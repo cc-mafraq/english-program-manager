@@ -4,7 +4,7 @@ import './App.css';
 
 interface AppProps {}
 
-function App({}: AppProps) {
+export const App = ({}: AppProps) => {
   // Create the count state.
   const [count, setCount] = useState(0);
   // Create the counter (+1 every second).
@@ -36,6 +36,4 @@ function App({}: AppProps) {
       </header>
     </div>
   );
-}
-
-export default App;
+};
