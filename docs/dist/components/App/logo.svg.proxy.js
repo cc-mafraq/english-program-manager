@@ -1,1 +1,0 @@
-export default "/dist/components/App/logo.svg";
