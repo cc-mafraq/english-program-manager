@@ -1,7 +1,7 @@
 import { createTheme, ThemeProvider } from '@mui/material';
 import React from 'react';
 import './App.css';
-import { MenuDrawer } from './components';
+import { MenuBar } from './components';
 
 const theme = createTheme({
   palette: {
@@ -9,7 +9,8 @@ const theme = createTheme({
       main: '#002060',
     },
     secondary: {
-      main: '#b3e5fc',
+      // main: '#b3e5fc',
+      main: '#196da7',
     },
   },
 });
@@ -17,7 +18,7 @@ const theme = createTheme({
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
-      <MenuDrawer />
+      <MenuBar />
     </ThemeProvider>
   );
 };
