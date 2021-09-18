@@ -3,12 +3,12 @@ import {
   Button,
   Divider,
   Drawer,
+  IconButton,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
   SvgIconTypeMap,
-  Theme,
 } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
@@ -19,6 +19,7 @@ import EqualizerIcon from '@mui/icons-material/Equalizer';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import AutoGraphIcon from '@mui/icons-material/AutoGraph';
+import MenuIcon from '@mui/icons-material/Menu';
 import React, { useState, KeyboardEvent, MouseEvent } from 'react';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 
@@ -30,6 +31,7 @@ interface DrawerListItem {
     muiName: string;
   };
 }
+
 const iconProps = { style: { color: 'white' } };
 const drawerList: DrawerListItem[] = [
   {
@@ -122,7 +124,15 @@ export const MenuDrawer = () => {
   return (
     <div>
       <React.Fragment>
-        <Button onClick={toggleDrawer}>Menu</Button>
+        <IconButton
+          size="large"
+          edge="start"
+          color="primary"
+          sx={{ mr: 2 }}
+          onClick={toggleDrawer}
+        >
+          <MenuIcon />
+        </IconButton>
         <Drawer anchor="left" open={isOpen} onClose={toggleDrawer}>
           {drawerItemList()}
         </Drawer>
