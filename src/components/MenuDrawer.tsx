@@ -24,6 +24,7 @@ import React, { useState, KeyboardEvent, MouseEvent } from 'react';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 
 const DRAWER_WIDTH = 250;
+const DRAWER_ITEM_MARGIN = '1.4vh';
 
 interface DrawerListItem {
   name: string;
@@ -104,7 +105,7 @@ export const MenuDrawer = () => {
                 backgroundColor: 'primary.dark',
                 opacity: [0.9, 0.8, 0.7],
               },
-              marginTop: '0.86vh',
+              marginTop: DRAWER_ITEM_MARGIN,
             }}
             key={item.name}
           >
@@ -122,21 +123,18 @@ export const MenuDrawer = () => {
   );
 
   return (
-    <div>
-      <React.Fragment>
-        <IconButton
-          size="large"
-          edge="start"
-          color="primary"
-          sx={{ mr: 2 }}
-          onClick={toggleDrawer}
-        >
-          <MenuIcon />
-        </IconButton>
-        <Drawer anchor="left" open={isOpen} onClose={toggleDrawer}>
-          {drawerItemList()}
-        </Drawer>
-      </React.Fragment>
-    </div>
+    <Box>
+      <IconButton
+        size="large"
+        edge="start"
+        color="primary"
+        onClick={toggleDrawer}
+      >
+        <MenuIcon />
+      </IconButton>
+      <Drawer anchor="left" open={isOpen} onClose={toggleDrawer}>
+        {drawerItemList()}
+      </Drawer>
+    </Box>
   );
 };
