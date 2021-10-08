@@ -1,37 +1,26 @@
-import { AppBar, Box, IconButton, Toolbar, Typography } from '@mui/material';
-import LogoutIcon from '@mui/icons-material/Logout';
 import React from 'react';
+import { Typography, IconButton, Toolbar } from '@mui/material';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { MenuDrawer } from '.';
 
-const name = 'Jon';
+const pageName = 'Home';
 
 export const MenuBar = () => {
   return (
-    <Box flexGrow={1}>
-      <AppBar position="static" color="default">
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
-          <MenuDrawer />
-          <Box>
-            <Box display="inline">
-              <Typography
-                sx={{
-                  display: 'inline',
-                  marginRight: '3em',
-                }}
-                variant="h6"
-                component="div"
-                color="primary"
-                fontWeight="bold"
-              >
-                Hi, {name}
-              </Typography>
-            </Box>
-            <IconButton size="large" color="primary">
-              <LogoutIcon />
-            </IconButton>
-          </Box>
-        </Toolbar>
-      </AppBar>
-    </Box>
+    <Toolbar sx={{ justifyContent: 'space-between' }}>
+      <MenuDrawer />
+      <Typography
+        color="primary"
+        variant="h6"
+        fontWeight="bold"
+        display="inline"
+        textAlign="center"
+      >
+        {pageName}
+      </Typography>
+      <IconButton>
+        <LogoutIcon color="primary" />
+      </IconButton>
+    </Toolbar>
   );
 };
