@@ -127,7 +127,7 @@ export const MenuDrawer = () => {
       <IconButton
         size="large"
         edge="start"
-        color="primary"
+        color="inherit"
         onClick={toggleDrawer}
       >
         <MenuIcon />

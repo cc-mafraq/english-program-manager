@@ -14,7 +14,7 @@ import { Searchbar } from '../components';
 
 export const StudentDatabasePage = () => {
   return (
-    <Toolbar sx={{ justifyContent: 'space-between' }}>
+    <Toolbar sx={{ justifyContent: 'space-between', paddingTop: '1vh' }}>
       <FormControl variant="standard" sx={{ width: '7vw' }}>
         <InputLabel>Sort By</InputLabel>
         <Select

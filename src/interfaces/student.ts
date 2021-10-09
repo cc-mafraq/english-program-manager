@@ -1,62 +1,21 @@
 export interface Student {
-  id: string;
-  nameEng: string;
-  nameAr: string;
-  photoId?: string;
-  IdCardId?: string;
   epId: number;
-  primaryPhone: number; //index of phoneNumbers
-  phoneNumbers: string[];
+  name: StudentName;
+  phone: WhatsappInfo;
   nationality: string;
-  inviteTag: boolean;
-  noCallList: boolean;
   currentLevel: GenderedLevel;
-  repeatNumber?: number; // Maybe remove?
-  audit?: boolean; // Maybe remove?
-  fgrDate?: string; // What does this mean?
-  sectionsOffered?: string[];
-  reactivatedDate?: string;
-  withdrawDate?: string;
-  currentStatus: Status;
-  placement?: {
-    photoContact?: boolean;
-    photoContactDate?: string;
-    placement?: string;
-    notified?: boolean;
-    confDate?: string;
-    pending?: boolean;
-  };
-  correspondence?: string;
-  classListSent?: string;
-  classListSentDate?: string;
+  status: StudentStatus;
+  correspondence: string;
   gender: 'M' | 'F';
   age?: number;
-  work: {
-    occupation: string;
-    lookingForJob?: string;
-    teacher?: boolean;
-    teachingSubjectAreas?: string;
-    englishTeacherLocation?: string;
-  };
-  hasWhatsapp: boolean;
-  waBroadcastSAR: string;
-  otherWaBroadcastGroups?: string[];
-  sessionEntered: string;
-  literacy?: {
-    illiterateAr?: boolean;
-    illiterateEng: boolean;
-    tutor?: string;
-    tutorDate?: string;
-  };
+  placement: Placement;
+  classList?: ClassList;
+  work: StudentWork;
+  initialSession: string;
+  literacy?: Literacy;
   zoom?: string;
   academicRecords: AcademicRecord[];
-  finalGradeReportIds?: string[];
   certificateRequests?: string;
-  placementData: {
-    writing: LevelPlus;
-    speaking: LevelPlus;
-    level: Level;
-  };
   droppedOutTiming?: DroppedOutTiming;
   droppedOutReason?: DroppedOutReason;
 }
@@ -72,6 +31,64 @@ export interface AcademicRecord {
   attendance?: string;
   comments: string;
   certificate: boolean;
+}
+
+export interface Placement {
+  photoContact?: boolean;
+  photoContactDate?: string;
+  placement?: string;
+  notified?: boolean;
+  confDate?: string;
+  pending?: boolean;
+  placementData: {
+    writing: LevelPlus;
+    speaking: LevelPlus;
+    level: Level;
+  };
+}
+
+export interface StudentWork {
+  occupation: string;
+  lookingForJob?: string;
+  teacher?: boolean;
+  teachingSubjectAreas?: string;
+  englishTeacherLocation?: string;
+}
+
+export interface Literacy {
+  illiterateAr?: boolean;
+  illiterateEng: boolean;
+  tutor?: string;
+  tutorDate?: string;
+}
+
+export interface WhatsappInfo {
+  primaryPhone: number; //index of phoneNumbers
+  phoneNumbers: string[];
+  hasWhatsapp: boolean;
+  whatsappNotes?: string;
+  waBroadcastSAR: string;
+  otherWaBroadcastGroups?: string[];
+}
+
+export interface StudentStatus {
+  currentStatus: Status;
+  inviteTag: boolean;
+  noCallList: boolean;
+  reactivatedDate?: string;
+  withdrawDate?: string;
+  sectionsOffered?: string[];
+}
+
+export interface ClassList {
+  classListSent?: string;
+  classListSentNotes?: string;
+  classListSentDate?: string;
+}
+
+export interface StudentName {
+  english: string;
+  arabic: string;
 }
 
 export type Level = 'PL1' | 'L1' | 'L2' | 'L3' | 'L4' | 'L5' | 'L5 GRAD';
