@@ -64,7 +64,7 @@ export interface Literacy {
 
 export interface WhatsappInfo {
   primaryPhone: number; //index of phoneNumbers
-  phoneNumbers: string[];
+  phoneNumbers: PhoneNumber[];
   hasWhatsapp: boolean;
   whatsappNotes?: string;
   waBroadcastSAR: string;
@@ -89,6 +89,10 @@ export interface ClassList {
 export interface StudentName {
   english: string;
   arabic: string;
+}
+export interface PhoneNumber {
+  number: number;
+  notes?: string;
 }
 
 export type Level = 'PL1' | 'L1' | 'L2' | 'L3' | 'L4' | 'L5' | 'L5 GRAD';
@@ -175,7 +179,10 @@ export const SAMPLE_STUDENTS: Student[] = [
     epId: 68989,
     phone: {
       primaryPhone: 1,
-      phoneNumbers: ['0777642766', '0775311956 (new WA # as of 9/4/21)'],
+      phoneNumbers: [
+        { number: 777642766 },
+        { number: 775311956, notes: 'new WA # as of 9/4/21' },
+      ],
       hasWhatsapp: true,
       waBroadcastSAR: 'Y SAR Group 3',
     },
@@ -211,7 +218,7 @@ export const SAMPLE_STUDENTS: Student[] = [
     epId: 19483,
     phone: {
       primaryPhone: 0,
-      phoneNumbers: ['7 7234 9662'],
+      phoneNumbers: [{ number: 772349662 }],
       hasWhatsapp: true,
       waBroadcastSAR: 'Y SAR Group 2',
     },
@@ -246,7 +253,7 @@ export const SAMPLE_STUDENTS: Student[] = [
     epId: 12411,
     phone: {
       primaryPhone: 0,
-      phoneNumbers: ['772005195'],
+      phoneNumbers: [{ number: 772005195 }],
       hasWhatsapp: true,
       waBroadcastSAR: 'Y SAR Group 4',
     },
@@ -281,8 +288,11 @@ export const SAMPLE_STUDENTS: Student[] = [
     phone: {
       primaryPhone: 0,
       phoneNumbers: [
-        "0789247692 (Mama's # on WA as of 11/2/20)",
-        '0785725767 (# does not appear to have WA as of 11/2/20)',
+        { number: 789247692, notes: "Mama's # on WA as of 11/2/20" },
+        {
+          number: 785725767,
+          notes: '# does not appear to have WA as of 11/2/20',
+        },
       ],
       hasWhatsapp: true,
       waBroadcastSAR: 'Y SAR Group 4',

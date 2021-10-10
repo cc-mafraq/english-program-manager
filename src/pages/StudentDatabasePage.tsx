@@ -62,9 +62,21 @@ export const StudentDatabasePage = () => {
             </Typography>
             <Box sx={{ float: 'right' }}>
               <Typography display="inline" variant="h5" marginRight="5px">
-                {student.phone.phoneNumbers[student.phone.primaryPhone]}
+                {student.phone.phoneNumbers[student.phone.primaryPhone].number}
               </Typography>
-              {student.phone.hasWhatsapp ? <WhatsAppIcon /> : <></>}
+              {student.phone.hasWhatsapp ? (
+                <IconButton
+                  href={`https://wa.me/962${
+                    student.phone.phoneNumbers[student.phone.primaryPhone]
+                      .number
+                  }`}
+                  target="_blank"
+                >
+                  <WhatsAppIcon />
+                </IconButton>
+              ) : (
+                <></>
+              )}
             </Box>
             <Box sx={{ marginTop: '1%', marginBottom: '1%' }}>
               <Typography {...typographyLineProps}>
