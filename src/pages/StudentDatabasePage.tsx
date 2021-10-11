@@ -20,11 +20,6 @@ interface EditableStudent extends Student {
   isEditMode: boolean;
 }
 
-const createData = (student: Student): EditableStudent => ({
-  ...student,
-  isEditMode: false,
-});
-
 const typographyLineProps: TypographyProps = {
   display: 'inline',
   variant: 'body1',
@@ -37,70 +32,75 @@ export const StudentDatabasePage = () => {
       <StudentDatabaseToolbar />
       {map(SAMPLE_STUDENTS, (student) => (
         <Card sx={{ display: 'flex' }}>
-          <Box>
+          <Box
+            sx={{
+              flexGrow: 1,
+              minWidth: '10%',
+            }}
+          >
             <CardMedia
-              sx={{
-                maxHeight: '200px',
-                maxWidth: '200px',
-                minWidth: '100px',
-                minHeight: '100px',
-                height: 'auto',
-                width: 'auto',
-              }}
+              sx={{ height: '100%' }}
               component="img"
               image={`./assets/${student.epId}.png`}
             />
           </Box>
-          <CardContent>
-            <Typography
-              gutterBottom
-              variant="h5"
-              component="div"
-              display="inline"
-            >
-              {student.name.english} {student.name.arabic}
-            </Typography>
-            <Box sx={{ float: 'right' }}>
-              <Typography display="inline" variant="h5" marginRight="5px">
-                {student.phone.phoneNumbers[student.phone.primaryPhone].number}
+          <Box sx={{ flexGrow: 5 }}>
+            <CardContent>
+              <Typography
+                gutterBottom
+                variant="h5"
+                component="div"
+                display="inline"
+              >
+                {student.name.english} {student.name.arabic}
               </Typography>
-              {student.phone.hasWhatsapp ? (
-                <IconButton
-                  href={`https://wa.me/962${
+              <Box sx={{ float: 'right', flexGrow: 1, flexDirection: 'row' }}>
+                <Typography display="inline" variant="h5" marginRight="5px">
+                  {
                     student.phone.phoneNumbers[student.phone.primaryPhone]
                       .number
-                  }`}
-                  target="_blank"
-                >
-                  <WhatsAppIcon />
-                </IconButton>
-              ) : (
-                <></>
-              )}
-            </Box>
-            <Box sx={{ marginTop: '1%', marginBottom: '1%' }}>
-              <Typography {...typographyLineProps}>
-                {Nationality[student.nationality]}
+                  }
+                </Typography>
+                {student.phone.hasWhatsapp ? (
+                  <IconButton
+                    href={`https://wa.me/962${
+                      student.phone.phoneNumbers[student.phone.primaryPhone]
+                        .number
+                    }`}
+                    target="_blank"
+                  >
+                    <WhatsAppIcon />
+                  </IconButton>
+                ) : (
+                  <></>
+                )}
+              </Box>
+              <Box sx={{ marginTop: '1%', marginBottom: '1%' }}>
+                <Typography {...typographyLineProps}>
+                  {Nationality[student.nationality]}
+                </Typography>
+                <Typography {...typographyLineProps}>{student.epId}</Typography>
+                <Typography {...typographyLineProps}>
+                  {student.status.inviteTag ? 'Y' : 'N'}
+                </Typography>
+                <Typography {...typographyLineProps}>
+                  {student.currentLevel}
+                </Typography>
+                <Typography {...typographyLineProps}>
+                  {Status[student.status.currentStatus]}
+                </Typography>
+                <Typography {...typographyLineProps}>
+                  {student.gender}
+                </Typography>
+                <Typography {...typographyLineProps}>
+                  {student.work.occupation}
+                </Typography>
+              </Box>
+              <Typography variant="body2" color="text.secondary">
+                {student.correspondence}
               </Typography>
-              <Typography {...typographyLineProps}>{student.epId}</Typography>
-              <Typography {...typographyLineProps}>
-                {student.status.inviteTag ? 'Y' : 'N'}
-              </Typography>
-              <Typography {...typographyLineProps}>
-                {student.currentLevel}
-              </Typography>
-              <Typography {...typographyLineProps}>
-                {Status[student.status.currentStatus]}
-              </Typography>
-              <Typography {...typographyLineProps}>{student.gender}</Typography>
-              <Typography {...typographyLineProps}>
-                {student.work.occupation}
-              </Typography>
-            </Box>
-            <Typography variant="body2" color="text.secondary">
-              {student.correspondence}
-            </Typography>
-          </CardContent>
+            </CardContent>
+          </Box>
           <CardActions>
             <IconButton>
               <PersonIcon />
