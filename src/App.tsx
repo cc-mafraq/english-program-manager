@@ -2,6 +2,7 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import React from 'react';
 import './App.css';
 import { MenuBar } from './components';
+import { StudentDatabasePage } from './pages';
 
 const theme = createTheme({
   palette: {
@@ -19,6 +20,7 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <MenuBar />
+      <StudentDatabasePage />
     </ThemeProvider>
   );
 };
