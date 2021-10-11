@@ -34,12 +34,12 @@ export const StudentDatabasePage = () => {
         <Card sx={{ display: 'flex' }}>
           <Box
             sx={{
-              flexGrow: 1,
               minWidth: '10%',
+              maxWidth: '10%',
             }}
           >
             <CardMedia
-              sx={{ height: '100%' }}
+              sx={{ height: '100%', maxHeight: '35vh' }}
               component="img"
               image={`./assets/${student.epId}.png`}
             />
