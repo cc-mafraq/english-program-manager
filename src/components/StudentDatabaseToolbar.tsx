@@ -1,30 +1,22 @@
-import React from 'react';
-import {
-  Box,
-  FormControl,
-  IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
-  Toolbar,
-} from '@mui/material';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import AddIcon from '@mui/icons-material/Add';
-import { Searchbar } from '../components';
+import AddIcon from "@mui/icons-material/Add";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import { Box, FormControl, IconButton, InputLabel, MenuItem, Select, Toolbar } from "@mui/material";
+import React from "react";
+import { Searchbar } from ".";
 
 export const StudentDatabaseToolbar = () => {
   return (
     <Toolbar
       sx={{
-        justifyContent: 'space-between',
-        paddingTop: '1vh',
+        justifyContent: "space-between",
+        paddingTop: "1vh",
       }}
     >
-      <FormControl variant="standard" sx={{ width: '7vw' }}>
+      <FormControl sx={{ width: "7vw" }} variant="standard">
         <InputLabel>Sort By</InputLabel>
         <Select
-          value="name"
           label="Sort By"
+          value="name"
           // onChange={handleChange}
         >
           <MenuItem value="name">Name</MenuItem>

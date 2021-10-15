@@ -1,6 +1,15 @@
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import AutoGraphIcon from "@mui/icons-material/AutoGraph";
+import CreateIcon from "@mui/icons-material/Create";
+import EqualizerIcon from "@mui/icons-material/Equalizer";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import HomeIcon from "@mui/icons-material/Home";
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import MenuIcon from "@mui/icons-material/Menu";
+import PersonIcon from "@mui/icons-material/Person";
+import ScheduleIcon from "@mui/icons-material/Schedule";
 import {
   Box,
-  Button,
   Divider,
   Drawer,
   IconButton,
@@ -9,67 +18,57 @@ import {
   ListItemIcon,
   ListItemText,
   SvgIconTypeMap,
-} from '@mui/material';
-import HomeIcon from '@mui/icons-material/Home';
-import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
-import PersonIcon from '@mui/icons-material/Person';
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-import CreateIcon from '@mui/icons-material/Create';
-import EqualizerIcon from '@mui/icons-material/Equalizer';
-import ScheduleIcon from '@mui/icons-material/Schedule';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
-import AutoGraphIcon from '@mui/icons-material/AutoGraph';
-import MenuIcon from '@mui/icons-material/Menu';
-import React, { useState, KeyboardEvent, MouseEvent } from 'react';
-import { OverridableComponent } from '@mui/material/OverridableComponent';
+} from "@mui/material";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
+import React, { KeyboardEvent, MouseEvent, useState } from "react";
 
 const DRAWER_WIDTH = 250;
-const DRAWER_ITEM_MARGIN = '1.4vh';
+const DRAWER_ITEM_MARGIN = "0.87vh";
 
 interface DrawerListItem {
-  name: string;
-  component: OverridableComponent<SvgIconTypeMap<{}, 'svg'>> & {
+  component: OverridableComponent<SvgIconTypeMap<Record<string, unknown>, "svg">> & {
     muiName: string;
   };
+  name: string;
 }
 
-const iconProps = { style: { color: 'white' } };
+const iconProps = { style: { color: "white" } };
 const drawerList: DrawerListItem[] = [
   {
-    name: 'Home',
     component: HomeIcon,
+    name: "Home",
   },
   {
-    name: 'Virtual Library',
     component: LibraryBooksIcon,
+    name: "Virtual Library",
   },
   {
-    name: 'Student Database',
     component: PersonIcon,
+    name: "Student Database",
   },
   {
-    name: 'Class Lists',
     component: FormatListBulletedIcon,
+    name: "Class Lists",
   },
   {
-    name: 'Attendance',
     component: CreateIcon,
+    name: "Attendance",
   },
   {
-    name: 'Gradebook',
     component: EqualizerIcon,
+    name: "Gradebook",
   },
   {
-    name: 'Schedules',
     component: ScheduleIcon,
+    name: "Schedules",
   },
   {
-    name: 'Admin Documents',
     component: AttachFileIcon,
+    name: "Admin Documents",
   },
   {
-    name: 'Statistics',
     component: AutoGraphIcon,
+    name: "Statistics",
   },
 ];
 
@@ -78,61 +77,59 @@ export const MenuDrawer = () => {
 
   const toggleDrawer = (event: KeyboardEvent | MouseEvent) => {
     if (
-      event.type === 'keydown' &&
-      ((event as KeyboardEvent).key === 'Tab' ||
-        (event as KeyboardEvent).key === 'Shift')
+      event.type === "keydown" &&
+      ((event as KeyboardEvent).key === "Tab" || (event as KeyboardEvent).key === "Shift")
     ) {
       return;
     }
     setIsOpen(!isOpen);
   };
 
-  const drawerItemList = () => (
-    <Box
-      sx={{
-        width: DRAWER_WIDTH,
-        bgcolor: 'primary.main',
-        color: 'white',
-      }}
-      role="presentation"
-    >
-      <img src="/ccm-logo.PNG" width={DRAWER_WIDTH} />
-      <List>
-        {drawerList.map((item) => (
-          <Box
-            sx={{
-              '&:hover': {
-                backgroundColor: 'primary.dark',
-                opacity: [0.9, 0.8, 0.7],
-              },
-              marginTop: DRAWER_ITEM_MARGIN,
-            }}
-            key={item.name}
-          >
-            <ListItem button>
-              <ListItemIcon>
-                <item.component {...iconProps} />
-              </ListItemIcon>
-              <ListItemText primary={item.name} />
-              <Divider />
-            </ListItem>
-          </Box>
-        ))}
-      </List>
-    </Box>
-  );
+  const drawerItemList = () => {
+    return (
+      <Box
+        role="presentation"
+        sx={{
+          bgcolor: "primary.main",
+          color: "white",
+          width: DRAWER_WIDTH,
+        }}
+      >
+        <img alt="CCM Logo" src="./assets/ccm-logo.PNG" width={DRAWER_WIDTH} />
+        <List>
+          {drawerList.map((item) => {
+            return (
+              <Box
+                key={item.name}
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "primary.dark",
+                    opacity: [0.9, 0.8, 0.7],
+                  },
+                  marginTop: DRAWER_ITEM_MARGIN,
+                }}
+              >
+                <ListItem button>
+                  <ListItemIcon>
+                    <item.component {...iconProps} />
+                  </ListItemIcon>
+                  <ListItemText primary={item.name} />
+                  <Divider />
+                </ListItem>
+              </Box>
+            );
+          })}
+        </List>
+      </Box>
+    );
+  };
 
   return (
     <Box>
-      <IconButton
-        size="large"
-        edge="start"
-        color="inherit"
-        onClick={toggleDrawer}
-      >
+      <IconButton color="inherit" edge="start" onClick={toggleDrawer} size="large">
         <MenuIcon />
       </IconButton>
-      <Drawer anchor="left" open={isOpen} onClose={toggleDrawer}>
+      <Drawer anchor="left" onClose={toggleDrawer} open={isOpen}>
         {drawerItemList()}
       </Drawer>
     </Box>

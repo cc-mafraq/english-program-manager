@@ -1,1 +1,1 @@
-export * from './StudentDatabasePage';
+export * from "./StudentDatabasePage";
