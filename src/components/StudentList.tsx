@@ -26,20 +26,20 @@ export const StudentList = () => {
     <>
       {map(SAMPLE_STUDENTS, (student) => {
         return (
-          <Card sx={{ display: "flex" }}>
+          <Card sx={{ display: "flex", marginLeft: "5px" }}>
             <Box
               sx={{
-                maxWidth: "10%",
-                minWidth: "10%",
+                display: "flex",
+                minWidth: "150px",
               }}
             >
               <CardMedia
                 component="img"
                 image={`./assets/${student.epId}.png`}
-                sx={{ height: "100%", maxHeight: "35vh" }}
+                sx={{ height: "35vh", minHeight: "200px" }}
               />
             </Box>
-            <Box sx={{ flexGrow: 5 }}>
+            <Box sx={{ flexGrow: 5, maxWidth: "85%" }}>
               <CardContent>
                 <Typography component="div" display="inline" gutterBottom variant="h5">
                   {student.name.english} {student.name.arabic}
@@ -81,7 +81,15 @@ export const StudentList = () => {
                 </Typography>
               </CardContent>
             </Box>
-            <CardActions>
+            <CardActions
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                marginBottom: "auto",
+                marginTop: "auto",
+                maxWidth: "5%",
+              }}
+            >
               <IconButton>
                 <PersonIcon />
               </IconButton>
