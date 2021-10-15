@@ -95,7 +95,7 @@ export const MenuDrawer = () => {
           width: DRAWER_WIDTH,
         }}
       >
-        <img alt="CCM Logo" src="./assets/ccm-logo.PNG" width={DRAWER_WIDTH} />
+        <img alt="CCM Logo" src="./assets/ccm-logo.png" width={DRAWER_WIDTH} />
         <List>
           {drawerList.map((item) => {
             return (
