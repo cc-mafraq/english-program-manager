@@ -1,37 +1,30 @@
-import React from 'react';
-import {
-  Typography,
-  IconButton,
-  Toolbar,
-  useTheme,
-  AppBar,
-} from '@mui/material';
-import LogoutIcon from '@mui/icons-material/Logout';
-import { MenuDrawer } from '.';
+import LogoutIcon from "@mui/icons-material/Logout";
+import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
+import React from "react";
+import { MenuDrawer } from ".";
 
-const pageName = 'Student Database';
+const pageName = "Student Database";
 
 export const MenuBar = () => {
-  const theme = useTheme();
   return (
     <AppBar position="static">
       <Toolbar
         sx={{
-          justifyContent: 'space-between',
+          justifyContent: "space-between",
         }}
       >
         <MenuDrawer />
         <Typography
           color="white"
-          variant="h6"
-          fontWeight="bold"
           display="inline"
+          fontWeight="bold"
           textAlign="center"
+          variant="h6"
         >
           {pageName}
         </Typography>
         <IconButton>
-          <LogoutIcon sx={{ color: 'white' }} />
+          <LogoutIcon sx={{ color: "white" }} />
         </IconButton>
       </Toolbar>
     </AppBar>

@@ -1,59 +1,59 @@
-import React from 'react';
-import { alpha, Box, InputBase, useTheme } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
+import { alpha, Box, InputBase, useTheme } from "@mui/material";
+import React from "react";
 
 export const Searchbar = () => {
   const theme = useTheme();
   return (
     <Box
       sx={{
-        position: 'relative',
-        display: 'inline',
-        padding: theme.spacing(1, 0),
-        borderRadius: theme.shape.borderRadius,
-        backgroundColor: alpha(theme.palette.common.black, 0.05),
-        '&:hover': {
+        "&:hover": {
           backgroundColor: alpha(theme.palette.common.black, 0.1),
         },
+        backgroundColor: alpha(theme.palette.common.black, 0.05),
+        borderRadius: theme.shape.borderRadius,
+        display: "inline",
         marginLeft: 0,
-        width: '100%',
-        [theme.breakpoints.up('sm')]: {
+        padding: theme.spacing(1, 0),
+        position: "relative",
+        width: "100%",
+        [theme.breakpoints.up("sm")]: {
           marginLeft: theme.spacing(1),
-          width: 'auto',
+          width: "auto",
         },
       }}
     >
       <Box
         sx={{
+          alignItems: "center",
+          display: "flex",
+          height: "100%",
+          justifyContent: "center",
           padding: theme.spacing(0, 2),
-          height: '100%',
-          position: 'absolute',
-          pointerEvents: 'none',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          pointerEvents: "none",
+          position: "absolute",
         }}
       >
         <SearchIcon color="primary" />
       </Box>
       <InputBase
+        inputProps={{ "aria-label": "search" }}
         placeholder="Search students"
-        inputProps={{ 'aria-label': 'search' }}
         sx={{
-          color: 'inherit',
-          '& .MuiInputBase-input': {
+          "& .MuiInputBase-input": {
             padding: theme.spacing(1, 1, 1, 0),
             // vertical padding + font size from searchIcon
             paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-            transition: theme.transitions.create('width'),
-            width: '100%',
-            [theme.breakpoints.up('sm')]: {
-              width: '50ch',
-              '&:focus': {
-                width: '65ch',
+            transition: theme.transitions.create("width"),
+            width: "100%",
+            [theme.breakpoints.up("sm")]: {
+              "&:focus": {
+                width: "65ch",
               },
+              width: "50ch",
             },
           },
+          color: "inherit",
         }}
       />
     </Box>
