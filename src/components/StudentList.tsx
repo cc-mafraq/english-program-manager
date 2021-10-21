@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { map } from "lodash";
 import React from "react";
+import { LabeledText } from ".";
 import { Nationality, SAMPLE_STUDENTS, Status } from "../interfaces";
 
 const typographyLineProps: TypographyProps = {
@@ -26,7 +27,7 @@ export const StudentList = () => {
     <>
       {map(SAMPLE_STUDENTS, (student) => {
         return (
-          <Card sx={{ display: "flex", marginLeft: "5px" }}>
+          <Card key={student.epId} sx={{ display: "flex", marginLeft: "5px" }}>
             <Box
               sx={{
                 display: "flex",
@@ -62,23 +63,31 @@ export const StudentList = () => {
                   )}
                 </Box>
                 <Box sx={{ marginBottom: "1%", marginTop: "1%" }}>
-                  <Typography {...typographyLineProps}>
-                    {Nationality[student.nationality]}
-                  </Typography>
-                  <Typography {...typographyLineProps}>{student.epId}</Typography>
-                  <Typography {...typographyLineProps}>
+                  <LabeledText {...typographyLineProps} label="ID Number">
+                    {student.epId}
+                  </LabeledText>
+                  <LabeledText {...typographyLineProps} label="Invite Tag">
                     {student.status.inviteTag ? "Y" : "N"}
-                  </Typography>
-                  <Typography {...typographyLineProps}>{student.currentLevel}</Typography>
-                  <Typography {...typographyLineProps}>
+                  </LabeledText>
+                  <LabeledText {...typographyLineProps} label="Current Level">
+                    {student.currentLevel}
+                  </LabeledText>
+                  <LabeledText {...typographyLineProps} label="Status">
                     {Status[student.status.currentStatus]}
-                  </Typography>
-                  <Typography {...typographyLineProps}>{student.gender}</Typography>
-                  <Typography {...typographyLineProps}>{student.work.occupation}</Typography>
+                  </LabeledText>
+                  <LabeledText {...typographyLineProps} label="Nationality">
+                    {Nationality[student.nationality]}
+                  </LabeledText>
+                  <LabeledText {...typographyLineProps} label="Gender">
+                    {student.gender}
+                  </LabeledText>
+                  <LabeledText {...typographyLineProps} label="Occupation">
+                    {student.work.occupation}
+                  </LabeledText>
                 </Box>
-                <Typography color="text.secondary" variant="body2">
+                <LabeledText label="Correspondence" textProps={{ variant: "body2" }}>
                   {student.correspondence}
-                </Typography>
+                </LabeledText>
               </CardContent>
             </Box>
             <CardActions

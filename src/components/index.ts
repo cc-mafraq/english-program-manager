@@ -1,3 +1,4 @@
+export * from "./LabeledText";
 export * from "./MenuBar";
 export * from "./MenuDrawer";
 export * from "./Searchbar";
