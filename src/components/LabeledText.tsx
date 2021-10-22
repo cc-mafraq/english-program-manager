@@ -9,7 +9,7 @@ interface LabeledTextProps {
 }
 
 const defaultContainerProps: BoxProps = {
-  sx: { float: "left", marginRight: "5%" },
+  sx: { float: "left", marginRight: "5vw" },
 };
 
 const defaultLabelProps: TypographyProps = {

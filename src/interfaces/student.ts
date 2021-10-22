@@ -79,9 +79,11 @@ export interface WhatsappInfo {
 export interface StudentStatus {
   audit?: boolean;
   currentStatus: Status;
+  finalGradeSentDate?: string;
   inviteTag: boolean;
+  levelRevealDate?: string;
   noCallList: boolean;
-  reactivatedDate?: string;
+  reactivatedDate?: string[];
   sectionsOffered?: string[];
   withdrawDate?: string[];
 }
@@ -262,6 +264,7 @@ export const SAMPLE_STUDENTS: Student[] = [
       currentStatus: Status.RET,
       inviteTag: true,
       noCallList: false,
+      reactivatedDate: ["9/1/21"],
       sectionsOffered: ["L1M-B Fa I 21"],
       withdrawDate: ["8/5/2020"],
     },
