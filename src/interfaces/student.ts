@@ -3,10 +3,9 @@ export interface Student {
   age?: number;
   certificateRequests?: string;
   classList?: ClassList;
-  correspondence: string;
+  correspondence: Correspondence[];
   currentLevel: GenderedLevel;
   droppedOutReason?: DroppedOutReason;
-  droppedOutTiming?: DroppedOutTiming;
   epId: number;
   gender: "M" | "F";
   initialSession: string;
@@ -16,31 +15,35 @@ export interface Student {
   phone: WhatsappInfo;
   placement: Placement;
   status: StudentStatus;
-  work: StudentWork;
+  work?: StudentWork;
   zoom?: string;
 }
 
 export interface AcademicRecord {
-  attendance?: string;
+  attendance?: number;
   certificate?: boolean;
   comments?: string;
   electiveClass?: string;
-  exitSpeakingExam?: string;
-  exitWritingExam?: string;
-  finalGrade?: string;
+  exitSpeakingExam?: Grade;
+  exitWritingExam?: Grade;
   finalGradeReportSentDate?: string;
-  level: Level;
-  result: FinalResult;
+  finalResult?: Grade;
+  level: GenderedLevel;
   session: string;
 }
 
+export interface Grade {
+  notes?: string;
+  percentage?: number;
+  result: FinalResult;
+}
+
 export interface Placement {
-  confDate?: string;
+  confDate?: string[];
   notified?: boolean;
   pending?: boolean;
-  photoContact?: boolean;
-  photoContactDate?: string;
-  placement?: string;
+  photoContact?: string[];
+  placement?: string[];
   placementData: {
     level: Level;
     speaking: LevelPlus;
@@ -80,11 +83,11 @@ export interface StudentStatus {
   noCallList: boolean;
   reactivatedDate?: string;
   sectionsOffered?: string[];
-  withdrawDate?: string;
+  withdrawDate?: string[];
 }
 
 export interface ClassList {
-  classListSent?: string;
+  classListSent?: boolean;
   classListSentDate?: string;
   classListSentNotes?: string;
 }
@@ -96,6 +99,11 @@ export interface StudentName {
 export interface PhoneNumber {
   notes?: string;
   number: number;
+}
+
+export interface Correspondence {
+  date: string;
+  notes: string;
 }
 
 export type Level = "PL1" | "L1" | "L2" | "L3" | "L4" | "L5" | "L5 GRAD";
@@ -162,11 +170,69 @@ export enum DroppedOutReason {
 
 export const SAMPLE_STUDENTS: Student[] = [
   {
-    academicRecords: [],
+    academicRecords: [
+      {
+        attendance: 88,
+        certificate: true,
+        comments:
+          "I would recommend passing this student.  This is a hard case.  He forgot or bombed HW at the start but has steadily improved.  He always offers answers in class.  I feel he would be extremely bored in a PL1 repeat.  L1 would challenge him.",
+        exitWritingExam: {
+          result: FinalResult.P,
+        },
+        finalResult: {
+          percentage: 74,
+          result: FinalResult.P,
+        },
+        level: "PL1-M",
+        session: "Fa I 19",
+      },
+      {
+        attendance: 57,
+        certificate: false,
+        exitWritingExam: { result: FinalResult.F },
+        finalResult: { percentage: 48, result: FinalResult.F },
+        level: "L1-M",
+        session: "Fa II 19",
+      },
+      {
+        finalResult: { result: FinalResult.WD },
+        level: "L1-M",
+        session: "Sp I 20",
+      },
+      {
+        level: "L1-M",
+        session: "Fa I 21",
+      },
+    ],
     age: 19,
-    correspondence:
-      "11/13/19: his friend Mohammed Khalid (PL1-M Fa I 19) says Bahaa doesn't have WA and is asking for his final grades; I told him I don't give that information. 8/5/20: He has not responded to class invite for Fa I 20; today sent bilingual notifications for fall semester; going ahead &WD status & change session tag to N. 12/24/20: Did not respond to 11/14/20 CS. 9/4/21: His brother Basel sent me a new # and asked if Bahaa could re-register for classes.  I don't see this as working out, but I will give him another shot since I have room.  Changing his tag back to Y at this point but I will wait to reactivate his status until he actually shows commitment by coming to class....",
+    classList: {
+      classListSent: true,
+      classListSentDate: "9/3/2021",
+      classListSentNotes: "Sent via WA",
+    },
+    correspondence: [
+      {
+        date: "11/13/19",
+        notes:
+          "his friend Mohammed Khalid (PL1-M Fa I 19) says Bahaa doesn't have WA and is asking for his final grades; I told him I don't give that information.",
+      },
+      {
+        date: "8/5/20",
+        notes:
+          "He has not responded to class invite for Fa I 20; today sent bilingual notifications for fall semester; going ahead &WD status & change session tag to N.",
+      },
+      {
+        date: "12/24/20",
+        notes: "Did not respond to 11/14/20 CS.",
+      },
+      {
+        date: "9/4/21",
+        notes:
+          "His brother Basel sent me a new # and asked if Bahaa could re-register for classes.  I don't see this as working out, but I will give him another shot since I have room.  Changing his tag back to Y at this point but I will wait to reactivate his status until he actually shows commitment by coming to class....",
+      },
+    ],
     currentLevel: "L1-M",
+    droppedOutReason: DroppedOutReason.UNK,
     epId: 68989,
     gender: "M",
     initialSession: "FA I 19",
@@ -182,6 +248,10 @@ export const SAMPLE_STUDENTS: Student[] = [
       waBroadcastSAR: "Y SAR Group 3",
     },
     placement: {
+      confDate: ["Conf 9/4/21 L1M-B"],
+      notified: true,
+      photoContact: ["Y 5/18/19"],
+      placement: ["Placed 9/4/21 L1M-B"],
       placementData: {
         level: "PL1",
         speaking: "PL1",
@@ -193,6 +263,7 @@ export const SAMPLE_STUDENTS: Student[] = [
       inviteTag: true,
       noCallList: false,
       sectionsOffered: ["L1M-B Fa I 21"],
+      withdrawDate: ["8/5/2020"],
     },
     work: {
       occupation: "High School Student",
@@ -200,8 +271,31 @@ export const SAMPLE_STUDENTS: Student[] = [
   },
   {
     academicRecords: [],
-    correspondence:
-      "11/9/18: she said that her kids go at 2:00 (or does she mean 'come' from school?  Because she wrote 'go' in Arabic.  Hmm) she is not able to come until after that.  Also when her kids have exams (they are ages 11 & 13) she will not come to English classes.  FYI she lost 4 babies due to liver and heart disease, all before age 8 - three of them were still infants.  These are the only remaining 2 kids.  11/19/18: she can come to the church class on Thursdays only. // 11/26/18: she WA'd in Arabic requesting to audit Level 2 not Level 3 (she was in Level 3 once last week, Wk 1 Fa II 18); I said yes. 8/6/20: I don't know what happened but somehow Sahar got missed on the class schedule distribution in the last couple weeks.  I went ahead & sent her the CS for L3 along w/ notifications for fall semester & there's currently no room in L3; I will wait to hear from her before putting her on CSWL L3, etc. 12/19/20: did not respond to CS 11/17/20; changing tag to N.",
+    correspondence: [
+      {
+        date: "11/9/18",
+        notes:
+          "she said that her kids go at 2:00 (or does she mean 'come' from school?  Because she wrote 'go' in Arabic.  Hmm) she is not able to come until after that.  Also when her kids have exams (they are ages 11 & 13) she will not come to English classes.  FYI she lost 4 babies due to liver and heart disease, all before age 8 - three of them were still infants.  These are the only remaining 2 kids.",
+      },
+      {
+        date: "11/19/18",
+        notes: "she can come to the church class on Thursdays only. //",
+      },
+      {
+        date: "11/26/18",
+        notes:
+          "she WA'd in Arabic requesting to audit Level 2 not Level 3 (she was in Level 3 once last week, Wk 1 Fa II 18); I said yes.",
+      },
+      {
+        date: "8/6/20",
+        notes:
+          "I don't know what happened but somehow Sahar got missed on the class schedule distribution in the last couple weeks.  I went ahead & sent her the CS for L3 along w/ notifications for fall semester & there's currently no room in L3; I will wait to hear from her before putting her on CSWL L3, etc.",
+      },
+      {
+        date: "12/19/20",
+        notes: "did not respond to CS 11/17/20; changing tag to N.",
+      },
+    ],
     currentLevel: "L3",
     epId: 19483,
     gender: "F",
@@ -235,7 +329,7 @@ export const SAMPLE_STUDENTS: Student[] = [
   },
   {
     academicRecords: [],
-    correspondence: "4/28/21: Registered him for German Su 21.",
+    correspondence: [{ date: "4/28/21", notes: "Registered him for German Su 21." }],
     currentLevel: "L4",
     epId: 12411,
     gender: "M",
@@ -269,8 +363,17 @@ export const SAMPLE_STUDENTS: Student[] = [
   },
   {
     academicRecords: [],
-    correspondence:
-      "11/2/20: Struggling literate (PEL). 4/10/21: Yousef was attending the class up the point that Scott went on Zoom (for 5/8 weeks).  I had Yousef once with me at the church, using my phone to Zoom, but I don't think he's capable of doing it or learning how to do it by himself.  Leaving his status active and his tag to Y.",
+    correspondence: [
+      {
+        date: "11/2/20",
+        notes: "Struggling literate (PEL).",
+      },
+      {
+        date: "4/10/21",
+        notes:
+          "Yousef was attending the class up the point that Scott went on Zoom (for 5/8 weeks).  I had Yousef once with me at the church, using my phone to Zoom, but I don't think he's capable of doing it or learning how to do it by himself.  Leaving his status active and his tag to Y.",
+      },
+    ],
     currentLevel: "PL1-M",
     epId: 17139,
     gender: "M",

@@ -8,6 +8,20 @@ interface LabeledTextProps {
   textProps?: TypographyProps;
 }
 
+const defaultContainerProps: BoxProps = {
+  sx: { float: "left", marginRight: "5%" },
+};
+
+const defaultLabelProps: TypographyProps = {
+  color: "text.secondary",
+  fontSize: "small",
+  variant: "subtitle2",
+};
+
+const defaultTextProps: TypographyProps = {
+  fontSize: "medium",
+};
+
 export const LabeledText: React.FC<LabeledTextProps> = ({
   containerProps,
   labelProps,
@@ -15,16 +29,22 @@ export const LabeledText: React.FC<LabeledTextProps> = ({
   textProps,
   children,
 }) => {
-  return (
-    <Box {...containerProps}>
-      <Typography {...labelProps}>{label}</Typography>
-      <Typography {...textProps}>{children}</Typography>
+  return children ? (
+    <Box {...defaultContainerProps} {...containerProps}>
+      <Typography {...defaultLabelProps} {...labelProps}>
+        {label}
+      </Typography>
+      <Typography {...defaultTextProps} {...textProps}>
+        {children}
+      </Typography>
     </Box>
+  ) : (
+    <></>
   );
 };
 
 LabeledText.defaultProps = {
-  containerProps: { sx: { float: "left", marginRight: "5%" } },
-  labelProps: { color: "text.secondary", fontSize: "small", variant: "subtitle2" },
-  textProps: { fontSize: "medium" },
+  containerProps: defaultContainerProps,
+  labelProps: defaultLabelProps,
+  textProps: defaultTextProps,
 };
