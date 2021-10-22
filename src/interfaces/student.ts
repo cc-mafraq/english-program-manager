@@ -40,7 +40,8 @@ export interface Grade {
 
 export interface Placement {
   confDate?: string[];
-  notified?: boolean;
+  noAnswerClassScheduleDate?: string;
+  notified: boolean;
   pending?: boolean;
   photoContact?: string[];
   placement?: string[];
@@ -315,6 +316,7 @@ export const SAMPLE_STUDENTS: Student[] = [
       waBroadcastSAR: "Y SAR Group 2",
     },
     placement: {
+      notified: false,
       placementData: {
         level: "L2",
         speaking: "L2+",
@@ -349,6 +351,7 @@ export const SAMPLE_STUDENTS: Student[] = [
       waBroadcastSAR: "Y SAR Group 4",
     },
     placement: {
+      notified: true,
       placementData: {
         level: "L4",
         speaking: "L5-",
@@ -399,6 +402,7 @@ export const SAMPLE_STUDENTS: Student[] = [
       waBroadcastSAR: "Y SAR Group 4",
     },
     placement: {
+      notified: true,
       placementData: {
         level: "PL1",
         speaking: "PL1",

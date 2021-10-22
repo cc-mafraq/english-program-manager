@@ -1,6 +1,6 @@
 import { Box, BoxProps, Typography, TypographyProps } from "@mui/material";
-import { every, map } from "lodash";
-import React, { ReactNode } from "react";
+import { every, get, map } from "lodash";
+import React from "react";
 
 interface LabeledContainerProps {
   containerProps?: BoxProps;
@@ -24,12 +24,13 @@ export const LabeledContainer: React.FC<LabeledContainerProps> = ({
   label,
   children,
 }) => {
-  const childrenArr = map(children as ReactNode[], "props.children");
-  const everyChildIsEmpty = every(childrenArr, (c) => {
+  const childrenChildrenArr =
+    children instanceof Array ? map(children, "props.children") : [get(children, "props.children")];
+  const everyChildIsEmpty = every(childrenChildrenArr, (c) => {
     return c === undefined || c === "";
   });
   return !everyChildIsEmpty ? (
-    <Box display="block" sx={{ float: "left" }}>
+    <Box display="block" sx={{ float: "left", marginRight: "2vh", marginTop: "1vh" }}>
       <Typography {...defaultLabelProps} {...labelProps}>
         {label}
       </Typography>

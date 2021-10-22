@@ -32,7 +32,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
       <Box sx={{ display: "flex", flexWrap: "wrap", marginBottom: "1%", marginTop: "1%" }}>
         <LabeledContainer label="Program Information">
           <LabeledText label="ID Number">{student.epId}</LabeledText>
-          <LabeledText label="Invite Tag">{student.status.inviteTag ? "Y" : "N"}</LabeledText>
+          <LabeledText label="Invite Tag">{student.status.inviteTag ? "Yes" : "No"}</LabeledText>
           <LabeledText label="No Call List" textProps={{ color: "red" }}>
             {student.status.noCallList ? "NCL" : undefined}
           </LabeledText>
@@ -40,7 +40,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
           <LabeledText label="Status">{Status[student.status.currentStatus]}</LabeledText>
         </LabeledContainer>
         <LabeledContainer label="Status">
-          <LabeledText label="Audit">{student.status.audit ? "Y" : undefined}</LabeledText>
+          <LabeledText label="Audit">{student.status.audit ? "Yes" : undefined}</LabeledText>
           <LabeledText label="Final GR Sent">{student.status.finalGradeSentDate}</LabeledText>
           <LabeledText label="Level Reveal Date">{student.status.levelRevealDate}</LabeledText>
           <LabeledText label="Reactivated Date">{student.status.reactivatedDate}</LabeledText>
@@ -52,6 +52,25 @@ export const StudentInfo = ({ student }: { student: Student }) => {
           <LabeledText label="Nationality">{Nationality[student.nationality]}</LabeledText>
           <LabeledText label="Gender">{student.gender}</LabeledText>
           <LabeledText label="Occupation">{student.work?.occupation}</LabeledText>
+        </LabeledContainer>
+        <LabeledContainer label="Placement">
+          <LabeledText label="Photo Contact">
+            {join(student.placement.photoContact, ", ")}
+          </LabeledText>
+          <LabeledText label="Placement">{join(student.placement.placement, ", ")}</LabeledText>
+          <LabeledText label="Notified">{student.placement.notified ? "Yes" : "No"}</LabeledText>
+          <LabeledText label="Placement Confirmed">
+            {join(student.placement.confDate, ", ")}
+          </LabeledText>
+          <LabeledText label="NA Class Schedule">
+            {student.placement.noAnswerClassScheduleDate}
+          </LabeledText>
+          <LabeledText label="Pending">{student.placement.pending ? "Yes" : undefined}</LabeledText>
+        </LabeledContainer>
+        <LabeledContainer label="Class List">
+          <LabeledText label="Sent">{student.classList?.classListSent ? "Yes" : "No"}</LabeledText>
+          <LabeledText label="Sent Date">{student.classList?.classListSentDate}</LabeledText>
+          <LabeledText label="Notes">{student.classList?.classListSentNotes}</LabeledText>
         </LabeledContainer>
         <LabeledText
           label="Correspondence"
