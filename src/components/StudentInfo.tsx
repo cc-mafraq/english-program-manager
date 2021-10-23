@@ -1,6 +1,6 @@
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { Box, IconButton, Typography } from "@mui/material";
-import { forOwn, join, map, reverse } from "lodash";
+import { forOwn, join, map } from "lodash";
 import React from "react";
 import { LabeledContainer, LabeledText, ProgressBox } from ".";
 import { FinalResult, GenderedLevel, Nationality, Status, Student } from "../interfaces";
@@ -153,7 +153,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
                 <LabeledText label="Result">
                   {ar.finalResult ? FinalResult[ar.finalResult?.result] : undefined}
                 </LabeledText>
-                <LabeledText label="Final Grade Percentage">
+                <LabeledText label="Final Grade">
                   {ar.finalResult?.percentage !== undefined
                     ? `${ar.finalResult?.percentage}%`
                     : undefined}
@@ -162,7 +162,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
                 <LabeledText label="Exit Writing Exam">
                   {ar.exitWritingExam ? FinalResult[ar.exitWritingExam?.result] : undefined}
                 </LabeledText>
-                <LabeledText label="Exit Writing Exam Percentage">
+                <LabeledText label="Exit Writing %">
                   {ar.exitWritingExam?.percentage !== undefined
                     ? `${ar.exitWritingExam?.percentage}%`
                     : undefined}
@@ -173,7 +173,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
                 <LabeledText label="Exit Speaking Exam">
                   {ar.exitSpeakingExam ? FinalResult[ar.exitSpeakingExam?.result] : undefined}
                 </LabeledText>
-                <LabeledText label="Exit Speaking Exam Percentage">
+                <LabeledText label="Exit Speaking Exam %">
                   {ar.exitSpeakingExam?.percentage !== undefined
                     ? `${ar.exitSpeakingExam?.percentage}%`
                     : undefined}
@@ -195,11 +195,9 @@ export const StudentInfo = ({ student }: { student: Student }) => {
           })}
         </LabeledContainer>
         <LabeledContainer label="Progress">
-          {reverse(
-            map(forOwn(progress), (v, k) => {
-              return <ProgressBox key={k} level={k as GenderedLevel} sessionResults={v} />;
-            }),
-          )}
+          {map(forOwn(progress), (v, k) => {
+            return <ProgressBox key={k} level={k as GenderedLevel} sessionResults={v} />;
+          })}
         </LabeledContainer>
       </Box>
     </>

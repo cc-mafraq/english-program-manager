@@ -5,6 +5,7 @@ interface LabeledTextProps {
   containerProps?: BoxProps;
   label: string;
   labelProps?: TypographyProps;
+  showWhenEmpty?: boolean;
   textProps?: TypographyProps;
 }
 
@@ -26,10 +27,11 @@ export const LabeledText: React.FC<LabeledTextProps> = ({
   containerProps,
   labelProps,
   label,
+  showWhenEmpty,
   textProps,
   children,
 }) => {
-  return children ? (
+  return children || showWhenEmpty ? (
     <Box {...defaultContainerProps} {...containerProps}>
       <Typography {...defaultLabelProps} {...labelProps}>
         {label}
@@ -46,5 +48,6 @@ export const LabeledText: React.FC<LabeledTextProps> = ({
 LabeledText.defaultProps = {
   containerProps: defaultContainerProps,
   labelProps: defaultLabelProps,
+  showWhenEmpty: false,
   textProps: defaultTextProps,
 };

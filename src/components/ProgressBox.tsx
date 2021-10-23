@@ -16,16 +16,22 @@ export const ProgressBox = ({
       containerProps={{
         sx: {
           backgroundColor:
-            last(sessionResults)?.result === 0
+            sessionResults?.length === 0
+              ? "none"
+              : last(sessionResults)?.result === 0
               ? "lightgreen"
               : last(sessionResults)?.result === undefined
               ? "yellow"
               : "red",
+
           marginRight: "0.5vw",
+          minWidth: "3vw",
           padding: "0.3vw",
         },
       }}
       label={level}
+      labelProps={{ fontWeight: "bold" }}
+      showWhenEmpty
     >
       {join(map(sessionResults, "session"), ", ")}
     </LabeledText>
