@@ -2,6 +2,7 @@ export * from "./LabeledContainer";
 export * from "./LabeledText";
 export * from "./MenuBar";
 export * from "./MenuDrawer";
+export * from "./ProgressBox";
 export * from "./Searchbar";
 export * from "./StudentDatabaseToolbar";
 export * from "./StudentInfo";

@@ -1,12 +1,13 @@
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { Box, IconButton, Typography } from "@mui/material";
-import { join, map } from "lodash";
+import { forOwn, join, map, reverse } from "lodash";
 import React from "react";
-import { LabeledContainer, LabeledText } from ".";
-import { FinalResult, Nationality, Status, Student } from "../interfaces";
-import { getRepeatNum, isActive } from "../services";
+import { LabeledContainer, LabeledText, ProgressBox } from ".";
+import { FinalResult, GenderedLevel, Nationality, Status, Student } from "../interfaces";
+import { getProgress, getRepeatNum, isActive } from "../services";
 
 export const StudentInfo = ({ student }: { student: Student }) => {
+  const progress = getProgress(student);
   return (
     <>
       <Typography component="div" display="inline" gutterBottom variant="h5">
@@ -72,13 +73,13 @@ export const StudentInfo = ({ student }: { student: Student }) => {
             {student.work?.englishTeacher ? student.work.englishTeacherLocation : undefined}
           </LabeledText>
         </LabeledContainer>
-        <LabeledContainer label="Phone Numbers and Whatsapp">
+        <LabeledContainer label="Phone Numbers and WhatsApp">
           {map(student.phone.phoneNumbers, (pn, i) => {
             return (
-              <>
+              <span key={i}>
                 <LabeledText label={`Number ${i + 1}`}>{pn.number}</LabeledText>
                 <LabeledText label={`Number ${i + 1} Notes`}>{pn.notes}</LabeledText>
-              </>
+              </span>
             );
           })}
           <LabeledText label="WA Notes">{student.phone.whatsappNotes}</LabeledText>
@@ -126,23 +127,25 @@ export const StudentInfo = ({ student }: { student: Student }) => {
           <LabeledText label="Tutor/Club and Details">{student.zoom}</LabeledText>
         </LabeledContainer>
         <LabeledText label="Certificate Requests">{student?.certificateRequests}</LabeledText>
-        <LabeledText
-          label="Correspondence"
-          labelProps={{ fontSize: "medium", fontWeight: "bold" }}
-          textProps={{ fontSize: "11pt", variant: "body2" }}
-        >
+        <LabeledContainer label="Correspondence">
           {map(student.correspondence, (c) => {
             return (
-              <div>
-                {c.date}: {c.notes}
+              <div key={c.date}>
+                <Typography fontSize="11pt" variant="body2">
+                  {c.date}: {c.notes}
+                </Typography>
               </div>
             );
           })}
-        </LabeledText>
+        </LabeledContainer>
         <LabeledContainer label="Academic Records">
           {map(student.academicRecords, (ar, i) => {
             return (
-              <LabeledContainer label={`Session ${i + 1}`} labelProps={{ fontWeight: "normal" }}>
+              <LabeledContainer
+                key={i}
+                label={`Session ${i + 1}`}
+                labelProps={{ fontWeight: "normal" }}
+              >
                 <LabeledText label="Session">{ar.session}</LabeledText>
                 <LabeledText label="Level">{ar.level}</LabeledText>
                 <LabeledText label="Elective Class">{ar.electiveClass}</LabeledText>
@@ -190,6 +193,13 @@ export const StudentInfo = ({ student }: { student: Student }) => {
               </LabeledContainer>
             );
           })}
+        </LabeledContainer>
+        <LabeledContainer label="Progress">
+          {reverse(
+            map(forOwn(progress), (v, k) => {
+              return <ProgressBox key={k} level={k as GenderedLevel} sessionResults={v} />;
+            }),
+          )}
         </LabeledContainer>
       </Box>
     </>

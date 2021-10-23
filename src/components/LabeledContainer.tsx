@@ -26,9 +26,15 @@ export const LabeledContainer: React.FC<LabeledContainerProps> = ({
 }) => {
   const childrenChildrenArr =
     children instanceof Array ? map(children, "props.children") : [get(children, "props.children")];
-  const everyChildIsEmpty = every(childrenChildrenArr, (c) => {
+  let everyChildIsEmpty = every(childrenChildrenArr, (c) => {
     return c === undefined || c === "";
   });
+
+  // Don't filter the Progress Container
+  if (label === "Progress") {
+    everyChildIsEmpty = false;
+  }
+
   return !everyChildIsEmpty ? (
     <Box display="block" sx={{ float: "left", marginRight: "2vh", marginTop: "1vh" }}>
       <Typography {...defaultLabelProps} {...labelProps}>
@@ -41,9 +47,4 @@ export const LabeledContainer: React.FC<LabeledContainerProps> = ({
   ) : (
     <></>
   );
-};
-
-LabeledContainer.defaultProps = {
-  containerProps: defaultContainerProps,
-  labelProps: defaultLabelProps,
 };
