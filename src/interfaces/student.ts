@@ -42,17 +42,18 @@ export interface Placement {
   confDate?: string[];
   noAnswerClassScheduleDate?: string;
   notified: boolean;
-  pending?: boolean;
-  photoContact?: string[];
-  placement?: string[];
-  placementData: {
+  origPlacementData: {
     level: Level;
     speaking: LevelPlus;
     writing: LevelPlus;
   };
+  pending?: boolean;
+  photoContact?: string[];
+  placement?: string[];
 }
 
 export interface StudentWork {
+  englishTeacher?: boolean;
   englishTeacherLocation?: string;
   lookingForJob?: string;
   occupation: string;
@@ -63,8 +64,7 @@ export interface StudentWork {
 export interface Literacy {
   illiterateAr?: boolean;
   illiterateEng: boolean;
-  tutor?: string;
-  tutorDate?: string;
+  tutorAndDate?: string;
 }
 
 export interface WhatsappInfo {
@@ -253,13 +253,13 @@ export const SAMPLE_STUDENTS: Student[] = [
     placement: {
       confDate: ["Conf 9/4/21 L1M-B"],
       notified: true,
-      photoContact: ["Y 5/18/19"],
-      placement: ["Placed 9/4/21 L1M-B"],
-      placementData: {
+      origPlacementData: {
         level: "PL1",
         speaking: "PL1",
         writing: "PL1",
       },
+      photoContact: ["Y 5/18/19"],
+      placement: ["Placed 9/4/21 L1M-B"],
     },
     status: {
       currentStatus: Status.RET,
@@ -317,7 +317,7 @@ export const SAMPLE_STUDENTS: Student[] = [
     },
     placement: {
       notified: false,
-      placementData: {
+      origPlacementData: {
         level: "L2",
         speaking: "L2+",
         writing: "L2-",
@@ -352,7 +352,7 @@ export const SAMPLE_STUDENTS: Student[] = [
     },
     placement: {
       notified: true,
-      placementData: {
+      origPlacementData: {
         level: "L4",
         speaking: "L5-",
         writing: "L4",
@@ -403,7 +403,7 @@ export const SAMPLE_STUDENTS: Student[] = [
     },
     placement: {
       notified: true,
-      placementData: {
+      origPlacementData: {
         level: "PL1",
         speaking: "PL1",
         writing: "PL1",

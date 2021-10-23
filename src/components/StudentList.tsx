@@ -33,8 +33,7 @@ export const StudentList = () => {
               sx={{
                 display: "flex",
                 flexDirection: "column",
-                marginBottom: "auto",
-                marginTop: "auto",
+                marginTop: "5%",
                 maxWidth: "5%",
               }}
             >
