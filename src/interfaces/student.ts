@@ -29,6 +29,7 @@ export interface AcademicRecord {
   finalGradeReportSentDate?: string;
   finalResult?: Grade;
   level: GenderedLevel;
+  levelAudited?: GenderedLevel;
   session: string;
 }
 

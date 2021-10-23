@@ -3,8 +3,8 @@ import { Box, IconButton, Typography } from "@mui/material";
 import { join, map } from "lodash";
 import React from "react";
 import { LabeledContainer, LabeledText } from ".";
-import { Nationality, Status, Student } from "../interfaces";
-import { getRepeatNum } from "../services";
+import { FinalResult, Nationality, Status, Student } from "../interfaces";
+import { getRepeatNum, isActive } from "../services";
 
 export const StudentInfo = ({ student }: { student: Student }) => {
   return (
@@ -38,6 +38,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
           </LabeledText>
           <LabeledText label="Current Level">{student.currentLevel}</LabeledText>
           <LabeledText label="Status">{Status[student.status.currentStatus]}</LabeledText>
+          <LabeledText label="Active">{isActive(student) ? "Yes" : "No"}</LabeledText>
           <LabeledText label="Initial Session">{student.initialSession}</LabeledText>
         </LabeledContainer>
         <LabeledContainer label="Status">
@@ -124,6 +125,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
         <LabeledContainer label="Zoom">
           <LabeledText label="Tutor/Club and Details">{student.zoom}</LabeledText>
         </LabeledContainer>
+        <LabeledText label="Certificate Requests">{student?.certificateRequests}</LabeledText>
         <LabeledText
           label="Correspondence"
           labelProps={{ fontSize: "medium", fontWeight: "bold" }}
@@ -137,7 +139,58 @@ export const StudentInfo = ({ student }: { student: Student }) => {
             );
           })}
         </LabeledText>
-        <LabeledText label="Certificate Requests">{student?.certificateRequests}</LabeledText>
+        <LabeledContainer label="Academic Records">
+          {map(student.academicRecords, (ar, i) => {
+            return (
+              <LabeledContainer label={`Session ${i + 1}`} labelProps={{ fontWeight: "normal" }}>
+                <LabeledText label="Session">{ar.session}</LabeledText>
+                <LabeledText label="Level">{ar.level}</LabeledText>
+                <LabeledText label="Elective Class">{ar.electiveClass}</LabeledText>
+                <LabeledText label="Level Audited">{ar.levelAudited}</LabeledText>
+                <LabeledText label="Result">
+                  {ar.finalResult ? FinalResult[ar.finalResult?.result] : undefined}
+                </LabeledText>
+                <LabeledText label="Final Grade Percentage">
+                  {ar.finalResult?.percentage !== undefined
+                    ? `${ar.finalResult?.percentage}%`
+                    : undefined}
+                </LabeledText>
+                <LabeledText label="Final Grade Notes">{ar.finalResult?.notes}</LabeledText>
+                <LabeledText label="Exit Writing Exam">
+                  {ar.exitWritingExam ? FinalResult[ar.exitWritingExam?.result] : undefined}
+                </LabeledText>
+                <LabeledText label="Exit Writing Exam Percentage">
+                  {ar.exitWritingExam?.percentage !== undefined
+                    ? `${ar.exitWritingExam?.percentage}%`
+                    : undefined}
+                </LabeledText>
+                <LabeledText label="Exit Writing Exam Notes">
+                  {ar.exitWritingExam?.notes}
+                </LabeledText>
+                <LabeledText label="Exit Speaking Exam">
+                  {ar.exitSpeakingExam ? FinalResult[ar.exitSpeakingExam?.result] : undefined}
+                </LabeledText>
+                <LabeledText label="Exit Speaking Exam Percentage">
+                  {ar.exitSpeakingExam?.percentage !== undefined
+                    ? `${ar.exitSpeakingExam?.percentage}%`
+                    : undefined}
+                </LabeledText>
+                <LabeledText label="Exit Speaking Exam Notes">
+                  {ar.exitSpeakingExam?.notes}
+                </LabeledText>
+                <LabeledText label="Attendance">
+                  {ar.attendance !== undefined ? `${ar.attendance}%` : undefined}
+                </LabeledText>
+                <LabeledText label="Certificate">
+                  {ar.certificate ? "Yes" : ar.certificate === undefined ? undefined : "No"}
+                </LabeledText>
+                <LabeledText label="Teacher Comments" textProps={{ fontSize: "11pt" }}>
+                  {ar.comments}
+                </LabeledText>
+              </LabeledContainer>
+            );
+          })}
+        </LabeledContainer>
       </Box>
     </>
   );
