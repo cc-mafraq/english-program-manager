@@ -26,7 +26,8 @@ export const getProgress = (student: Student): StudentProgress => {
   const sessions = map(student.academicRecords, "session");
   const levels = map(student.academicRecords, "level");
   const results = map(student.academicRecords, "finalResult.result");
-  const progress: StudentProgress = { L1: [], L2: [], L3: [], L4: [], L5: [], PL1: [] };
+  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
+  const progress: StudentProgress = { PL1: [], L1: [], L2: [], L3: [], L4: [], L5: [] };
   forEach(zip(sessions, levels, results), ([s, l, r]) => {
     let level: GenderedLevel = "PL1";
     switch (l) {
