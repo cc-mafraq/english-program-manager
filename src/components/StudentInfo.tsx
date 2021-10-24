@@ -15,12 +15,14 @@ export const StudentInfo = ({ student }: { student: Student }) => {
       </Typography>
       <Box sx={{ flexDirection: "row", flexGrow: 1, float: "right" }}>
         <Typography display="inline" marginRight="5px" variant="h5">
-          {student.phone.phoneNumbers[student.phone.primaryPhone].number}
+          {/* {student.phone.phoneNumbers[student.phone.primaryPhone].number} */}
+          {student.phone.primaryPhone}
         </Typography>
         {student.phone.hasWhatsapp ? (
           <IconButton
             href={`https://wa.me/962${
-              student.phone.phoneNumbers[student.phone.primaryPhone].number
+              // student.phone.phoneNumbers[student.phone.primaryPhone].number
+              student.phone.primaryPhone
             }`}
             target="_blank"
           >
@@ -133,7 +135,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
         <LabeledContainer label="Correspondence">
           {map(student.correspondence, (c) => {
             return (
-              <div key={c.date}>
+              <div key={`${c.date} ${c.notes}`}>
                 <Typography fontSize="11pt" variant="body2">
                   {c.date}: {c.notes}
                 </Typography>

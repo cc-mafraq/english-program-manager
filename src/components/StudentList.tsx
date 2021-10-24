@@ -1,15 +1,15 @@
 import EditIcon from "@mui/icons-material/Edit";
 import PersonIcon from "@mui/icons-material/Person";
-import { Box, Card, CardActions, CardContent, CardMedia, IconButton } from "@mui/material";
+import { Box, Card, CardActions, CardContent, IconButton } from "@mui/material";
 import { map } from "lodash";
 import React from "react";
 import { StudentInfo } from ".";
-import { SAMPLE_STUDENTS } from "../interfaces";
+import { Student } from "../interfaces";
 
-export const StudentList = () => {
+export const StudentList = ({ students }: { students: Student[] }) => {
   return (
     <>
-      {map(SAMPLE_STUDENTS, (student) => {
+      {map(students, (student) => {
         return (
           <Card key={student.epId} sx={{ display: "flex", marginLeft: "5px" }}>
             <Box
@@ -18,11 +18,11 @@ export const StudentList = () => {
                 minWidth: "150px",
               }}
             >
-              <CardMedia
+              {/* <CardMedia
                 component="img"
                 image={`./assets/${student.epId}.png`}
                 sx={{ height: "35vh", minHeight: "200px" }}
-              />
+              /> */}
             </Box>
             <Box sx={{ flexGrow: 5, maxWidth: "85%" }}>
               <CardContent>

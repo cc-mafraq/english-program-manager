@@ -1,4 +1,4 @@
-import { cloneDeep, join, replace, slice, split } from "lodash";
+import { cloneDeep, join, replace, slice } from "lodash";
 import papa from "papaparse";
 import { emptyStudent, Student } from "../interfaces";
 import * as ps from "./parsingService";
@@ -7,7 +7,7 @@ export interface ValidFields {
   [key: string]: (key: string, value: string, student: Student) => void;
 }
 
-const fieldCleanRegex = /[\s)(-#/+:,;&%]/g; // /\s|(|)|-|#|\/|+|:|,|;|&|%/g;
+const fieldCleanRegex = /[\s)(\-#/+:,;&%]/g; // /\s|(|)|-|#|\/|+|:|,|;|&|%/g;
 
 const studentFields: ValidFields = ps.expand({
   ADJ: ps.parseOrigPlacementAdjustment,
@@ -64,8 +64,7 @@ const studentFields: ValidFields = ps.expand({
 
 export const spreadsheetToStudentList = (csvString: string): Student[] => {
   // Remove junk and title rows from Excel export to CSV
-  const csvStringClean = join(slice(split(replace(csvString, "ï»¿", ""), "/n"), 3), "\n");
-
+  const csvStringClean = join(slice(replace(csvString, "ï»¿", "").split("\n"), 3), "\n");
   const objects: papa.ParseResult<never> = papa.parse(csvStringClean, {
     header: true,
     skipEmptyLines: "greedy",
@@ -75,7 +74,7 @@ export const spreadsheetToStudentList = (csvString: string): Student[] => {
 
   const { data, meta } = objects;
   const { fields } = meta;
-
+  console.log(data[0]);
   // Parse each row of the CSV as an object
   data.forEach((object) => {
     const student = cloneDeep(emptyStudent);
@@ -89,7 +88,10 @@ export const spreadsheetToStudentList = (csvString: string): Student[] => {
           studentFields[fieldClean as keyof ValidFields](field, value, student);
         }
       });
-
+      // student.phone.primaryPhone = indexOf(
+      //   map(student.phone.phoneNumbers, "number"),
+      //   student.phone.primaryPhone,
+      // );
       students.push(student);
     }
   });
