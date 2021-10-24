@@ -1,4 +1,15 @@
-import { forEach, includes, map, replace, split, toLower, trim, zip } from "lodash";
+import {
+  forEach,
+  includes,
+  isEmpty,
+  map,
+  pullAll,
+  replace,
+  split,
+  toLower,
+  trim,
+  zip,
+} from "lodash";
 import {
   DroppedOutReason,
   GenderedLevel,
@@ -10,7 +21,8 @@ import {
 import { ValidFields } from "./spreadsheetService";
 
 const separatorRegex = /[;,]/g;
-const dateRegex = /\d{1,2}([/.-])\d{1,2}\1\d{2}/g;
+const dateRegex = /\d{1,2}([/])\d{1,2}\1\d{2}/g;
+const phoneRegex = /\d{9,10}/g;
 
 const splitAndTrim = (value: string, separator?: string | RegExp): string[] => {
   const sep = separator || separatorRegex;
@@ -48,7 +60,8 @@ export const parseID = (key: string, value: string, student: Student) => {
 };
 
 export const parseWaPrimPhone = (key: string, value: string, student: Student) => {
-  student.phone.primaryPhone = Number(value);
+  const strippedValue = replace(value, /[" "]/g, "");
+  student.phone.primaryPhone = Number(phoneRegex.exec(strippedValue));
 };
 
 export const parseNationality = (key: string, value: string, student: Student) => {
@@ -96,7 +109,7 @@ export const parseWithdrawDate = (key: string, value: string, student: Student) 
 };
 
 export const parseCurrentStatus = (key: string, value: string, student: Student) => {
-  student.status.currentStatus = Status[key as keyof typeof Status];
+  student.status.currentStatus = Status[value as keyof typeof Status];
 };
 
 export const parsePhotoContact = (key: string, value: string, student: Student) => {
@@ -126,7 +139,10 @@ export const parseNoAnswerClassSchedule = (key: string, value: string, student: 
 };
 
 export const parseCorrespondence = (key: string, value: string, student: Student) => {
-  const splitCorrespondence = splitAndTrim(replace(value, ":", ""), dateRegex);
+  const splitCorrespondence = pullAll(splitAndTrim(replace(value, /[:]/g, ""), dateRegex), [
+    "",
+    "/",
+  ]);
   const dates = value.match(dateRegex);
   forEach(zip(dates, splitCorrespondence), ([date, notes]) => {
     if (date !== undefined && notes !== undefined) {
@@ -153,7 +169,7 @@ export const parseGender = (key: string, value: string, student: Student) => {
 };
 
 export const parseAge = (key: string, value: string, student: Student) => {
-  student.age = Number(value);
+  student.age = value !== "" ? Number(value) : undefined;
 };
 
 export const parseOccupation = (key: string, value: string, student: Student) => {
@@ -185,18 +201,19 @@ export const parseEnglishTeacherLocation = (key: string, value: string, student:
 };
 
 export const parsePhone = (key: string, value: string, student: Student) => {
-  const phoneRegex = /\d{9,10}/;
-  const insideParenRegex = /\((.+)\)/;
-  const phoneNumber = value.match(phoneRegex);
-  const phoneNumberNotes = value.match(insideParenRegex);
-  forEach(zip(phoneNumber, phoneNumberNotes), ([phone, notes]) => {
-    if (phone) {
+  if (!isEmpty(value)) {
+    const strippedValue = replace(value, /[" "]/g, "");
+    const insideParenRegex = /\(([^)]+)\)/;
+    const phoneNumber = strippedValue.match(phoneRegex);
+    const phoneNumberNotesMatches = value.match(insideParenRegex);
+    const phoneNumberNotes = phoneNumberNotesMatches !== null && phoneNumberNotesMatches[1];
+    const phoneNumberNotesStr = phoneNumberNotes ? String(phoneNumberNotes) : undefined;
+    phoneNumber &&
       student.phone.phoneNumbers.push({
-        notes,
-        number: Number(phone),
+        notes: phoneNumberNotesStr,
+        number: Number(phoneNumber),
       });
-    }
-  });
+  }
 };
 
 export const parseWAStatus = (key: string, value: string, student: Student) => {

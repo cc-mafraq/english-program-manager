@@ -11,7 +11,7 @@ const fieldCleanRegex = /[\s)(\-#/+:,;&%]/g; // /\s|(|)|-|#|\/|+|:|,|;|&|%/g;
 
 const studentFields: ValidFields = ps.expand({
   ADJ: ps.parseOrigPlacementAdjustment,
-  AGE: ps.parseAge,
+  AGEATPROGENTRY: ps.parseAge,
   AUD: ps.parseAudit,
   CERTREQUESTSDATE: ps.parseCertRequests,
   "CORRESPONDENCE1,CORRESPONDENCE2,CORRESPONDENCE3,CORRESPONDENCE4": ps.parseCorrespondence,
@@ -39,7 +39,7 @@ const studentFields: ValidFields = ps.expand({
   NOTIFIED: ps.parseNotified,
   OCCUPATION: ps.parseOccupation,
   PENDINGPLCM: ps.parsePendingPlacement,
-  PHONE: ps.parsePhone,
+  "PHONE1,PHONE2,PHONE3,PHONE4,PHONE5,PHONE6": ps.parsePhone,
   PHOTOCONTACT: ps.parsePhotoContact,
   PLCMCONFDATE: ps.parsePlacementConfDate,
   PLCMLVL: ps.parseOrigPlacementLevel,
@@ -53,8 +53,7 @@ const studentFields: ValidFields = ps.expand({
   TutorClubDetails: ps.parseZoomTutor,
   TutorDate: ps.parseLiteracyTutor,
   WABCSAR: ps.parseWABroadcastSAR,
-  "WABCSARL35W,WABCSAREngTchrs,WABCSAREngTchrsL3-5,WABCPhotography,WABCGerman":
-    ps.parseWABroadcasts,
+  "WABCSARL35W,WABCSAREngTchrs,WABCSAREngTchrsL35,WABCPhotography,WABCGerman": ps.parseWABroadcasts,
   WAPRIMPHONE: ps.parseWaPrimPhone,
   WASTATUS: ps.parseWAStatus,
   WDDATE: ps.parseWithdrawDate,
@@ -64,7 +63,7 @@ const studentFields: ValidFields = ps.expand({
 
 export const spreadsheetToStudentList = (csvString: string): Student[] => {
   // Remove junk and title rows from Excel export to CSV
-  const csvStringClean = join(slice(replace(csvString, "ï»¿", "").split("\n"), 3), "\n");
+  const csvStringClean = join(slice(replace(csvString, "ï»¿", "").split("\n"), 2), "\n");
   const objects: papa.ParseResult<never> = papa.parse(csvStringClean, {
     header: true,
     skipEmptyLines: "greedy",
@@ -74,7 +73,6 @@ export const spreadsheetToStudentList = (csvString: string): Student[] => {
 
   const { data, meta } = objects;
   const { fields } = meta;
-  console.log(data[0]);
   // Parse each row of the CSV as an object
   data.forEach((object) => {
     const student = cloneDeep(emptyStudent);
@@ -92,7 +90,7 @@ export const spreadsheetToStudentList = (csvString: string): Student[] => {
       //   map(student.phone.phoneNumbers, "number"),
       //   student.phone.primaryPhone,
       // );
-      students.push(student);
+      student.epId !== 0 && students.push(student);
     }
   });
   return students;
