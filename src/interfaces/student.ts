@@ -28,7 +28,7 @@ export interface AcademicRecord {
   exitWritingExam?: Grade;
   finalGradeReportSentDate?: string;
   finalResult?: Grade;
-  level: GenderedLevel;
+  level?: GenderedLevel;
   levelAudited?: GenderedLevel;
   session: string;
 }

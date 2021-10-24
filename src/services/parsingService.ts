@@ -2,6 +2,7 @@ import {
   forEach,
   includes,
   isEmpty,
+  last,
   map,
   pullAll,
   replace,
@@ -12,6 +13,7 @@ import {
 } from "lodash";
 import {
   DroppedOutReason,
+  FinalResult,
   GenderedLevel,
   Level,
   Nationality,
@@ -282,54 +284,177 @@ export const parseOrigPlacementAdjustment = (key: string, value: string, student
 };
 
 export const parseDropoutReason = (key: string, value: string, student: Student) => {
-  student.droppedOutReason = DroppedOutReason[key as keyof typeof DroppedOutReason];
-  // switch (key) {
-  //   case "Lack of Child-Care":
-  //     student.droppedOutReason = DroppedOutReason.LCC;
-  //     break;
-  //   case "Lack of Transport":
-  //     student.droppedOutReason = DroppedOutReason.LT;
-  //     break;
-  //   case "Time Conflict":
-  //     student.droppedOutReason = DroppedOutReason.TC;
-  //     break;
-  //   case "Illness or Pregnancy":
-  //     student.droppedOutReason = DroppedOutReason.IP;
-  //     break;
-  //   case "Vision Problems":
-  //     student.droppedOutReason = DroppedOutReason.VP;
-  //     break;
-  //   case "Got a Job":
-  //     student.droppedOutReason = DroppedOutReason.JOB;
-  //     break;
-  //   case "Moved":
-  //     student.droppedOutReason = DroppedOutReason.MOVE;
-  //     break;
-  //   case "Graduated from L5":
-  //     student.droppedOutReason = DroppedOutReason.GRAD;
-  //     break;
-  //   case "Failed to Thrive in Clsrm Env":
-  //     student.droppedOutReason = DroppedOutReason.FTCLE;
-  //     break;
-  //   case "Lack of Life Mgm Skills":
-  //     student.droppedOutReason = DroppedOutReason.LLMS;
-  //     break;
-  //   case "Lack of Familial Support":
-  //     student.droppedOutReason = DroppedOutReason.LFS;
-  //     break;
-  //   case "Lack of Commitment or Motivation":
-  //     student.droppedOutReason = DroppedOutReason.LCM;
-  //     break;
-  //   case "Family Member or Employer Forbid Further Study":
-  //     student.droppedOutReason = DroppedOutReason.FMEF;
-  //     break;
-  //   case "COVID-19 Pandemic Related":
-  //     student.droppedOutReason = DroppedOutReason.COVID;
-  //     break;
-  //   case "Unknown":
-  //     student.droppedOutReason = DroppedOutReason.UNK;
-  //     break;
-  //   default:
-  //     break;
-  // }
+  // student.droppedOutReason = DroppedOutReason[key as keyof typeof DroppedOutReason];
+  switch (key) {
+    case "Lack of Child-Care":
+      student.droppedOutReason = DroppedOutReason.LCC;
+      break;
+    case "Lack of Transport":
+      student.droppedOutReason = DroppedOutReason.LT;
+      break;
+    case "Time Conflict":
+      student.droppedOutReason = DroppedOutReason.TC;
+      break;
+    case "Illness or Pregnancy":
+      student.droppedOutReason = DroppedOutReason.IP;
+      break;
+    case "Vision Problems":
+      student.droppedOutReason = DroppedOutReason.VP;
+      break;
+    case "Got a Job":
+      student.droppedOutReason = DroppedOutReason.JOB;
+      break;
+    case "Moved":
+      student.droppedOutReason = DroppedOutReason.MOVE;
+      break;
+    case "Graduated from L5":
+      student.droppedOutReason = DroppedOutReason.GRAD;
+      break;
+    case "Failed to Thrive in Clsrm Env":
+      student.droppedOutReason = DroppedOutReason.FTCLE;
+      break;
+    case "Lack of Life Mgm Skills":
+      student.droppedOutReason = DroppedOutReason.LLMS;
+      break;
+    case "Lack of Familial Support":
+      student.droppedOutReason = DroppedOutReason.LFS;
+      break;
+    case "Lack of Commitment or Motivation":
+      student.droppedOutReason = DroppedOutReason.LCM;
+      break;
+    case "Family Member or Employer Forbid Further Study":
+      student.droppedOutReason = DroppedOutReason.FMEF;
+      break;
+    case "COVID-19 Pandemic Related":
+      student.droppedOutReason = DroppedOutReason.COVID;
+      break;
+    case "Unknown":
+      student.droppedOutReason = DroppedOutReason.UNK;
+      break;
+    default:
+      break;
+  }
+};
+
+export const parseAcademicRecordSession = (key: string, value: string, student: Student) => {
+  student.academicRecords.push({ session: value });
+};
+
+export const parseAcademicRecordLevel = (key: string, value: string, student: Student) => {
+  const lastAcademicRecord = last(student.academicRecords);
+  if (lastAcademicRecord) {
+    lastAcademicRecord.level = value as GenderedLevel;
+  }
+};
+
+export const parseAcademicRecordResult = (key: string, value: string, student: Student) => {
+  const resultRegex = /P|F|WD/;
+  const keyGrade = key.match(resultRegex);
+  const lastAcademicRecord = last(student.academicRecords);
+  if (lastAcademicRecord && Number(value) === 1 && keyGrade) {
+    lastAcademicRecord.finalResult = {
+      result: FinalResult[keyGrade[0] as keyof typeof FinalResult],
+    };
+  }
+};
+
+export const parseAcademicRecordFinalGrade = (key: string, value: string, student: Student) => {
+  const percentRegex = /\d{2,3}%/;
+  const percentGrade = value.match(percentRegex)?.toString().slice(0, -1);
+  const gradeNotes = trim(replace(replace(value, percentRegex, ""), /[()]/g, ""));
+  const lastAcademicRecord = last(student.academicRecords);
+  if (lastAcademicRecord && lastAcademicRecord.finalResult) {
+    lastAcademicRecord.finalResult.percentage = Number.isNaN(Number(percentGrade))
+      ? undefined
+      : Number(percentGrade);
+    lastAcademicRecord.finalResult.notes = gradeNotes;
+  }
+};
+
+export const parseAcademicRecordExitWritingExam = (
+  key: string,
+  value: string,
+  student: Student,
+) => {
+  const resultRegex = /P|F/;
+  const percentRegex = /\d{2,3}/;
+  const examGrade = value.match(resultRegex);
+  const percentGrade = value.match(percentRegex)?.toString();
+  const gradeNotes = trim(
+    replace(replace(replace(value, percentRegex, ""), /[()]/g, ""), /P|F/, ""),
+  );
+  const lastAcademicRecord = last(student.academicRecords);
+  if (lastAcademicRecord && examGrade) {
+    lastAcademicRecord.exitWritingExam = {
+      notes: gradeNotes,
+      percentage: Number.isNaN(Number(percentGrade)) ? undefined : Number(percentGrade),
+      result: FinalResult[examGrade[0] as keyof typeof FinalResult],
+    };
+  }
+};
+
+export const parseAcademicRecordExitSpeakingExam = (
+  key: string,
+  value: string,
+  student: Student,
+) => {
+  const resultRegex = /P|F/;
+  const percentRegex = /\d{2,3}/;
+  const examGrade = value.match(resultRegex);
+  const percentGrade = value.match(percentRegex)?.toString();
+  const gradeNotes = trim(
+    replace(replace(replace(value, percentRegex, ""), /[()]/g, ""), /P|F/, ""),
+  );
+  const lastAcademicRecord = last(student.academicRecords);
+  if (lastAcademicRecord && examGrade) {
+    lastAcademicRecord.exitSpeakingExam = {
+      notes: gradeNotes,
+      percentage: Number.isNaN(Number(percentGrade)) ? undefined : Number(percentGrade),
+      result: FinalResult[examGrade[0] as keyof typeof FinalResult],
+    };
+  }
+};
+
+export const parseAcademicRecordAudit = (key: string, value: string, student: Student) => {
+  if (!isEmpty(value)) {
+    const lastAcademicRecord = last(student.academicRecords);
+    if (lastAcademicRecord) {
+      lastAcademicRecord.levelAudited = value as GenderedLevel;
+    }
+  }
+};
+
+export const parseAcademicRecordAttendance = (key: string, value: string, student: Student) => {
+  if (!isEmpty(value)) {
+    const percentRegex = /\d{2,3}/;
+    const percentAttendance = value.match(percentRegex)?.toString();
+    const lastAcademicRecord = last(student.academicRecords);
+    if (lastAcademicRecord) {
+      lastAcademicRecord.attendance = Number.isNaN(Number(percentAttendance))
+        ? undefined
+        : Number(percentAttendance);
+    }
+  }
+};
+
+export const parseAcademicRecordTeacherComments = (
+  key: string,
+  value: string,
+  student: Student,
+) => {
+  if (!isEmpty(value)) {
+    const lastAcademicRecord = last(student.academicRecords);
+    if (lastAcademicRecord) {
+      lastAcademicRecord.comments = value;
+    }
+  }
+};
+
+export const parseAcademicRecordCertificate = (key: string, value: string, student: Student) => {
+  if (!isEmpty(value)) {
+    const lastAcademicRecord = last(student.academicRecords);
+    if (lastAcademicRecord) {
+      lastAcademicRecord.certificate = includes(value, "Y");
+    }
+  }
 };
