@@ -2,20 +2,20 @@ export interface Student {
   academicRecords: AcademicRecord[];
   age?: number;
   certificateRequests?: string;
-  classList?: ClassList;
+  classList: ClassList;
   correspondence: Correspondence[];
   currentLevel: GenderedLevel;
   droppedOutReason?: DroppedOutReason;
   epId: number;
   gender: "M" | "F";
   initialSession: string;
-  literacy?: Literacy;
+  literacy: Literacy;
   name: StudentName;
   nationality: Nationality;
   phone: WhatsappInfo;
   placement: Placement;
   status: StudentStatus;
-  work?: StudentWork;
+  work: StudentWork;
   zoom?: string;
 }
 
@@ -44,6 +44,7 @@ export interface Placement {
   noAnswerClassScheduleDate?: string;
   notified: boolean;
   origPlacementData: {
+    adjustment?: string;
     level: Level;
     speaking: LevelPlus;
     writing: LevelPlus;
@@ -54,17 +55,17 @@ export interface Placement {
 }
 
 export interface StudentWork {
-  englishTeacher?: boolean;
   englishTeacherLocation?: string;
+  isEnglishTeacher?: boolean;
+  isTeacher?: boolean;
   lookingForJob?: string;
-  occupation: string;
-  teacher?: boolean;
+  occupation?: string;
   teachingSubjectAreas?: string;
 }
 
 export interface Literacy {
   illiterateAr?: boolean;
-  illiterateEng: boolean;
+  illiterateEng?: boolean;
   tutorAndDate?: string;
 }
 
@@ -74,7 +75,7 @@ export interface WhatsappInfo {
   // index of phoneNumbers
   phoneNumbers: PhoneNumber[];
   primaryPhone: number;
-  waBroadcastSAR: string;
+  waBroadcastSAR?: string;
   whatsappNotes?: string;
 }
 
@@ -125,10 +126,10 @@ export enum Nationality {
   EGY,
   INDNES,
   YEM,
-  CEAFRE,
+  CEAFRRE,
   CHI,
   KOR,
-  UNK,
+  UNKNWN,
 }
 
 export enum Status {
@@ -240,6 +241,7 @@ export const SAMPLE_STUDENTS: Student[] = [
     epId: 68989,
     gender: "M",
     initialSession: "FA I 19",
+    literacy: {},
     name: {
       arabic: "بهاء حسين محمد الخالدي",
       english: "Bahaa Hussein Mohammed Al Khalidi",
@@ -276,6 +278,7 @@ export const SAMPLE_STUDENTS: Student[] = [
   },
   {
     academicRecords: [],
+    classList: {},
     correspondence: [
       {
         date: "11/9/18",
@@ -305,6 +308,7 @@ export const SAMPLE_STUDENTS: Student[] = [
     epId: 19483,
     gender: "F",
     initialSession: "FA I 18",
+    literacy: {},
     name: {
       arabic: "سحر موسى النور سهاونه",
       english: "Sahar Mousa Sahawneh",
@@ -335,11 +339,13 @@ export const SAMPLE_STUDENTS: Student[] = [
   },
   {
     academicRecords: [],
+    classList: {},
     correspondence: [{ date: "4/28/21", notes: "Registered him for German Su 21." }],
     currentLevel: "L4",
     epId: 12411,
     gender: "M",
     initialSession: "SP I 21",
+    literacy: {},
     name: {
       arabic: "طلال عطالله سالم المساعيد",
       english: "Talal Atallah Al Masaeid",
@@ -370,6 +376,7 @@ export const SAMPLE_STUDENTS: Student[] = [
   },
   {
     academicRecords: [],
+    classList: {},
     correspondence: [
       {
         date: "11/2/20",
@@ -385,6 +392,7 @@ export const SAMPLE_STUDENTS: Student[] = [
     epId: 17139,
     gender: "M",
     initialSession: "FA II 20",
+    literacy: {},
     name: {
       arabic: "يوسف محمد خالد جوق",
       english: "Yousef Mohammed Khalid",
@@ -420,3 +428,38 @@ export const SAMPLE_STUDENTS: Student[] = [
     },
   },
 ];
+
+export const emptyStudent: Student = {
+  academicRecords: [],
+  classList: {},
+  correspondence: [],
+  currentLevel: "PL1",
+  epId: 0,
+  gender: "M",
+  initialSession: "",
+  literacy: {},
+  name: {
+    arabic: "",
+    english: "",
+  },
+  nationality: Nationality.JRD,
+  phone: {
+    hasWhatsapp: true,
+    phoneNumbers: [],
+    primaryPhone: -1,
+  },
+  placement: {
+    notified: true,
+    origPlacementData: {
+      level: "PL1",
+      speaking: "PL1",
+      writing: "PL1",
+    },
+  },
+  status: {
+    currentStatus: Status.NEW,
+    inviteTag: false,
+    noCallList: false,
+  },
+  work: {},
+};

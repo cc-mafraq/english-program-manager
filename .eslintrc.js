@@ -116,7 +116,9 @@ module.exports = {
     // Allow nested ternary (often it's cleaner)
     "no-nested-ternary": "off",
 
-    "no-unused-expressions": ["error", { allowShortCircuit: true }],
+    "no-param-reassign": ["error", { props: false }],
+
+    "no-unused-expressions": ["error", { allowShortCircuit: true, allowTernary: true }],
 
     // Enforce the same syntax for all arrow functions
     "arrow-body-style": ["error", "always"],

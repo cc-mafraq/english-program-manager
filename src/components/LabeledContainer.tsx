@@ -6,6 +6,7 @@ interface LabeledContainerProps {
   containerProps?: BoxProps;
   label: string;
   labelProps?: TypographyProps;
+  showWhenEmpty?: boolean;
 }
 
 const defaultContainerProps: BoxProps = {
@@ -22,20 +23,16 @@ export const LabeledContainer: React.FC<LabeledContainerProps> = ({
   containerProps,
   labelProps,
   label,
+  showWhenEmpty,
   children,
 }) => {
   const childrenChildrenArr =
     children instanceof Array ? map(children, "props.children") : [get(children, "props.children")];
-  let everyChildIsEmpty = every(childrenChildrenArr, (c) => {
+  const everyChildIsEmpty = every(childrenChildrenArr, (c) => {
     return c === undefined || c === "";
   });
 
-  // Don't filter the Progress Container
-  if (label === "Progress") {
-    everyChildIsEmpty = false;
-  }
-
-  return !everyChildIsEmpty ? (
+  return !everyChildIsEmpty || showWhenEmpty ? (
     <Box display="block" sx={{ float: "left", marginRight: "2vh", marginTop: "1vh" }}>
       <Typography {...defaultLabelProps} {...labelProps}>
         {label}
@@ -47,4 +44,10 @@ export const LabeledContainer: React.FC<LabeledContainerProps> = ({
   ) : (
     <></>
   );
+};
+
+LabeledContainer.defaultProps = {
+  containerProps: defaultContainerProps,
+  labelProps: defaultLabelProps,
+  showWhenEmpty: false,
 };
