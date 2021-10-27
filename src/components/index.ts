@@ -1,4 +1,5 @@
 export * from "./LabeledContainer";
+export * from "./LabeledIconButton";
 export * from "./LabeledText";
 export * from "./MenuBar";
 export * from "./MenuDrawer";

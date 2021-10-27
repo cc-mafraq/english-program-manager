@@ -1,18 +1,10 @@
 import AddIcon from "@mui/icons-material/Add";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import {
-  AppBar,
-  Box,
-  FormControl,
-  IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
-  TablePagination,
-  Toolbar,
-} from "@mui/material";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import UploadIcon from "@mui/icons-material/Upload";
+import { AppBar, Box, IconButton, Popover, TablePagination, Toolbar } from "@mui/material";
 import React from "react";
-import { Searchbar } from ".";
+import { LabeledIconButton, Searchbar } from ".";
 import { Student } from "../interfaces";
 
 export const StudentDatabaseToolbar = ({
@@ -30,6 +22,22 @@ export const StudentDatabaseToolbar = ({
   rowsPerPage: number;
   students: Student[];
 }) => {
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const buttonLabelStyle = {
+    display: "flex",
+    flexDirection: "column",
+  };
+
   return (
     <AppBar color="default" elevation={0} position="sticky">
       <Toolbar
@@ -38,27 +46,41 @@ export const StudentDatabaseToolbar = ({
           paddingTop: "1vh",
         }}
       >
-        <FormControl sx={{ width: "7vw" }} variant="standard">
-          <InputLabel>Sort By</InputLabel>
-          <Select
-            label="Sort By"
-            value="name"
-            // onChange={handleChange}
+        <IconButton onClick={handleClick}>
+          <MoreHorizIcon color="primary" />
+        </IconButton>
+        <Popover
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            horizontal: "left",
+            vertical: "bottom",
+          }}
+          onClose={handleClose}
+          open={open}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              flexWrap: "wrap",
+              maxWidth: "10vw",
+              width: "100%",
+            }}
           >
-            <MenuItem value="name">Name</MenuItem>
-            <MenuItem value="level">Level</MenuItem>
-          </Select>
-        </FormControl>
-
+            <LabeledIconButton label="Add">
+              <AddIcon color="primary" />
+            </LabeledIconButton>
+            <LabeledIconButton label="Import">
+              <UploadIcon color="primary" />
+            </LabeledIconButton>
+          </Box>
+        </Popover>
         <Box>
           <Searchbar />
           <IconButton>
             <FilterAltIcon />
           </IconButton>
         </Box>
-        <IconButton>
-          <AddIcon color="primary" />
-        </IconButton>
         <TablePagination
           component="div"
           count={students.length}
