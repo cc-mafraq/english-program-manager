@@ -8,12 +8,28 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  TablePagination,
   Toolbar,
 } from "@mui/material";
 import React from "react";
 import { Searchbar } from ".";
+import { Student } from "../interfaces";
 
-export const StudentDatabaseToolbar = () => {
+export const StudentDatabaseToolbar = ({
+  students,
+  page,
+  rowsPerPage,
+  handleChangePage,
+  handleChangeRowsPerPage,
+}: {
+  handleChangePage: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
+  handleChangeRowsPerPage: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => void;
+  page: number;
+  rowsPerPage: number;
+  students: Student[];
+}) => {
   return (
     <AppBar color="default" elevation={0} position="sticky">
       <Toolbar
@@ -43,6 +59,15 @@ export const StudentDatabaseToolbar = () => {
         <IconButton>
           <AddIcon color="primary" />
         </IconButton>
+        <TablePagination
+          component="div"
+          count={students.length}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          rowsPerPageOptions={[10, 50, 100, 200, 500, 1000, 2000]}
+        />
       </Toolbar>
     </AppBar>
   );

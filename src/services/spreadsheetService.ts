@@ -13,22 +13,22 @@ const studentFields: ValidFields = ps.expand({
   ADJ: ps.parseOrigPlacementAdjustment,
   AGEATPROGENTRY: ps.parseAge,
   AUD: ps.parseAudit,
-  "Att1,Att2,Att3,Att4,Att5,Att6,Att7,Att8,Att9,Att10": ps.parseAcademicRecordAttendance,
+  "Att,Att40,Att53,Att66,Att79,Att92,Att105,Att118,Att131,Att143": ps.parseAcademicRecordAttendance,
   CERTREQUESTSDATE: ps.parseCertRequests,
   "CORRESPONDENCE1,CORRESPONDENCE2,CORRESPONDENCE3,CORRESPONDENCE4": ps.parseCorrespondence,
   CURRENTLEVEL: ps.parseCurrentLevel,
   CURRENTSTATUS: ps.parseCurrentStatus,
-  "Cert1,Cert2,Cert3,Cert4,Cert5,Cert6,Cert7,Cert8,Cert9,Cert10": ps.parseAcademicRecordCertificate,
+  "Cert,Cert42,Cert55,Cert68,Cert81,Cert94,Cert107,Cert120": ps.parseAcademicRecordCertificate,
   DATESENT: ps.parseClassListSentDate,
   EnglishTeacher: ps.parseEnglishTeacher,
-  "ExitSpeakingExamPF1,ExitSpeakingExamPF2,ExitSpeakingExamPF3,ExitSpeakingExamPF4,ExitSpeakingExamPF5,ExitSpeakingExamPF6,ExitSpeakingExamPF7,ExitSpeakingExamPF8,ExitSpeakingExamPF9,ExitSpeakingExamPF10":
+  "ExitSpeakingExamPF,ExitSpeakingExamPF39,ExitSpeakingExamPF52,ExitSpeakingExamPF65,ExitSpeakingExamPF78,ExitSpeakingExamPF91,ExitSpeakingExamPF104,ExitSpeakingExamPF117,ExitSpeakingExamPF130,ExitSpeakingExamPF142":
     ps.parseAcademicRecordExitSpeakingExam,
-  "ExitWritingExamPF1,ExitWritingExamPF2,ExitWritingExamPF3,ExitWritingExamPF4,ExitWritingExamPF5,ExitWritingExamPF6,ExitWritingExamPF7,ExitWritingExamPF8,ExitWritingExamPF9,ExitWritingExamPF10":
+  "ExitWritingExamPF,ExitWritingExamPF38,ExitWritingExamPF51,ExitWritingExamPF64,ExitWritingExamPF77,ExitWritingExamPF90,ExitWritingExamPF103,ExitWritingExamPF116,ExitWritingExamPF129,ExitWritingExamPF141":
     ps.parseAcademicRecordExitWritingExam,
   "FAI17,FAII17,SPI18,SPII18,FAI18,FAII18,SPI19,SPII19,FAI19,FAII19,SPI20,SPII20,FAI20,FAII20,SPI21,FAI21,FAII21,SPI22,SPII22,FAI22,FAII22":
     ps.parseInitialSession,
   FGRDATE: ps.parseFgrDate,
-  "FinalGrades1,FinalGrades2,FinalGrades3,FinalGrades4,FinalGrades5,FinalGrades6,FinalGrades7,FinalGrades8,FinalGrades9,FinalGrades10":
+  "FinalGrades,FinalGrades37,FinalGrades50,FinalGrades63,FinalGrades76,FinalGrades89,FinalGrades102,FinalGrades115,FinalGrades128,FinalGrades140":
     ps.parseAcademicRecordFinalGrade,
   ID: ps.parseID,
   IfELTPubschlprivschlunivorrefgcamp: ps.parseEnglishTeacherLocation,
@@ -38,9 +38,9 @@ const studentFields: ValidFields = ps.expand({
   LEVELREVEALDATE: ps.parseLevelRevealDate,
   "LackofChildCare,LackofTransport,TimeConflict,IllnessorPregnancy,VisionProblems,GotaJob,Moved,GraduatedfromL5,FailedtoThriveinClsrmEnv,LackofLifeMgmSkills,LackofFamilialSupport,LackofCommitmentorMotivation,FamilyMemberorEmployerForbidFurtherStudy,COVID19PandemicRelated,Unknown":
     ps.parseDropoutReason,
-  "LevelAttended1,LevelAttended2,LevelAttended3,LevelAttended4,LevelAttended5,LevelAttended6,LevelAttended7,LevelAttended8,LevelAttended9,LevelAttended10":
+  "LevelAttended,LevelAttended32,LevelAttended45,LevelAttended58,LevelAttended71,LevelAttended84,LevelAttended97,LevelAttended110,LevelAttended123,LevelAttended135":
     ps.parseAcademicRecordLevel,
-  "LevelAudited1,LevelAudited2,LevelAudited3,LevelAudited4,LevelAudited5,LevelAudited6,LevelAudited7,LevelAudited8,LevelAudited9,LevelAudited10":
+  "LevelAudited,LevelAudited33,LevelAudited46,LevelAudited59,LevelAudited72,LevelAudited85,LevelAudited98,LevelAudited111,LevelAudited124,LevelAudited136":
     ps.parseAcademicRecordAudit,
   LookingforaJobDate: ps.parseLookingForJob,
   M: ps.parseGender,
@@ -50,10 +50,10 @@ const studentFields: ValidFields = ps.expand({
   NCL: ps.parseNCL,
   NOTIFIED: ps.parseNotified,
   OCCUPATION: ps.parseOccupation,
-  "P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,WD1,WD2,WD3,WD4,WD5,WD6,WD7,WD8,WD9,WD10":
+  "P,P34,P47,P60,P73,P86,P99,P112,P125,P137,F28,F35,F48,F61,F74,F87,F100,F113,F126,F138,WD29,WD36,WD49,WD62,WD75,WD88,WD101,WD114,WD127,WD139":
     ps.parseAcademicRecordResult,
   PENDINGPLCM: ps.parsePendingPlacement,
-  "PHONE1,PHONE2,PHONE3,PHONE4,PHONE5,PHONE6": ps.parsePhone,
+  "PHONE,PHONE19,PHONE20,PHONE21,PHONE22,PHONE23": ps.parsePhone,
   PHOTOCONTACT: ps.parsePhotoContact,
   PLCMCONFDATE: ps.parsePlacementConfDate,
   PLCMLVL: ps.parseOrigPlacementLevel,
@@ -62,8 +62,8 @@ const studentFields: ValidFields = ps.expand({
   SECSOFFERED: ps.parseSectionsOffered,
   SENTTEXTEDCL: ps.parseClassListSent,
   SPKG: ps.parseOrigPlacementSpeaking,
-  "Ses1,Ses2,Ses3,Ses4,Ses5,Ses6,Ses7,Ses8,Ses9,Ses10": ps.parseAcademicRecordSession,
-  "TeacherComments1,TeacherComments2,TeacherComments3,TeacherComments4,TeacherComments5,TeacherComments6,TeacherComments7,TeacherComments8,TeacherComments9,TeacherComments10":
+  "Ses,Ses31,Ses44,Ses57,Ses70,Ses83,Ses96,Ses109,Ses122,Ses134": ps.parseAcademicRecordSession,
+  "TeacherComments,TeacherComments41,TeacherComments54,TeacherComments67,TeacherComments80,TeacherComments93,TeacherComments106,TeacherComments119,TeacherComments132,TeacherComments144":
     ps.parseAcademicRecordTeacherComments,
   TeacherorProfessor: ps.parseTeacher,
   TeachingSubjectAreas: ps.parseTeachingSubjectAreas,
@@ -80,7 +80,10 @@ const studentFields: ValidFields = ps.expand({
 
 export const spreadsheetToStudentList = (csvString: string): Student[] => {
   // Remove junk and title rows from Excel export to CSV
-  const csvStringClean = join(slice(replace(csvString, "ï»¿", "").split("\n"), 2), "\n");
+  const csvStringClean = join(
+    slice(replace(replace(csvString, "ï»¿", ""), "\t", ",").split("\n"), 3),
+    "\n",
+  );
   const objects: papa.ParseResult<never> = papa.parse(csvStringClean, {
     header: true,
     skipEmptyLines: "greedy",

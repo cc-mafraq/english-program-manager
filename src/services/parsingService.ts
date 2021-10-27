@@ -202,6 +202,15 @@ export const parseEnglishTeacherLocation = (key: string, value: string, student:
   student.work.englishTeacherLocation = value;
 };
 
+export const parseWAStatus = (key: string, value: string, student: Student) => {
+  if (!isEmpty(value)) {
+    const lowerValue = toLower(value);
+    student.phone.hasWhatsapp =
+      includes(lowerValue, "has whatsapp") || includes(lowerValue, "has WA");
+    student.phone.whatsappNotes = value;
+  }
+};
+
 export const parsePhone = (key: string, value: string, student: Student) => {
   if (!isEmpty(value)) {
     const strippedValue = replace(value, /[" "]/g, "");
@@ -215,14 +224,8 @@ export const parsePhone = (key: string, value: string, student: Student) => {
         notes: phoneNumberNotesStr,
         number: Number(phoneNumber),
       });
+    value === "has whatsapp" && parseWAStatus(key, value, student);
   }
-};
-
-export const parseWAStatus = (key: string, value: string, student: Student) => {
-  const lowerValue = toLower(value);
-  student.phone.hasWhatsapp =
-    includes(lowerValue, "has whatsapp") || includes(lowerValue, "has WA");
-  student.phone.whatsappNotes = value;
 };
 
 export const parseWABroadcastSAR = (key: string, value: string, student: Student) => {
@@ -285,54 +288,56 @@ export const parseOrigPlacementAdjustment = (key: string, value: string, student
 
 export const parseDropoutReason = (key: string, value: string, student: Student) => {
   // student.droppedOutReason = DroppedOutReason[key as keyof typeof DroppedOutReason];
-  switch (key) {
-    case "Lack of Child-Care":
-      student.droppedOutReason = DroppedOutReason.LCC;
-      break;
-    case "Lack of Transport":
-      student.droppedOutReason = DroppedOutReason.LT;
-      break;
-    case "Time Conflict":
-      student.droppedOutReason = DroppedOutReason.TC;
-      break;
-    case "Illness or Pregnancy":
-      student.droppedOutReason = DroppedOutReason.IP;
-      break;
-    case "Vision Problems":
-      student.droppedOutReason = DroppedOutReason.VP;
-      break;
-    case "Got a Job":
-      student.droppedOutReason = DroppedOutReason.JOB;
-      break;
-    case "Moved":
-      student.droppedOutReason = DroppedOutReason.MOVE;
-      break;
-    case "Graduated from L5":
-      student.droppedOutReason = DroppedOutReason.GRAD;
-      break;
-    case "Failed to Thrive in Clsrm Env":
-      student.droppedOutReason = DroppedOutReason.FTCLE;
-      break;
-    case "Lack of Life Mgm Skills":
-      student.droppedOutReason = DroppedOutReason.LLMS;
-      break;
-    case "Lack of Familial Support":
-      student.droppedOutReason = DroppedOutReason.LFS;
-      break;
-    case "Lack of Commitment or Motivation":
-      student.droppedOutReason = DroppedOutReason.LCM;
-      break;
-    case "Family Member or Employer Forbid Further Study":
-      student.droppedOutReason = DroppedOutReason.FMEF;
-      break;
-    case "COVID-19 Pandemic Related":
-      student.droppedOutReason = DroppedOutReason.COVID;
-      break;
-    case "Unknown":
-      student.droppedOutReason = DroppedOutReason.UNK;
-      break;
-    default:
-      break;
+  if (Number(value) === 1) {
+    switch (key) {
+      case "Lack of Child-Care":
+        student.droppedOutReason = DroppedOutReason.LCC;
+        break;
+      case "Lack of Transport":
+        student.droppedOutReason = DroppedOutReason.LT;
+        break;
+      case "Time Conflict":
+        student.droppedOutReason = DroppedOutReason.TC;
+        break;
+      case "Illness or Pregnancy":
+        student.droppedOutReason = DroppedOutReason.IP;
+        break;
+      case "Vision Problems":
+        student.droppedOutReason = DroppedOutReason.VP;
+        break;
+      case "Got a Job":
+        student.droppedOutReason = DroppedOutReason.JOB;
+        break;
+      case "Moved":
+        student.droppedOutReason = DroppedOutReason.MOVE;
+        break;
+      case "Graduated from L5":
+        student.droppedOutReason = DroppedOutReason.GRAD;
+        break;
+      case "Failed to Thrive in Clsrm Env":
+        student.droppedOutReason = DroppedOutReason.FTCLE;
+        break;
+      case "Lack of Life Mgm Skills":
+        student.droppedOutReason = DroppedOutReason.LLMS;
+        break;
+      case "Lack of Familial Support":
+        student.droppedOutReason = DroppedOutReason.LFS;
+        break;
+      case "Lack of Commitment or Motivation":
+        student.droppedOutReason = DroppedOutReason.LCM;
+        break;
+      case "Family Member or Employer Forbid Further Study":
+        student.droppedOutReason = DroppedOutReason.FMEF;
+        break;
+      case "COVID-19 Pandemic Related":
+        student.droppedOutReason = DroppedOutReason.COVID;
+        break;
+      case "Unknown":
+        student.droppedOutReason = DroppedOutReason.UNK;
+        break;
+      default:
+        break;
+    }
   }
 };
 

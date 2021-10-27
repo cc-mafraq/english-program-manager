@@ -1,52 +1,54 @@
 import EditIcon from "@mui/icons-material/Edit";
 import PersonIcon from "@mui/icons-material/Person";
-import { Box, Card, CardActions, CardContent, IconButton } from "@mui/material";
+import { Box, Card, CardActions, CardContent, IconButton, List, ListItem } from "@mui/material";
 import { map } from "lodash";
 import React from "react";
 import { StudentInfo } from ".";
 import { Student } from "../interfaces";
 
-export const StudentList = ({ students }: { students: Student[] }) => {
+export const StudentList = ({ studentsPage }: { studentsPage: Student[] }) => {
   return (
-    <>
-      {map(students, (student) => {
+    <List>
+      {map(studentsPage, (student) => {
         return (
-          <Card key={student.epId} sx={{ display: "flex", marginLeft: "5px" }}>
-            <Box
-              sx={{
-                display: "flex",
-                minWidth: "150px",
-              }}
-            >
-              {/* <CardMedia
+          <ListItem>
+            <Card key={student.epId} sx={{ display: "flex", marginLeft: "5px" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  minWidth: "150px",
+                }}
+              >
+                {/* <CardMedia
                 component="img"
                 image={`./assets/${student.epId}.png`}
                 sx={{ height: "35vh", minHeight: "200px" }}
               /> */}
-            </Box>
-            <Box sx={{ flexGrow: 5, maxWidth: "85%" }}>
-              <CardContent>
-                <StudentInfo student={student} />
-              </CardContent>
-            </Box>
-            <CardActions
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                marginTop: "5%",
-                maxWidth: "5%",
-              }}
-            >
-              <IconButton>
-                <PersonIcon />
-              </IconButton>
-              <IconButton>
-                <EditIcon />
-              </IconButton>
-            </CardActions>
-          </Card>
+              </Box>
+              <Box sx={{ flexGrow: 5, maxWidth: "85%" }}>
+                <CardContent>
+                  <StudentInfo student={student} />
+                </CardContent>
+              </Box>
+              <CardActions
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  marginTop: "5%",
+                  maxWidth: "5%",
+                }}
+              >
+                <IconButton>
+                  <PersonIcon />
+                </IconButton>
+                <IconButton>
+                  <EditIcon />
+                </IconButton>
+              </CardActions>
+            </Card>
+          </ListItem>
         );
       })}
-    </>
+    </List>
   );
 };

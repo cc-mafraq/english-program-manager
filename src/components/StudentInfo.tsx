@@ -18,19 +18,15 @@ export const StudentInfo = ({ student }: { student: Student }) => {
           {/* {student.phone.phoneNumbers[student.phone.primaryPhone].number} */}
           {student.phone.primaryPhone}
         </Typography>
-        {student.phone.hasWhatsapp ? (
-          <IconButton
-            href={`https://wa.me/962${
-              // student.phone.phoneNumbers[student.phone.primaryPhone].number
-              student.phone.primaryPhone
-            }`}
-            target="_blank"
-          >
-            <WhatsAppIcon />
-          </IconButton>
-        ) : (
-          <></>
-        )}
+        <IconButton
+          href={`https://wa.me/962${
+            // student.phone.phoneNumbers[student.phone.primaryPhone].number
+            student.phone.primaryPhone
+          }`}
+          target="_blank"
+        >
+          <WhatsAppIcon />
+        </IconButton>
       </Box>
       <Box sx={{ display: "flex", flexWrap: "wrap", marginBottom: "1%", marginTop: "1%" }}>
         <LabeledContainer label="Program Information">
