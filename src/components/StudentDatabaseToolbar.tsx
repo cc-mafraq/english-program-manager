@@ -1,4 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
+import CachedIcon from "@mui/icons-material/Cached";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import UploadIcon from "@mui/icons-material/Upload";
@@ -14,11 +15,13 @@ export const StudentDatabaseToolbar = ({
   handleChangePage,
   handleChangeRowsPerPage,
   handleImportClick,
+  handleGenerateFGRClick,
 }: {
   handleChangePage: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
   handleChangeRowsPerPage: (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
+  handleGenerateFGRClick: (e: React.MouseEvent<HTMLLIElement>) => void;
   handleImportClick: (e: ChangeEvent<HTMLInputElement>) => void;
   page: number;
   rowsPerPage: number;
@@ -80,6 +83,9 @@ export const StudentDatabaseToolbar = ({
                 <UploadIcon color="primary" />
               </LabeledIconButton>
             </label>
+            <LabeledIconButton label="GENERATE FGRs" onClick={handleGenerateFGRClick}>
+              <CachedIcon color="primary" />
+            </LabeledIconButton>
           </Box>
         </Popover>
         <Box>

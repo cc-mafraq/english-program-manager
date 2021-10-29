@@ -1,3 +1,4 @@
+import { includes, map } from "lodash";
 import React, { ChangeEvent, useState } from "react";
 import { FinalGradeReport, StudentDatabaseToolbar, StudentList } from "../components";
 import { Student } from "../interfaces";
@@ -9,6 +10,8 @@ export const StudentDatabasePage = () => {
   const [studentsPage, setStudentsPage] = useState<Student[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
+  const [generateFGRs, setGenerateFGRs] = useState(false);
+  const fgrSession = "Sp I 21";
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPage(newPage);
@@ -38,17 +41,33 @@ export const StudentDatabasePage = () => {
     };
   };
 
+  const handleGenerateFGRClick = () => {
+    setGenerateFGRs(true);
+  };
+
   return (
     <>
       <StudentDatabaseToolbar
         handleChangePage={handleChangePage}
         handleChangeRowsPerPage={handleChangeRowsPerPage}
+        handleGenerateFGRClick={handleGenerateFGRClick}
         handleImportClick={onInputChange}
         page={page}
         rowsPerPage={rowsPerPage}
         students={students}
       />
-      {students.length > 6 ? <FinalGradeReport session="Sp I 21" student={students[6]} /> : <></>}
+      {students.length > 0 ? (
+        generateFGRs &&
+        map(students, (fgrStudent) => {
+          return includes(map(fgrStudent.academicRecords, "session"), fgrSession) ? (
+            <FinalGradeReport session={fgrSession} student={fgrStudent} />
+          ) : (
+            <></>
+          );
+        })
+      ) : (
+        <></>
+      )}
       <StudentList studentsPage={studentsPage} />
     </>
   );
