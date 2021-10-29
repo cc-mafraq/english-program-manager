@@ -7,10 +7,6 @@ import React, { ChangeEvent } from "react";
 import { LabeledIconButton, Searchbar } from ".";
 import { Student } from "../interfaces";
 
-interface RefObject {
-  click: () => void;
-}
-
 export const StudentDatabaseToolbar = ({
   students,
   page,
@@ -29,7 +25,6 @@ export const StudentDatabaseToolbar = ({
   students: Student[];
 }) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-  const fileInput = React.useRef<HTMLInputElement>();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);

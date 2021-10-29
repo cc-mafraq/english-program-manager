@@ -1,3 +1,5 @@
+export * from "./FGRGridRow";
+export * from "./FinalGradeReport";
 export * from "./LabeledContainer";
 export * from "./LabeledIconButton";
 export * from "./LabeledText";

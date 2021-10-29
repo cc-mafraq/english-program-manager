@@ -40,13 +40,6 @@ export const StudentDatabasePage = () => {
 
   return (
     <>
-      {/* <input
-        accept=".txt"
-        id="fileSelect"
-        onChange={onInputChange}
-        hidden
-        type="file"
-      /> */}
       <StudentDatabaseToolbar
         handleChangePage={handleChangePage}
         handleChangeRowsPerPage={handleChangeRowsPerPage}
@@ -55,6 +48,7 @@ export const StudentDatabasePage = () => {
         rowsPerPage={rowsPerPage}
         students={students}
       />
+      {/* {students.length > 8 ? <FinalGradeReport session="Sp I 21" student={students[8]} /> : <></>} */}
       <StudentList studentsPage={studentsPage} />
     </>
   );
