@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState } from "react";
-import { StudentDatabaseToolbar, StudentList } from "../components";
+import { FinalGradeReport, StudentDatabaseToolbar, StudentList } from "../components";
 import { Student } from "../interfaces";
 import { getStudentPage } from "../services";
 import { spreadsheetToStudentList } from "../services/spreadsheetService";
@@ -48,7 +48,7 @@ export const StudentDatabasePage = () => {
         rowsPerPage={rowsPerPage}
         students={students}
       />
-      {/* {students.length > 8 ? <FinalGradeReport session="Sp I 21" student={students[8]} /> : <></>} */}
+      {students.length > 6 ? <FinalGradeReport session="Sp I 21" student={students[6]} /> : <></>}
       <StudentList studentsPage={studentsPage} />
     </>
   );

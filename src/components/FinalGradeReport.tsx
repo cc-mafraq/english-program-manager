@@ -1,12 +1,15 @@
 import { Box, Grid, Typography } from "@mui/material";
 import { indexOf, join, map, nth, slice, split } from "lodash";
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import { exportComponentAsPNG } from "react-component-export-image";
 import { FGRGridRow } from ".";
 import { FinalResult, Student } from "../interfaces";
 import { getLevelForNextSession } from "../services";
 
-const FGR_WIDTH = "640px";
+const FGR_WIDTH = 640;
+const IMAGE_WIDTH = FGR_WIDTH - 30;
 const FGR_SPACING = 2;
+const BORDER_SIZE = 15;
 const BACKGROUND_COLOR_MAIN = "rgba(255,242,204,1)";
 const BACKGROUND_COLOR_SECONDARY = "rgba(117,219,255,1)";
 
@@ -17,20 +20,42 @@ export const FinalGradeReport = ({
   session: Student["initialSession"];
   student: Student;
 }) => {
+  const componentRef = useRef(null);
   const academicRecord = nth(
     student.academicRecords,
     indexOf(map(student.academicRecords, "session"), session),
   );
 
+  useEffect(() => {
+    exportComponentAsPNG(componentRef, {
+      fileName: `${join(slice(split(student.name.english, " "), 0, 2), "_")}_${student.epId}`,
+    });
+  }, [student]);
+
   return academicRecord ? (
-    <>
-      <img alt="FGR Border" src="./assets/fgr-border.jpg" width={FGR_WIDTH} />
-      <Grid container marginLeft={0} spacing={FGR_SPACING} width={FGR_WIDTH}>
+    <div ref={componentRef} style={{ width: FGR_WIDTH }}>
+      <Box
+        sx={{
+          border: BORDER_SIZE,
+          borderBottom: 0,
+          borderColor: "#002060",
+        }}
+      >
+        <img alt="FGR Border" src="./assets/fgr-border.jpg" width={IMAGE_WIDTH} />
+      </Box>
+      <Grid
+        container
+        marginLeft={0}
+        marginTop={0}
+        sx={{ backgroundColor: "white" }}
+        width={FGR_WIDTH}
+      >
         <Grid
-          border={15}
+          border={BORDER_SIZE}
+          borderBottom={1}
           borderColor="#002060"
+          borderTop={1}
           container
-          marginTop={FGR_SPACING}
           padding={FGR_SPACING}
         >
           <Grid item marginBottom="auto" marginTop="auto" xs={1}>
@@ -47,7 +72,7 @@ export const FinalGradeReport = ({
             </Typography>
           </Grid>
         </Grid>
-        <Grid border={15} borderColor="#002060" borderTop={0} container>
+        <Grid border={BORDER_SIZE} borderBottom={0} borderColor="#002060" borderTop={0} container>
           <FGRGridRow
             colText1="Name:"
             colText2="الإسم"
@@ -135,10 +160,17 @@ export const FinalGradeReport = ({
           />
         </Grid>
       </Grid>
-      <Box sx={{ transform: "scaleY(-1)" }}>
-        <img alt="FGR Border" src="./assets/fgr-border.jpg" width={FGR_WIDTH} />
+      <Box
+        sx={{
+          border: BORDER_SIZE,
+          borderBottom: 0,
+          borderColor: "#002060",
+          transform: "scaleY(-1)",
+        }}
+      >
+        <img alt="FGR Border" src="./assets/fgr-border.jpg" width={IMAGE_WIDTH} />
       </Box>
-    </>
+    </div>
   ) : (
     <></>
   );
