@@ -1,4 +1,4 @@
-import { countBy, forEach, last, map, zip } from "lodash";
+import { countBy, forEach, last, map, slice, zip } from "lodash";
 import { FinalResult, GenderedLevel, Status, Student } from "../interfaces";
 
 export type StudentProgress = {
@@ -50,4 +50,9 @@ export const getProgress = (student: Student): StudentProgress => {
     progress[level]?.push({ result: r, session: s });
   });
   return progress;
+};
+
+export const getStudentPage = (students: Student[], page: number, rowsPerPage: number) => {
+  const newRowsPerPage = rowsPerPage > students.length ? students.length : rowsPerPage;
+  return slice(students, page * newRowsPerPage, (page + 1) * newRowsPerPage);
 };

@@ -15,20 +15,18 @@ export const StudentInfo = ({ student }: { student: Student }) => {
       </Typography>
       <Box sx={{ flexDirection: "row", flexGrow: 1, float: "right" }}>
         <Typography display="inline" marginRight="5px" variant="h5">
-          {student.phone.phoneNumbers[student.phone.primaryPhone].number}
+          {/* {student.phone.phoneNumbers[student.phone.primaryPhone].number} */}
+          {student.phone.primaryPhone}
         </Typography>
-        {student.phone.hasWhatsapp ? (
-          <IconButton
-            href={`https://wa.me/962${
-              student.phone.phoneNumbers[student.phone.primaryPhone].number
-            }`}
-            target="_blank"
-          >
-            <WhatsAppIcon />
-          </IconButton>
-        ) : (
-          <></>
-        )}
+        <IconButton
+          href={`https://wa.me/962${
+            // student.phone.phoneNumbers[student.phone.primaryPhone].number
+            student.phone.primaryPhone
+          }`}
+          target="_blank"
+        >
+          <WhatsAppIcon />
+        </IconButton>
       </Box>
       <Box sx={{ display: "flex", flexWrap: "wrap", marginBottom: "1%", marginTop: "1%" }}>
         <LabeledContainer label="Program Information">
@@ -62,15 +60,15 @@ export const StudentInfo = ({ student }: { student: Student }) => {
           <LabeledText label="Age at Prog. Entry">{student.age}</LabeledText>
           <LabeledText label="Occupation">{student.work?.occupation}</LabeledText>
           <LabeledText label="Looking For Job">{student.work?.lookingForJob}</LabeledText>
-          <LabeledText label="Teacher">{student.work?.teacher ? "Yes" : undefined}</LabeledText>
+          <LabeledText label="Teacher">{student.work?.isTeacher ? "Yes" : undefined}</LabeledText>
           <LabeledText label="Teaching Subject Area">
-            {student.work?.teacher ? student.work.teachingSubjectAreas : undefined}
+            {student.work?.isTeacher ? student.work.teachingSubjectAreas : undefined}
           </LabeledText>
           <LabeledText label="English Teacher">
-            {student.work?.englishTeacher ? "Yes" : undefined}
+            {student.work?.isEnglishTeacher ? "Yes" : undefined}
           </LabeledText>
           <LabeledText label="English Teacher Location">
-            {student.work?.englishTeacher ? student.work.englishTeacherLocation : undefined}
+            {student.work?.isEnglishTeacher ? student.work.englishTeacherLocation : undefined}
           </LabeledText>
         </LabeledContainer>
         <LabeledContainer label="Phone Numbers and WhatsApp">
@@ -108,6 +106,9 @@ export const StudentInfo = ({ student }: { student: Student }) => {
           <LabeledText label="Placement Level">
             {student.placement.origPlacementData.level}
           </LabeledText>
+          <LabeledText label="Adjustment">
+            {student.placement.origPlacementData.adjustment}
+          </LabeledText>
         </LabeledContainer>
         <LabeledContainer label="Class List">
           <LabeledText label="Sent">{student.classList?.classListSent ? "Yes" : "No"}</LabeledText>
@@ -130,7 +131,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
         <LabeledContainer label="Correspondence">
           {map(student.correspondence, (c) => {
             return (
-              <div key={c.date}>
+              <div key={`${c.date} ${c.notes}`}>
                 <Typography fontSize="11pt" variant="body2">
                   {c.date}: {c.notes}
                 </Typography>
@@ -194,7 +195,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
             );
           })}
         </LabeledContainer>
-        <LabeledContainer label="Progress">
+        <LabeledContainer label="Progress" showWhenEmpty>
           {map(forOwn(progress), (v, k) => {
             return <ProgressBox key={k} level={k as GenderedLevel} sessionResults={v} />;
           })}

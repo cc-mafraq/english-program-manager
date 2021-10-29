@@ -1,7 +1,7 @@
 import { join, last, map } from "lodash";
 import React from "react";
 import { LabeledText } from ".";
-import { GenderedLevel } from "../interfaces";
+import { FinalResult, GenderedLevel } from "../interfaces";
 import { SessionResult } from "../services";
 
 export const ProgressBox = ({
@@ -33,7 +33,12 @@ export const ProgressBox = ({
       labelProps={{ fontWeight: "bold" }}
       showWhenEmpty
     >
-      {join(map(sessionResults, "session"), ", ")}
+      {join(
+        map(sessionResults, (sr) => {
+          return sr.result === FinalResult.WD ? `${sr.session} WD` : sr.session;
+        }),
+        ", ",
+      )}
     </LabeledText>
   );
 };
