@@ -3,9 +3,13 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import UploadIcon from "@mui/icons-material/Upload";
 import { AppBar, Box, IconButton, Popover, TablePagination, Toolbar } from "@mui/material";
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { LabeledIconButton, Searchbar } from ".";
 import { Student } from "../interfaces";
+
+interface RefObject {
+  click: () => void;
+}
 
 export const StudentDatabaseToolbar = ({
   students,
@@ -13,16 +17,19 @@ export const StudentDatabaseToolbar = ({
   rowsPerPage,
   handleChangePage,
   handleChangeRowsPerPage,
+  handleImportClick,
 }: {
   handleChangePage: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
   handleChangeRowsPerPage: (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
+  handleImportClick: (e: ChangeEvent<HTMLInputElement>) => void;
   page: number;
   rowsPerPage: number;
   students: Student[];
 }) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const fileInput = React.useRef<HTMLInputElement>();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -33,10 +40,6 @@ export const StudentDatabaseToolbar = ({
   };
 
   const open = Boolean(anchorEl);
-  const buttonLabelStyle = {
-    display: "flex",
-    flexDirection: "column",
-  };
 
   return (
     <AppBar color="default" elevation={0} position="sticky">
@@ -63,16 +66,25 @@ export const StudentDatabaseToolbar = ({
               display: "flex",
               flexDirection: "row",
               flexWrap: "wrap",
-              maxWidth: "10vw",
-              width: "100%",
+              marginRight: "0.5vw",
+              maxWidth: "15vw",
             }}
           >
-            <LabeledIconButton label="Add">
+            <LabeledIconButton label="ADD STUDENT">
               <AddIcon color="primary" />
             </LabeledIconButton>
-            <LabeledIconButton label="Import">
-              <UploadIcon color="primary" />
-            </LabeledIconButton>
+            <label htmlFor="importSpreadsheet">
+              <input
+                accept=".txt"
+                hidden
+                id="importSpreadsheet"
+                onChange={handleImportClick}
+                type="file"
+              />
+              <LabeledIconButton label="IMPORT SPREADSHEET">
+                <UploadIcon color="primary" />
+              </LabeledIconButton>
+            </label>
           </Box>
         </Popover>
         <Box>

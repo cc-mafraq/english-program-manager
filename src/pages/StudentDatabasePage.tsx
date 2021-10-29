@@ -40,10 +40,17 @@ export const StudentDatabasePage = () => {
 
   return (
     <>
-      <input accept=".txt" id="fileSelect" onChange={onInputChange} type="file" />
+      {/* <input
+        accept=".txt"
+        id="fileSelect"
+        onChange={onInputChange}
+        hidden
+        type="file"
+      /> */}
       <StudentDatabaseToolbar
         handleChangePage={handleChangePage}
         handleChangeRowsPerPage={handleChangeRowsPerPage}
+        handleImportClick={onInputChange}
         page={page}
         rowsPerPage={rowsPerPage}
         students={students}
