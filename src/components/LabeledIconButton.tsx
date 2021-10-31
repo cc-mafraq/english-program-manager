@@ -2,12 +2,14 @@ import { Box, MenuItem, Typography } from "@mui/material";
 import React from "react";
 
 interface LabeledIconButtonProps {
+  color?: string;
   label: string;
   onClick?: (e: React.MouseEvent<HTMLLIElement>) => void;
 }
 
 export const LabeledIconButton: React.FC<LabeledIconButtonProps> = ({
   children,
+  color,
   label,
   onClick,
 }) => {
@@ -25,7 +27,7 @@ export const LabeledIconButton: React.FC<LabeledIconButtonProps> = ({
     >
       <MenuItem onClick={onClick}>{children}</MenuItem>
       <Typography
-        color="primary"
+        color={color}
         display="block"
         fontSize="6pt"
         fontWeight="bold"
@@ -39,5 +41,6 @@ export const LabeledIconButton: React.FC<LabeledIconButtonProps> = ({
 };
 
 LabeledIconButton.defaultProps = {
+  color: "primary",
   onClick: undefined,
 };

@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Card, Grid, Typography } from "@mui/material";
 import { indexOf, join, map, nth, slice, split } from "lodash";
 import React, { useRef, useState } from "react";
 import { exportComponentAsPNG } from "react-component-export-image";
@@ -35,7 +35,7 @@ export const FinalGradeReport = ({
   };
 
   return academicRecord && shouldShow ? (
-    <>
+    <Card sx={{ margin: "5px", padding: "10px" }}>
       <Button onClick={downloadFGR}>Download</Button>
       <div ref={componentRef} style={{ width: FGR_WIDTH }}>
         <Box
@@ -177,7 +177,7 @@ export const FinalGradeReport = ({
           <img alt="FGR Border" src="./assets/fgr-border.jpg" width={IMAGE_WIDTH} />
         </Box>
       </div>
-    </>
+    </Card>
   ) : (
     <></>
   );
