@@ -13,6 +13,9 @@ import { Student } from "../interfaces";
 import { getStudentPage } from "../services";
 import { spreadsheetToStudentList } from "../services/spreadsheetService";
 
+const scale = 0.5;
+const fgrWidth = 640 * scale;
+
 export const StudentDatabasePage = () => {
   const [students, setStudents] = useState<Student[]>([]);
   const [studentsPage, setStudentsPage] = useState<Student[]>([]);
@@ -71,15 +74,14 @@ export const StudentDatabasePage = () => {
       {students.length > 0 ? (
         <Dialog
           fullScreen
-          fullWidth
-          maxWidth="xl"
           onClose={handleFGRModalClose}
           open={openFGRModal}
           PaperProps={{ style: { backgroundColor: "#f5f5f5", overflowX: "hidden" } }}
           sx={{
             marginLeft: "50%",
+            marginTop: "5%",
             transform: "translate(-50%)",
-            width: "700px",
+            width: `${fgrWidth * 3 + 80 * scale + 42}px`,
           }}
         >
           <Box sx={{ padding: "10px" }}>
@@ -103,13 +105,20 @@ export const StudentDatabasePage = () => {
                 </LabeledIconButton>
               </Box>
             </Card>
-            {map(students, (fgrStudent) => {
-              return includes(map(fgrStudent.academicRecords, "session"), fgrSession) ? (
-                <FinalGradeReport session={fgrSession} student={fgrStudent} />
-              ) : (
-                <></>
-              );
-            })}
+            <Box sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
+              {map(students, (fgrStudent) => {
+                return includes(map(fgrStudent.academicRecords, "session"), fgrSession) ? (
+                  <FinalGradeReport
+                    scale={scale}
+                    session={fgrSession}
+                    student={fgrStudent}
+                    width={fgrWidth}
+                  />
+                ) : (
+                  <></>
+                );
+              })}
+            </Box>
           </Box>
         </Dialog>
       ) : (
