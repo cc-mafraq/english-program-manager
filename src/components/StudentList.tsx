@@ -11,8 +11,8 @@ export const StudentList = ({ studentsPage }: { studentsPage: Student[] }) => {
     <List>
       {map(studentsPage, (student) => {
         return (
-          <ListItem>
-            <Card key={student.epId} sx={{ display: "flex", marginLeft: "5px" }}>
+          <ListItem key={student.epId}>
+            <Card sx={{ display: "flex", marginLeft: "5px" }}>
               <Box
                 sx={{
                   display: "flex",

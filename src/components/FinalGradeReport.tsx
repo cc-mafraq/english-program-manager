@@ -1,60 +1,72 @@
 import CloseIcon from "@mui/icons-material/Close";
 import DownloadIcon from "@mui/icons-material/Download";
+import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
 import { Box, Card, Grid, IconButton, Typography } from "@mui/material";
 import { indexOf, join, map, nth, slice, split } from "lodash";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { exportComponentAsPNG } from "react-component-export-image";
 import { FGRGridRow } from ".";
 import { FinalResult, Student } from "../interfaces";
 import { getLevelForNextSession } from "../services";
 
-export const FinalGradeReport = ({
-  session,
-  student,
-  scale,
-  width,
-}: {
+interface FinalGradeReportProps {
   scale: number;
   session: Student["initialSession"];
+  shouldDownload: boolean;
   student: Student;
   width: number;
+}
+
+export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
+  session,
+  student,
+  shouldDownload,
+  scale,
+  width,
 }) => {
   const imageWidth = width - 30 * scale;
   const spacing = 2 * scale;
   const borderSize = 15 * scale;
   const backgroundColorMain = "rgba(255,242,204,1)";
   const backgroundColorSecondary = "rgba(117,219,255,1)";
+  const [isDownloaded, setIsDownloaded] = useState(false);
 
   const componentRef = useRef(null);
   const academicRecord = nth(
     student?.academicRecords,
     indexOf(map(student?.academicRecords, "session"), session),
   );
-  const [shouldShow, setShouldShow] = useState(true);
 
-  const downloadFGR = () => {
+  const downloadFGR = useCallback(() => {
     exportComponentAsPNG(componentRef, {
       fileName: `${join(slice(split(student.name.english, " "), 0, 2), "_")}_${student.epId}`,
       html2CanvasOptions: {
         scale: 1 / scale,
       },
     });
-    setShouldShow(false);
-  };
+    setIsDownloaded(true);
+  }, [scale, student]);
 
-  return academicRecord && shouldShow ? (
-    <Card sx={{ margin: `${5 * scale}px`, padding: `${10 * scale}px`, width }}>
+  useEffect(() => {
+    if (shouldDownload) {
+      downloadFGR();
+    }
+  }, [shouldDownload, downloadFGR, student.name.english]);
+
+  return academicRecord ? (
+    <Card sx={{ margin: `${5 * scale}px`, padding: `${10 * scale}px` }}>
       <Box display="flex" flexDirection="row">
         <IconButton
           color="error"
           onClick={() => {
-            setShouldShow(false);
+            setIsDownloaded(true);
           }}
         >
           <CloseIcon color="error" />
         </IconButton>
+
         <IconButton color="primary" onClick={downloadFGR}>
-          <DownloadIcon />
+          {isDownloaded ? <DownloadDoneIcon /> : <DownloadIcon />}
         </IconButton>
       </Box>
       <div ref={componentRef} style={{ width }}>

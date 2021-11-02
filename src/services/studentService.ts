@@ -1,4 +1,4 @@
-import { countBy, forEach, last, map, slice, zip } from "lodash";
+import { countBy, filter, forEach, includes, last, map, slice, zip } from "lodash";
 import { FinalResult, GenderedLevel, Status, Student } from "../interfaces";
 
 export type StudentProgress = {
@@ -59,4 +59,19 @@ export const getStudentPage = (
 ): Student[] => {
   const newRowsPerPage = rowsPerPage > students.length ? students.length : rowsPerPage;
   return slice(students, page * newRowsPerPage, (page + 1) * newRowsPerPage);
+};
+
+export const filterBySession = (
+  students: Student[],
+  session: Student["initialSession"],
+): Student[] => {
+  return filter(students, (s) => {
+    return includes(map(s.academicRecords, "session"), session);
+  });
+};
+
+export const filterOutById = (students: Student[], id: Student["epId"]): Student[] => {
+  return filter(students, (s) => {
+    return s.epId !== id;
+  });
 };
