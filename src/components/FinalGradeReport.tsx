@@ -2,33 +2,42 @@ import CloseIcon from "@mui/icons-material/Close";
 import DownloadIcon from "@mui/icons-material/Download";
 import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
 import { Box, Card, Grid, IconButton, Typography } from "@mui/material";
-import { indexOf, join, map, nth, slice, split } from "lodash";
+import download from "downloadjs";
+import { toPng } from "html-to-image";
+import JSZip from "jszip";
+import { indexOf, join, map, nth, replace, slice, split } from "lodash";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { exportComponentAsPNG } from "react-component-export-image";
 import { FGRGridRow } from ".";
 import { FinalResult, Student } from "../interfaces";
 import { getLevelForNextSession } from "../services";
 
 interface FinalGradeReportProps {
+  handleDownloadFinished: (student: Student) => void;
   scale: number;
   session: Student["initialSession"];
   shouldDownload: boolean;
   student: Student;
   width: number;
+  zip: JSZip;
 }
 
 export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
+  handleDownloadFinished,
   session,
   student,
   shouldDownload,
   scale,
   width,
+  zip,
 }) => {
   const imageWidth = width - 30 * scale;
   const spacing = 2 * scale;
   const borderSize = 15 * scale;
   const backgroundColorMain = "rgba(255,242,204,1)";
   const backgroundColorSecondary = "rgba(117,219,255,1)";
+  const fileName = `${join(slice(split(student.name.english, " "), 0, 2), "_")}_${
+    student.epId
+  }.png`;
   const [isDownloaded, setIsDownloaded] = useState(false);
 
   const componentRef = useRef(null);
@@ -37,21 +46,37 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
     indexOf(map(student?.academicRecords, "session"), session),
   );
 
-  const downloadFGR = useCallback(() => {
-    exportComponentAsPNG(componentRef, {
-      fileName: `${join(slice(split(student.name.english, " "), 0, 2), "_")}_${student.epId}`,
-      html2CanvasOptions: {
-        scale: 1 / scale,
-      },
-    });
-    setIsDownloaded(true);
-  }, [scale, student]);
+  const downloadFGR = useCallback(
+    (dl: boolean) => {
+      return async () => {
+        if (componentRef.current) {
+          const imgData = await toPng(componentRef.current, { canvasWidth: width, width });
+          if (dl) {
+            await download(imgData, fileName);
+            setIsDownloaded(true);
+          }
+          return imgData;
+        }
+        return null;
+      };
+    },
+    [fileName, width],
+  );
 
   useEffect(() => {
-    if (shouldDownload) {
-      downloadFGR();
-    }
-  }, [shouldDownload, downloadFGR, student.name.english]);
+    const downloadAllCalled = async () => {
+      if (shouldDownload) {
+        const img = await downloadFGR(false)();
+        if (img) {
+          const imgClean = replace(img, "data:image/png;base64,", "");
+          await zip.file(fileName, imgClean, { base64: true });
+          await handleDownloadFinished(student);
+          setIsDownloaded(true);
+        }
+      }
+    };
+    downloadAllCalled();
+  }, [shouldDownload]);
 
   return academicRecord ? (
     <Card sx={{ margin: `${5 * scale}px`, padding: `${10 * scale}px` }}>
@@ -65,7 +90,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
           <CloseIcon color="error" />
         </IconButton>
 
-        <IconButton color="primary" onClick={downloadFGR}>
+        <IconButton color="primary" onClick={downloadFGR(true)}>
           {isDownloaded ? <DownloadDoneIcon /> : <DownloadIcon />}
         </IconButton>
       </Box>
