@@ -3,11 +3,10 @@ import DownloadIcon from "@mui/icons-material/Download";
 import { Box, Card, Dialog, Typography } from "@mui/material";
 import download from "downloadjs";
 import JSZip from "jszip";
-import { isEqual, map, replace } from "lodash";
+import { filter, first, isEqual, map, replace } from "lodash";
 import React, { useState } from "react";
 import { FinalGradeReportList, LabeledIconButton } from ".";
-import { Student } from "../interfaces";
-import { filterBySession } from "../services";
+import { FinalResult, Student } from "../interfaces";
 
 interface FinalGradeReportDialogProps {
   handleDialogClose: () => void;
@@ -26,7 +25,13 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({
   let zippedStudents: Student[] = [];
   let zip = new JSZip();
 
-  const fgrStudents = filterBySession(students, fgrSession);
+  const fgrStudents = filter(students, (student) => {
+    const academicRecord = filter(student.academicRecords, (ar) => {
+      return ar.session === fgrSession;
+    });
+    const result = first(academicRecord)?.finalResult?.result;
+    return academicRecord.length && result !== undefined && result !== FinalResult.WD;
+  });
   const [shouldDownload, setShouldDownload] = useState(false);
 
   const handleDownloadAllFinished = async (student: Student) => {
@@ -65,14 +70,6 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({
           <Typography fontWeight="bold" variant="h5">
             Final Grade Reports: {fgrSession}
           </Typography>
-          {/* <TablePagination
-            component="div"
-            count={fgrStudents.length}
-            onPageChange={handleFGRChangePage}
-            page={fgrPage}
-            rowsPerPage={fgrRowsPerPage}
-            rowsPerPageOptions={[fgrRowsPerPage]}
-          /> */}
           <Box display="flex" flexDirection="row">
             <LabeledIconButton
               label="DOWNLOAD ALL"

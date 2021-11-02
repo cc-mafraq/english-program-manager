@@ -50,7 +50,12 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
     (dl: boolean) => {
       return async () => {
         if (componentRef.current) {
-          const imgData = await toPng(componentRef.current, { canvasWidth: width, width });
+          const imgData = await toPng(componentRef.current, {
+            backgroundColor: "#002060",
+            canvasHeight: 870,
+            canvasWidth: width / scale,
+            skipAutoScale: true,
+          });
           if (dl) {
             await download(imgData, fileName);
             setIsDownloaded(true);
@@ -113,9 +118,9 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
         >
           <Grid
             border={borderSize}
-            borderBottom={1 * scale}
+            borderBottom={1}
             borderColor="#002060"
-            borderTop={1 * scale}
+            borderTop={1}
             container
             padding={spacing}
           >
@@ -156,7 +161,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
             <FGRGridRow
               colText1="Session:"
               colText2="الفصل"
-              colText3={session}
+              colText3={replace(replace(session, "Sp", "Spring"), "Fa", "Fall")}
               labelBackgroundColor={backgroundColorMain}
               scale={scale}
             />
@@ -167,67 +172,65 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
               labelBackgroundColor={backgroundColorMain}
               scale={scale}
             />
-            {academicRecord.finalResult?.percentage ? (
-              <FGRGridRow
-                colText1="Class Grade:"
-                colText2="العلامة في الصف"
-                colText3={`${academicRecord.finalResult.percentage}%`}
-                labelBackgroundColor={backgroundColorSecondary}
-                scale={scale}
-              />
-            ) : (
-              <></>
-            )}
-            {academicRecord.attendance ? (
-              <FGRGridRow
-                colText1="Class Attendance:"
-                colText2="الحضور"
-                colText3={`${academicRecord.attendance}%`}
-                labelBackgroundColor={backgroundColorSecondary}
-                scale={scale}
-              />
-            ) : (
-              <></>
-            )}
-            {academicRecord.exitWritingExam?.result !== undefined ? (
-              <FGRGridRow
-                colText1="Exit Writing Exam: Pass or Fail"
-                colText2="امتحان المستوى بالكتابة: ناجح او راسب"
-                colText3={
-                  FinalResult[academicRecord.exitWritingExam.result] === "P" ? "Pass" : "Fail"
-                }
-                labelBackgroundColor={backgroundColorSecondary}
-                scale={scale}
-              />
-            ) : (
-              <></>
-            )}
-            {academicRecord.exitSpeakingExam?.result !== undefined ? (
-              <FGRGridRow
-                colText1="Exit Speaking Exam: Pass or Fail"
-                colText2="امتحان المستوى بالمحادثة: ناجح او راسب"
-                colText3={
-                  FinalResult[academicRecord.exitSpeakingExam.result] === "P" ? "Pass" : "Fail"
-                }
-                labelBackgroundColor={backgroundColorSecondary}
-                scale={scale}
-              />
-            ) : (
-              <></>
-            )}
-            {academicRecord.finalResult?.result !== undefined ? (
-              <FGRGridRow
-                colText1="Level: Pass or Repeat"
-                colText2="المستوى: ناجح او راسب, لازم تبقى بنفس السمتوى"
-                colText3={
-                  FinalResult[academicRecord.finalResult.result] === "P" ? "Pass" : "Repeat"
-                }
-                labelBackgroundColor={backgroundColorSecondary}
-                scale={scale}
-              />
-            ) : (
-              <></>
-            )}
+            <FGRGridRow
+              colText1="Class Grade:"
+              colText2="العلامة في الصف"
+              colText3={
+                academicRecord.finalResult?.percentage
+                  ? `${academicRecord.finalResult.percentage}%`
+                  : "Not Applicable"
+              }
+              labelBackgroundColor={backgroundColorSecondary}
+              scale={scale}
+            />
+            <FGRGridRow
+              colText1="Class Attendance:"
+              colText2="الحضور"
+              colText3={
+                academicRecord.attendance ? `${academicRecord.attendance}%` : "Not Applicable"
+              }
+              labelBackgroundColor={backgroundColorSecondary}
+              scale={scale}
+            />
+            <FGRGridRow
+              colText1="Exit Writing Exam: Pass or Fail"
+              colText2="امتحان المستوى بالكتابة: ناجح او راسب"
+              colText3={
+                academicRecord.exitWritingExam?.result !== undefined
+                  ? FinalResult[academicRecord.exitWritingExam.result] === "P"
+                    ? "Pass"
+                    : "Fail"
+                  : "Not Applicable"
+              }
+              labelBackgroundColor={backgroundColorSecondary}
+              scale={scale}
+            />
+            <FGRGridRow
+              colText1="Exit Speaking Exam: Pass or Fail"
+              colText2="امتحان المستوى بالمحادثة: ناجح او راسب"
+              colText3={
+                academicRecord.exitSpeakingExam?.result !== undefined
+                  ? FinalResult[academicRecord.exitSpeakingExam.result] === "P"
+                    ? "Pass"
+                    : "Fail"
+                  : "Not Applicable"
+              }
+              labelBackgroundColor={backgroundColorSecondary}
+              scale={scale}
+            />
+            <FGRGridRow
+              colText1="Level: Pass or Repeat"
+              colText2="المستوى: ناجح او راسب, لازم تبقى بنفس السمتوى"
+              colText3={
+                academicRecord.finalResult?.result !== undefined
+                  ? FinalResult[academicRecord.finalResult.result] === "P"
+                    ? "Pass"
+                    : "Repeat"
+                  : "Not Applicable"
+              }
+              labelBackgroundColor={backgroundColorSecondary}
+              scale={scale}
+            />
             <FGRGridRow
               colText1="Your Level for Next Session"
               colText2="مستواك في الدورة الجاي"

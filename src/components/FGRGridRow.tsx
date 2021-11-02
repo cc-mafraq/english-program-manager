@@ -18,7 +18,7 @@ export const FGRGridRow = ({
 }) => {
   const SPACING = 1 * scale;
   return (
-    <Grid borderBottom={1 * scale} borderColor="#222222" container>
+    <Grid borderBottom={1} borderColor="#222222" container>
       <Grid item padding={SPACING} sx={{ backgroundColor: labelBackgroundColor }} xs={4}>
         <Typography fontSize={`${12 * scale}pt`} fontWeight="bold" variant="body1">
           {colText1}
