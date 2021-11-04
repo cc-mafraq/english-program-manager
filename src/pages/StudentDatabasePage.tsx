@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState } from "react";
-import { StudentDatabaseToolbar, StudentList } from "../components";
+import { FinalGradeReportDialog, StudentDatabaseToolbar, StudentList } from "../components";
 import { Student } from "../interfaces";
 import { getStudentPage } from "../services";
 import { spreadsheetToStudentList } from "../services/spreadsheetService";
@@ -9,6 +9,7 @@ export const StudentDatabasePage = () => {
   const [studentsPage, setStudentsPage] = useState<Student[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
+  const [openFGRDialog, setOpenFGRDialog] = useState(false);
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPage(newPage);
@@ -38,23 +39,34 @@ export const StudentDatabasePage = () => {
     };
   };
 
+  const handleGenerateFGRClick = () => {
+    setOpenFGRDialog(true);
+  };
+
+  const handleFGRDialogClose = () => {
+    setOpenFGRDialog(false);
+  };
+
   return (
     <>
-      {/* <input
-        accept=".txt"
-        id="fileSelect"
-        onChange={onInputChange}
-        hidden
-        type="file"
-      /> */}
       <StudentDatabaseToolbar
         handleChangePage={handleChangePage}
         handleChangeRowsPerPage={handleChangeRowsPerPage}
+        handleGenerateFGRClick={handleGenerateFGRClick}
         handleImportClick={onInputChange}
         page={page}
         rowsPerPage={rowsPerPage}
         students={students}
       />
+      {students.length > 0 ? (
+        <FinalGradeReportDialog
+          handleDialogClose={handleFGRDialogClose}
+          open={openFGRDialog}
+          students={students}
+        />
+      ) : (
+        <></>
+      )}
       <StudentList studentsPage={studentsPage} />
     </>
   );

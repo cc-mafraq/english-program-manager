@@ -102,7 +102,6 @@ module.exports = {
 
     // React Hooks
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
 
     // React
     "react/jsx-props-no-spreading": "off",

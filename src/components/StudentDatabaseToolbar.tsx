@@ -1,4 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
+import CachedIcon from "@mui/icons-material/Cached";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import UploadIcon from "@mui/icons-material/Upload";
@@ -7,10 +8,6 @@ import React, { ChangeEvent } from "react";
 import { LabeledIconButton, Searchbar } from ".";
 import { Student } from "../interfaces";
 
-interface RefObject {
-  click: () => void;
-}
-
 export const StudentDatabaseToolbar = ({
   students,
   page,
@@ -18,18 +15,19 @@ export const StudentDatabaseToolbar = ({
   handleChangePage,
   handleChangeRowsPerPage,
   handleImportClick,
+  handleGenerateFGRClick,
 }: {
   handleChangePage: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
   handleChangeRowsPerPage: (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
+  handleGenerateFGRClick: (e: React.MouseEvent<HTMLLIElement>) => void;
   handleImportClick: (e: ChangeEvent<HTMLInputElement>) => void;
   page: number;
   rowsPerPage: number;
   students: Student[];
 }) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-  const fileInput = React.useRef<HTMLInputElement>();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -85,6 +83,9 @@ export const StudentDatabaseToolbar = ({
                 <UploadIcon color="primary" />
               </LabeledIconButton>
             </label>
+            <LabeledIconButton label="GENERATE FGRs" onClick={handleGenerateFGRClick}>
+              <CachedIcon color="primary" />
+            </LabeledIconButton>
           </Box>
         </Popover>
         <Box>

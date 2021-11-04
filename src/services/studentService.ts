@@ -1,4 +1,20 @@
-import { countBy, forEach, last, map, slice, zip } from "lodash";
+import {
+  countBy,
+  filter,
+  forEach,
+  includes,
+  isEmpty,
+  last,
+  lowerCase,
+  map,
+  nth,
+  replace,
+  reverse,
+  slice,
+  sortBy,
+  uniq,
+  zip,
+} from "lodash";
 import { FinalResult, GenderedLevel, Status, Student } from "../interfaces";
 
 export type StudentProgress = {
@@ -52,7 +68,44 @@ export const getProgress = (student: Student): StudentProgress => {
   return progress;
 };
 
-export const getStudentPage = (students: Student[], page: number, rowsPerPage: number) => {
+export const getStudentPage = (
+  students: Student[],
+  page: number,
+  rowsPerPage: number,
+): Student[] => {
   const newRowsPerPage = rowsPerPage > students.length ? students.length : rowsPerPage;
   return slice(students, page * newRowsPerPage, (page + 1) * newRowsPerPage);
+};
+
+export const filterBySession = (
+  students: Student[],
+  session: Student["initialSession"],
+): Student[] => {
+  return filter(students, (s) => {
+    return includes(map(s.academicRecords, "session"), session);
+  });
+};
+
+export const filterOutById = (students: Student[], id: Student["epId"]): Student[] => {
+  return filter(students, (s) => {
+    return s.epId !== id;
+  });
+};
+
+export const getAllSessions = (students: Student[]) => {
+  return filter(
+    reverse(
+      sortBy(uniq(map(students, "initialSession")), (session) => {
+        const sessionParts = session.split(" ");
+        return `${nth(sessionParts, 2)} ${replace(
+          replace(lowerCase(nth(sessionParts, 0)), "fa", "2"),
+          "sp",
+          "1",
+        )} ${nth(sessionParts, 1)}`;
+      }),
+    ),
+    (s) => {
+      return !isEmpty(s);
+    },
+  );
 };
