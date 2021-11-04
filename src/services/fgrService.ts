@@ -1,10 +1,12 @@
-import { forEach, includes, indexOf, replace } from "lodash";
+import { concat, forEach, includes, indexOf, replace } from "lodash";
 import { AcademicRecord, FinalResult, Student } from "../interfaces";
 
 export interface StudentAcademicRecordIndex {
   academicRecordIndex: number;
   student: Student;
 }
+
+const levels = ["PL1", "L1", "L2", "L3", "L4", "L5", "L5 GRAD"];
 
 export const getFullLevelName = (level: string): string => {
   return replace(
@@ -19,7 +21,6 @@ export const getLevelForNextSession = (
   academicRecord: AcademicRecord,
   noIncrement?: boolean,
 ): string => {
-  const levels = ["PL1", "L1", "L2", "L3", "L4", "L5", "L5 GRAD"];
   if (academicRecord.level && includes(levels, replace(academicRecord.level, /(-W)|(-M)/, ""))) {
     const recordLevel = replace(academicRecord.level, /(-W)|(-M)/, "");
     const levelIndex = indexOf(levels, recordLevel);
@@ -38,14 +39,29 @@ export const getFGRStudents = (
   const fgrStudents: StudentAcademicRecordIndex[] = [];
   forEach(students, (student) => {
     forEach(student.academicRecords, (ar, i) => {
+      // conditions for creating an FGR
       if (
         ar.session === session &&
         ar.finalResult?.result !== FinalResult.WD &&
-        !(ar.finalResult?.result === undefined && ar.attendance === undefined)
+        !(ar.finalResult?.result === undefined && ar.attendance === undefined) &&
+        !ar.levelAudited
       ) {
         fgrStudents.push({ academicRecordIndex: i, student });
       }
     });
   });
   return fgrStudents;
+};
+
+export const isElective = (academicRecord: AcademicRecord): boolean => {
+  const genderedLevels = concat(levels, ["PL1-M", "PL1-W", "L1-M", "L1-W", "L2-M", "L2-W"]);
+  return !includes(genderedLevels, academicRecord.level);
+};
+
+export const getElectiveFullName = (electiveName: string): string => {
+  return replace(
+    replace(electiveName, "I&T", "IELTS & TOEFL"),
+    /(Ac Rdg)|(Adv Rdg)/,
+    "Advanced Reading",
+  );
 };

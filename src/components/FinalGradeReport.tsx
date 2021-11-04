@@ -9,7 +9,12 @@ import { join, nth, replace, slice, split } from "lodash";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FGRGridRow } from ".";
 import { FinalResult, Student } from "../interfaces";
-import { getLevelForNextSession, StudentAcademicRecordIndex } from "../services";
+import {
+  getElectiveFullName,
+  getLevelForNextSession,
+  isElective,
+  StudentAcademicRecordIndex,
+} from "../services";
 
 interface FinalGradeReportProps {
   handleDownloadFinished: (studentAcademicRecord: StudentAcademicRecordIndex) => void;
@@ -40,7 +45,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
   const backgroundColorMain = "rgba(255,242,204,1)";
   const backgroundColorSecondary = "rgba(117,219,255,1)";
   const fileName = `${join(slice(split(student.name.english, " "), 0, 2), "_")}_${student.epId}_${
-    studentAcademicRecord.academicRecordIndex
+    studentAcademicRecord.academicRecordIndex + 1
   }.png`;
   const [isDownloaded, setIsDownloaded] = useState(false);
   const componentRef = useRef(null);
@@ -171,6 +176,21 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
               labelBackgroundColor={backgroundColorMain}
               scale={scale}
             />
+            {isElective(academicRecord) ? (
+              <FGRGridRow
+                colText1="Name of Class:"
+                colText2="إسم الصف"
+                colText3={
+                  academicRecord.level
+                    ? getElectiveFullName(academicRecord.level)
+                    : "Not Applicable"
+                }
+                labelBackgroundColor={backgroundColorSecondary}
+                scale={scale}
+              />
+            ) : (
+              <></>
+            )}
             <FGRGridRow
               colText1="Class Grade:"
               colText2="العلامة في الصف"
@@ -217,19 +237,19 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
               labelBackgroundColor={backgroundColorSecondary}
               scale={scale}
             />
-            <FGRGridRow
-              colText1="Level: Pass or Repeat"
-              colText2="المستوى: ناجح او راسب, لازم تبقى بنفس السمتوى"
-              colText3={
-                academicRecord.finalResult?.result !== undefined
-                  ? FinalResult[academicRecord.finalResult.result] === "P"
-                    ? "Pass"
-                    : "Repeat"
-                  : "Not Applicable"
-              }
-              labelBackgroundColor={backgroundColorSecondary}
-              scale={scale}
-            />
+            {academicRecord.finalResult?.result !== undefined ? (
+              <FGRGridRow
+                colText1="Level: Pass or Repeat"
+                colText2="المستوى: ناجح او راسب, لازم تبقى بنفس السمتوى"
+                colText3={
+                  FinalResult[academicRecord.finalResult.result] === "P" ? "Pass" : "Repeat"
+                }
+                labelBackgroundColor={backgroundColorSecondary}
+                scale={scale}
+              />
+            ) : (
+              <></>
+            )}
             <FGRGridRow
               colText1="Your Level for Next Session"
               colText2="مستواك في الدورة الجاي"
