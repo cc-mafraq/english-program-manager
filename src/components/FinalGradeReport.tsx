@@ -122,7 +122,9 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
     {
       colText1: "Level:",
       colText2: "المستوى",
-      colText3: academicRecord ? getLevelForNextSession(student, academicRecord, true) : "",
+      colText3: academicRecord
+        ? getLevelForNextSession({ academicRecord, noIncrement: true, student })
+        : "",
       labelBackgroundColor: backgroundColorMain,
     },
     {
@@ -183,7 +185,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
     {
       colText1: "Your Level for Next Session",
       colText2: "مستواك في الدورة الجاي",
-      colText3: academicRecord ? getLevelForNextSession(student, academicRecord) : "",
+      colText3: academicRecord ? getLevelForNextSession({ academicRecord, student }) : "",
       colText3Props: { fontWeight: "bold" },
       labelBackgroundColor: backgroundColorMain,
     },

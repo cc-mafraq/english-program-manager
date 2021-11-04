@@ -1,4 +1,15 @@
-import { concat, forEach, includes, indexOf, lowerCase, map, replace } from "lodash";
+import {
+  concat,
+  filter,
+  forEach,
+  includes,
+  indexOf,
+  isEqual,
+  lowerCase,
+  map,
+  replace,
+  some,
+} from "lodash";
 import { AcademicRecord, FinalResult, Student } from "../interfaces";
 
 export interface StudentAcademicRecordIndex {
@@ -16,15 +27,44 @@ export const getFullLevelName = (level: string): string => {
   );
 };
 
-export const getLevelForNextSession = (
-  student: Student,
-  academicRecord: AcademicRecord,
-  noIncrement?: boolean,
-): string => {
-  if (academicRecord.level && includes(levels, replace(academicRecord.level, /(-W)|(-M)/, ""))) {
+export const getLevelForNextSession = ({
+  academicRecord,
+  isOtherRecord,
+  student,
+  noIncrement,
+}: {
+  academicRecord: AcademicRecord;
+  isOtherRecord?: boolean;
+  noIncrement?: boolean;
+  student: Student;
+}): string => {
+  if (academicRecord.level) {
     const recordLevel = replace(academicRecord.level, /(-W)|(-M)/, "");
-    const levelIndex = indexOf(levels, recordLevel);
-    if (academicRecord.finalResult?.result === 0 && !noIncrement) {
+    const isCoreClass = includes(levels, recordLevel);
+    const levelIndex = isCoreClass
+      ? indexOf(levels, recordLevel)
+      : indexOf(levels, replace(student.currentLevel, /(-W)|(-M)/, ""));
+    const hasPassed = academicRecord.finalResult?.result === 0;
+    const sessionAcademicRecords = filter(student.academicRecords, (ar) => {
+      return (
+        !isOtherRecord &&
+        !noIncrement &&
+        ar.session === academicRecord.session &&
+        !isEqual(ar, academicRecord)
+      );
+    });
+    const sessionAcademicRecordNextLevels = map(sessionAcademicRecords, (sessionAR) => {
+      return getLevelForNextSession({ academicRecord: sessionAR, isOtherRecord: true, student });
+    });
+    const passedDifferentCoreClass =
+      !isCoreClass &&
+      some(sessionAcademicRecordNextLevels, (sessionARNL) => {
+        return sessionARNL !== recordLevel;
+      });
+    if (
+      !noIncrement &&
+      ((isCoreClass && hasPassed) || (!isCoreClass && passedDifferentCoreClass))
+    ) {
       return getFullLevelName(levels[levelIndex + 1]);
     }
     return getFullLevelName(levels[levelIndex]);
