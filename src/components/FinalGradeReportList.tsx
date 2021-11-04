@@ -4,10 +4,12 @@ import { map } from "lodash";
 import React from "react";
 import { FinalGradeReport } from ".";
 import { Student } from "../interfaces";
+import { StudentAcademicRecordIndex } from "../services";
 
 interface FinalGradeReportListProps {
-  fgrPage: Student[];
-  handleDownloadFinished: (student: Student) => void;
+  fgrStudents: StudentAcademicRecordIndex[];
+  handleDownloadFinished: (studentAcademicRecord: StudentAcademicRecordIndex) => void;
+  handleRemoveFGR: (studentAcademicRecord: StudentAcademicRecordIndex) => void;
   scale: number;
   session: Student["initialSession"];
   shouldDownload: boolean;
@@ -16,8 +18,9 @@ interface FinalGradeReportListProps {
 }
 
 export const FinalGradeReportList: React.FC<FinalGradeReportListProps> = ({
-  fgrPage,
+  fgrStudents,
   handleDownloadFinished,
+  handleRemoveFGR,
   scale,
   session,
   shouldDownload,
@@ -26,15 +29,16 @@ export const FinalGradeReportList: React.FC<FinalGradeReportListProps> = ({
 }) => {
   return (
     <Box sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
-      {map(fgrPage, (fgrStudent) => {
+      {map(fgrStudents, (fgrStudent) => {
         return (
-          <span key={fgrStudent.epId}>
+          <span key={`${fgrStudent.student.epId}-${fgrStudent.academicRecordIndex}`}>
             <FinalGradeReport
               handleDownloadFinished={handleDownloadFinished}
+              handleRemoveFGR={handleRemoveFGR}
               scale={scale}
               session={session}
               shouldDownload={shouldDownload}
-              student={fgrStudent}
+              studentAcademicRecord={fgrStudent}
               width={width}
               zip={zip}
             />

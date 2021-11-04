@@ -3,10 +3,11 @@ import DownloadIcon from "@mui/icons-material/Download";
 import { Box, Card, Dialog, Typography } from "@mui/material";
 import download from "downloadjs";
 import JSZip from "jszip";
-import { filter, first, isEqual, map, replace } from "lodash";
+import { cloneDeep, isEqual, map, pull, replace } from "lodash";
 import React, { useState } from "react";
 import { FinalGradeReportList, LabeledIconButton } from ".";
-import { FinalResult, Student } from "../interfaces";
+import { Student } from "../interfaces";
+import { getFGRStudents, StudentAcademicRecordIndex } from "../services";
 
 interface FinalGradeReportDialogProps {
   handleDialogClose: () => void;
@@ -22,27 +23,36 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({
   const scale = 0.5;
   const fgrWidth = 640 * scale;
   const fgrSession = "Sp I 21";
-  let zippedStudents: Student[] = [];
+  let zippedStudentAcademicRecords: StudentAcademicRecordIndex[] = [];
   let zip = new JSZip();
 
-  const fgrStudents = filter(students, (student) => {
-    const academicRecord = filter(student.academicRecords, (ar) => {
-      return ar.session === fgrSession;
-    });
-    const result = first(academicRecord)?.finalResult?.result;
-    return academicRecord.length && result !== undefined && result !== FinalResult.WD;
-  });
+  const [fgrStudents, setFGRStudents] = useState<StudentAcademicRecordIndex[]>(
+    getFGRStudents(students, fgrSession),
+  );
   const [shouldDownload, setShouldDownload] = useState(false);
 
-  const handleDownloadAllFinished = async (student: Student) => {
-    zippedStudents.push(student);
-    if (isEqual(map(zippedStudents, "epId").sort(), map(fgrStudents, "epId").sort())) {
+  const handleDownloadAllFinished = async (studentAcademicRecord: StudentAcademicRecordIndex) => {
+    zippedStudentAcademicRecords.push(studentAcademicRecord);
+    if (
+      isEqual(
+        map(zippedStudentAcademicRecords, (zsar) => {
+          return `${zsar.student.epId}${zsar.academicRecordIndex}`;
+        }).sort(),
+        map(fgrStudents, (sar) => {
+          return `${sar.student.epId}${sar.academicRecordIndex}`;
+        }).sort(),
+      )
+    ) {
       setShouldDownload(false);
       const content = await zip.generateAsync({ type: "blob" });
       await download(content, `${replace(fgrSession, /\s/g, "-")}-FGRs`);
-      zippedStudents = [];
+      zippedStudentAcademicRecords = [];
       zip = new JSZip();
     }
+  };
+
+  const handleRemoveFGR = (studentAcademicRecord: StudentAcademicRecordIndex) => {
+    setFGRStudents(cloneDeep(pull(fgrStudents, studentAcademicRecord)));
   };
 
   return (
@@ -85,8 +95,9 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({
           </Box>
         </Card>
         <FinalGradeReportList
-          fgrPage={fgrStudents}
+          fgrStudents={fgrStudents}
           handleDownloadFinished={handleDownloadAllFinished}
+          handleRemoveFGR={handleRemoveFGR}
           scale={scale}
           session={fgrSession}
           shouldDownload={shouldDownload}

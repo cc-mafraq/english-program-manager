@@ -5,46 +5,45 @@ import { Box, Card, Grid, IconButton, Typography } from "@mui/material";
 import download from "downloadjs";
 import { toPng } from "html-to-image";
 import JSZip from "jszip";
-import { indexOf, join, map, nth, replace, slice, split } from "lodash";
+import { join, nth, replace, slice, split } from "lodash";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FGRGridRow } from ".";
 import { FinalResult, Student } from "../interfaces";
-import { getLevelForNextSession } from "../services";
+import { getLevelForNextSession, StudentAcademicRecordIndex } from "../services";
 
 interface FinalGradeReportProps {
-  handleDownloadFinished: (student: Student) => void;
+  handleDownloadFinished: (studentAcademicRecord: StudentAcademicRecordIndex) => void;
+  handleRemoveFGR: (studentAcademicRecord: StudentAcademicRecordIndex) => void;
   scale: number;
   session: Student["initialSession"];
   shouldDownload: boolean;
-  student: Student;
+  studentAcademicRecord: StudentAcademicRecordIndex;
   width: number;
   zip: JSZip;
 }
 
 export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
   handleDownloadFinished,
+  handleRemoveFGR,
   session,
-  student,
+  studentAcademicRecord,
   shouldDownload,
   scale,
   width,
   zip,
 }) => {
+  const { student } = studentAcademicRecord;
+  const academicRecord = nth(student.academicRecords, studentAcademicRecord.academicRecordIndex);
   const imageWidth = width - 30 * scale;
   const spacing = 2 * scale;
   const borderSize = 15 * scale;
   const backgroundColorMain = "rgba(255,242,204,1)";
   const backgroundColorSecondary = "rgba(117,219,255,1)";
-  const fileName = `${join(slice(split(student.name.english, " "), 0, 2), "_")}_${
-    student.epId
+  const fileName = `${join(slice(split(student.name.english, " "), 0, 2), "_")}_${student.epId}_${
+    studentAcademicRecord.academicRecordIndex
   }.png`;
   const [isDownloaded, setIsDownloaded] = useState(false);
-
   const componentRef = useRef(null);
-  const academicRecord = nth(
-    student?.academicRecords,
-    indexOf(map(student?.academicRecords, "session"), session),
-  );
 
   const downloadFGR = useCallback(
     (dl: boolean) => {
@@ -75,7 +74,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
         if (img) {
           const imgClean = replace(img, "data:image/png;base64,", "");
           await zip.file(fileName, imgClean, { base64: true });
-          await handleDownloadFinished(student);
+          await handleDownloadFinished(studentAcademicRecord);
           setIsDownloaded(true);
         }
       }
@@ -89,7 +88,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
         <IconButton
           color="error"
           onClick={() => {
-            setIsDownloaded(true);
+            handleRemoveFGR(studentAcademicRecord);
           }}
         >
           <CloseIcon color="error" />

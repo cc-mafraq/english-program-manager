@@ -1,5 +1,10 @@
-import { includes, indexOf, replace } from "lodash";
-import { AcademicRecord, Student } from "../interfaces";
+import { forEach, includes, indexOf, replace } from "lodash";
+import { AcademicRecord, FinalResult, Student } from "../interfaces";
+
+export interface StudentAcademicRecordIndex {
+  academicRecordIndex: number;
+  student: Student;
+}
 
 export const getFullLevelName = (level: string): string => {
   return replace(
@@ -24,4 +29,23 @@ export const getLevelForNextSession = (
     return getFullLevelName(levels[levelIndex]);
   }
   return getFullLevelName(student.currentLevel);
+};
+
+export const getFGRStudents = (
+  students: Student[],
+  session: Student["initialSession"],
+): StudentAcademicRecordIndex[] => {
+  const fgrStudents: StudentAcademicRecordIndex[] = [];
+  forEach(students, (student) => {
+    forEach(student.academicRecords, (ar, i) => {
+      if (
+        ar.session === session &&
+        ar.finalResult?.result !== FinalResult.WD &&
+        !(ar.finalResult?.result === undefined && ar.attendance === undefined)
+      ) {
+        fgrStudents.push({ academicRecordIndex: i, student });
+      }
+    });
+  });
+  return fgrStudents;
 };
