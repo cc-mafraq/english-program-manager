@@ -1,4 +1,4 @@
-import { concat, forEach, includes, indexOf, replace } from "lodash";
+import { concat, forEach, includes, indexOf, lowerCase, replace } from "lodash";
 import { AcademicRecord, FinalResult, Student } from "../interfaces";
 
 export interface StudentAcademicRecordIndex {
@@ -41,7 +41,7 @@ export const getFGRStudents = (
     forEach(student.academicRecords, (ar, i) => {
       // conditions for creating an FGR
       if (
-        ar.session === session &&
+        lowerCase(ar.session) === lowerCase(session) &&
         ar.finalResult?.result !== FinalResult.WD &&
         !(ar.finalResult?.result === undefined && ar.attendance === undefined) &&
         !ar.levelAudited
@@ -63,5 +63,19 @@ export const getElectiveFullName = (electiveName: string): string => {
     replace(electiveName, "I&T", "IELTS & TOEFL"),
     /(Ac Rdg)|(Adv Rdg)/,
     "Advanced Reading",
+  );
+};
+
+export const getSessionFullName = (session: string): string => {
+  return replace(
+    replace(
+      replace(replace(lowerCase(session), /i/g, "I"), /(\d{2})/, (r) => {
+        return `20${r}`;
+      }),
+      "sp",
+      "Spring",
+    ),
+    "fa",
+    "Fall",
   );
 };

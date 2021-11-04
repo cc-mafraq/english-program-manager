@@ -1,4 +1,20 @@
-import { countBy, filter, forEach, includes, last, map, slice, zip } from "lodash";
+import {
+  countBy,
+  filter,
+  forEach,
+  includes,
+  isEmpty,
+  last,
+  lowerCase,
+  map,
+  nth,
+  replace,
+  reverse,
+  slice,
+  sortBy,
+  uniq,
+  zip,
+} from "lodash";
 import { FinalResult, GenderedLevel, Status, Student } from "../interfaces";
 
 export type StudentProgress = {
@@ -74,4 +90,22 @@ export const filterOutById = (students: Student[], id: Student["epId"]): Student
   return filter(students, (s) => {
     return s.epId !== id;
   });
+};
+
+export const getAllSessions = (students: Student[]) => {
+  return filter(
+    reverse(
+      sortBy(uniq(map(students, "initialSession")), (session) => {
+        const sessionParts = session.split(" ");
+        return `${nth(sessionParts, 2)} ${replace(
+          replace(lowerCase(nth(sessionParts, 0)), "fa", "2"),
+          "sp",
+          "1",
+        )} ${nth(sessionParts, 1)}`;
+      }),
+    ),
+    (s) => {
+      return !isEmpty(s);
+    },
+  );
 };

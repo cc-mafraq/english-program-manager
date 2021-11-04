@@ -1,13 +1,28 @@
 import CloseIcon from "@mui/icons-material/Close";
 import DownloadIcon from "@mui/icons-material/Download";
-import { Box, Card, Dialog, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  Dialog,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Typography,
+} from "@mui/material";
 import download from "downloadjs";
 import JSZip from "jszip";
-import { cloneDeep, isEqual, map, pull, replace } from "lodash";
+import { cloneDeep, isEqual, map, nth, pull, replace } from "lodash";
 import React, { useState } from "react";
 import { FinalGradeReportList, LabeledIconButton } from ".";
 import { Student } from "../interfaces";
-import { getFGRStudents, StudentAcademicRecordIndex } from "../services";
+import {
+  getAllSessions,
+  getFGRStudents,
+  getSessionFullName,
+  StudentAcademicRecordIndex,
+} from "../services";
 
 interface FinalGradeReportDialogProps {
   handleDialogClose: () => void;
@@ -22,10 +37,11 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({
 }) => {
   const scale = 0.5;
   const fgrWidth = 640 * scale;
-  const fgrSession = "Sp I 21";
+  const sessionOptions = getAllSessions(students);
   let zippedStudentAcademicRecords: StudentAcademicRecordIndex[] = [];
   let zip = new JSZip();
 
+  const [fgrSession, setFGRSession] = useState(nth(sessionOptions, 1) || "Sp I 21");
   const [fgrStudents, setFGRStudents] = useState<StudentAcademicRecordIndex[]>(
     getFGRStudents(students, fgrSession),
   );
@@ -55,6 +71,12 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({
     setFGRStudents(cloneDeep(pull(fgrStudents, studentAcademicRecord)));
   };
 
+  const handleSessionChange = (event: SelectChangeEvent) => {
+    const session = event.target.value as string;
+    setFGRSession(session);
+    setFGRStudents(getFGRStudents(students, session));
+  };
+
   return (
     <Dialog
       fullScreen
@@ -77,9 +99,31 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({
             padding: "5px",
           }}
         >
-          <Typography fontWeight="bold" variant="h5">
-            Final Grade Reports: {fgrSession}
-          </Typography>
+          <Box sx={{ marginBottom: "auto", marginLeft: "5%", marginTop: "auto" }}>
+            <Typography fontWeight="bold" variant="h5">
+              Final Grade Reports
+            </Typography>
+          </Box>
+          <Box sx={{ width: "30%" }}>
+            <FormControl fullWidth>
+              <InputLabel id="session-label">Session</InputLabel>
+              <Select
+                id="session-select"
+                label="Session"
+                labelId="session-label"
+                onChange={handleSessionChange}
+                value={fgrSession}
+              >
+                {map(sessionOptions, (so) => {
+                  return (
+                    <MenuItem key={so} value={so}>
+                      {getSessionFullName(so)}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          </Box>
           <Box display="flex" flexDirection="row">
             <LabeledIconButton
               label="DOWNLOAD ALL"

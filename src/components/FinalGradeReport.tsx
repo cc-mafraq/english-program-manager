@@ -12,6 +12,7 @@ import { FinalResult, Student } from "../interfaces";
 import {
   getElectiveFullName,
   getLevelForNextSession,
+  getSessionFullName,
   isElective,
   StudentAcademicRecordIndex,
 } from "../services";
@@ -165,7 +166,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
             <FGRGridRow
               colText1="Session:"
               colText2="الفصل"
-              colText3={replace(replace(session, "Sp", "Spring"), "Fa", "Fall")}
+              colText3={getSessionFullName(session)}
               labelBackgroundColor={backgroundColorMain}
               scale={scale}
             />
