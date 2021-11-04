@@ -1,4 +1,4 @@
-import { concat, forEach, includes, indexOf, lowerCase, replace } from "lodash";
+import { concat, forEach, includes, indexOf, lowerCase, map, replace } from "lodash";
 import { AcademicRecord, FinalResult, Student } from "../interfaces";
 
 export interface StudentAcademicRecordIndex {
@@ -78,4 +78,10 @@ export const getSessionFullName = (session: string): string => {
     "fa",
     "Fall",
   );
+};
+
+export const getSortedSARIndexArray = (sarArr: StudentAcademicRecordIndex[]) => {
+  return map(sarArr, (sar) => {
+    return `${sar.student.epId}${sar.academicRecordIndex}`;
+  }).sort();
 };
