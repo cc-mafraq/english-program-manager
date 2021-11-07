@@ -7,8 +7,10 @@ import {
   isEqual,
   lowerCase,
   map,
+  nth,
   replace,
   some,
+  split,
 } from "lodash";
 import { AcademicRecord, FinalResult, Student } from "../interfaces";
 
@@ -124,4 +126,13 @@ export const getSortedSARIndexArray = (sarArr: StudentAcademicRecordIndex[]) => 
   return map(sarArr, (sar) => {
     return `${sar.student.epId}${sar.academicRecordIndex}`;
   }).sort();
+};
+
+export const getStudentShortName = (student: Student) => {
+  const nameParts = split(student.name.english, " ");
+  const firstName = nth(nameParts, 0);
+  const secondName = nth(nameParts, 1);
+  const thirdName = nth(nameParts, 2);
+  const shortName = `${firstName} ${secondName}`;
+  return secondName === "Al" ? `${shortName} ${thirdName}` : shortName;
 };
