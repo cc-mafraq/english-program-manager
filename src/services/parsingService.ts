@@ -364,11 +364,11 @@ export const parseAcademicRecordResult = (key: string, value: string, student: S
 };
 
 const percentRegex = /\d{1,3}/;
+const removeFromNotesRegex = /[()%]/g;
 
 export const parseAcademicRecordFinalGrade = (key: string, value: string, student: Student) => {
-  const percentWithSymbolRegex = /\d{1,3}%/;
-  const percentGrade = value.match(percentWithSymbolRegex)?.toString().slice(0, -1);
-  const gradeNotes = trim(replace(replace(value, percentWithSymbolRegex, ""), /[()]/g, ""));
+  const percentGrade = value.match(percentRegex)?.toString();
+  const gradeNotes = trim(replace(replace(value, percentRegex, ""), removeFromNotesRegex, ""));
   const lastAcademicRecord = last(student.academicRecords);
   if (lastAcademicRecord && lastAcademicRecord.finalResult) {
     lastAcademicRecord.finalResult.percentage = Number.isNaN(Number(percentGrade))
@@ -387,7 +387,7 @@ export const parseAcademicRecordExitWritingExam = (
   const examGrade = value.match(resultRegex);
   const percentGrade = value.match(percentRegex)?.toString();
   const gradeNotes = trim(
-    replace(replace(replace(value, percentRegex, ""), /[()]/g, ""), /P|F/, ""),
+    replace(replace(replace(value, percentRegex, ""), removeFromNotesRegex, ""), /P|F/, ""),
   );
   const lastAcademicRecord = last(student.academicRecords);
   if (lastAcademicRecord && examGrade) {
@@ -408,7 +408,7 @@ export const parseAcademicRecordExitSpeakingExam = (
   const examGrade = value.match(resultRegex);
   const percentGrade = value.match(percentRegex)?.toString();
   const gradeNotes = trim(
-    replace(replace(replace(value, percentRegex, ""), /[()]/g, ""), /P|F/, ""),
+    replace(replace(replace(value, percentRegex, ""), removeFromNotesRegex, ""), /P|F/, ""),
   );
   const lastAcademicRecord = last(student.academicRecords);
   if (lastAcademicRecord && examGrade) {
