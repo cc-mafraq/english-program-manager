@@ -5,7 +5,7 @@ import { Box, Card, Grid, IconButton, useTheme } from "@mui/material";
 import download from "downloadjs";
 import { toPng } from "html-to-image";
 import JSZip from "jszip";
-import { join, map, nth, replace, slice, split } from "lodash";
+import { map, nth, replace } from "lodash";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FGRGridRow, FGRGridRowProps, FGRHeader } from ".";
 import { FinalResult, Student } from "../interfaces";
@@ -13,6 +13,7 @@ import {
   getElectiveFullName,
   getLevelForNextSession,
   getSessionFullName,
+  getStudentShortName,
   isElective,
   StudentAcademicRecordIndex,
 } from "../services";
@@ -44,9 +45,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
 }) => {
   const { student } = studentAcademicRecord;
   const academicRecord = nth(student.academicRecords, studentAcademicRecord.academicRecordIndex);
-  const fileName = `${join(slice(split(student.name.english, " "), 0, 2), "_")}_${student.epId}_${
-    studentAcademicRecord.academicRecordIndex + 1
-  }.png`;
+  const fileName = `${student.epId}_${academicRecord?.level}.png`;
 
   const imageWidth = width - 30 * scale;
   const fgrHeight = 870;
@@ -104,7 +103,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
     {
       colText1: "Name:",
       colText2: "الإسم",
-      colText3: join(slice(split(student.name.english, " "), 0, 2), " "),
+      colText3: getStudentShortName(student),
       labelBackgroundColor: backgroundColorMain,
     },
     {
@@ -139,15 +138,19 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
     {
       colText1: "Class Grade:",
       colText2: "العلامة في الصف",
-      colText3: academicRecord?.finalResult?.percentage
-        ? `${academicRecord.finalResult.percentage}%`
-        : "Not Applicable",
+      colText3:
+        academicRecord?.finalResult?.percentage !== undefined
+          ? `${academicRecord.finalResult.percentage}%`
+          : "Not Applicable",
       labelBackgroundColor: backgroundColorSecondary,
     },
     {
       colText1: "Class Attendance:",
       colText2: "الحضور",
-      colText3: academicRecord?.attendance ? `${academicRecord.attendance}%` : "Not Applicable",
+      colText3:
+        academicRecord?.attendance !== undefined
+          ? `${academicRecord.attendance}%`
+          : "Not Applicable",
       labelBackgroundColor: backgroundColorSecondary,
     },
     {
