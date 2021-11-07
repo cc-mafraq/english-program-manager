@@ -45,7 +45,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
 }) => {
   const { student } = studentAcademicRecord;
   const academicRecord = nth(student.academicRecords, studentAcademicRecord.academicRecordIndex);
-  const fileName = `${student.epId}_${academicRecord?.level}.png`;
+  const fileName = `${student.epId}_${replace(academicRecord?.level || "", /[\s:]/g, "-")}.png`;
 
   const imageWidth = width - 30 * scale;
   const fgrHeight = 870;
