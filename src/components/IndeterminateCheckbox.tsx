@@ -8,7 +8,7 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { camelCase, every, forOwn, get, set, values } from "lodash";
+import { camelCase, every, forOwn, get, set, some, values } from "lodash";
 import React, { useContext } from "react";
 import { AppContext } from "../interfaces";
 
@@ -26,9 +26,7 @@ export const IndeterminateCheckbox: React.FC<IndeterminateCheckboxProps> = ({
   } = useContext(AppContext);
   const childrenValues = get(dataVisibility, camelCase(label));
   const allValuesChecked = every(values(childrenValues));
-  const noValuesChecked = every(values(childrenValues), (value) => {
-    return value === false;
-  });
+  const noValuesChecked = !some(values(childrenValues));
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     forOwn(childrenValues, (v, k: string) => {
