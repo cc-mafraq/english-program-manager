@@ -1,22 +1,29 @@
-import AddIcon from "@mui/icons-material/Add";
-import CachedIcon from "@mui/icons-material/Cached";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import UploadIcon from "@mui/icons-material/Upload";
-import { AppBar, Box, IconButton, Popover, TablePagination, Toolbar } from "@mui/material";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { AppBar, Box, IconButton, TablePagination, Toolbar } from "@mui/material";
 import React, { ChangeEvent } from "react";
-import { LabeledIconButton, Searchbar } from ".";
+import { ActionsPopover, Searchbar } from ".";
 import { Student } from "../interfaces";
+import { DataVisibilityPopover } from "./DataVisibilityPopover";
 
-export const StudentDatabaseToolbar = ({
-  students,
-  page,
-  rowsPerPage,
-  handleChangePage,
-  handleChangeRowsPerPage,
-  handleImportClick,
-  handleGenerateFGRClick,
-}: {
+const handlePopoverClick = (
+  setFn: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>,
+) => {
+  return (event: React.MouseEvent<HTMLButtonElement>) => {
+    setFn(event.currentTarget);
+  };
+};
+
+const handlePopoverClose = (
+  setFn: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>,
+) => {
+  return () => {
+    setFn(null);
+  };
+};
+
+interface StudentDatabaseToolbarProps {
   handleChangePage: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
   handleChangeRowsPerPage: (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -26,18 +33,21 @@ export const StudentDatabaseToolbar = ({
   page: number;
   rowsPerPage: number;
   students: Student[];
+}
+
+export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
+  students,
+  page,
+  rowsPerPage,
+  handleChangePage,
+  handleChangeRowsPerPage,
+  handleImportClick,
+  handleGenerateFGRClick,
 }) => {
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
+  const [actionsAnchorEl, setActionsAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const [dataFilterAnchorEl, setDataFilterAnchorEl] = React.useState<HTMLButtonElement | null>(
+    null,
+  );
 
   return (
     <AppBar color="default" elevation={0} position="sticky">
@@ -47,52 +57,27 @@ export const StudentDatabaseToolbar = ({
           paddingTop: "1vh",
         }}
       >
-        <IconButton onClick={handleClick}>
+        <IconButton onClick={handlePopoverClick(setActionsAnchorEl)}>
           <MoreHorizIcon color="primary" />
         </IconButton>
-        <Popover
-          anchorEl={anchorEl}
-          anchorOrigin={{
-            horizontal: "left",
-            vertical: "bottom",
-          }}
-          onClose={handleClose}
-          open={open}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              flexWrap: "wrap",
-              marginRight: "0.5vw",
-              maxWidth: "15vw",
-            }}
-          >
-            <LabeledIconButton label="ADD STUDENT">
-              <AddIcon color="primary" />
-            </LabeledIconButton>
-            <label htmlFor="importSpreadsheet">
-              <input
-                accept=".txt"
-                hidden
-                id="importSpreadsheet"
-                onChange={handleImportClick}
-                type="file"
-              />
-              <LabeledIconButton label="IMPORT SPREADSHEET">
-                <UploadIcon color="primary" />
-              </LabeledIconButton>
-            </label>
-            <LabeledIconButton label="GENERATE FGRs" onClick={handleGenerateFGRClick}>
-              <CachedIcon color="primary" />
-            </LabeledIconButton>
-          </Box>
-        </Popover>
+        <ActionsPopover
+          anchorEl={actionsAnchorEl}
+          handleClose={handlePopoverClose(setActionsAnchorEl)}
+          handleGenerateFGRClick={handleGenerateFGRClick}
+          handleImportClick={handleImportClick}
+        />
         <Box>
           <Searchbar />
           <IconButton>
             <FilterAltIcon />
           </IconButton>
+          <IconButton onClick={handlePopoverClick(setDataFilterAnchorEl)}>
+            <VisibilityOffIcon />
+          </IconButton>
+          <DataVisibilityPopover
+            anchorEl={dataFilterAnchorEl}
+            handleClose={handlePopoverClose(setDataFilterAnchorEl)}
+          />
         </Box>
         <TablePagination
           component="div"

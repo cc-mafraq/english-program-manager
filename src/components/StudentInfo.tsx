@@ -82,7 +82,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
           })}
           <LabeledText label="WA Notes">{student.phone.whatsappNotes}</LabeledText>
           <LabeledText label="WA Broadcast SAR">{student.phone.waBroadcastSAR}</LabeledText>
-          <LabeledText label="WA Broadcast SAR">
+          <LabeledText label="WA Broadcast Other Groups">
             {join(student.phone.otherWaBroadcastGroups, ", ")}
           </LabeledText>
         </LabeledContainer>
@@ -127,7 +127,6 @@ export const StudentInfo = ({ student }: { student: Student }) => {
         <LabeledContainer label="Zoom">
           <LabeledText label="Tutor/Club and Details">{student.zoom}</LabeledText>
         </LabeledContainer>
-        <LabeledText label="Certificate Requests">{student?.certificateRequests}</LabeledText>
         <LabeledContainer label="Correspondence">
           {map(student.correspondence, (c) => {
             return (
@@ -194,6 +193,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
               </LabeledContainer>
             );
           })}
+          <LabeledText label="Certificate Requests">{student?.certificateRequests}</LabeledText>
         </LabeledContainer>
         <LabeledContainer label="Progress" showWhenEmpty>
           {map(forOwn(progress), (v, k) => {

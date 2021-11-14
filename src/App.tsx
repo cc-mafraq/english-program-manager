@@ -1,8 +1,11 @@
 import { createTheme, ThemeProvider } from "@mui/material";
-import React from "react";
+import React, { useReducer } from "react";
 import "./App.css";
 import { MenuBar } from "./components";
+import { useLocal } from "./hooks";
+import { AppContext, initialAppState } from "./interfaces";
 import { StudentDatabasePage } from "./pages";
+import { reducer } from "./reducers";
 
 const theme = createTheme({
   palette: {
@@ -17,10 +20,15 @@ const theme = createTheme({
 });
 
 export const App = () => {
+  const { save } = useLocal("appState");
+  const [appState, appDispatch] = useReducer(reducer(save), initialAppState);
+
   return (
     <ThemeProvider theme={theme}>
-      <MenuBar />
-      <StudentDatabasePage />
+      <AppContext.Provider value={{ appDispatch, appState }}>
+        <MenuBar />
+        <StudentDatabasePage />
+      </AppContext.Provider>
     </ThemeProvider>
   );
 };
