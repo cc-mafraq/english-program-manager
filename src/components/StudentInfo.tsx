@@ -154,7 +154,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
           </LabeledText>
         </LabeledContainer>
         <LabeledContainer
-          condition={allCheckboxesFalse("Phone Numbers and Whatsapp")}
+          condition={allCheckboxesFalse("Phone Numbers and WhatsApp")}
           label="Phone Numbers and WhatsApp"
         >
           {map(student.phone.phoneNumbers, (pn, i) => {
@@ -275,6 +275,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
         <LabeledContainer
           condition={allCheckboxesFalse("Academic Records")}
           label="Academic Records"
+          showWhenEmpty
         >
           {map(student.academicRecords, (ar, i) => {
             return (
