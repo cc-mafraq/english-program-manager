@@ -19,10 +19,10 @@ export const ProgressBox = ({
             sessionResults?.length === 0
               ? "none"
               : last(sessionResults)?.result === 0
-              ? "lightgreen"
+              ? "rgba(198,224,180,1)"
               : last(sessionResults)?.result === undefined
-              ? "yellow"
-              : "red",
+              ? "rgba(245,255,150,1)"
+              : "rgba(255,175,175,1)",
 
           marginRight: "0.5vw",
           minWidth: "3vw",
