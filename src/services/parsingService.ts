@@ -342,12 +342,12 @@ export const parseDropoutReason = (key: string, value: string, student: Student)
 };
 
 export const parseAcademicRecordSession = (key: string, value: string, student: Student) => {
-  student.academicRecords.push({ session: value });
+  value && student.academicRecords.push({ session: value });
 };
 
 export const parseAcademicRecordLevel = (key: string, value: string, student: Student) => {
   const lastAcademicRecord = last(student.academicRecords);
-  if (lastAcademicRecord) {
+  if (lastAcademicRecord && value) {
     lastAcademicRecord.level = value as GenderedLevel;
   }
 };

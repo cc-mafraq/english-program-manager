@@ -3,6 +3,7 @@ import { every, get, map } from "lodash";
 import React from "react";
 
 interface LabeledContainerProps {
+  condition?: boolean;
   containerProps?: BoxProps;
   label: string;
   labelProps?: TypographyProps;
@@ -20,6 +21,7 @@ const defaultLabelProps: TypographyProps = {
 };
 
 export const LabeledContainer: React.FC<LabeledContainerProps> = ({
+  condition,
   containerProps,
   labelProps,
   label,
@@ -32,7 +34,7 @@ export const LabeledContainer: React.FC<LabeledContainerProps> = ({
     return c === undefined || c === "";
   });
 
-  return !everyChildIsEmpty || showWhenEmpty ? (
+  return condition && (!everyChildIsEmpty || showWhenEmpty) ? (
     <Box display="block" sx={{ float: "left", marginRight: "2vh", marginTop: "1vh" }}>
       <Typography {...defaultLabelProps} {...labelProps}>
         {label}
@@ -47,6 +49,7 @@ export const LabeledContainer: React.FC<LabeledContainerProps> = ({
 };
 
 LabeledContainer.defaultProps = {
+  condition: true,
   containerProps: defaultContainerProps,
   labelProps: defaultLabelProps,
   showWhenEmpty: false,

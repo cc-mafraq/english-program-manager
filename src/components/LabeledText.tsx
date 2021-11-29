@@ -2,6 +2,7 @@ import { Box, BoxProps, Typography, TypographyProps } from "@mui/material";
 import React from "react";
 
 interface LabeledTextProps {
+  condition?: boolean;
   containerProps?: BoxProps;
   label: string;
   labelProps?: TypographyProps;
@@ -24,6 +25,7 @@ const defaultTextProps: TypographyProps = {
 };
 
 export const LabeledText: React.FC<LabeledTextProps> = ({
+  condition,
   containerProps,
   labelProps,
   label,
@@ -31,7 +33,7 @@ export const LabeledText: React.FC<LabeledTextProps> = ({
   textProps,
   children,
 }) => {
-  return children || showWhenEmpty ? (
+  return condition && (children || showWhenEmpty) ? (
     <Box {...defaultContainerProps} {...containerProps}>
       <Typography {...defaultLabelProps} {...labelProps}>
         {label}
@@ -46,6 +48,7 @@ export const LabeledText: React.FC<LabeledTextProps> = ({
 };
 
 LabeledText.defaultProps = {
+  condition: true,
   containerProps: defaultContainerProps,
   labelProps: defaultLabelProps,
   showWhenEmpty: false,
