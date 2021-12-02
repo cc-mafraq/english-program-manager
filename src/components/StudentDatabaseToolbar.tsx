@@ -33,7 +33,6 @@ interface StudentDatabaseToolbarProps {
   handleSearchStringChange: (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
   page: number;
   rowsPerPage: number;
-  searchString: string;
   students: Student[];
 }
 
@@ -45,7 +44,6 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
   handleChangeRowsPerPage,
   handleImportClick,
   handleGenerateFGRClick,
-  searchString,
   handleSearchStringChange,
 }) => {
   const [actionsAnchorEl, setActionsAnchorEl] = React.useState<HTMLButtonElement | null>(null);
@@ -71,10 +69,7 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
           handleImportClick={handleImportClick}
         />
         <Box>
-          <Searchbar
-            handleSearchStringChange={handleSearchStringChange}
-            searchString={searchString}
-          />
+          <Searchbar handleSearchStringChange={handleSearchStringChange} />
           <IconButton>
             <FilterAltIcon />
           </IconButton>

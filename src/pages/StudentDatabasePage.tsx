@@ -72,7 +72,6 @@ export const StudentDatabasePage = () => {
         handleSearchStringChange={handleSearchStringChange}
         page={page}
         rowsPerPage={rowsPerPage}
-        searchString={searchString}
         students={filteredStudents}
       />
       {students.length > 0 ? (
