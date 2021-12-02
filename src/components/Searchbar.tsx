@@ -2,8 +2,14 @@ import SearchIcon from "@mui/icons-material/Search";
 import { alpha, Box, InputBase, useTheme } from "@mui/material";
 import React from "react";
 
-export const Searchbar = () => {
+interface SearchbarProps {
+  handleSearchStringChange: (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
+  searchString: string;
+}
+
+export const Searchbar: React.FC<SearchbarProps> = ({ searchString, handleSearchStringChange }) => {
   const theme = useTheme();
+
   return (
     <Box
       sx={{
@@ -38,6 +44,7 @@ export const Searchbar = () => {
       </Box>
       <InputBase
         inputProps={{ "aria-label": "search" }}
+        onChange={handleSearchStringChange}
         placeholder="Search students"
         sx={{
           "& .MuiInputBase-input": {
@@ -55,6 +62,7 @@ export const Searchbar = () => {
           },
           color: "inherit",
         }}
+        value={searchString}
       />
     </Box>
   );
