@@ -1,5 +1,6 @@
 import SearchIcon from "@mui/icons-material/Search";
 import { alpha, Box, InputBase, useTheme } from "@mui/material";
+import { isEmpty } from "lodash";
 import React, { useState } from "react";
 
 interface SearchbarProps {
@@ -7,7 +8,7 @@ interface SearchbarProps {
 }
 
 const minSearchLength = 3;
-const searchDelay = 200;
+const searchDelay = 500;
 
 export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange }) => {
   const theme = useTheme();
@@ -17,8 +18,10 @@ export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange }
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ) => {
     setValue(e.target.value);
-    if (e.target.value.length >= minSearchLength) {
-      handleSearchStringChange(e);
+    if (e.target.value.length >= minSearchLength || isEmpty(e.target.value)) {
+      setTimeout(() => {
+        handleSearchStringChange(e);
+      }, searchDelay);
     }
   };
 
