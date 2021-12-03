@@ -16,6 +16,7 @@ export const StudentDatabasePage = () => {
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPage(newPage);
     setStudentsPage(getStudentPage(filteredStudents, newPage, rowsPerPage));
+    window.scrollTo(0, 0);
   };
 
   const handleChangeRowsPerPage = (
@@ -27,10 +28,8 @@ export const StudentDatabasePage = () => {
     setStudentsPage(getStudentPage(filteredStudents, 0, newRowsPerPage));
   };
 
-  const handleSearchStringChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-  ) => {
-    const searchStr = e.target.value;
+  const handleSearchStringChange = (value: string) => {
+    const searchStr = value;
     const filStudents = searchStudents(students, searchStr);
     setSearchString(searchStr);
     setPage(0);

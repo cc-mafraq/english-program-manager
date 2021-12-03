@@ -30,7 +30,7 @@ interface StudentDatabaseToolbarProps {
   ) => void;
   handleGenerateFGRClick: (e: React.MouseEvent<HTMLLIElement>) => void;
   handleImportClick: (e: ChangeEvent<HTMLInputElement>) => void;
-  handleSearchStringChange: (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
+  handleSearchStringChange: (value: string) => void;
   page: number;
   rowsPerPage: number;
   students: Student[];
