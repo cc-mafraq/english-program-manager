@@ -1,9 +1,36 @@
+import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
-import { alpha, Box, InputBase, useTheme } from "@mui/material";
-import React from "react";
+import { alpha, Box, IconButton, InputBase, useTheme } from "@mui/material";
+import { isEmpty } from "lodash";
+import React, { useState } from "react";
 
-export const Searchbar = () => {
+interface SearchbarProps {
+  handleSearchStringChange: (value: string) => void;
+}
+
+const minSearchLength = 3;
+const searchDelay = 500;
+
+export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange }) => {
   const theme = useTheme();
+  const [value, setValue] = useState("");
+
+  const handleLocalSearchStringChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+  ) => {
+    setValue(e.target.value);
+    if (e.target.value.length >= minSearchLength || isEmpty(e.target.value)) {
+      setTimeout(() => {
+        handleSearchStringChange(e.target.value);
+      }, searchDelay);
+    }
+  };
+
+  const handleClearSearch = () => {
+    setValue("");
+    handleSearchStringChange("");
+  };
+
   return (
     <Box
       sx={{
@@ -38,6 +65,7 @@ export const Searchbar = () => {
       </Box>
       <InputBase
         inputProps={{ "aria-label": "search" }}
+        onChange={handleLocalSearchStringChange}
         placeholder="Search students"
         sx={{
           "& .MuiInputBase-input": {
@@ -55,7 +83,21 @@ export const Searchbar = () => {
           },
           color: "inherit",
         }}
+        value={value}
       />
+      <IconButton
+        onClick={handleClearSearch}
+        sx={{
+          display: "flex",
+          height: "100%",
+          padding: theme.spacing(0, 2),
+          position: "absolute",
+          right: 0,
+          top: 0,
+        }}
+      >
+        <CloseIcon />
+      </IconButton>
     </Box>
   );
 };
