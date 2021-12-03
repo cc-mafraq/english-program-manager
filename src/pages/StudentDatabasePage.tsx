@@ -29,9 +29,8 @@ export const StudentDatabasePage = () => {
   };
 
   const handleSearchStringChange = (value: string) => {
-    const searchStr = value;
-    const filStudents = searchStudents(students, searchStr);
-    setSearchString(searchStr);
+    const filStudents = searchStudents(students, value);
+    setSearchString(value);
     setPage(0);
     setStudentsPage(getStudentPage(filStudents, 0, rowsPerPage));
     setFilteredStudents(filStudents);
