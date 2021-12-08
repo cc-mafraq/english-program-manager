@@ -8,6 +8,7 @@ export interface Student {
   droppedOutReason?: DroppedOutReason;
   epId: number;
   gender: "M" | "F";
+  imageName?: string;
   initialSession: string;
   literacy: Literacy;
   name: StudentName;
