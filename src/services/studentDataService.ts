@@ -1,7 +1,24 @@
+import { collection, doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, getMetadata, ref, StorageReference } from "firebase/storage";
-import { map } from "lodash";
-import { storage } from ".";
+import { map, toString } from "lodash";
+import { cleanStudent, db, storage } from ".";
 import { Student } from "../interfaces";
+
+export const setStudentData = async (student: Student) => {
+  const cleanedStudent: Student = cleanStudent(
+    student as unknown as Record<string, unknown>,
+  ) as unknown as Student;
+  try {
+    const res = await setDoc(
+      doc(collection(db, "students"), toString(student.epId)),
+      cleanedStudent,
+    );
+    console.log(res);
+  } catch (error) {
+    console.log(error);
+    console.log(cleanedStudent);
+  }
+};
 
 const imageExtensions = [".jpeg", ".jpg", ".png", ".jfif", ".JPG"];
 const imageFolderName = "studentPics/";
@@ -28,5 +45,6 @@ export const getStudentImage = async (student: Student): Promise<string> => {
       }
     }),
   );
+  setStudentData(student);
   return downloadURL;
 };

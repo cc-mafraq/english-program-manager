@@ -1,28 +1,34 @@
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { collection, doc, setDoc } from "firebase/firestore";
+import { app, db } from ".";
 
 const provider = new GoogleAuthProvider();
 
-export const loginWithGoogle = () => {
-  const auth = getAuth();
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential?.accessToken;
-      // The signed-in user info.
-      const { user } = result;
-      // ...
-    })
-    .catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const { email } = error;
-      // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error);
-      // ...
+export const loginWithGoogle = async () => {
+  const auth = getAuth(app);
+  try {
+    const result = await signInWithPopup(auth, provider);
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    const token = credential?.accessToken;
+    // The signed-in user info.
+    const { user } = result;
+    setDoc(doc(collection(db, "users"), user.uid), {
+      email: user.email,
+      name: user.displayName,
+      uid: user.uid,
     });
+    // ...
+  } catch (error) {
+    console.log(error);
+    // Handle Errors here.
+    // const errorCode = error.code;
+    // const errorMessage = error.message;
+    // // The email of the user's account used.
+    // const { email } = error;
+    // // The AuthCredential type that was used.
+    // const credential = GoogleAuthProvider.credentialFromError(error);
+    // // ...
+  }
 };
 
 export const logout = () => {

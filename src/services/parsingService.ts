@@ -15,8 +15,10 @@ import {
   DroppedOutReason,
   FinalResult,
   GenderedLevel,
+  Grade,
   Level,
   Nationality,
+  PhoneNumber,
   Status,
   Student,
 } from "../interfaces";
@@ -171,7 +173,9 @@ export const parseGender = (key: string, value: string, student: Student) => {
 };
 
 export const parseAge = (key: string, value: string, student: Student) => {
-  student.age = value !== "" ? Number(value) : undefined;
+  if (!isEmpty(value)) {
+    student.age = Number(value);
+  }
 };
 
 export const parseOccupation = (key: string, value: string, student: Student) => {
@@ -218,12 +222,13 @@ export const parsePhone = (key: string, value: string, student: Student) => {
     const phoneNumber = strippedValue.match(phoneRegex);
     const phoneNumberNotesMatches = value.match(insideParenRegex);
     const phoneNumberNotes = phoneNumberNotesMatches !== null && phoneNumberNotesMatches[1];
-    const phoneNumberNotesStr = phoneNumberNotes ? String(phoneNumberNotes) : undefined;
-    phoneNumber &&
-      student.phone.phoneNumbers.push({
-        notes: phoneNumberNotesStr,
-        number: Number(phoneNumber),
-      });
+    const numberObject: PhoneNumber = {
+      number: Number(phoneNumber),
+    };
+    if (phoneNumberNotes) {
+      numberObject.notes = String(phoneNumberNotes);
+    }
+    phoneNumber && student.phone.phoneNumbers.push(numberObject);
     value === "has whatsapp" && parseWAStatus(key, value, student);
   }
 };
@@ -371,9 +376,9 @@ export const parseAcademicRecordFinalGrade = (key: string, value: string, studen
   const gradeNotes = trim(replace(replace(value, percentRegex, ""), removeFromNotesRegex, ""));
   const lastAcademicRecord = last(student.academicRecords);
   if (lastAcademicRecord && lastAcademicRecord.finalResult) {
-    lastAcademicRecord.finalResult.percentage = Number.isNaN(Number(percentGrade))
-      ? undefined
-      : Number(percentGrade);
+    if (Number.isNaN(Number(percentGrade))) {
+      lastAcademicRecord.finalResult.percentage = Number(percentGrade);
+    }
     lastAcademicRecord.finalResult.notes = gradeNotes;
   }
 };
@@ -391,11 +396,14 @@ export const parseAcademicRecordExitWritingExam = (
   );
   const lastAcademicRecord = last(student.academicRecords);
   if (lastAcademicRecord && examGrade) {
-    lastAcademicRecord.exitWritingExam = {
+    const writingExamObject: Grade = {
       notes: gradeNotes,
-      percentage: Number.isNaN(Number(percentGrade)) ? undefined : Number(percentGrade),
       result: FinalResult[examGrade[0] as keyof typeof FinalResult],
     };
+    if (!Number.isNaN(Number(percentGrade))) {
+      writingExamObject.percentage = Number(percentGrade);
+    }
+    lastAcademicRecord.exitWritingExam = writingExamObject;
   }
 };
 
@@ -412,11 +420,14 @@ export const parseAcademicRecordExitSpeakingExam = (
   );
   const lastAcademicRecord = last(student.academicRecords);
   if (lastAcademicRecord && examGrade) {
-    lastAcademicRecord.exitSpeakingExam = {
+    const speakingExamObject: Grade = {
       notes: gradeNotes,
-      percentage: Number.isNaN(Number(percentGrade)) ? undefined : Number(percentGrade),
       result: FinalResult[examGrade[0] as keyof typeof FinalResult],
     };
+    if (!Number.isNaN(Number(percentGrade))) {
+      speakingExamObject.percentage = Number(percentGrade);
+    }
+    lastAcademicRecord.exitSpeakingExam = speakingExamObject;
   }
 };
 
@@ -433,10 +444,8 @@ export const parseAcademicRecordAttendance = (key: string, value: string, studen
   if (!isEmpty(value)) {
     const percentAttendance = value.match(percentRegex)?.toString();
     const lastAcademicRecord = last(student.academicRecords);
-    if (lastAcademicRecord) {
-      lastAcademicRecord.attendance = Number.isNaN(Number(percentAttendance))
-        ? undefined
-        : Number(percentAttendance);
+    if (lastAcademicRecord && !Number.isNaN(Number(percentAttendance))) {
+      lastAcademicRecord.attendance = Number(percentAttendance);
     }
   }
 };
