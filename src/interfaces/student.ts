@@ -443,7 +443,7 @@ export const emptyStudent: Student = {
     arabic: "",
     english: "",
   },
-  nationality: Nationality.JRD,
+  nationality: Nationality.UNKNWN,
   phone: {
     hasWhatsapp: true,
     phoneNumbers: [],

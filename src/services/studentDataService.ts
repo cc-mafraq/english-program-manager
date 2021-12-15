@@ -36,7 +36,7 @@ export const getStudentImage = async (student: Student): Promise<string> => {
       }),
     );
     student.imageName = student.imageName ? student.imageName : "";
-    setStudentData(student);
+    // setStudentData(student);
     return downloadURL;
   }
   return "";

@@ -1,16 +1,7 @@
-import { Avatar, Box, Button, Container, Typography, TypographyProps } from "@mui/material";
+import { Avatar, Box, Button, Card, Container } from "@mui/material";
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { loginWithGoogle } from "../services";
-
-// https://github.com/mui-org/material-ui/blob/master/docs/src/pages/getting-started/templates/sign-in/SignIn.tsx
-const Copyright = (props: TypographyProps) => {
-  return (
-    <Typography align="center" color="text.secondary" variant="body2" {...props}>
-      {"Copyright © "} CCM English Program {new Date().getFullYear()}.
-    </Typography>
-  );
-};
 
 export const LoginPage = () => {
   const navigate = useNavigate();
@@ -18,27 +9,45 @@ export const LoginPage = () => {
     await loginWithGoogle();
     navigate("/epd");
   };
+
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
+    <Container
+      component="main"
+      sx={{
+        backgroundColor: "primary.main",
+        height: "100vh",
+        justifyContent: "center",
+        minHeight: "100vh",
+        minWidth: "100vw",
+        width: "100vw",
+      }}
+    >
+      <Card
         sx={{
           alignItems: "center",
           display: "flex",
           flexDirection: "column",
-          marginTop: 8,
+          left: "50%",
+          paddingBottom: 3,
+          paddingTop: 2,
+          position: "fixed",
+          top: "30%",
+          transform: "translate(-50%, -50%)",
+          width: "30vw",
         }}
       >
-        <Avatar sx={{ bgcolor: "secondary.main", m: 1 }}>{/* <LockOutlinedIcon /> */}</Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
+        <Avatar src="./assets/ep-logo-full.png" sx={{ height: 56, width: 56 }} />
         <Box sx={{ mt: 1 }}>
-          <Button fullWidth onClick={handleLogin} sx={{ mb: 2, mt: 1 }} variant="contained">
+          <Button
+            fullWidth
+            onClick={handleLogin}
+            sx={{ color: "secondary.main" }}
+            variant="outlined"
+          >
             Sign In With Google
           </Button>
         </Box>
-      </Box>
-      <Copyright />
+      </Card>
     </Container>
   );
 };
