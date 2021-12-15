@@ -1,23 +1,11 @@
 import { collection, doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, getMetadata, ref, StorageReference } from "firebase/storage";
-import { map, toString } from "lodash";
-import { cleanStudent, db, storage } from ".";
+import { isEmpty, map, toString } from "lodash";
+import { db, storage } from ".";
 import { Student } from "../interfaces";
 
 export const setStudentData = async (student: Student) => {
-  const cleanedStudent: Student = cleanStudent(
-    student as unknown as Record<string, unknown>,
-  ) as unknown as Student;
-  try {
-    const res = await setDoc(
-      doc(collection(db, "students"), toString(student.epId)),
-      cleanedStudent,
-    );
-    console.log(res);
-  } catch (error) {
-    console.log(error);
-    console.log(cleanedStudent);
-  }
+  await setDoc(doc(collection(db, "students"), toString(student.epId)), student, { merge: true });
 };
 
 const imageExtensions = [".jpeg", ".jpg", ".png", ".jfif", ".JPG"];
@@ -28,23 +16,28 @@ export const getStudentImage = async (student: Student): Promise<string> => {
     student.imageName = (await getMetadata(imageRef)).fullPath;
   };
 
-  if (student.imageName) {
+  if (!isEmpty(student.imageName)) {
     return getDownloadURL(ref(storage, student.imageName));
   }
-
-  let downloadURL = "";
-  // https://stackoverflow.com/questions/37576685/using-async-await-with-a-foreach-loop
-  await Promise.all(
-    map(imageExtensions, async (ext) => {
-      try {
-        await setImageName(ref(storage, `${imageFolderName}${student.epId}${ext}`));
-        downloadURL = await getDownloadURL(ref(storage, `${imageFolderName}${student.epId}${ext}`));
-      } catch (e) {
-        // eslint-disable-next-line no-useless-return
-        return;
-      }
-    }),
-  );
-  setStudentData(student);
-  return downloadURL;
+  if (student.imageName === undefined) {
+    let downloadURL = "";
+    // https://stackoverflow.com/questions/37576685/using-async-await-with-a-foreach-loop
+    await Promise.all(
+      map(imageExtensions, async (ext) => {
+        try {
+          await setImageName(ref(storage, `${imageFolderName}${student.epId}${ext}`));
+          downloadURL = await getDownloadURL(
+            ref(storage, `${imageFolderName}${student.epId}${ext}`),
+          );
+        } catch (e) {
+          // eslint-disable-next-line no-useless-return
+          return;
+        }
+      }),
+    );
+    student.imageName = student.imageName ? student.imageName : "";
+    setStudentData(student);
+    return downloadURL;
+  }
+  return "";
 };

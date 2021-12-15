@@ -1,8 +1,18 @@
-import React, { ChangeEvent, useState } from "react";
+import { collection, onSnapshot } from "firebase/firestore";
+import { forEach, sortBy } from "lodash";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { FinalGradeReportDialog, StudentDatabaseToolbar, StudentList } from "../components";
 import { Student } from "../interfaces";
-import { getStudentPage, searchStudents } from "../services";
+import { db, getStudentPage, searchStudents } from "../services";
 import { spreadsheetToStudentList } from "../services/spreadsheetService";
+
+interface SetStateOptions {
+  newPage?: number;
+  newRowsPerPage?: number;
+  newSearchString?: string;
+  newStudents?: Student[];
+  shouldFilter?: boolean;
+}
 
 export const StudentDatabasePage = () => {
   const [students, setStudents] = useState<Student[]>([]);
@@ -13,9 +23,53 @@ export const StudentDatabasePage = () => {
   const [openFGRDialog, setOpenFGRDialog] = useState(false);
   const [searchString, setSearchString] = useState<string>("");
 
+  const setState = ({
+    newRowsPerPage,
+    newPage,
+    newSearchString,
+    shouldFilter,
+    newStudents,
+  }: SetStateOptions) => {
+    const filStudents = shouldFilter
+      ? searchStudents(
+          newStudents !== undefined ? newStudents : students,
+          newSearchString !== undefined ? newSearchString : searchString,
+        )
+      : filteredStudents;
+    shouldFilter && setFilteredStudents(filStudents);
+    newStudents !== undefined && setStudents(newStudents);
+    newPage !== undefined && setPage(newPage);
+    newRowsPerPage !== undefined && setRowsPerPage(newRowsPerPage);
+    newSearchString !== undefined && setSearchString(newSearchString);
+    setStudentsPage(
+      getStudentPage(
+        filStudents,
+        newPage !== undefined ? newPage : page,
+        newRowsPerPage !== undefined ? newRowsPerPage : rowsPerPage,
+      ),
+    );
+  };
+
+  useEffect(() => {
+    onSnapshot(collection(db, "students"), {
+      next: (snapshot) => {
+        const studentData: Student[] = [];
+        forEach(snapshot.docs, (d) => {
+          studentData.push({ ...d.data() } as Student);
+        });
+        const sortedStudentData = sortBy(studentData, (student) => {
+          return student.name.english;
+        });
+        setState({
+          newStudents: sortedStudentData,
+          shouldFilter: true,
+        });
+      },
+    });
+  }, []);
+
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-    setPage(newPage);
-    setStudentsPage(getStudentPage(filteredStudents, newPage, rowsPerPage));
+    setState({ newPage });
     window.scrollTo(0, 0);
   };
 
@@ -23,17 +77,11 @@ export const StudentDatabasePage = () => {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const newRowsPerPage = parseInt(event.target.value, 10);
-    setRowsPerPage(newRowsPerPage);
-    setPage(0);
-    setStudentsPage(getStudentPage(filteredStudents, 0, newRowsPerPage));
+    setState({ newPage: 0, newRowsPerPage });
   };
 
   const handleSearchStringChange = (value: string) => {
-    const filStudents = searchStudents(students, value);
-    setSearchString(value);
-    setPage(0);
-    setStudentsPage(getStudentPage(filStudents, 0, rowsPerPage));
-    setFilteredStudents(filStudents);
+    setState({ newPage: 0, newSearchString: value, shouldFilter: true });
   };
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -45,10 +93,7 @@ export const StudentDatabasePage = () => {
     reader.onloadend = async () => {
       const studentListString = String(reader.result);
       const studentList = spreadsheetToStudentList(studentListString);
-      const filStudents = searchStudents(studentList, searchString);
-      setStudents(studentList);
-      setFilteredStudents(filStudents);
-      setStudentsPage(getStudentPage(filStudents, page, rowsPerPage));
+      setState({ newStudents: studentList, shouldFilter: true });
     };
   };
 

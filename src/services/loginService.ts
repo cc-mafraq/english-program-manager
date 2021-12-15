@@ -12,11 +12,15 @@ export const loginWithGoogle = async () => {
     const token = credential?.accessToken;
     // The signed-in user info.
     const { user } = result;
-    setDoc(doc(collection(db, "users"), user.uid), {
-      email: user.email,
-      name: user.displayName,
-      uid: user.uid,
-    });
+    setDoc(
+      doc(collection(db, "users"), user.uid),
+      {
+        email: user.email,
+        name: user.displayName,
+        uid: user.uid,
+      },
+      { merge: true },
+    );
     // ...
   } catch (error) {
     console.log(error);
@@ -31,13 +35,7 @@ export const loginWithGoogle = async () => {
   }
 };
 
-export const logout = () => {
-  const auth = getAuth();
-  signOut(auth)
-    .then(() => {
-      // Sign-out successful.
-    })
-    .catch((error) => {
-      // An error happened.
-    });
+export const logout = async () => {
+  const auth = getAuth(app);
+  await signOut(auth);
 };

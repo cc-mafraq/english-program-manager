@@ -70,7 +70,8 @@ export const parseWaPrimPhone = (key: string, value: string, student: Student) =
 
 export const parseNationality = (key: string, value: string, student: Student) => {
   if (Number(value) === 1) {
-    student.nationality = Nationality[key as keyof typeof Nationality];
+    student.nationality =
+      Nationality[replace(replace(key, "-", ""), /\s/g, "") as keyof typeof Nationality];
   }
 };
 
@@ -376,7 +377,7 @@ export const parseAcademicRecordFinalGrade = (key: string, value: string, studen
   const gradeNotes = trim(replace(replace(value, percentRegex, ""), removeFromNotesRegex, ""));
   const lastAcademicRecord = last(student.academicRecords);
   if (lastAcademicRecord && lastAcademicRecord.finalResult) {
-    if (Number.isNaN(Number(percentGrade))) {
+    if (!Number.isNaN(Number(percentGrade))) {
       lastAcademicRecord.finalResult.percentage = Number(percentGrade);
     }
     lastAcademicRecord.finalResult.notes = gradeNotes;
