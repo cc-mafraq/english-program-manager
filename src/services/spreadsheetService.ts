@@ -13,22 +13,22 @@ const studentFields: ValidFields = ps.expand({
   ADJ: ps.parseOrigPlacementAdjustment,
   AGEATPROGENTRY: ps.parseAge,
   AUD: ps.parseAudit,
-  "Att,Att40,Att53,Att66,Att79,Att92,Att105,Att118,Att131,Att143": ps.parseAcademicRecordAttendance,
+  "Att,Att42,Att55,Att68,Att81,Att94,Att107,Att120,Att133,Att146,Att159,Att172,Att185": ps.parseAcademicRecordAttendance,
   CERTREQUESTSDATE: ps.parseCertRequests,
   "CORRESPONDENCE1,CORRESPONDENCE2,CORRESPONDENCE3,CORRESPONDENCE4": ps.parseCorrespondence,
   CURRENTLEVEL: ps.parseCurrentLevel,
   CURRENTSTATUS: ps.parseCurrentStatus,
-  "Cert,Cert42,Cert55,Cert68,Cert81,Cert94,Cert107,Cert120": ps.parseAcademicRecordCertificate,
+  "Cert,Cert44,Cert57,Cert70,Cert83,Cert96,Cert109,Cert122,Cert135,Cert148,Cert161,Cert174": ps.parseAcademicRecordCertificate,
   DATESENT: ps.parseClassListSentDate,
   EnglishTeacher: ps.parseEnglishTeacher,
-  "ExitSpeakingExamPF,ExitSpeakingExamPF39,ExitSpeakingExamPF52,ExitSpeakingExamPF65,ExitSpeakingExamPF78,ExitSpeakingExamPF91,ExitSpeakingExamPF104,ExitSpeakingExamPF117,ExitSpeakingExamPF130,ExitSpeakingExamPF142":
+  "ExitSpeakingExamPF,ExitSpeakingExamPF41,ExitSpeakingExamPF54,ExitSpeakingExamPF67,ExitSpeakingExamPF80,ExitSpeakingExamPF93,ExitSpeakingExamPF106,ExitSpeakingExamPF119,ExitSpeakingExamPF132,ExitSpeakingExamPF145,ExitSpeakingExamPF158,ExitSpeakingExamPF171,ExitSpeakingExamPF184":
     ps.parseAcademicRecordExitSpeakingExam,
-  "ExitWritingExamPF,ExitWritingExamPF38,ExitWritingExamPF51,ExitWritingExamPF64,ExitWritingExamPF77,ExitWritingExamPF90,ExitWritingExamPF103,ExitWritingExamPF116,ExitWritingExamPF129,ExitWritingExamPF141":
+  "ExitWritingExamPF,ExitWritingExamPF40,ExitWritingExamPF53,ExitWritingExamPF66,ExitWritingExamPF79,ExitWritingExamPF92,ExitWritingExamPF105,ExitWritingExamPF118,ExitWritingExamPF131,ExitWritingExamPF144,ExitWritingExamPF157,ExitWritingExamPF170,ExitWritingExamPF183":
     ps.parseAcademicRecordExitWritingExam,
   "FAI17,FAII17,SPI18,SPII18,FAI18,FAII18,SPI19,SPII19,FAI19,FAII19,SPI20,SPII20,FAI20,FAII20,SPI21,FAI21,FAII21,SPI22,SPII22,FAI22,FAII22":
     ps.parseInitialSession,
   FGRDATE: ps.parseFgrDate,
-  "FinalGrades,FinalGrades37,FinalGrades50,FinalGrades63,FinalGrades76,FinalGrades89,FinalGrades102,FinalGrades115,FinalGrades128,FinalGrades140":
+  "FinalGrades,FinalGrades39,FinalGrades52,FinalGrades65,FinalGrades78,FinalGrades91,FinalGrades104,FinalGrades117,FinalGrades130,FinalGrades143,FinalGrades156,FinalGrades169":
     ps.parseAcademicRecordFinalGrade,
   ID: ps.parseID,
   IfELTPubschlprivschlunivorrefgcamp: ps.parseEnglishTeacherLocation,
@@ -38,9 +38,9 @@ const studentFields: ValidFields = ps.expand({
   LEVELREVEALDATE: ps.parseLevelRevealDate,
   "LackofChildCare,LackofTransport,TimeConflict,IllnessorPregnancy,VisionProblems,GotaJob,Moved,GraduatedfromL5,FailedtoThriveinClsrmEnv,LackofLifeMgmSkills,LackofFamilialSupport,LackofCommitmentorMotivation,FamilyMemberorEmployerForbidFurtherStudy,COVID19PandemicRelated,Unknown":
     ps.parseDropoutReason,
-  "LevelAttended,LevelAttended32,LevelAttended45,LevelAttended58,LevelAttended71,LevelAttended84,LevelAttended97,LevelAttended110,LevelAttended123,LevelAttended135":
+  "LevelAttended,LevelAttended34,LevelAttended47,LevelAttended60,LevelAttended73,LevelAttended86,LevelAttended99,LevelAttended112,LevelAttended125,LevelAttended138,LevelAttended151,LevelAttended164,LevelAttended177":
     ps.parseAcademicRecordLevel,
-  "LevelAudited,LevelAudited33,LevelAudited46,LevelAudited59,LevelAudited72,LevelAudited85,LevelAudited98,LevelAudited111,LevelAudited124,LevelAudited136":
+  "LevelAudited,LevelAudited35,LevelAudited48,LevelAudited61,LevelAudited74,LevelAudited87,LevelAudited100,LevelAudited113,LevelAudited126,LevelAudited139,LevelAudited152,LevelAudited165,LevelAudited178":
     ps.parseAcademicRecordAudit,
   LookingforaJobDate: ps.parseLookingForJob,
   M: ps.parseGender,
@@ -50,10 +50,10 @@ const studentFields: ValidFields = ps.expand({
   NCL: ps.parseNCL,
   NOTIFIED: ps.parseNotified,
   OCCUPATION: ps.parseOccupation,
-  "P,P34,P47,P60,P73,P86,P99,P112,P125,P137,F28,F35,F48,F61,F74,F87,F100,F113,F126,F138,WD29,WD36,WD49,WD62,WD75,WD88,WD101,WD114,WD127,WD139":
+  "P,P36,P49,P62,P75,P88,P101,P114,P127,P140,P153,P166,P179,F30,F37,F50,F63,F76,F89,F102,F115,F128,F141,F154,F167,F180,WD31,WD38,WD51,WD64,WD77,WD90,WD103,WD116,WD129,WD142,WD155,WD168,WD181":
     ps.parseAcademicRecordResult,
   PENDINGPLCM: ps.parsePendingPlacement,
-  "PHONE,PHONE19,PHONE20,PHONE21,PHONE22,PHONE23": ps.parsePhone,
+  "PHONE,PHONE20,PHONE21,PHONE22,PHONE23,PHONE24,PHONE25": ps.parsePhone,
   PHOTOCONTACT: ps.parsePhotoContact,
   PLCMCONFDATE: ps.parsePlacementConfDate,
   PLCMLVL: ps.parseOrigPlacementLevel,
@@ -62,8 +62,8 @@ const studentFields: ValidFields = ps.expand({
   SECSOFFERED: ps.parseSectionsOffered,
   SENTTEXTEDCL: ps.parseClassListSent,
   SPKG: ps.parseOrigPlacementSpeaking,
-  "Ses,Ses31,Ses44,Ses57,Ses70,Ses83,Ses96,Ses109,Ses122,Ses134": ps.parseAcademicRecordSession,
-  "TeacherComments,TeacherComments41,TeacherComments54,TeacherComments67,TeacherComments80,TeacherComments93,TeacherComments106,TeacherComments119,TeacherComments132,TeacherComments144":
+  "Ses,Ses33,Ses46,Ses59,Ses72,Ses85,Ses98,Ses111,Ses124,Ses137,Ses150,Ses163,Ses176": ps.parseAcademicRecordSession,
+  "TeacherComments,TeacherComments43,TeacherComments56,TeacherComments69,TeacherComments82,TeacherComments95,TeacherComments108,TeacherComments121,TeacherComments134,TeacherComments147,TeacherComments160,TeacherComments173,TeacherComments186":
     ps.parseAcademicRecordTeacherComments,
   TeacherorProfessor: ps.parseTeacher,
   TeachingSubjectAreas: ps.parseTeachingSubjectAreas,
