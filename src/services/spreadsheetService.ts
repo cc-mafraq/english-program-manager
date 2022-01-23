@@ -28,7 +28,7 @@ const studentFields: ValidFields = ps.expand({
   "FAI17,FAII17,SPI18,SPII18,FAI18,FAII18,SPI19,SPII19,FAI19,FAII19,SPI20,SPII20,FAI20,FAII20,SPI21,FAI21,FAII21,SPI22,SPII22,FAI22,FAII22":
     ps.parseInitialSession,
   FGRDATE: ps.parseFgrDate,
-  "FinalGrades,FinalGrades39,FinalGrades52,FinalGrades65,FinalGrades78,FinalGrades91,FinalGrades104,FinalGrades117,FinalGrades130,FinalGrades143,FinalGrades156,FinalGrades169":
+  "FinalGrades,FinalGrades39,FinalGrades52,FinalGrades65,FinalGrades78,FinalGrades91,FinalGrades104,FinalGrades117,FinalGrades130,FinalGrades143,FinalGrades156,FinalGrades169,FinalGrades182":
     ps.parseAcademicRecordFinalGrade,
   ID: ps.parseID,
   IfELTPubschlprivschlunivorrefgcamp: ps.parseEnglishTeacherLocation,
