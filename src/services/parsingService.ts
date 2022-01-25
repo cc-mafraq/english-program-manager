@@ -372,11 +372,6 @@ export const parseAcademicRecordResult = (key: string, value: string, student: S
   const resultRegex = /P|F|WD/;
   const keyGrade = key.match(resultRegex);
   const lastAcademicRecord = last(student.academicRecords);
-  if (student.epId === 19133 && !isEmpty(value)) {
-    console.log(key);
-    console.log(value);
-    console.log(keyGrade);
-  }
   if (lastAcademicRecord && Number(value) === 1 && keyGrade) {
     lastAcademicRecord.finalResult = {
       result: FinalResult[keyGrade[0] as keyof typeof FinalResult],
