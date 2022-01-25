@@ -110,9 +110,6 @@ export const spreadsheetToStudentList = (csvString: string): Student[] => {
     if (fields) {
       fields.forEach((field) => {
         const value = String(object[field]);
-        if (student.epId === 19133 && field === "P") {
-          console.log(value);
-        }
         const fieldClean = replace(field, fieldCleanRegex, "");
         if (fieldClean in studentFields) {
           studentFields[fieldClean as keyof ValidFields](field, value, student);
