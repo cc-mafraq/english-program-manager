@@ -2,9 +2,11 @@ import {
   forEach,
   includes,
   isEmpty,
+  join,
   last,
   map,
   pullAll,
+  range,
   replace,
   split,
   toLower,
@@ -47,6 +49,20 @@ export const expand = (obj: ValidFields) => {
     });
   });
   return obj;
+};
+
+export const generateKeys = (
+  keyName: string,
+  endNum: number,
+  noIncludeKeyName?: boolean,
+): string => {
+  const nums = range(0, endNum);
+  const keyArr: string[] = [];
+  !noIncludeKeyName && keyArr.push(keyName);
+  forEach(nums, (num) => {
+    keyArr.push(keyName + num.toString());
+  });
+  return join(keyArr, ",");
 };
 
 export const parseEnglishName = (key: string, value: string, student: Student) => {
@@ -356,6 +372,11 @@ export const parseAcademicRecordResult = (key: string, value: string, student: S
   const resultRegex = /P|F|WD/;
   const keyGrade = key.match(resultRegex);
   const lastAcademicRecord = last(student.academicRecords);
+  if (student.epId === 19133 && !isEmpty(value)) {
+    console.log(key);
+    console.log(value);
+    console.log(keyGrade);
+  }
   if (lastAcademicRecord && Number(value) === 1 && keyGrade) {
     lastAcademicRecord.finalResult = {
       result: FinalResult[keyGrade[0] as keyof typeof FinalResult],
