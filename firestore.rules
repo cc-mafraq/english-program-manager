@@ -1,8 +1,21 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.access == true;
+  	function signedInAndWhitelisted() {
+      return request.auth != null && exists(/databases/$(database)/documents/whitelist/$(request.auth.token.email));
+    }
+
+    match /students/{document=**} {
+      allow read, write: if signedInAndWhitelisted();
+    }
+
+    match /users/{document=**} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /whitelist/{document=**} {
+    	allow read: if request.auth != null;
+      allow write: if signedInAndWhitelisted();
     }
   }
 }
