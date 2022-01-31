@@ -14,7 +14,8 @@ export const LoginPage = () => {
     <Container
       component="main"
       sx={{
-        backgroundColor: "primary.main",
+        backgroundImage: `url(./assets/login-background.jpg)`,
+        backgroundSize: "100%",
         height: "100vh",
         justifyContent: "center",
         minHeight: "100vh",
@@ -41,8 +42,8 @@ export const LoginPage = () => {
           <Button
             fullWidth
             onClick={handleLogin}
-            sx={{ color: "secondary.main" }}
-            variant="outlined"
+            // sx={{ color: "secondary.main" }}
+            variant="contained"
           >
             Sign In With Google
           </Button>
