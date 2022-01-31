@@ -2,9 +2,11 @@ import {
   forEach,
   includes,
   isEmpty,
+  join,
   last,
   map,
   pullAll,
+  range,
   replace,
   split,
   toLower,
@@ -49,6 +51,20 @@ export const expand = (obj: ValidFields) => {
     });
   });
   return obj;
+};
+
+export const generateKeys = (
+  keyName: string,
+  endNum: number,
+  noIncludeKeyName?: boolean,
+): string => {
+  const nums = range(0, endNum);
+  const keyArr: string[] = [];
+  !noIncludeKeyName && keyArr.push(keyName);
+  forEach(nums, (num) => {
+    keyArr.push(keyName + num.toString());
+  });
+  return join(keyArr, ",");
 };
 
 export const parseEnglishName = (key: string, value: string, student: Student) => {
