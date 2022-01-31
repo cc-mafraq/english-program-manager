@@ -121,7 +121,7 @@ export type LevelPlus =
   | ("PL1+" | "L1-" | "L1+" | "L2-" | "L2+" | "L3-" | "L3+" | "L4-" | "L4+" | "L5-");
 
 export enum Nationality {
-  JRD,
+  JDN,
   SYR,
   IRQ,
   EGY,
@@ -247,7 +247,7 @@ export const SAMPLE_STUDENTS: Student[] = [
       arabic: "بهاء حسين محمد الخالدي",
       english: "Bahaa Hussein Mohammed Al Khalidi",
     },
-    nationality: Nationality.JRD,
+    nationality: Nationality.JDN,
     phone: {
       hasWhatsapp: true,
       phoneNumbers: [{ number: 777642766 }, { notes: "new WA # as of 9/4/21", number: 775311956 }],
@@ -314,7 +314,7 @@ export const SAMPLE_STUDENTS: Student[] = [
       arabic: "سحر موسى النور سهاونه",
       english: "Sahar Mousa Sahawneh",
     },
-    nationality: Nationality.JRD,
+    nationality: Nationality.JDN,
     phone: {
       hasWhatsapp: true,
       phoneNumbers: [{ number: 772349662 }],
@@ -351,7 +351,7 @@ export const SAMPLE_STUDENTS: Student[] = [
       arabic: "طلال عطالله سالم المساعيد",
       english: "Talal Atallah Al Masaeid",
     },
-    nationality: Nationality.JRD,
+    nationality: Nationality.JDN,
     phone: {
       hasWhatsapp: true,
       phoneNumbers: [{ number: 772005195 }],
@@ -443,7 +443,7 @@ export const emptyStudent: Student = {
     arabic: "",
     english: "",
   },
-  nationality: Nationality.JRD,
+  nationality: Nationality.UNKNWN,
   phone: {
     hasWhatsapp: true,
     phoneNumbers: [],
