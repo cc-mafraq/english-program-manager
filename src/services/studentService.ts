@@ -1,14 +1,9 @@
 import {
-  cloneDeep,
   countBy,
   filter,
   forEach,
-  forOwn,
   includes,
-  isArray,
   isEmpty,
-  isObject,
-  isUndefined,
   last,
   lowerCase,
   map,
@@ -113,26 +108,4 @@ export const getAllSessions = (students: Student[]) => {
       return !isEmpty(s);
     },
   );
-};
-
-export const cleanStudent = (object: Record<string, unknown>) => {
-  const objectCopy = cloneDeep(object);
-  forOwn(object, (value, key) => {
-    if (isObject(object[key])) {
-      objectCopy[key] = cleanStudent(value as Record<string, unknown>);
-    } else if (isArray(object[key])) {
-      const newArray: Record<string, unknown>[] = [];
-      forEach(object[key] as object, (e) => {
-        if (isObject(e)) {
-          newArray.push(cleanStudent(e));
-        } else if (!isUndefined(e) && !isEmpty(e)) {
-          newArray.push(e);
-        }
-      });
-      objectCopy[key] = newArray;
-    } else if (!isUndefined(object[key]) && !isEmpty(object[key])) {
-      objectCopy[key] = value;
-    }
-  });
-  return objectCopy;
 };
