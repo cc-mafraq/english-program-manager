@@ -1,9 +1,10 @@
 import { collection, onSnapshot } from "firebase/firestore";
 import { forEach, sortBy } from "lodash";
 import React, { ChangeEvent, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FinalGradeReportDialog, StudentDatabaseToolbar, StudentList } from "../components";
 import { Student } from "../interfaces";
-import { db, getStudentPage, searchStudents } from "../services";
+import { db, getStudentPage, logout, searchStudents } from "../services";
 import { spreadsheetToStudentList } from "../services/spreadsheetService";
 
 interface SetStateOptions {
@@ -22,6 +23,7 @@ export const StudentDatabasePage = () => {
   const [rowsPerPage, setRowsPerPage] = useState(100);
   const [openFGRDialog, setOpenFGRDialog] = useState(false);
   const [searchString, setSearchString] = useState<string>("");
+  const navigate = useNavigate();
 
   const setState = ({
     newRowsPerPage,
@@ -52,6 +54,12 @@ export const StudentDatabasePage = () => {
 
   useEffect(() => {
     onSnapshot(collection(db, "students"), {
+      error: (e) => {
+        if (e.code === "permission-denied") {
+          logout();
+          navigate("/");
+        }
+      },
       next: (snapshot) => {
         const studentData: Student[] = [];
         forEach(snapshot.docs, (d) => {
