@@ -174,6 +174,93 @@ export enum DroppedOutReason {
   VP = "Vision Problems",
 }
 
+export const nationalities = [
+  Nationality[Nationality.JDN],
+  Nationality[Nationality.SYR],
+  Nationality[Nationality.EGY],
+  Nationality[Nationality.YEM],
+  Nationality[Nationality.IRQ],
+  Nationality[Nationality.KOR],
+  Nationality[Nationality.CHI],
+  Nationality[Nationality.INDNES],
+  Nationality[Nationality.CEAFRRE],
+  Nationality[Nationality.UNKNWN],
+];
+
+export const genderedLevels: GenderedLevel[] = [
+  "PL1-M",
+  "PL1-W",
+  "L1-M",
+  "L1-W",
+  "L2-M",
+  "L2-W",
+  "L3",
+  "L4",
+  "L5",
+];
+
+export const levels: Level[] = ["PL1", "L1", "L2", "L3", "L4", "L5"];
+
+export const statuses = [
+  Status[Status.NEW],
+  Status[Status.RET],
+  Status[Status.WD],
+  Status[Status.NCL],
+];
+
+// export interface StudentFormFields {
+//   // academicRecords: AcademicRecord[];
+//   age?: Student["age"];
+//   certificateRequests?: Student["certificateRequests"];
+//   classListDate: ClassList["classListSentDate"];
+//   classListNotes: ClassList["classListSentNotes"];
+//   classListSent: ClassList["classListSent"];
+//   correspondence: Correspondence["notes"];
+//   currentLevel: Student["currentLevel"];
+//   currentStatus: StudentStatus["currentStatus"];
+//   droppedOutReason?: Student["droppedOutReason"];
+//   englishTeacherLocation?: StudentWork["englishTeacherLocation"];
+//   epId: Student["epId"];
+//   finalGradeSentDate: StudentStatus["finalGradeSentDate"];
+//   gender: Student["gender"];
+//   hasWhatsapp: WhatsappInfo["hasWhatsapp"];
+//   initialSession: Student["initialSession"];
+//   inviteTag: StudentStatus["inviteTag"];
+//   isEnglishTeacher: StudentWork["isEnglishTeacher"];
+//   isTeacher: StudentWork["isTeacher"];
+//   levelRevealDate: StudentStatus["levelRevealDate"];
+//   literacyAr: Literacy["illiterateAr"];
+//   literacyEng: Literacy["illiterateEng"];
+//   literacyTutor: Literacy["tutorAndDate"];
+//   lookingForJob?: StudentWork["lookingForJob"];
+//   nameAr: StudentName["arabic"];
+//   nameEng: StudentName["english"];
+//   nationality: Student["nationality"];
+//   noCallList: StudentStatus["noCallList"];
+//   occupation: StudentWork["occupation"];
+//   origPlacementAdj: Placement["origPlacementData"]["adjustment"];
+//   origPlacementLevel: Placement["origPlacementData"]["level"];
+//   origPlacementSpeaking: Placement["origPlacementData"]["speaking"];
+//   origPlacementWriting: Placement["origPlacementData"]["writing"];
+//   otherWaBroadcastGroups: WhatsappInfo["otherWaBroadcastGroups"];
+//   // phoneNumbers: WhatsappInfo["phoneNumbers"];
+//   placementConfDate: Placement["confDate"];
+//   placementNoAnswerDate: Placement["noAnswerClassScheduleDate"];
+//   placementNotified: Placement["notified"];
+//   placementPending: Placement["pending"];
+//   placementPhotoContact: Placement["photoContact"];
+//   placements: Placement["placement"];
+//   primaryPhone: WhatsappInfo["primaryPhone"];
+//   reactivatedDate: StudentStatus["reactivatedDate"];
+//   sectionsOffered: StudentStatus["sectionsOffered"];
+//   statusAudit: StudentStatus["audit"];
+//   teachingSubjectAreas?: StudentWork["teachingSubjectAreas"];
+//   waBroadcastSAR: WhatsappInfo["waBroadcastSAR"];
+//   whatsappNotes: WhatsappInfo["whatsappNotes"];
+//   withdrawDate: StudentStatus["withdrawDate"];
+//   zoom?: Student["zoom"];
+// }
+
 export const SAMPLE_STUDENTS: Student[] = [
   {
     academicRecords: [

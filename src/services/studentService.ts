@@ -109,3 +109,12 @@ export const getAllSessions = (students: Student[]) => {
     },
   );
 };
+
+export const generateId = (students: Student[]): number => {
+  const randomId = Math.floor(Math.random() * 90000 + 10000);
+  const studentIds = map(students, "epId");
+  if (includes(studentIds, randomId)) {
+    return generateId(students);
+  }
+  return randomId;
+};

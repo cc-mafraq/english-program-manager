@@ -149,7 +149,11 @@ export const StudentDatabasePage = () => {
       ) : (
         <></>
       )}
-      <StudentFormDialog handleDialogClose={handleStudentDialogClose} open={openStudentDialog} />
+      <StudentFormDialog
+        handleDialogClose={handleStudentDialogClose}
+        open={openStudentDialog}
+        students={students}
+      />
       <StudentList studentsPage={studentsPage} />
     </>
   );

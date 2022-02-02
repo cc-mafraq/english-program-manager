@@ -5,4 +5,5 @@ export * from "./loginService";
 export * from "./parsingService";
 export * from "./spreadsheetService";
 export * from "./studentDataService";
+export * from "./studentFormService";
 export * from "./studentService";

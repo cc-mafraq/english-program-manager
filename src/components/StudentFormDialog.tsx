@@ -1,14 +1,18 @@
 import { Box, Dialog } from "@mui/material";
 import React from "react";
+import { StudentForm } from ".";
+import { Student } from "../interfaces";
 
 interface StudentFormDialogProps {
   handleDialogClose: () => void;
   open: boolean;
+  students: Student[];
 }
 
 export const StudentFormDialog: React.FC<StudentFormDialogProps> = ({
   handleDialogClose,
   open,
+  students,
 }) => {
   return (
     <Dialog
@@ -18,12 +22,14 @@ export const StudentFormDialog: React.FC<StudentFormDialogProps> = ({
       PaperProps={{ style: { backgroundColor: "#f5f5f5", overflowX: "hidden" } }}
       sx={{
         marginLeft: "50%",
-        marginTop: "5%",
+        marginTop: "1%",
         transform: "translate(-50%)",
-        width: "90%",
+        width: "95%",
       }}
     >
-      <Box sx={{ padding: "10px" }} />
+      <Box sx={{ padding: "10px" }}>
+        <StudentForm students={students} />
+      </Box>
     </Dialog>
   );
 };
