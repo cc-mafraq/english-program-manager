@@ -2,7 +2,12 @@ import { collection, onSnapshot } from "firebase/firestore";
 import { forEach, sortBy } from "lodash";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FinalGradeReportDialog, StudentDatabaseToolbar, StudentList } from "../components";
+import {
+  FinalGradeReportDialog,
+  StudentDatabaseToolbar,
+  StudentFormDialog,
+  StudentList,
+} from "../components";
 import { Student } from "../interfaces";
 import { db, getStudentPage, logout, searchStudents } from "../services";
 import { spreadsheetToStudentList } from "../services/spreadsheetService";
@@ -22,6 +27,7 @@ export const StudentDatabasePage = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
   const [openFGRDialog, setOpenFGRDialog] = useState(false);
+  const [openStudentDialog, setOpenStudentDialog] = useState(false);
   const [searchString, setSearchString] = useState<string>("");
   const navigate = useNavigate();
 
@@ -105,6 +111,14 @@ export const StudentDatabasePage = () => {
     };
   };
 
+  const handleAddStudentClick = () => {
+    setOpenStudentDialog(true);
+  };
+
+  const handleStudentDialogClose = () => {
+    setOpenStudentDialog(false);
+  };
+
   const handleGenerateFGRClick = () => {
     setOpenFGRDialog(true);
   };
@@ -116,6 +130,7 @@ export const StudentDatabasePage = () => {
   return (
     <>
       <StudentDatabaseToolbar
+        handleAddStudentClick={handleAddStudentClick}
         handleChangePage={handleChangePage}
         handleChangeRowsPerPage={handleChangeRowsPerPage}
         handleGenerateFGRClick={handleGenerateFGRClick}
@@ -134,6 +149,7 @@ export const StudentDatabasePage = () => {
       ) : (
         <></>
       )}
+      <StudentFormDialog handleDialogClose={handleStudentDialogClose} open={openStudentDialog} />
       <StudentList studentsPage={studentsPage} />
     </>
   );

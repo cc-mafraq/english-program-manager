@@ -7,6 +7,7 @@ import { LabeledIconButton } from ".";
 
 interface ActionsPopoverProps {
   anchorEl: HTMLButtonElement | null;
+  handleAddStudentClick: (e: React.MouseEvent<HTMLLIElement>) => void;
   handleClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
   handleGenerateFGRClick: (e: React.MouseEvent<HTMLLIElement>) => void;
   handleImportClick: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -14,6 +15,7 @@ interface ActionsPopoverProps {
 
 export const ActionsPopover: React.FC<ActionsPopoverProps> = ({
   anchorEl,
+  handleAddStudentClick,
   handleClose,
   handleGenerateFGRClick,
   handleImportClick,
@@ -39,7 +41,7 @@ export const ActionsPopover: React.FC<ActionsPopoverProps> = ({
           maxWidth: "15vw",
         }}
       >
-        <LabeledIconButton label="ADD STUDENT">
+        <LabeledIconButton label="ADD STUDENT" onClick={handleAddStudentClick}>
           <AddIcon color="primary" />
         </LabeledIconButton>
         <label htmlFor="importSpreadsheet">

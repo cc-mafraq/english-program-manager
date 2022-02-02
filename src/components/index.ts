@@ -16,5 +16,6 @@ export * from "./ProgressBox";
 export * from "./Searchbar";
 export * from "./StudentCard";
 export * from "./StudentDatabaseToolbar";
+export * from "./StudentFormDialog";
 export * from "./StudentInfo";
 export * from "./StudentList";
