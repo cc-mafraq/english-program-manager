@@ -7,9 +7,9 @@ import { LabeledIconButton } from ".";
 
 interface ActionsPopoverProps {
   anchorEl: HTMLButtonElement | null;
-  handleAddStudentClick: (e: React.MouseEvent<HTMLLIElement>) => void;
+  handleAddStudentClick: (e: React.MouseEvent<HTMLElement>) => void;
   handleClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  handleGenerateFGRClick: (e: React.MouseEvent<HTMLLIElement>) => void;
+  handleGenerateFGRClick: (e: React.MouseEvent<HTMLElement>) => void;
   handleImportClick: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -52,7 +52,7 @@ export const ActionsPopover: React.FC<ActionsPopoverProps> = ({
             onChange={handleImportClick}
             type="file"
           />
-          <LabeledIconButton label="IMPORT SPREADSHEET">
+          <LabeledIconButton buttonProps={{ component: "span" }} label="IMPORT SPREADSHEET">
             <UploadIcon color="primary" />
           </LabeledIconButton>
         </label>

@@ -65,7 +65,11 @@ export const FGRDialogHeader: React.FC<FGRDialogHeaderProps> = ({
         </FormControl>
       </Box>
       <Box display="flex" flexDirection="row">
-        <LabeledIconButton label="DOWNLOAD ALL" onClick={handleDownloadAllClick}>
+        <LabeledIconButton
+          buttonProps={{ color: "primary" }}
+          label="DOWNLOAD ALL"
+          onClick={handleDownloadAllClick}
+        >
           <DownloadIcon />
         </LabeledIconButton>
         <LabeledIconButton color="red" label="CLOSE WINDOW" onClick={handleDialogClose}>

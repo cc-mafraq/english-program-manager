@@ -73,8 +73,8 @@ export interface Literacy {
 export interface WhatsappInfo {
   hasWhatsapp: boolean;
   otherWaBroadcastGroups?: string[];
-  // index of phoneNumbers
   phoneNumbers: PhoneNumber[];
+  // index of phoneNumbers
   primaryPhone: number;
   waBroadcastSAR?: string;
   whatsappNotes?: string;
@@ -206,6 +206,12 @@ export const statuses = [
   Status[Status.RET],
   Status[Status.WD],
   Status[Status.NCL],
+];
+
+export const results = [
+  FinalResult[FinalResult.P],
+  FinalResult[FinalResult.F],
+  FinalResult[FinalResult.WD],
 ];
 
 // export interface StudentFormFields {

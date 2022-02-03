@@ -24,12 +24,12 @@ const handlePopoverClose = (
 };
 
 interface StudentDatabaseToolbarProps {
-  handleAddStudentClick: (e: React.MouseEvent<HTMLLIElement>) => void;
+  handleAddStudentClick: (e: React.MouseEvent<HTMLElement>) => void;
   handleChangePage: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
   handleChangeRowsPerPage: (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
-  handleGenerateFGRClick: (e: React.MouseEvent<HTMLLIElement>) => void;
+  handleGenerateFGRClick: (e: React.MouseEvent<HTMLElement>) => void;
   handleImportClick: (e: ChangeEvent<HTMLInputElement>) => void;
   handleSearchStringChange: (value: string) => void;
   page: number;
