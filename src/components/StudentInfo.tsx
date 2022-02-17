@@ -55,11 +55,11 @@ export const StudentInfo = ({ student }: { student: Student }) => {
             {student.status.inviteTag ? "Yes" : "No"}
           </LabeledText>
           <LabeledText
-            condition={dataVisibility.programInformation.noCallList}
-            label="No Call List"
+            condition={dataVisibility.programInformation.noContactList}
+            label="No Contact List"
             textProps={{ color: "red" }}
           >
-            {student.status.noCallList ? "NCL" : undefined}
+            {student.status.noContactList ? "NCL" : undefined}
           </LabeledText>
           <LabeledText
             condition={dataVisibility.programInformation.currentLevel}

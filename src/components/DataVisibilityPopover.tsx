@@ -59,7 +59,7 @@ const labels: { childLabels: string[]; parentLabel: string }[] = [
       "ID Number",
       "Initial Session",
       "Invite Tag",
-      "No Call List",
+      "No Contact List",
       "Status",
     ],
     parentLabel: "Program Information",

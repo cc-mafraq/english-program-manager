@@ -20,5 +20,6 @@ export * from "./StudentCard";
 export * from "./StudentDatabaseToolbar";
 export * from "./StudentForm";
 export * from "./StudentFormDialog";
+export * from "./StudentFormLabel";
 export * from "./StudentInfo";
 export * from "./StudentList";

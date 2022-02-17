@@ -96,7 +96,7 @@ export const parseInviteTag = (key: string, value: string, student: Student) => 
 };
 
 export const parseNCL = (key: string, value: string, student: Student) => {
-  student.status.noCallList = !!value;
+  student.status.noContactList = !!value;
 };
 
 export const parseCurrentLevel = (key: string, value: string, student: Student) => {

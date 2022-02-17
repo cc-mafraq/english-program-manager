@@ -49,7 +49,7 @@ export interface DataVisibility {
     idNumber: boolean;
     initialSession: boolean;
     inviteTag: boolean;
-    noCallList: boolean;
+    noContactList: boolean;
     status: boolean;
   };
   status: {
@@ -141,7 +141,7 @@ export const initialAppState: AppState = {
       idNumber: true,
       initialSession: true,
       inviteTag: true,
-      noCallList: true,
+      noContactList: true,
       status: true,
     },
     status: {

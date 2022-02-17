@@ -1,13 +1,23 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Divider, Grid, Typography } from "@mui/material";
 import { map } from "lodash";
+import moment from "moment";
 import React, { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { GridItemAutocomplete, GridItemRadioGroup, GridItemTextField, LabeledCheckbox } from ".";
+import {
+  GridItemAutocomplete,
+  GridItemDatePicker,
+  GridItemRadioGroup,
+  GridItemTextField,
+  LabeledCheckbox,
+  StudentFormLabel,
+} from ".";
 import {
   AcademicRecord,
+  Correspondence,
   genderedLevels,
   levels,
+  levelsPlus,
   nationalities,
   PhoneNumber,
   results,
@@ -17,6 +27,7 @@ import {
 import { generateId, getAllSessions, studentFormSchema } from "../services";
 
 interface StudentFormProps {
+  handleDialogClose: () => void;
   students: Student[];
 }
 
@@ -28,10 +39,15 @@ const defaultAcademicRecord: AcademicRecord = {
   session: "",
 };
 
+const defaultCorrespondence: Correspondence = {
+  date: "",
+  notes: "",
+};
+
 const SPACING = 2;
 const MARGIN = 0;
 
-export const StudentForm: React.FC<StudentFormProps> = ({ students }) => {
+export const StudentForm: React.FC<StudentFormProps> = ({ students, handleDialogClose }) => {
   const methods = useForm<Student>({
     criteriaMode: "all",
     // defaultValues: mapInternalTypesToInput(values),
@@ -39,6 +55,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students }) => {
   });
   const [phoneNumbers, setPhoneNumbers] = useState<PhoneNumber[]>([defaultPhone]);
   const [academicRecords, setAcademicRecords] = useState<AcademicRecord[]>([defaultAcademicRecord]);
+  const [correspondence, setCorrespondence] = useState<Correspondence[]>([]);
 
   const addPhone = async () => {
     setPhoneNumbers([...phoneNumbers, defaultPhone]);
@@ -48,8 +65,13 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students }) => {
     setAcademicRecords([...academicRecords, defaultAcademicRecord]);
   };
 
+  const addCorrespondence = async () => {
+    setCorrespondence([...correspondence, defaultCorrespondence]);
+  };
+
   const onSubmit = (data: Student) => {
     console.log(data);
+    handleDialogClose();
   };
 
   return (
@@ -60,7 +82,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students }) => {
             Add Student
           </Typography>
         </Box>
-        <Grid container marginTop={MARGIN} spacing={SPACING}>
+        <Grid container marginBottom={SPACING} marginTop={MARGIN} spacing={SPACING}>
           <GridItemTextField label="Name - ENG" name="name.english" />
           <GridItemTextField label="Name - AR" name="name.arabic" />
           <Grid item>
@@ -69,12 +91,13 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students }) => {
               label="Invite?"
               name="status.inviteTag"
             />
-            <LabeledCheckbox label="NCL" name="status.noCallList" />
+            <LabeledCheckbox label="NCL" name="status.noContactList" />
           </Grid>
         </Grid>
-        <Grid container marginTop={MARGIN} spacing={SPACING}>
+        <Divider />
+        <StudentFormLabel textProps={{ marginTop: SPACING }}>Program Information</StudentFormLabel>
+        <Grid container marginBottom={SPACING * 2} marginTop={MARGIN} spacing={SPACING}>
           <GridItemTextField label="ID" name="epId" value={generateId(students).toString()} />
-          <GridItemAutocomplete label="Nationality" options={nationalities} />
           <GridItemAutocomplete label="Current Level" options={genderedLevels} />
           <GridItemAutocomplete
             label="Current Status"
@@ -82,12 +105,22 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students }) => {
             options={statuses}
             value="NEW"
           />
-          <GridItemTextField label="Age" />
+          <GridItemAutocomplete
+            freeSolo
+            label="Initial Session"
+            options={getAllSessions(students)}
+          />
         </Grid>
+        <Divider />
+        <StudentFormLabel textProps={{ marginTop: SPACING }}>Student Information</StudentFormLabel>
         <Grid container marginTop={MARGIN} spacing={SPACING}>
-          <GridItemRadioGroup label="Gender" options={["M", "F"]} />
+          <GridItemAutocomplete label="Nationality" options={nationalities} />
+          <GridItemTextField label="Age" />
           <GridItemTextField label="Occupation" name="work.occupation" />
-          <Grid item xs>
+          <GridItemRadioGroup gridProps={{ xs: 2 }} label="Gender" options={["M", "F"]} />
+        </Grid>
+        <Grid container marginBottom={SPACING * 2} marginTop={MARGIN} spacing={SPACING}>
+          <Grid item xs={2}>
             <LabeledCheckbox label="Teacher?" name="work.isTeacher" />
             <LabeledCheckbox label="English Teacher?" name="work.isEnglishTeacher" />
           </Grid>
@@ -96,34 +129,36 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students }) => {
             label="If ELT: public, private, university, refugee"
             name="work.englishTeacherLocation"
           />
+          <GridItemTextField label="Looking for Job" name="work.lookingForJob" />
         </Grid>
-        <Grid container marginTop={MARGIN} spacing={SPACING}>
+        <Divider />
+        <StudentFormLabel textProps={{ marginTop: SPACING }}>Original Placement</StudentFormLabel>
+        <Grid container marginBottom={SPACING * 2} marginTop={MARGIN} spacing={SPACING}>
           <GridItemAutocomplete
-            freeSolo
-            label="Initial Session"
-            options={getAllSessions(students)}
-          />
-          <GridItemAutocomplete
-            label="Writing Orig Placement"
+            label="Writing Placement"
             name="placement.origPlacementData.writing"
-            options={levels}
+            options={levelsPlus}
           />
           <GridItemAutocomplete
-            label="Speaking Orig Placement"
+            label="Speaking Placement"
             name="placement.origPlacementData.speaking"
-            options={levels}
+            options={levelsPlus}
           />
           <GridItemAutocomplete
-            label="Orig Placement Level"
+            label="Placement Level"
             name="placement.origPlacementData.level"
             options={levels}
           />
           <GridItemTextField
-            label="Orig Placement Adjustment"
+            label="Placement Adjustment"
             name="placement.origPlacementData.adjustment"
           />
         </Grid>
-        <Grid container marginTop={MARGIN} spacing={SPACING}>
+        <Divider />
+        <StudentFormLabel textProps={{ marginTop: SPACING }}>
+          Phone Numbers and WhatsApp
+        </StudentFormLabel>
+        <Grid container marginBottom={SPACING} marginTop={MARGIN} spacing={SPACING}>
           {map(phoneNumbers, (phoneNumber, i) => {
             const phoneName = `phone.phoneNumbers[${i}]`;
             return (
@@ -165,24 +200,57 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students }) => {
               name="phone.whatsappNotes"
             />
           </Grid>
+        </Grid>
+        <Divider />
+        <StudentFormLabel textProps={{ marginTop: SPACING }}>Literacy</StudentFormLabel>
+        <Grid container marginBottom={SPACING * 2} marginTop={SPACING / 2} xs>
           <Grid item xs>
             <LabeledCheckbox label="Illiterate - AR" name="literacy.illiterateAr" />
             <LabeledCheckbox label="Illiterate - ENG" name="literacy.illiterateAr" />
-            <GridItemTextField
-              gridProps={{ paddingRight: SPACING, paddingTop: SPACING / 2 }}
-              label="Tutor and Date"
-              name="literacy.tutorAndDate"
-            />
+          </Grid>
+          <GridItemTextField
+            gridProps={{ paddingRight: SPACING, paddingTop: SPACING / 2 }}
+            label="Tutor and Date"
+            name="literacy.tutorAndDate"
+          />
+        </Grid>
+        <Divider />
+        <StudentFormLabel textProps={{ marginTop: SPACING }}>Correspondence</StudentFormLabel>
+        <Grid container marginBottom={SPACING * 2} marginTop={MARGIN} spacing={SPACING}>
+          {map(correspondence, (c, i) => {
+            const correspondenceName = `correspondence[${i}]`;
+            return (
+              <Grid container>
+                <GridItemDatePicker
+                  gridProps={{ margin: SPACING, xs: 2 }}
+                  label="Date"
+                  name={`${correspondenceName}.date`}
+                  value={moment()}
+                />
+                <GridItemTextField
+                  gridProps={{ marginTop: SPACING }}
+                  label="Correspondence"
+                  name={`${correspondenceName}.notes`}
+                  textFieldProps={{ multiline: true, rows: 4 }}
+                />
+              </Grid>
+            );
+          })}
+          <Grid item xs={3}>
+            <Button color="secondary" onClick={addCorrespondence} variant="contained">
+              Add Correspondence
+            </Button>
           </Grid>
         </Grid>
+        <Divider />
         <Grid container marginTop={MARGIN} spacing={SPACING}>
           {map(academicRecords, (academicRecord, i) => {
             const recordName = `academicRecords[${i}]`;
             return (
               <Grid container>
-                <Typography fontWeight={600} marginLeft={SPACING} variant="h6">
+                <StudentFormLabel textProps={{ marginLeft: SPACING, marginTop: SPACING }}>
                   Academic Record {i + 1}
-                </Typography>
+                </StudentFormLabel>
                 <Grid key={recordName} container>
                   <Grid item xs>
                     <GridItemTextField
@@ -267,7 +335,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students }) => {
                     />
                     <LabeledCheckbox
                       containerProps={{ paddingLeft: SPACING }}
-                      label="Certificate"
+                      label="Certificate?"
                       name={`${recordName}.certificate`}
                     />
                   </Grid>
@@ -299,6 +367,13 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students }) => {
         >
           Add Student
         </Button>
+        <Grid item>
+          <Typography variant="caption">
+            Tip: use <b>tab</b> and <b>shift + tab</b> to navigate, <b>space bar</b> to select
+            checkboxes, <b>arrow keys</b> to select radio buttons, and <b>return</b> to submit and
+            click buttons.
+          </Typography>
+        </Grid>
       </form>
     </FormProvider>
   );

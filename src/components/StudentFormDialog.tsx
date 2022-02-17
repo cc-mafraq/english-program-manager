@@ -28,7 +28,7 @@ export const StudentFormDialog: React.FC<StudentFormDialogProps> = ({
       }}
     >
       <Box sx={{ padding: "10px" }}>
-        <StudentForm students={students} />
+        <StudentForm handleDialogClose={handleDialogClose} students={students} />
       </Box>
     </Dialog>
   );
