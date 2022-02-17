@@ -27,7 +27,7 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
     formState: { errors },
   } = useFormContext();
   const { name: nameFallback, errorMessage } = useInput(label, errors as FieldError);
-  const [dateValue, setDateValue] = React.useState<Moment | null | undefined>(value);
+  const [dateValue, setDateValue] = React.useState<Moment | null>(value || null);
 
   return (
     <Grid direction="column" item xs {...gridProps}>

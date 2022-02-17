@@ -26,7 +26,7 @@ const studentFieldsUnexpanded: ValidFields = {
   IlliterateAR: ps.parseArabicLiteracy,
   IlliterateENG: ps.parseEnglishLiteracy,
   "JDN,SYR,IRQ,EGY,INDNES,YEM,CEAFRRE,CHI,KOR,UNKNWN": ps.parseNationality,
-  LEVELREVEALDATE: ps.parseLevelRevealDate,
+  LEVELREEVALDATE: ps.parseLevelReevalDate,
   "LackofChildCare,LackofTransport,TimeConflict,IllnessorPregnancy,VisionProblems,GotaJob,Moved,GraduatedfromL5,FailedtoThriveinClsrmEnv,LackofLifeMgmSkills,LackofFamilialSupport,LackofCommitmentorMotivation,FamilyMemberorEmployerForbidFurtherStudy,COVID19PandemicRelated,Unknown":
     ps.parseDropoutReason,
   LookingforaJobDate: ps.parseLookingForJob,

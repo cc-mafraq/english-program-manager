@@ -87,8 +87,8 @@ export const StudentInfo = ({ student }: { student: Student }) => {
           <LabeledText condition={dataVisibility.status.finalGrSent} label="Final GR Sent">
             {student.status.finalGradeSentDate}
           </LabeledText>
-          <LabeledText condition={dataVisibility.status.levelRevealDate} label="Level Reveal Date">
-            {student.status.levelRevealDate}
+          <LabeledText condition={dataVisibility.status.levelReevalDate} label="Level Reeval Date">
+            {student.status.levelReevalDate}
           </LabeledText>
           <LabeledText condition={dataVisibility.status.reactivatedDate} label="Reactivated Date">
             {join(student.status.reactivatedDate, ", ")}
@@ -97,13 +97,10 @@ export const StudentInfo = ({ student }: { student: Student }) => {
             {join(student.status.withdrawDate, ", ")}
           </LabeledText>
           <LabeledText condition={dataVisibility.status.withdrawReason} label="Withdraw Reason">
-            {student.droppedOutReason}
+            {student.status.droppedOutReason}
           </LabeledText>
           <LabeledText condition={dataVisibility.status.repeatNumber} label="Repeat Number">
             {getRepeatNum(student)}
-          </LabeledText>
-          <LabeledText condition={dataVisibility.status.sectionsOffered} label="Sections Offered">
-            {join(student.status.sectionsOffered, ", ")}
           </LabeledText>
         </LabeledContainer>
         <LabeledContainer
@@ -194,6 +191,12 @@ export const StudentInfo = ({ student }: { student: Student }) => {
         <LabeledContainer condition={allCheckboxesFalse("Placement")} label="Placement">
           <LabeledText condition={dataVisibility.placement.photoContact} label="Photo Contact">
             {join(student.placement.photoContact, ", ")}
+          </LabeledText>
+          <LabeledText
+            condition={dataVisibility.placement.sectionsOffered}
+            label="Sections Offered"
+          >
+            {student.placement.sectionsOffered}
           </LabeledText>
           <LabeledText condition={dataVisibility.placement.placement} label="Placement">
             {join(student.placement.placement, ", ")}

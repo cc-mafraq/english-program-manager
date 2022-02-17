@@ -23,6 +23,7 @@ import {
   results,
   statuses,
   Student,
+  withdrawReasons,
 } from "../interfaces";
 import { generateId, getAllSessions, studentFormSchema } from "../services";
 
@@ -132,27 +133,32 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students, handleDialog
           <GridItemTextField label="Looking for Job" name="work.lookingForJob" />
         </Grid>
         <Divider />
-        <StudentFormLabel textProps={{ marginTop: SPACING }}>Original Placement</StudentFormLabel>
+        <StudentFormLabel textProps={{ marginTop: SPACING }}>Correspondence</StudentFormLabel>
         <Grid container marginBottom={SPACING * 2} marginTop={MARGIN} spacing={SPACING}>
-          <GridItemAutocomplete
-            label="Writing Placement"
-            name="placement.origPlacementData.writing"
-            options={levelsPlus}
-          />
-          <GridItemAutocomplete
-            label="Speaking Placement"
-            name="placement.origPlacementData.speaking"
-            options={levelsPlus}
-          />
-          <GridItemAutocomplete
-            label="Placement Level"
-            name="placement.origPlacementData.level"
-            options={levels}
-          />
-          <GridItemTextField
-            label="Placement Adjustment"
-            name="placement.origPlacementData.adjustment"
-          />
+          {map(correspondence, (c, i) => {
+            const correspondenceName = `correspondence[${i}]`;
+            return (
+              <Grid container>
+                <GridItemDatePicker
+                  gridProps={{ margin: SPACING, xs: 2 }}
+                  label="Date"
+                  name={`${correspondenceName}.date`}
+                  value={moment()}
+                />
+                <GridItemTextField
+                  gridProps={{ marginTop: SPACING }}
+                  label="Correspondence"
+                  name={`${correspondenceName}.notes`}
+                  textFieldProps={{ multiline: true, rows: 4 }}
+                />
+              </Grid>
+            );
+          })}
+          <Grid item xs={3}>
+            <Button color="secondary" onClick={addCorrespondence} variant="contained">
+              Add Correspondence
+            </Button>
+          </Grid>
         </Grid>
         <Divider />
         <StudentFormLabel textProps={{ marginTop: SPACING }}>
@@ -202,45 +208,119 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students, handleDialog
           </Grid>
         </Grid>
         <Divider />
-        <StudentFormLabel textProps={{ marginTop: SPACING }}>Literacy</StudentFormLabel>
-        <Grid container marginBottom={SPACING * 2} marginTop={SPACING / 2} xs>
-          <Grid item xs>
-            <LabeledCheckbox label="Illiterate - AR" name="literacy.illiterateAr" />
-            <LabeledCheckbox label="Illiterate - ENG" name="literacy.illiterateAr" />
-          </Grid>
+        <StudentFormLabel textProps={{ marginTop: SPACING }}>Original Placement</StudentFormLabel>
+        <Grid container marginBottom={SPACING * 2} marginTop={MARGIN} spacing={SPACING}>
+          <GridItemAutocomplete
+            label="Writing Placement"
+            name="placement.origPlacementData.writing"
+            options={levelsPlus}
+          />
+          <GridItemAutocomplete
+            label="Speaking Placement"
+            name="placement.origPlacementData.speaking"
+            options={levelsPlus}
+          />
+          <GridItemAutocomplete
+            label="Placement Level"
+            name="placement.origPlacementData.level"
+            options={levels}
+          />
           <GridItemTextField
-            gridProps={{ paddingRight: SPACING, paddingTop: SPACING / 2 }}
-            label="Tutor and Date"
-            name="literacy.tutorAndDate"
+            label="Placement Adjustment"
+            name="placement.origPlacementData.adjustment"
           />
         </Grid>
         <Divider />
-        <StudentFormLabel textProps={{ marginTop: SPACING }}>Correspondence</StudentFormLabel>
-        <Grid container marginBottom={SPACING * 2} marginTop={MARGIN} spacing={SPACING}>
-          {map(correspondence, (c, i) => {
-            const correspondenceName = `correspondence[${i}]`;
-            return (
-              <Grid container>
-                <GridItemDatePicker
-                  gridProps={{ margin: SPACING, xs: 2 }}
-                  label="Date"
-                  name={`${correspondenceName}.date`}
-                  value={moment()}
-                />
-                <GridItemTextField
-                  gridProps={{ marginTop: SPACING }}
-                  label="Correspondence"
-                  name={`${correspondenceName}.notes`}
-                  textFieldProps={{ multiline: true, rows: 4 }}
-                />
-              </Grid>
-            );
-          })}
-          <Grid item xs={3}>
-            <Button color="secondary" onClick={addCorrespondence} variant="contained">
-              Add Correspondence
-            </Button>
+        <Grid container>
+          <Grid item xs>
+            <StudentFormLabel textProps={{ marginTop: SPACING }}>Literacy</StudentFormLabel>
           </Grid>
+          <Grid item xs>
+            <StudentFormLabel textProps={{ marginTop: SPACING }}>Zoom</StudentFormLabel>
+          </Grid>
+        </Grid>
+        <Grid container marginBottom={SPACING * 2} marginTop={SPACING / 2} xs>
+          <Grid container xs>
+            <Grid item xs>
+              <LabeledCheckbox label="Illiterate - AR" name="literacy.illiterateAr" />
+              <LabeledCheckbox label="Illiterate - ENG" name="literacy.illiterateAr" />
+              <GridItemTextField
+                gridProps={{ paddingRight: SPACING, paddingTop: SPACING / 2 }}
+                label="Tutor and Date"
+                name="literacy.tutorAndDate"
+              />
+            </Grid>
+          </Grid>
+          <Grid item xs>
+            <GridItemTextField
+              label="Tutor / Club and Details"
+              name="zoom"
+              textFieldProps={{ multiline: true, rows: 4 }}
+            />
+          </Grid>
+        </Grid>
+        <Divider />
+        <StudentFormLabel textProps={{ marginTop: SPACING }}>Placement</StudentFormLabel>
+        <Grid container marginTop={MARGIN} spacing={SPACING}>
+          <Grid item xs={2}>
+            <LabeledCheckbox label="Notified" name="placement.notified" />
+            <LabeledCheckbox label="Pending" name="placement.pending" />
+          </Grid>
+          <GridItemTextField label="Sections Offered" name="placement.sectionsOffered" />
+          <GridItemTextField label="Placement" name="placement.placement" />
+        </Grid>
+        <Grid container marginBottom={SPACING * 2} marginTop={MARGIN} spacing={SPACING}>
+          <GridItemDatePicker label="Confirmed Date" name="placement.confDate" />
+          <GridItemDatePicker label="Photo Contact" name="placement.photoContact" />
+          <GridItemDatePicker
+            label="No Answer Class Schedule"
+            name="placement.noAnswerClassScheduleDate"
+          />
+        </Grid>
+        <Divider />
+        <StudentFormLabel textProps={{ marginTop: SPACING }}>Status</StudentFormLabel>
+        <Grid container marginTop={MARGIN} spacing={SPACING}>
+          <GridItemDatePicker label="Withdraw Date" name="status.withdrawDate" />
+          <GridItemAutocomplete
+            label="Withdraw Reason"
+            name="status.droppedOutReason"
+            options={withdrawReasons}
+          />
+          <GridItemDatePicker label="Reactivated Date" name="status.reactivatedDate" />
+        </Grid>
+        <Grid container marginBottom={SPACING * 2} marginTop={MARGIN} spacing={SPACING}>
+          <GridItemDatePicker label="Final Grade Report Sent" name="status.finalGradeSentDate" />
+          <GridItemDatePicker label="Level Reeval Date" name="status.levelReevalDate" />
+          <Grid item xs>
+            <LabeledCheckbox label="Audit" name="status.audit" />
+          </Grid>
+        </Grid>
+        <Divider />
+        <Grid container>
+          <Grid item xs={7}>
+            <StudentFormLabel textProps={{ marginTop: SPACING }}>Class Lists</StudentFormLabel>
+          </Grid>
+          <Grid item marginLeft={SPACING} xs>
+            <StudentFormLabel textProps={{ marginTop: SPACING }}>
+              Certificate Requests
+            </StudentFormLabel>
+          </Grid>
+        </Grid>
+        <Grid container marginBottom={SPACING * 2} marginTop={MARGIN} spacing={SPACING}>
+          <Grid item xs={1}>
+            <LabeledCheckbox label="Sent" name="classList.classListSent" />
+          </Grid>
+          <GridItemDatePicker
+            gridProps={{ xs: 3 }}
+            label="Class List Date"
+            name="classList.classListSentDate"
+          />
+          <GridItemTextField
+            gridProps={{ xs: 3 }}
+            label="Class List Notes"
+            name="classList.classListSentNotes"
+          />
+          <GridItemTextField label="Request and Date" name="certificateRequests" />
         </Grid>
         <Divider />
         <Grid container marginTop={MARGIN} spacing={SPACING}>

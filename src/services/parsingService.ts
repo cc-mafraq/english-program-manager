@@ -113,12 +113,12 @@ export const parseFgrDate = (key: string, value: string, student: Student) => {
   student.status.finalGradeSentDate = value;
 };
 
-export const parseLevelRevealDate = (key: string, value: string, student: Student) => {
-  student.status.levelRevealDate = value;
+export const parseLevelReevalDate = (key: string, value: string, student: Student) => {
+  student.status.levelReevalDate = value;
 };
 
 export const parseSectionsOffered = (key: string, value: string, student: Student) => {
-  student.status.sectionsOffered = splitAndTrim(value);
+  student.placement.sectionsOffered = value;
 };
 
 export const parseReactivatedDate = (key: string, value: string, student: Student) => {
@@ -309,53 +309,52 @@ export const parseOrigPlacementAdjustment = (key: string, value: string, student
 };
 
 export const parseDropoutReason = (key: string, value: string, student: Student) => {
-  // student.droppedOutReason = DroppedOutReason[key as keyof typeof DroppedOutReason];
   if (Number(value) === 1) {
     switch (key) {
       case "Lack of Child-Care":
-        student.droppedOutReason = DroppedOutReason.LCC;
+        student.status.droppedOutReason = DroppedOutReason.LCC;
         break;
       case "Lack of Transport":
-        student.droppedOutReason = DroppedOutReason.LT;
+        student.status.droppedOutReason = DroppedOutReason.LT;
         break;
       case "Time Conflict":
-        student.droppedOutReason = DroppedOutReason.TC;
+        student.status.droppedOutReason = DroppedOutReason.TC;
         break;
       case "Illness or Pregnancy":
-        student.droppedOutReason = DroppedOutReason.IP;
+        student.status.droppedOutReason = DroppedOutReason.IP;
         break;
       case "Vision Problems":
-        student.droppedOutReason = DroppedOutReason.VP;
+        student.status.droppedOutReason = DroppedOutReason.VP;
         break;
       case "Got a Job":
-        student.droppedOutReason = DroppedOutReason.JOB;
+        student.status.droppedOutReason = DroppedOutReason.JOB;
         break;
       case "Moved":
-        student.droppedOutReason = DroppedOutReason.MOVE;
+        student.status.droppedOutReason = DroppedOutReason.MOVE;
         break;
       case "Graduated from L5":
-        student.droppedOutReason = DroppedOutReason.GRAD;
+        student.status.droppedOutReason = DroppedOutReason.GRAD;
         break;
       case "Failed to Thrive in Clsrm Env":
-        student.droppedOutReason = DroppedOutReason.FTCLE;
+        student.status.droppedOutReason = DroppedOutReason.FTCLE;
         break;
       case "Lack of Life Mgm Skills":
-        student.droppedOutReason = DroppedOutReason.LLMS;
+        student.status.droppedOutReason = DroppedOutReason.LLMS;
         break;
       case "Lack of Familial Support":
-        student.droppedOutReason = DroppedOutReason.LFS;
+        student.status.droppedOutReason = DroppedOutReason.LFS;
         break;
       case "Lack of Commitment or Motivation":
-        student.droppedOutReason = DroppedOutReason.LCM;
+        student.status.droppedOutReason = DroppedOutReason.LCM;
         break;
       case "Family Member or Employer Forbid Further Study":
-        student.droppedOutReason = DroppedOutReason.FMEF;
+        student.status.droppedOutReason = DroppedOutReason.FMEF;
         break;
       case "COVID-19 Pandemic Related":
-        student.droppedOutReason = DroppedOutReason.COVID;
+        student.status.droppedOutReason = DroppedOutReason.COVID;
         break;
       case "Unknown":
-        student.droppedOutReason = DroppedOutReason.UNK;
+        student.status.droppedOutReason = DroppedOutReason.UNK;
         break;
       default:
         break;

@@ -1,11 +1,10 @@
 export interface Student {
   academicRecords: AcademicRecord[];
   age?: number;
-  certificateRequests?: string; //
+  certificateRequests?: string;
   classList: ClassList;
   correspondence: Correspondence[];
   currentLevel: GenderedLevel;
-  droppedOutReason?: DroppedOutReason; //
   epId: number;
   gender: "M" | "F";
   imageName?: string;
@@ -17,7 +16,7 @@ export interface Student {
   placement: Placement;
   status: StudentStatus;
   work: StudentWork;
-  zoom?: string; //
+  zoom?: string;
 }
 
 export interface AcademicRecord {
@@ -40,18 +39,19 @@ export interface Grade {
 }
 
 export interface Placement {
-  confDate?: string[]; //
-  noAnswerClassScheduleDate?: string; //
-  notified: boolean; //
+  confDate?: string[];
+  noAnswerClassScheduleDate?: string;
+  notified: boolean;
   origPlacementData: {
     adjustment?: string;
     level: Level;
     speaking: LevelPlus;
     writing: LevelPlus;
   };
-  pending?: boolean; //
-  photoContact?: string[]; //
-  placement?: string[]; //
+  pending?: boolean;
+  photoContact?: string[];
+  placement?: string[];
+  sectionsOffered?: string;
 }
 
 export interface StudentWork {
@@ -80,21 +80,21 @@ export interface WhatsappInfo {
 }
 
 export interface StudentStatus {
-  audit?: boolean; //
+  audit?: boolean;
   currentStatus: Status;
-  finalGradeSentDate?: string; //
+  droppedOutReason?: DroppedOutReason;
+  finalGradeSentDate?: string;
   inviteTag: boolean;
-  levelRevealDate?: string; //
+  levelReevalDate?: string;
   noContactList: boolean;
-  reactivatedDate?: string[]; //
-  sectionsOffered?: string[]; //
-  withdrawDate?: string[]; //
+  reactivatedDate?: string[];
+  withdrawDate?: string[];
 }
 
 export interface ClassList {
-  classListSent?: boolean; //
-  classListSentDate?: string; //
-  classListSentNotes?: string; //
+  classListSent?: boolean;
+  classListSentDate?: string;
+  classListSentNotes?: string;
 }
 
 export interface StudentName {
@@ -230,6 +230,24 @@ export const results = [
   FinalResult[FinalResult.P],
   FinalResult[FinalResult.F],
   FinalResult[FinalResult.WD],
+];
+
+export const withdrawReasons = [
+  DroppedOutReason.COVID,
+  DroppedOutReason.FMEF,
+  DroppedOutReason.FTCLE,
+  DroppedOutReason.GRAD,
+  DroppedOutReason.IP,
+  DroppedOutReason.JOB,
+  DroppedOutReason.LCC,
+  DroppedOutReason.LCM,
+  DroppedOutReason.LFS,
+  DroppedOutReason.LLMS,
+  DroppedOutReason.LT,
+  DroppedOutReason.MOVE,
+  DroppedOutReason.TC,
+  DroppedOutReason.VP,
+  DroppedOutReason.UNK,
 ];
 
 export const emptyStudent: Student = {

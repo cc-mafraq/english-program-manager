@@ -68,7 +68,7 @@ const labels: { childLabels: string[]; parentLabel: string }[] = [
     childLabels: [
       "Audit",
       "Final GR Sent",
-      "Level Reveal Date",
+      "Level Reeval Date",
       "Reactivated Date",
       "Repeat Number",
       "Sections Offered",

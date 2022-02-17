@@ -41,6 +41,7 @@ export interface DataVisibility {
     photoContact: boolean;
     placement: boolean;
     placementConfirmed: boolean;
+    sectionsOffered: boolean;
   };
   programInformation: {
     active: boolean;
@@ -55,10 +56,9 @@ export interface DataVisibility {
   status: {
     audit: boolean;
     finalGrSent: boolean;
-    levelRevealDate: boolean;
+    levelReevalDate: boolean;
     reactivatedDate: boolean;
     repeatNumber: boolean;
-    sectionsOffered: boolean;
     withdrawDate: boolean;
     withdrawReason: boolean;
   };
@@ -133,6 +133,7 @@ export const initialAppState: AppState = {
       photoContact: true,
       placement: true,
       placementConfirmed: true,
+      sectionsOffered: true,
     },
     programInformation: {
       active: true,
@@ -147,10 +148,9 @@ export const initialAppState: AppState = {
     status: {
       audit: true,
       finalGrSent: true,
-      levelRevealDate: true,
+      levelReevalDate: true,
       reactivatedDate: true,
       repeatNumber: true,
-      sectionsOffered: true,
       withdrawDate: true,
       withdrawReason: true,
     },
