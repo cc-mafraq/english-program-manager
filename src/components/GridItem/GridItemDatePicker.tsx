@@ -26,7 +26,7 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
     register,
     formState: { errors },
   } = useFormContext();
-  const { name: nameFallback, errorMessage } = useInput(label, errors as FieldError);
+  const { name: nameFallback, errorMessage } = useInput(label, errors as FieldError, name);
   const [dateValue, setDateValue] = React.useState<Moment | null>(value || null);
 
   return (
@@ -40,10 +40,10 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
           renderInput={(params) => {
             return (
               <TextField
+                error={!!errorMessage}
                 fullWidth
                 label={label}
                 {...textFieldProps}
-                error={!!errorMessage}
                 helperText={errorMessage}
                 variant="outlined"
                 {...params}

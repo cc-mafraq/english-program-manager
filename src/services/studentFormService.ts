@@ -1,4 +1,15 @@
-import { indexOf, isEmpty, map } from "lodash";
+import {
+  indexOf,
+  isEmpty,
+  isNaN,
+  isNull,
+  isObject,
+  map,
+  mapValues,
+  merge,
+  omitBy,
+  pickBy,
+} from "lodash";
 import { array, bool, number, object, string } from "yup";
 import {
   genderedLevels,
@@ -15,12 +26,13 @@ const stringToArray = (value: string, originalValue: string) => {
 };
 
 const stringToInteger = (value: string, originalValue: string) => {
-  return parseInt(originalValue);
+  const parsedInt = parseInt(originalValue);
+  return isNaN(parsedInt) ? undefined : parsedInt;
 };
 
-const emptyStringToNull = (value: string, originalValue: string) => {
+const emptyToNull = (value: string, originalValue: string) => {
   if (isEmpty(originalValue)) {
-    return undefined;
+    return null;
   }
   return originalValue;
 };
@@ -29,54 +41,56 @@ const dateSchema = string(); // TODO: Date Validation
 
 const gradeSchema = object()
   .shape({
-    notes: string().optional(),
-    percentage: percentageSchema,
-    result: string().oneOf(results).required(),
+    notes: string().transform(emptyToNull).nullable().optional(),
+    percentage: percentageSchema.transform(emptyToNull).nullable(),
+    result: string().oneOf(results).required("result is required"),
   })
   .optional();
 
 const academicRecordsSchema = object().shape({
-  attendance: percentageSchema,
+  attendance: percentageSchema.transform(emptyToNull).nullable(),
   certificate: bool().optional(),
-  comments: string().optional(),
-  electiveClass: string().optional(),
+  comments: string().transform(emptyToNull).nullable().optional(),
+  electiveClass: string().transform(emptyToNull).nullable().optional(),
   exitSpeakingExam: gradeSchema,
   exitWritingExam: gradeSchema,
   finalResult: gradeSchema,
-  level: string().oneOf(genderedLevels).optional(),
-  levelAudited: string().oneOf(genderedLevels).optional(),
-  session: string().required(),
+  level: string().oneOf(genderedLevels).transform(emptyToNull).nullable().optional(),
+  levelAudited: string().oneOf(genderedLevels).transform(emptyToNull).nullable().optional(),
+  session: string().required("session is required"),
 });
 
 const classListSchema = object().shape({
   classListSent: bool().optional(),
-  classListSentDate: string().optional(),
-  classListSentNotes: string().optional(),
+  classListSentDate: string().transform(emptyToNull).nullable().optional(),
+  classListSentNotes: string().transform(emptyToNull).nullable().optional(),
 });
 
 const correspondenceSchema = object().shape({
-  date: dateSchema.required(),
-  notes: string().required(),
+  date: dateSchema.required("date is required"),
+  notes: string().required(
+    "correspondence notes are required if added. You can remove the correspondence by clicking the X button",
+  ),
 });
 
 const literacySchema = object().shape({
   illiterateAr: bool().optional(),
   illiterateEng: bool().optional(),
-  tutorAndDate: string().optional(),
+  tutorAndDate: string().transform(emptyToNull).nullable().optional(),
 });
 
 const nameSchema = object()
   .shape({
-    arabic: string().required('arabic name is a required field. You may write "N/A"'),
-    english: string().required(),
+    arabic: string().required('arabic name is required. You may write "N/A"'),
+    english: string().required("english name is required"),
   })
   .required();
 
 const phoneNumberSchema = object()
   .shape({
-    notes: string().optional(),
+    notes: string().transform(emptyToNull).nullable().optional(),
     number: number()
-      .transform(emptyStringToNull)
+      .transform(emptyToNull)
       .transform(stringToInteger)
       .test("valid-phone-number", "The phone number is not valid", (value) => {
         return (
@@ -85,14 +99,21 @@ const phoneNumberSchema = object()
             (value > 201200000000 && value < 201300000000))
         );
       })
-      .required(),
+      .required(
+        "phone number is required if added. You can remove the correspondence by clicking the X button",
+      ),
   })
   .required();
 
 const phoneSchema = object()
   .shape({
     hasWhatsapp: bool().required(),
-    otherWaBroadcastGroups: array().of(string()).transform(stringToArray).optional(),
+    otherWaBroadcastGroups: array()
+      .of(string())
+      .transform(stringToArray)
+      .transform(emptyToNull)
+      .nullable()
+      .optional(),
     phoneNumbers: array().of(phoneNumberSchema).min(1),
     primaryPhone: number()
       .test("one-primary-phone", "Exactly one primary number must be selected", (value) => {
@@ -112,74 +133,107 @@ const phoneSchema = object()
         return undefined;
       })
       .required(),
-    waBroadcastSAR: string().optional(),
-    whatsappNotes: string().optional(),
+    waBroadcastSAR: string().transform(emptyToNull).nullable().optional(),
+    whatsappNotes: string().transform(emptyToNull).nullable().optional(),
   })
   .required();
 
 const placementSchema = object().shape({
-  confDate: array().of(string()).transform(stringToArray).optional(),
-  noAnswerClassScheduleDate: dateSchema.optional(),
+  confDate: array()
+    .of(string())
+    .transform(stringToArray)
+    .transform(emptyToNull)
+    .nullable()
+    .optional(),
+  noAnswerClassScheduleDate: dateSchema.transform(emptyToNull).nullable().optional(),
   notified: bool().optional(),
   origPlacementData: object()
     .shape({
-      adjustment: string().optional(),
-      level: string().oneOf(levels).required(),
-      speaking: string().oneOf(levelsPlus).required(),
-      writing: string().oneOf(levelsPlus).required(),
+      adjustment: string().transform(emptyToNull).nullable().optional(),
+      level: string().oneOf(levels).required("original placement level is required"),
+      speaking: string().oneOf(levelsPlus).required("original speaking placement is required"),
+      writing: string().oneOf(levelsPlus).required("original writing placement is required"),
     })
     .required(),
   pending: bool().optional(),
-  photoContact: array().of(string()).transform(stringToArray).optional(),
-  placement: array().of(string()).transform(stringToArray).optional(),
-  sectionsOffered: string().optional(),
+  photoContact: array()
+    .of(string())
+    .transform(stringToArray)
+    .transform(emptyToNull)
+    .nullable()
+    .optional(),
+  placement: array()
+    .of(string())
+    .transform(stringToArray)
+    .transform(emptyToNull)
+    .nullable()
+    .optional(),
+  sectionsOffered: string().transform(emptyToNull).nullable().optional(),
 });
 
 const statusSchema = object().shape({
   audit: bool().optional(),
-  currentStatus: string().oneOf(statuses).required(),
-  droppedOutReason: string().oneOf(withdrawReasons).optional(),
-  finalGradeSentDate: dateSchema.optional(),
+  currentStatus: string().oneOf(statuses).required("current status is required"),
+  droppedOutReason: string().oneOf(withdrawReasons).transform(emptyToNull).nullable().optional(),
+  finalGradeSentDate: dateSchema.transform(emptyToNull).nullable().optional(),
   inviteTag: bool().required(),
-  levelReevalDate: dateSchema.optional(),
+  levelReevalDate: dateSchema.transform(emptyToNull).nullable().optional(),
   noContactList: bool().required(),
-  reactivatedDate: array().of(dateSchema).transform(stringToArray).optional(),
-  withdrawDate: array().of(dateSchema).transform(stringToArray).optional(),
+  reactivatedDate: array()
+    .of(dateSchema)
+    .transform(stringToArray)
+    .transform(emptyToNull)
+    .nullable()
+    .optional(),
+  withdrawDate: array()
+    .of(dateSchema)
+    .transform(stringToArray)
+    .transform(emptyToNull)
+    .nullable()
+    .optional(),
 });
 
 const workSchema = object().shape({
-  englishTeacherLocation: string().optional(),
+  englishTeacherLocation: string().transform(emptyToNull).nullable().optional(),
   isEnglishTeacher: bool().optional(),
   isTeacher: bool().optional(),
-  lookingForJob: string().optional(),
-  occupation: string().required(),
-  teachingSubjectAreas: string().optional(),
+  lookingForJob: string().transform(emptyToNull).nullable().optional(),
+  occupation: string().required("occupation is required"),
+  teachingSubjectAreas: string().transform(emptyToNull).nullable().optional(),
 });
 
 export const studentFormSchema = object().shape({
   academicRecords: array().of(academicRecordsSchema),
   age: number()
-    .transform(emptyStringToNull)
+    .transform(emptyToNull)
     .transform(stringToInteger)
     .min(13)
     .max(99)
     .integer()
-    .required(),
-  certificateRequests: string().optional(),
+    .required("age is required"),
+  certificateRequests: string().transform(emptyToNull).nullable().optional(),
   classList: classListSchema,
   correspondence: array().of(correspondenceSchema),
-  currentLevel: string().oneOf(genderedLevels).required(),
-  epId: number().min(10000).max(99999).integer().required(),
-  gender: string().oneOf(["M", "F"]).required(),
+  currentLevel: string().oneOf(genderedLevels).required("current level is required"),
+  epId: number().min(10000).max(99999).integer().required("id is required"),
+  gender: string().oneOf(["M", "F"]).required("gender is required"),
   initialSession: string()
     .matches(/(FA|SP) (I|II) \d{2}/)
-    .required(),
+    .required("initial session is required"),
   literacy: literacySchema,
   name: nameSchema,
-  nationality: string().oneOf(nationalities).required(),
+  nationality: string().oneOf(nationalities).required("nationality is required"),
   phone: phoneSchema,
   placement: placementSchema,
   status: statusSchema,
   work: workSchema,
-  zoom: string().optional(),
+  zoom: string().transform(emptyToNull).nullable().optional(),
 });
+
+// https://stackoverflow.com/questions/38275753/how-to-remove-empty-values-from-object-using-lodash
+export const removeNullFromObject = (obj: object): object => {
+  const objNoNull = omitBy(obj, isNull);
+  const subObjects = mapValues(pickBy(objNoNull, isObject), removeNullFromObject);
+  const subValues = omitBy(objNoNull, isObject);
+  return merge(subObjects, subValues);
+};

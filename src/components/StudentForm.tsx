@@ -21,11 +21,12 @@ import {
   nationalities,
   PhoneNumber,
   results,
+  Status,
   statuses,
   Student,
   withdrawReasons,
 } from "../interfaces";
-import { generateId, getAllSessions, studentFormSchema } from "../services";
+import { generateId, getAllSessions, removeNullFromObject, studentFormSchema } from "../services";
 
 interface StudentFormProps {
   handleDialogClose: () => void;
@@ -71,14 +72,17 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students, handleDialog
   };
 
   const onSubmit = (data: Student) => {
-    console.log(data);
     data.phone.primaryPhone = data.phone.phoneNumbers[data.phone.primaryPhone].number;
-    if (isEmpty(data.academicRecords)) {
-      data.academicRecords.push({
-        level: data.currentLevel,
-        session: data.initialSession,
-      });
+    if (isEmpty(data.academicRecords) && data.status.currentStatus === Status.NEW) {
+      data.academicRecords = [
+        {
+          level: data.currentLevel,
+          session: data.initialSession,
+        },
+      ];
     }
+    const dataNoNull = removeNullFromObject(data);
+    console.log(dataNoNull);
     handleDialogClose();
   };
 
