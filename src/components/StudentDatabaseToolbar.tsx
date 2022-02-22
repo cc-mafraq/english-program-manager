@@ -91,7 +91,7 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
           onRowsPerPageChange={handleChangeRowsPerPage}
           page={page}
           rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[10, 50, 100, 200, 500, 1000, 2000]}
+          rowsPerPageOptions={[1, 10, 50, 100, 200, 500, 1000]}
         />
       </Toolbar>
     </AppBar>

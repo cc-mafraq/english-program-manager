@@ -41,7 +41,7 @@ export interface Grade {
 export interface Placement {
   confDate?: string[];
   noAnswerClassScheduleDate?: string;
-  notified: boolean;
+  notified?: boolean;
   origPlacementData: {
     adjustment?: string;
     level: Level;
@@ -270,7 +270,6 @@ export const emptyStudent: Student = {
     primaryPhone: -1,
   },
   placement: {
-    notified: true,
     origPlacementData: {
       level: "PL1",
       speaking: "PL1",

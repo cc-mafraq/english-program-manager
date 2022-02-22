@@ -25,7 +25,7 @@ export const StudentDatabasePage = () => {
   const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
   const [studentsPage, setStudentsPage] = useState<Student[]>([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(100);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [openFGRDialog, setOpenFGRDialog] = useState(false);
   const [openStudentDialog, setOpenStudentDialog] = useState(false);
   const [searchString, setSearchString] = useState<string>("");

@@ -202,7 +202,11 @@ export const StudentInfo = ({ student }: { student: Student }) => {
             {join(student.placement.placement, ", ")}
           </LabeledText>
           <LabeledText condition={dataVisibility.placement.notified} label="Notified">
-            {student.placement.notified ? "Yes" : "No"}
+            {student.placement.notified === undefined
+              ? student.placement.notified
+                ? "Yes"
+                : "No"
+              : undefined}
           </LabeledText>
           <LabeledText
             condition={dataVisibility.placement.placementConfirmed}

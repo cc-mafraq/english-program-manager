@@ -1,15 +1,16 @@
 import {
   FormControl,
   FormControlLabel,
+  FormHelperText,
   FormLabel,
   Grid,
   GridProps,
   Radio,
   RadioGroup,
 } from "@mui/material";
-import { camelCase } from "lodash";
 import React from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, FieldError, useFormContext } from "react-hook-form";
+import { useInput } from "../../hooks";
 
 interface GridItemRadioGroup {
   defaultValue?: string;
@@ -28,16 +29,20 @@ export const GridItemRadioGroup = ({
   name,
   options,
 }: GridItemRadioGroup) => {
-  const { control } = useFormContext();
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
+  const { name: nameFallback, errorMessage } = useInput(label, errors as FieldError, name);
 
   return (
     <Grid item xs {...gridProps}>
-      <FormControl component="fieldset">
+      <FormControl component="fieldset" error={!!errorMessage}>
         <FormLabel component="legend">{label}</FormLabel>
         <Controller
           control={control}
           defaultValue={defaultValue}
-          name={name ?? camelCase(label)}
+          name={name ?? nameFallback}
           render={({ field: { onChange, onBlur, ref } }) => {
             return (
               <RadioGroup sx={{ flexDirection: "row" }}>
@@ -55,6 +60,7 @@ export const GridItemRadioGroup = ({
             );
           }}
         />
+        <FormHelperText>{errorMessage}</FormHelperText>
       </FormControl>
     </Grid>
   );

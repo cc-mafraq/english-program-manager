@@ -5,11 +5,10 @@ import { Controller, FieldError, useFormContext } from "react-hook-form";
 import { useInput } from "../../hooks/useInput";
 
 interface GridItemAutocomplete {
-  defaultValue?: string[];
+  defaultValue?: string[] | string;
   gridProps?: GridProps;
   label: string;
   name?: string;
-  options: string[];
 }
 
 /* A text field to be used on forms */
@@ -17,15 +16,15 @@ export const GridItemAutocomplete = (
   props: GridItemAutocomplete &
     Omit<AutocompleteProps<unknown, boolean, boolean, boolean>, "renderInput">,
 ) => {
-  const { defaultValue, label, name, gridProps, options } = props;
+  const { defaultValue, label, name, gridProps } = props;
   const {
     control,
     formState: { errors },
   } = useFormContext();
-  const { name: nameFallback, errorMessage } = useInput(label, errors as FieldError);
+  const { name: nameFallback, errorMessage } = useInput(label, errors as FieldError, name);
 
   return (
-    <Grid direction="column" item xs {...gridProps}>
+    <Grid item xs {...gridProps}>
       <Controller
         control={control}
         defaultValue={defaultValue}
@@ -40,7 +39,6 @@ export const GridItemAutocomplete = (
                 return onChange(data);
               }}
               openOnFocus
-              options={options}
               renderInput={(params) => {
                 return (
                   <TextField

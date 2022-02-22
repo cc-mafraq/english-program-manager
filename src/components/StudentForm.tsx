@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Divider, Grid, Typography } from "@mui/material";
-import { map } from "lodash";
+import { isEmpty, map } from "lodash";
 import moment from "moment";
 import React, { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -51,11 +51,11 @@ const MARGIN = 0;
 export const StudentForm: React.FC<StudentFormProps> = ({ students, handleDialogClose }) => {
   const methods = useForm<Student>({
     criteriaMode: "all",
-    // defaultValues: mapInternalTypesToInput(values),
+    // defaultValues: student,
     resolver: yupResolver(studentFormSchema),
   });
   const [phoneNumbers, setPhoneNumbers] = useState<PhoneNumber[]>([defaultPhone]);
-  const [academicRecords, setAcademicRecords] = useState<AcademicRecord[]>([defaultAcademicRecord]);
+  const [academicRecords, setAcademicRecords] = useState<AcademicRecord[]>([]);
   const [correspondence, setCorrespondence] = useState<Correspondence[]>([]);
 
   const addPhone = async () => {
@@ -72,6 +72,13 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students, handleDialog
 
   const onSubmit = (data: Student) => {
     console.log(data);
+    data.phone.primaryPhone = data.phone.phoneNumbers[data.phone.primaryPhone].number;
+    if (isEmpty(data.academicRecords)) {
+      data.academicRecords.push({
+        level: data.currentLevel,
+        session: data.initialSession,
+      });
+    }
     handleDialogClose();
   };
 
@@ -89,7 +96,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students, handleDialog
           <Grid item>
             <LabeledCheckbox
               checkboxProps={{ defaultChecked: true }}
-              label="Invite?"
+              label="Invite"
               name="status.inviteTag"
             />
             <LabeledCheckbox label="NCL" name="status.noContactList" />
@@ -101,10 +108,10 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students, handleDialog
           <GridItemTextField label="ID" name="epId" value={generateId(students).toString()} />
           <GridItemAutocomplete label="Current Level" options={genderedLevels} />
           <GridItemAutocomplete
+            defaultValue="NEW"
             label="Current Status"
             name="status.currentStatus"
             options={statuses}
-            value="NEW"
           />
           <GridItemAutocomplete
             freeSolo
@@ -122,8 +129,8 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students, handleDialog
         </Grid>
         <Grid container marginBottom={SPACING * 2} marginTop={MARGIN} spacing={SPACING}>
           <Grid item xs={2}>
-            <LabeledCheckbox label="Teacher?" name="work.isTeacher" />
-            <LabeledCheckbox label="English Teacher?" name="work.isEnglishTeacher" />
+            <LabeledCheckbox label="Teacher" name="work.isTeacher" />
+            <LabeledCheckbox label="English Teacher" name="work.isEnglishTeacher" />
           </Grid>
           <GridItemTextField label="Teaching Subject(s)" name="work.teachingSubjectAreas" />
           <GridItemTextField
@@ -138,7 +145,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students, handleDialog
           {map(correspondence, (c, i) => {
             const correspondenceName = `correspondence[${i}]`;
             return (
-              <Grid container>
+              <Grid key={correspondenceName} container>
                 <GridItemDatePicker
                   gridProps={{ margin: SPACING, xs: 2 }}
                   label="Date"
@@ -169,7 +176,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students, handleDialog
             const phoneName = `phone.phoneNumbers[${i}]`;
             return (
               <Grid key={phoneName} item padding={SPACING} xs>
-                <GridItemTextField label={`Phone Number ${i + 1}`} name={`${phoneName}.phone`} />
+                <GridItemTextField label={`Phone Number ${i + 1}`} name={`${phoneName}.number`} />
                 <GridItemTextField
                   gridProps={{ marginTop: SPACING / 2 }}
                   label={`Phone Notes ${i + 1}`}
@@ -177,8 +184,10 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students, handleDialog
                 />
                 <LabeledCheckbox
                   containerProps={{ marginTop: 0 }}
-                  label="Primary?"
+                  errorName="phone.primaryPhone"
+                  label="Primary"
                   name={`phone.primaryPhone[${i}]`}
+                  parentStateIndex={i}
                 />
               </Grid>
             );
@@ -192,7 +201,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students, handleDialog
               label="WhatsApp Broadcast SAR"
               name="phone.waBroadcastSAR"
             />
-            <LabeledCheckbox label="Has WhatsApp?" name="phone.hasWhatsapp" />
+            <LabeledCheckbox label="Has WhatsApp" name="phone.hasWhatsapp" />
           </Grid>
           <Grid item xs>
             <GridItemTextField
@@ -239,17 +248,15 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students, handleDialog
             <StudentFormLabel textProps={{ marginTop: SPACING }}>Zoom</StudentFormLabel>
           </Grid>
         </Grid>
-        <Grid container marginBottom={SPACING * 2} marginTop={SPACING / 2} xs>
-          <Grid container xs>
-            <Grid item xs>
-              <LabeledCheckbox label="Illiterate - AR" name="literacy.illiterateAr" />
-              <LabeledCheckbox label="Illiterate - ENG" name="literacy.illiterateAr" />
-              <GridItemTextField
-                gridProps={{ paddingRight: SPACING, paddingTop: SPACING / 2 }}
-                label="Tutor and Date"
-                name="literacy.tutorAndDate"
-              />
-            </Grid>
+        <Grid container marginBottom={SPACING * 2} marginTop={SPACING / 2}>
+          <Grid item xs>
+            <LabeledCheckbox label="Illiterate - AR" name="literacy.illiterateAr" />
+            <LabeledCheckbox label="Illiterate - ENG" name="literacy.illiterateEng" />
+            <GridItemTextField
+              gridProps={{ paddingRight: SPACING, paddingTop: SPACING / 2 }}
+              label="Tutor and Date"
+              name="literacy.tutorAndDate"
+            />
           </Grid>
           <Grid item xs>
             <GridItemTextField
@@ -327,7 +334,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students, handleDialog
           {map(academicRecords, (academicRecord, i) => {
             const recordName = `academicRecords[${i}]`;
             return (
-              <Grid container>
+              <Grid key={recordName} container>
                 <StudentFormLabel textProps={{ marginLeft: SPACING, marginTop: SPACING }}>
                   Academic Record {i + 1}
                 </StudentFormLabel>
@@ -415,7 +422,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students, handleDialog
                     />
                     <LabeledCheckbox
                       containerProps={{ paddingLeft: SPACING }}
-                      label="Certificate?"
+                      label="Certificate"
                       name={`${recordName}.certificate`}
                     />
                   </Grid>

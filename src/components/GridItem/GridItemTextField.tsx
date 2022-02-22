@@ -23,10 +23,10 @@ export const GridItemTextField = ({
     register,
     formState: { errors },
   } = useFormContext();
-  const { name: nameFallback, errorMessage } = useInput(label, errors as FieldError);
+  const { name: nameFallback, errorMessage } = useInput(label, errors as FieldError, name);
 
   return (
-    <Grid direction="column" item xs {...gridProps}>
+    <Grid item xs {...gridProps}>
       <TextField
         defaultValue={value}
         fullWidth

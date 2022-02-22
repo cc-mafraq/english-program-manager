@@ -30,7 +30,7 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
   const [dateValue, setDateValue] = React.useState<Moment | null>(value || null);
 
   return (
-    <Grid direction="column" item xs {...gridProps}>
+    <Grid item xs {...gridProps}>
       <LocalizationProvider dateAdapter={AdapterMoment}>
         <DatePicker
           label={label}
@@ -40,7 +40,6 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
           renderInput={(params) => {
             return (
               <TextField
-                defaultValue={value}
                 fullWidth
                 label={label}
                 {...textFieldProps}
@@ -48,6 +47,7 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
                 helperText={errorMessage}
                 variant="outlined"
                 {...params}
+                value={dateValue}
                 {...register(name ?? nameFallback)}
               />
             );
