@@ -7,6 +7,7 @@ import {
   GridProps,
   Radio,
   RadioGroup,
+  useTheme,
 } from "@mui/material";
 import React from "react";
 import { Controller, FieldError, useFormContext } from "react-hook-form";
@@ -34,6 +35,8 @@ export const GridItemRadioGroup = ({
     formState: { errors },
   } = useFormContext();
   const { name: nameFallback, errorMessage } = useInput(label, errors as FieldError, name);
+  const theme = useTheme();
+  const errorColor = errorMessage ? theme.palette.error.main : undefined;
 
   return (
     <Grid item xs {...gridProps}>
@@ -50,8 +53,16 @@ export const GridItemRadioGroup = ({
                   return (
                     <FormControlLabel
                       key={opt}
-                      control={<Radio inputRef={ref} onBlur={onBlur} onChange={onChange} />}
+                      control={
+                        <Radio
+                          inputRef={ref}
+                          onBlur={onBlur}
+                          onChange={onChange}
+                          sx={{ color: errorColor }}
+                        />
+                      }
                       label={opt}
+                      sx={{ color: errorColor }}
                       value={opt}
                     />
                   );

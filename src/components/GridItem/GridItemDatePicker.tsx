@@ -1,12 +1,13 @@
 import { DatePicker, LocalizationProvider } from "@mui/lab";
 import AdapterMoment from "@mui/lab/AdapterMoment";
-import { Grid, GridProps, StandardTextFieldProps, TextField } from "@mui/material";
+import { Grid, GridProps, StandardTextFieldProps, TextField, useTheme } from "@mui/material";
 import { Moment } from "moment";
 import React from "react";
 import { FieldError, useFormContext } from "react-hook-form";
 import { useInput } from "../../hooks/useInput";
 
 interface GridItemDatePickerProps {
+  errorName?: string;
   gridProps?: GridProps;
   label: string;
   name?: string;
@@ -21,13 +22,20 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
   textFieldProps,
   value,
   name,
+  errorName,
 }) => {
   const {
     register,
     formState: { errors },
   } = useFormContext();
-  const { name: nameFallback, errorMessage } = useInput(label, errors as FieldError, name);
+  const { name: nameFallback, errorMessage } = useInput(
+    label,
+    errors as FieldError,
+    errorName ?? name,
+  );
   const [dateValue, setDateValue] = React.useState<Moment | null>(value || null);
+  const theme = useTheme();
+  const errorColor = errorMessage ? theme.palette.error.main : undefined;
 
   return (
     <Grid item xs {...gridProps}>
@@ -40,13 +48,16 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
           renderInput={(params) => {
             return (
               <TextField
-                error={!!errorMessage}
                 fullWidth
                 label={label}
                 {...textFieldProps}
                 helperText={errorMessage}
+                sx={{
+                  svg: { color: errorColor },
+                }}
                 variant="outlined"
                 {...params}
+                error={!!errorMessage}
                 value={dateValue}
                 {...register(name ?? nameFallback)}
               />
@@ -60,6 +71,7 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
 };
 
 GridItemDatePicker.defaultProps = {
+  errorName: undefined,
   gridProps: undefined,
   name: undefined,
   textFieldProps: undefined,

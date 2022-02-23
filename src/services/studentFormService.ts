@@ -9,20 +9,32 @@ import {
   merge,
   omitBy,
   pickBy,
+  split,
+  trim,
 } from "lodash";
-import { array, bool, number, object, string } from "yup";
+import { array, bool, mixed, number, object, string } from "yup";
 import {
+  DroppedOutReason,
+  FinalResult,
+  GenderedLevel,
   genderedLevels,
+  Level,
+  LevelPlus,
   levels,
   levelsPlus,
-  nationalities,
-  results,
-  statuses,
-  withdrawReasons,
+  Nationality,
+  Status,
 } from "../interfaces";
 
 const stringToArray = (value: string, originalValue: string) => {
-  // TODO: Transform string to array
+  const separators = /,|;|\t/g;
+  return isEmpty(originalValue)
+    ? originalValue.match(separators)
+      ? map(split(originalValue, separators), (val) => {
+          return trim(val);
+        })
+      : [originalValue]
+    : null;
 };
 
 const stringToInteger = (value: string, originalValue: string) => {
@@ -30,20 +42,38 @@ const stringToInteger = (value: string, originalValue: string) => {
   return isNaN(parsedInt) ? undefined : parsedInt;
 };
 
-const emptyToNull = (value: string, originalValue: string) => {
-  if (isEmpty(originalValue)) {
-    return null;
-  }
-  return originalValue;
+const stringToStatus = (value: string, originalValue: string) => {
+  return Status[originalValue as keyof typeof Status];
 };
+
+const stringToNationality = (value: string, originalValue: string) => {
+  return Nationality[originalValue as keyof typeof Nationality];
+};
+
+const stringToResult = (value: string, originalValue: string) => {
+  return FinalResult[originalValue as keyof typeof FinalResult];
+};
+
+const emptyToNull = (value: string, originalValue: string) => {
+  return isEmpty(originalValue) ? null : originalValue;
+};
+
 const percentageSchema = number().min(0).max(100).integer().optional();
-const dateSchema = string(); // TODO: Date Validation
+
+// https://www.regular-expressions.info/dates.html
+const dateSchema = string().matches(
+  /^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d$/,
+  "Invalid date format",
+);
 
 const gradeSchema = object()
   .shape({
     notes: string().transform(emptyToNull).nullable().optional(),
     percentage: percentageSchema.transform(emptyToNull).nullable(),
-    result: string().oneOf(results).required("result is required"),
+    result: mixed<FinalResult>()
+      .oneOf(Object.values(FinalResult) as FinalResult[])
+      .transform(stringToResult)
+      .required("Result is required"),
   })
   .optional();
 
@@ -55,21 +85,25 @@ const academicRecordsSchema = object().shape({
   exitSpeakingExam: gradeSchema,
   exitWritingExam: gradeSchema,
   finalResult: gradeSchema,
-  level: string().oneOf(genderedLevels).transform(emptyToNull).nullable().optional(),
-  levelAudited: string().oneOf(genderedLevels).transform(emptyToNull).nullable().optional(),
-  session: string().required("session is required"),
+  level: mixed<GenderedLevel>().oneOf(genderedLevels).transform(emptyToNull).nullable().optional(),
+  levelAudited: mixed<GenderedLevel>()
+    .oneOf(genderedLevels)
+    .transform(emptyToNull)
+    .nullable()
+    .optional(),
+  session: string().required("Session is required"),
 });
 
 const classListSchema = object().shape({
   classListSent: bool().optional(),
-  classListSentDate: string().transform(emptyToNull).nullable().optional(),
+  classListSentDate: dateSchema.transform(emptyToNull).nullable().optional(),
   classListSentNotes: string().transform(emptyToNull).nullable().optional(),
 });
 
 const correspondenceSchema = object().shape({
-  date: dateSchema.required("date is required"),
+  date: dateSchema.required("Date is required"),
   notes: string().required(
-    "correspondence notes are required if added. You can remove the correspondence by clicking the X button",
+    "Correspondence notes are required if added. You can remove the correspondence by clicking the X button",
   ),
 });
 
@@ -81,8 +115,10 @@ const literacySchema = object().shape({
 
 const nameSchema = object()
   .shape({
-    arabic: string().required('arabic name is required. You may write "N/A"'),
-    english: string().required("english name is required"),
+    arabic: string()
+      .matches(/^[\u0621-\u064A\s]+|(N\/A)/, "Arabic name must be in arabic or N/A")
+      .required("Arabic name is required. You may write N/A"),
+    english: string().required("English name is required"),
   })
   .required();
 
@@ -100,7 +136,7 @@ const phoneNumberSchema = object()
         );
       })
       .required(
-        "phone number is required if added. You can remove the correspondence by clicking the X button",
+        "Phone number is required if added. You can remove the correspondence by clicking the X button",
       ),
   })
   .required();
@@ -108,12 +144,7 @@ const phoneNumberSchema = object()
 const phoneSchema = object()
   .shape({
     hasWhatsapp: bool().required(),
-    otherWaBroadcastGroups: array()
-      .of(string())
-      .transform(stringToArray)
-      .transform(emptyToNull)
-      .nullable()
-      .optional(),
+    otherWaBroadcastGroups: array().of(string()).transform(stringToArray).nullable().optional(),
     phoneNumbers: array().of(phoneNumberSchema).min(1),
     primaryPhone: number()
       .test("one-primary-phone", "Exactly one primary number must be selected", (value) => {
@@ -139,58 +170,44 @@ const phoneSchema = object()
   .required();
 
 const placementSchema = object().shape({
-  confDate: array()
-    .of(string())
-    .transform(stringToArray)
-    .transform(emptyToNull)
-    .nullable()
-    .optional(),
+  confDate: array().of(dateSchema).transform(stringToArray).nullable().optional(),
   noAnswerClassScheduleDate: dateSchema.transform(emptyToNull).nullable().optional(),
   notified: bool().optional(),
   origPlacementData: object()
     .shape({
       adjustment: string().transform(emptyToNull).nullable().optional(),
-      level: string().oneOf(levels).required("original placement level is required"),
-      speaking: string().oneOf(levelsPlus).required("original speaking placement is required"),
-      writing: string().oneOf(levelsPlus).required("original writing placement is required"),
+      level: mixed<Level>().oneOf(levels).required("Original placement level is required"),
+      speaking: mixed<LevelPlus>()
+        .oneOf(levelsPlus)
+        .required("Original speaking placement is required"),
+      writing: mixed<LevelPlus>()
+        .oneOf(levelsPlus)
+        .required("Original writing placement is required"),
     })
     .required(),
   pending: bool().optional(),
-  photoContact: array()
-    .of(string())
-    .transform(stringToArray)
-    .transform(emptyToNull)
-    .nullable()
-    .optional(),
-  placement: array()
-    .of(string())
-    .transform(stringToArray)
-    .transform(emptyToNull)
-    .nullable()
-    .optional(),
+  photoContact: array().of(dateSchema).transform(stringToArray).nullable().optional(),
+  placement: array().of(string()).transform(stringToArray).nullable().optional(),
   sectionsOffered: string().transform(emptyToNull).nullable().optional(),
 });
 
 const statusSchema = object().shape({
   audit: bool().optional(),
-  currentStatus: string().oneOf(statuses).required("current status is required"),
-  droppedOutReason: string().oneOf(withdrawReasons).transform(emptyToNull).nullable().optional(),
+  currentStatus: mixed<Status>()
+    .oneOf(Object.values(Status) as Status[])
+    .transform(stringToStatus)
+    .required("Current status is required"),
+  droppedOutReason: mixed<DroppedOutReason>()
+    .oneOf(Object.values(DroppedOutReason) as DroppedOutReason[])
+    .transform(emptyToNull)
+    .nullable()
+    .optional(),
   finalGradeSentDate: dateSchema.transform(emptyToNull).nullable().optional(),
   inviteTag: bool().required(),
   levelReevalDate: dateSchema.transform(emptyToNull).nullable().optional(),
   noContactList: bool().required(),
-  reactivatedDate: array()
-    .of(dateSchema)
-    .transform(stringToArray)
-    .transform(emptyToNull)
-    .nullable()
-    .optional(),
-  withdrawDate: array()
-    .of(dateSchema)
-    .transform(stringToArray)
-    .transform(emptyToNull)
-    .nullable()
-    .optional(),
+  reactivatedDate: array().of(dateSchema).transform(stringToArray).nullable().optional(),
+  withdrawDate: array().of(dateSchema).transform(stringToArray).nullable().optional(),
 });
 
 const workSchema = object().shape({
@@ -198,7 +215,7 @@ const workSchema = object().shape({
   isEnglishTeacher: bool().optional(),
   isTeacher: bool().optional(),
   lookingForJob: string().transform(emptyToNull).nullable().optional(),
-  occupation: string().required("occupation is required"),
+  occupation: string().required("Occupation is required"),
   teachingSubjectAreas: string().transform(emptyToNull).nullable().optional(),
 });
 
@@ -210,19 +227,23 @@ export const studentFormSchema = object().shape({
     .min(13)
     .max(99)
     .integer()
-    .required("age is required"),
+    .required("Age is required"),
   certificateRequests: string().transform(emptyToNull).nullable().optional(),
   classList: classListSchema,
   correspondence: array().of(correspondenceSchema),
-  currentLevel: string().oneOf(genderedLevels).required("current level is required"),
-  epId: number().min(10000).max(99999).integer().required("id is required"),
-  gender: string().oneOf(["M", "F"]).required("gender is required"),
+  currentLevel: mixed<GenderedLevel>().oneOf(genderedLevels).required("Current level is required"),
+  epId: number().min(10000).max(99999).integer().required("ID is required"),
+  gender: mixed<"M" | "F">().oneOf(["M", "F"]).required("Gender is required"),
   initialSession: string()
-    .matches(/(FA|SP) (I|II) \d{2}/)
-    .required("initial session is required"),
+    .matches(/(FA|SP) (I|II) \d{2}/, "Initial session must be FA/SP I/II year (e.g. SP I 22)")
+    .typeError("Initial session is required")
+    .required("Initial session is required"),
   literacy: literacySchema,
   name: nameSchema,
-  nationality: string().oneOf(nationalities).required("nationality is required"),
+  nationality: mixed<Nationality>()
+    .oneOf(Object.values(Nationality) as Nationality[])
+    .transform(stringToNationality)
+    .required("Nationality is required"),
   phone: phoneSchema,
   placement: placementSchema,
   status: statusSchema,

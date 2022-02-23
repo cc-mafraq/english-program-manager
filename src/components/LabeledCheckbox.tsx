@@ -38,7 +38,7 @@ export const LabeledCheckbox: React.FC<LabeledCheckboxProps> = ({
     errorName ?? name,
   );
   const errorColor = errorMessage ? theme.palette.error.main : undefined;
-  const [checkboxVal, setCheckboxVal] = useState(false);
+  const [checkboxVal, setCheckboxVal] = useState(checkboxProps?.defaultChecked ?? false);
 
   return (
     <Box marginTop={-1} {...containerProps}>
@@ -48,7 +48,6 @@ export const LabeledCheckbox: React.FC<LabeledCheckboxProps> = ({
             {...checkboxProps}
             onChange={(event) => {
               setCheckboxVal(event?.target.checked);
-              // setParentState && setParentState(event.target.checked, parentStateIndex ?? -1);
             }}
             sx={{ color: errorColor }}
             value={checkboxVal}
