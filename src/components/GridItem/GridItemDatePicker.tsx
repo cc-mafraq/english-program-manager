@@ -1,9 +1,10 @@
 import { DatePicker, LocalizationProvider } from "@mui/lab";
 import AdapterMoment from "@mui/lab/AdapterMoment";
 import { Grid, GridProps, StandardTextFieldProps, TextField, useTheme } from "@mui/material";
+import { omit } from "lodash";
 import { Moment } from "moment";
 import React from "react";
-import { FieldError, useFormContext } from "react-hook-form";
+import { Controller, FieldError, useFormContext } from "react-hook-form";
 import { useInput } from "../../hooks/useInput";
 
 interface GridItemDatePickerProps {
@@ -25,47 +26,50 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
   errorName,
 }) => {
   const {
-    register,
     formState: { errors },
+    control,
   } = useFormContext();
   const { name: nameFallback, errorMessage } = useInput(
     label,
     errors as FieldError,
     errorName ?? name,
   );
-  const [dateValue, setDateValue] = React.useState<Moment | null>(value || null);
   const theme = useTheme();
   const errorColor = errorMessage ? theme.palette.error.main : undefined;
 
   return (
     <Grid item xs {...gridProps}>
-      <LocalizationProvider dateAdapter={AdapterMoment}>
-        <DatePicker
-          label={label}
-          onChange={(newValue) => {
-            setDateValue(newValue);
-          }}
-          renderInput={(params) => {
-            return (
-              <TextField
-                fullWidth
+      <Controller
+        control={control}
+        defaultValue={value || null}
+        name={name ?? nameFallback}
+        render={({ field }) => {
+          return (
+            <LocalizationProvider dateAdapter={AdapterMoment}>
+              <DatePicker
+                {...field}
                 label={label}
-                {...textFieldProps}
-                helperText={errorMessage}
-                sx={{
-                  svg: { color: errorColor },
+                renderInput={(params) => {
+                  return (
+                    <TextField
+                      error={!!errorMessage}
+                      fullWidth
+                      helperText={errorMessage}
+                      label={label}
+                      sx={{
+                        svg: { color: errorColor },
+                      }}
+                      variant="outlined"
+                      {...textFieldProps}
+                      {...omit(params, ["error"])}
+                    />
+                  );
                 }}
-                variant="outlined"
-                {...params}
-                error={!!errorMessage}
-                value={dateValue}
-                {...register(name ?? nameFallback)}
               />
-            );
-          }}
-          value={dateValue}
-        />
-      </LocalizationProvider>
+            </LocalizationProvider>
+          );
+        }}
+      />
     </Grid>
   );
 };

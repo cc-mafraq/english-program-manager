@@ -12,6 +12,7 @@ import {
   split,
   trim,
 } from "lodash";
+import moment from "moment";
 import { array, bool, mixed, number, object, string } from "yup";
 import {
   DroppedOutReason,
@@ -54,6 +55,10 @@ const stringToResult = (value: string, originalValue: string) => {
   return FinalResult[originalValue as keyof typeof FinalResult];
 };
 
+const dateToString = (value: string, originalValue: string) => {
+  return originalValue ? moment(originalValue).format("L") : null;
+};
+
 const emptyToNull = (value: string, originalValue: string) => {
   return isEmpty(originalValue) ? null : originalValue;
 };
@@ -61,10 +66,12 @@ const emptyToNull = (value: string, originalValue: string) => {
 const percentageSchema = number().min(0).max(100).integer().optional();
 
 // https://www.regular-expressions.info/dates.html
-const dateSchema = string().matches(
-  /^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d$/,
-  "Invalid date format",
-);
+const dateSchema = string()
+  .matches(
+    /^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d$/,
+    "Invalid date format. The format must be MM-DD-YYYY",
+  )
+  .transform(dateToString);
 
 const gradeSchema = object()
   .shape({
@@ -96,7 +103,7 @@ const academicRecordsSchema = object().shape({
 
 const classListSchema = object().shape({
   classListSent: bool().optional(),
-  classListSentDate: dateSchema.transform(emptyToNull).nullable().optional(),
+  classListSentDate: dateSchema.nullable().optional(),
   classListSentNotes: string().transform(emptyToNull).nullable().optional(),
 });
 
@@ -170,8 +177,8 @@ const phoneSchema = object()
   .required();
 
 const placementSchema = object().shape({
-  confDate: array().of(dateSchema).transform(stringToArray).nullable().optional(),
-  noAnswerClassScheduleDate: dateSchema.transform(emptyToNull).nullable().optional(),
+  confDate: dateSchema.nullable().optional(),
+  noAnswerClassScheduleDate: dateSchema.nullable().optional(),
   notified: bool().optional(),
   origPlacementData: object()
     .shape({
@@ -186,7 +193,7 @@ const placementSchema = object().shape({
     })
     .required(),
   pending: bool().optional(),
-  photoContact: array().of(dateSchema).transform(stringToArray).nullable().optional(),
+  photoContact: dateSchema.nullable().optional(),
   placement: array().of(string()).transform(stringToArray).nullable().optional(),
   sectionsOffered: string().transform(emptyToNull).nullable().optional(),
 });
@@ -202,12 +209,12 @@ const statusSchema = object().shape({
     .transform(emptyToNull)
     .nullable()
     .optional(),
-  finalGradeSentDate: dateSchema.transform(emptyToNull).nullable().optional(),
+  finalGradeSentDate: dateSchema.nullable().optional(),
   inviteTag: bool().required(),
-  levelReevalDate: dateSchema.transform(emptyToNull).nullable().optional(),
+  levelReevalDate: dateSchema.nullable().optional(),
   noContactList: bool().required(),
-  reactivatedDate: array().of(dateSchema).transform(stringToArray).nullable().optional(),
-  withdrawDate: array().of(dateSchema).transform(stringToArray).nullable().optional(),
+  reactivatedDate: dateSchema.nullable().optional(),
+  withdrawDate: dateSchema.nullable().optional(),
 });
 
 const workSchema = object().shape({
