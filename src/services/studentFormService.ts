@@ -1,5 +1,6 @@
 import {
   indexOf,
+  isArray,
   isEmpty,
   isNaN,
   isNull,
@@ -9,6 +10,7 @@ import {
   merge,
   omitBy,
   pickBy,
+  some,
   split,
   trim,
 } from "lodash";
@@ -30,7 +32,11 @@ import {
 const stringToArray = (value: string, originalValue: string) => {
   const separators = /,|;|\t/g;
   return originalValue
-    ? originalValue.match(separators)
+    ? isArray(originalValue)
+      ? some(originalValue)
+        ? originalValue
+        : null
+      : originalValue.match(separators)
       ? map(split(originalValue, separators), (val) => {
           return trim(val);
         })

@@ -29,15 +29,10 @@ export const GridItemAutocomplete = (
         control={control}
         defaultValue={defaultValue}
         name={name ?? nameFallback}
-        render={({ field: { onChange, onBlur, ref } }) => {
+        render={({ field }) => {
           return (
             <Autocomplete
-              ref={ref}
               autoSelect
-              onBlur={onBlur}
-              onChange={(e, data) => {
-                return onChange(data);
-              }}
               openOnFocus
               renderInput={(params) => {
                 return (
@@ -51,6 +46,10 @@ export const GridItemAutocomplete = (
                 );
               }}
               {...omit(props, ["gridProps"])}
+              {...omit(field, ["onChange"])}
+              onChange={(e, data) => {
+                return field.onChange(data);
+              }}
             />
           );
         }}

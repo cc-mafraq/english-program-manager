@@ -46,9 +46,9 @@ export const GridItemRadioGroup = ({
           control={control}
           defaultValue={defaultValue}
           name={name ?? nameFallback}
-          render={({ field: { onChange, onBlur, ref } }) => {
+          render={({ field: { onChange, onBlur, ref, value } }) => {
             return (
-              <RadioGroup sx={{ flexDirection: "row" }}>
+              <RadioGroup sx={{ flexDirection: "row" }} value={value}>
                 {options.map((opt) => {
                   return (
                     <FormControlLabel

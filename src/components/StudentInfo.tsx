@@ -1,6 +1,6 @@
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { Box, IconButton, Typography } from "@mui/material";
-import { camelCase, forOwn, get, join, map, some, values } from "lodash";
+import { camelCase, forOwn, get, map, some, values } from "lodash";
 import React, { useContext } from "react";
 import { LabeledContainer, LabeledText, ProgressBox } from ".";
 import {
@@ -30,16 +30,9 @@ export const StudentInfo = ({ student }: { student: Student }) => {
       </Typography>
       <Box sx={{ flexDirection: "row", flexGrow: 1, float: "right" }}>
         <Typography display="inline" marginRight="5px" variant="h5">
-          {/* {student.phone.phoneNumbers[student.phone.primaryPhone].number} */}
           {student.phone.primaryPhone}
         </Typography>
-        <IconButton
-          href={`https://wa.me/962${
-            // student.phone.phoneNumbers[student.phone.primaryPhone].number
-            student.phone.primaryPhone
-          }`}
-          target="_blank"
-        >
+        <IconButton href={`https://wa.me/962${student.phone.primaryPhone}`} target="_blank">
           <WhatsAppIcon />
         </IconButton>
       </Box>
@@ -91,10 +84,10 @@ export const StudentInfo = ({ student }: { student: Student }) => {
             {student.status.levelReevalDate}
           </LabeledText>
           <LabeledText condition={dataVisibility.status.reactivatedDate} label="Reactivated Date">
-            {join(student.status.reactivatedDate, ", ")}
+            {student.status.reactivatedDate}
           </LabeledText>
           <LabeledText condition={dataVisibility.status.withdrawDate} label="Withdraw Date">
-            {join(student.status.withdrawDate, ", ")}
+            {student.status.withdrawDate}
           </LabeledText>
           <LabeledText condition={dataVisibility.status.withdrawReason} label="Withdraw Reason">
             {student.status.droppedOutReason}
@@ -185,12 +178,12 @@ export const StudentInfo = ({ student }: { student: Student }) => {
             condition={dataVisibility.phoneNumbersAndWhatsApp.waBroadcastOtherGroups}
             label="WA Broadcast Other Groups"
           >
-            {join(student.phone.otherWaBroadcastGroups, ", ")}
+            {student.phone.otherWaBroadcastGroups}
           </LabeledText>
         </LabeledContainer>
         <LabeledContainer condition={allCheckboxesFalse("Placement")} label="Placement">
           <LabeledText condition={dataVisibility.placement.photoContact} label="Photo Contact">
-            {join(student.placement.photoContact, ", ")}
+            {student.placement.photoContact}
           </LabeledText>
           <LabeledText
             condition={dataVisibility.placement.sectionsOffered}
@@ -199,7 +192,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
             {student.placement.sectionsOffered}
           </LabeledText>
           <LabeledText condition={dataVisibility.placement.placement} label="Placement">
-            {join(student.placement.placement, ", ")}
+            {student.placement.placement}
           </LabeledText>
           <LabeledText condition={dataVisibility.placement.notified} label="Notified">
             {student.placement.notified === undefined
@@ -212,7 +205,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
             condition={dataVisibility.placement.placementConfirmed}
             label="Placement Confirmed"
           >
-            {join(student.placement.confDate, ", ")}
+            {student.placement.confDate}
           </LabeledText>
           <LabeledText
             condition={dataVisibility.placement.naClassSchedule}

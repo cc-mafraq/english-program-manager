@@ -1,3 +1,4 @@
+/* eslint-disable typescript-sort-keys/string-enum */
 export interface Student {
   academicRecords: AcademicRecord[];
   age?: number;
@@ -39,7 +40,7 @@ export interface Grade {
 }
 
 export interface Placement {
-  confDate?: string[];
+  confDate?: string;
   noAnswerClassScheduleDate?: string;
   notified?: boolean;
   origPlacementData: {
@@ -49,8 +50,8 @@ export interface Placement {
     writing: LevelPlus;
   };
   pending?: boolean;
-  photoContact?: string[];
-  placement?: string[];
+  photoContact?: string;
+  placement?: string;
   sectionsOffered?: string;
 }
 
@@ -87,8 +88,8 @@ export interface StudentStatus {
   inviteTag: boolean;
   levelReevalDate?: string;
   noContactList: boolean;
-  reactivatedDate?: string[];
-  withdrawDate?: string[];
+  reactivatedDate?: string;
+  withdrawDate?: string;
 }
 
 export interface ClassList {
@@ -120,29 +121,29 @@ export type LevelPlus =
   | ("PL1+" | "L1-" | "L1+" | "L2-" | "L2+" | "L3-" | "L3+" | "L4-" | "L4+" | "L5-");
 
 export enum Nationality {
-  JDN,
-  SYR,
-  IRQ,
-  EGY,
-  INDNES,
-  YEM,
-  CEAFRRE,
-  CHI,
-  KOR,
-  UNKNWN,
+  JDN = "JDN",
+  SYR = "SYR",
+  IRQ = "IRQ",
+  EGY = "EGY",
+  INDNES = "INDNES",
+  YEM = "YEM",
+  CEAFRRE = "CEAFRRE",
+  CHI = "CHI",
+  KOR = "KOR",
+  UNKNWN = "UNKNWN",
 }
 
 export enum Status {
-  NEW,
-  RET,
-  WD,
-  NCL,
+  NEW = "NEW",
+  RET = "RET",
+  WD = "WD",
+  NCL = "NCL",
 }
 
 export enum FinalResult {
-  P,
-  F,
-  WD,
+  P = "P",
+  F = "F",
+  WD = "WD",
 }
 
 export enum DroppedOutTiming {
@@ -174,16 +175,16 @@ export enum DroppedOutReason {
 }
 
 export const nationalities = [
-  Nationality[Nationality.JDN],
-  Nationality[Nationality.SYR],
-  Nationality[Nationality.EGY],
-  Nationality[Nationality.YEM],
-  Nationality[Nationality.IRQ],
-  Nationality[Nationality.KOR],
-  Nationality[Nationality.CHI],
-  Nationality[Nationality.INDNES],
-  Nationality[Nationality.CEAFRRE],
-  Nationality[Nationality.UNKNWN],
+  Nationality.JDN,
+  Nationality.SYR,
+  Nationality.EGY,
+  Nationality.YEM,
+  Nationality.IRQ,
+  Nationality.KOR,
+  Nationality.CHI,
+  Nationality.INDNES,
+  Nationality.CEAFRRE,
+  Nationality.UNKNWN,
 ];
 
 export const genderedLevels: GenderedLevel[] = [
@@ -219,18 +220,9 @@ export const levelsPlus: LevelPlus[] = [
   "L5",
 ];
 
-export const statuses = [
-  Status[Status.NEW],
-  Status[Status.RET],
-  Status[Status.WD],
-  Status[Status.NCL],
-];
+export const statuses = [Status.NEW, Status.RET, Status.WD, Status.NCL];
 
-export const results = [
-  FinalResult[FinalResult.P],
-  FinalResult[FinalResult.F],
-  FinalResult[FinalResult.WD],
-];
+export const results = [FinalResult.P, FinalResult.F, FinalResult.WD];
 
 export const withdrawReasons = [
   DroppedOutReason.COVID,

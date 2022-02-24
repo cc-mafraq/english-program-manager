@@ -122,11 +122,11 @@ export const parseSectionsOffered = (key: string, value: string, student: Studen
 };
 
 export const parseReactivatedDate = (key: string, value: string, student: Student) => {
-  student.status.reactivatedDate = splitAndTrim(value);
+  student.status.reactivatedDate = value;
 };
 
 export const parseWithdrawDate = (key: string, value: string, student: Student) => {
-  student.status.withdrawDate = splitAndTrim(value);
+  student.status.withdrawDate = value;
 };
 
 export const parseCurrentStatus = (key: string, value: string, student: Student) => {
@@ -134,11 +134,11 @@ export const parseCurrentStatus = (key: string, value: string, student: Student)
 };
 
 export const parsePhotoContact = (key: string, value: string, student: Student) => {
-  student.placement.photoContact = splitAndTrim(value);
+  student.placement.photoContact = value;
 };
 
 export const parsePlacement = (key: string, value: string, student: Student) => {
-  student.placement.placement = splitAndTrim(value);
+  student.placement.placement = value;
 };
 
 export const parseNotified = (key: string, value: string, student: Student) => {
@@ -146,7 +146,7 @@ export const parseNotified = (key: string, value: string, student: Student) => {
 };
 
 export const parsePlacementConfDate = (key: string, value: string, student: Student) => {
-  student.placement.confDate = splitAndTrim(value);
+  student.placement.confDate = value;
 };
 
 export const parsePendingPlacement = (key: string, value: string, student: Student) => {

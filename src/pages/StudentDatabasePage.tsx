@@ -22,6 +22,7 @@ interface SetStateOptions {
 
 export const StudentDatabasePage = () => {
   const [students, setStudents] = useState<Student[]>([]);
+  const [selectedStudent, setSelectedStudent] = useState<Student>();
   const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
   const [studentsPage, setStudentsPage] = useState<Student[]>([]);
   const [page, setPage] = useState(0);
@@ -111,12 +112,13 @@ export const StudentDatabasePage = () => {
     };
   };
 
-  const handleAddStudentClick = () => {
+  const handleStudentDialogOpen = () => {
     setOpenStudentDialog(true);
   };
 
   const handleStudentDialogClose = () => {
     setOpenStudentDialog(false);
+    setSelectedStudent(undefined);
   };
 
   const handleGenerateFGRClick = () => {
@@ -130,7 +132,7 @@ export const StudentDatabasePage = () => {
   return (
     <>
       <StudentDatabaseToolbar
-        handleAddStudentClick={handleAddStudentClick}
+        handleAddStudentClick={handleStudentDialogOpen}
         handleChangePage={handleChangePage}
         handleChangeRowsPerPage={handleChangeRowsPerPage}
         handleGenerateFGRClick={handleGenerateFGRClick}
@@ -152,9 +154,14 @@ export const StudentDatabasePage = () => {
       <StudentFormDialog
         handleDialogClose={handleStudentDialogClose}
         open={openStudentDialog}
+        selectedStudent={selectedStudent}
         students={students}
       />
-      <StudentList studentsPage={studentsPage} />
+      <StudentList
+        handleEditStudentClick={handleStudentDialogOpen}
+        setSelectedStudent={setSelectedStudent}
+        studentsPage={studentsPage}
+      />
     </>
   );
 };

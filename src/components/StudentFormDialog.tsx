@@ -6,12 +6,14 @@ import { Student } from "../interfaces";
 interface StudentFormDialogProps {
   handleDialogClose: () => void;
   open: boolean;
+  selectedStudent?: Student;
   students: Student[];
 }
 
 export const StudentFormDialog: React.FC<StudentFormDialogProps> = ({
   handleDialogClose,
   open,
+  selectedStudent,
   students,
 }) => {
   return (
@@ -28,8 +30,16 @@ export const StudentFormDialog: React.FC<StudentFormDialogProps> = ({
       }}
     >
       <Box sx={{ padding: "10px" }}>
-        <StudentForm handleDialogClose={handleDialogClose} students={students} />
+        <StudentForm
+          handleDialogClose={handleDialogClose}
+          selectedStudent={selectedStudent}
+          students={students}
+        />
       </Box>
     </Dialog>
   );
+};
+
+StudentFormDialog.defaultProps = {
+  selectedStudent: undefined,
 };

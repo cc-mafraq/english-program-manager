@@ -37,6 +37,7 @@ import {
 
 interface StudentFormProps {
   handleDialogClose: () => void;
+  selectedStudent?: Student;
   students: Student[];
 }
 
@@ -56,15 +57,27 @@ const defaultCorrespondence: Correspondence = {
 const SPACING = 2;
 const MARGIN = 0;
 
-export const StudentForm: React.FC<StudentFormProps> = ({ students, handleDialogClose }) => {
+export const StudentForm: React.FC<StudentFormProps> = ({
+  students,
+  selectedStudent,
+  handleDialogClose,
+}) => {
   const methods = useForm<Student>({
     criteriaMode: "all",
-    // defaultValues: student,
+    defaultValues: selectedStudent,
     resolver: yupResolver(studentFormSchema),
   });
-  const [phoneNumbers, setPhoneNumbers] = useState<PhoneNumber[]>([defaultPhone]);
-  const [academicRecords, setAcademicRecords] = useState<AcademicRecord[]>([]);
-  const [correspondence, setCorrespondence] = useState<Correspondence[]>([]);
+  const [phoneNumbers, setPhoneNumbers] = useState<PhoneNumber[]>(
+    selectedStudent?.phone.phoneNumbers.length
+      ? selectedStudent.phone.phoneNumbers
+      : [defaultPhone],
+  );
+  const [academicRecords, setAcademicRecords] = useState<AcademicRecord[]>(
+    selectedStudent?.academicRecords?.length ? selectedStudent.academicRecords : [],
+  );
+  const [correspondence, setCorrespondence] = useState<Correspondence[]>(
+    selectedStudent?.correspondence?.length ? selectedStudent.correspondence : [],
+  );
 
   const addPhone = async () => {
     setPhoneNumbers([...phoneNumbers, defaultPhone]);
@@ -492,4 +505,8 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students, handleDialog
       </form>
     </FormProvider>
   );
+};
+
+StudentForm.defaultProps = {
+  selectedStudent: undefined,
 };
