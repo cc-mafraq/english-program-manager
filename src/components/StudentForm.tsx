@@ -1,5 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Divider, Grid, Typography } from "@mui/material";
+import { collection, doc, setDoc } from "firebase/firestore";
 import { isEmpty, map } from "lodash";
 import moment from "moment";
 import React, { useState } from "react";
@@ -26,7 +27,13 @@ import {
   Student,
   withdrawReasons,
 } from "../interfaces";
-import { generateId, getAllSessions, removeNullFromObject, studentFormSchema } from "../services";
+import {
+  db,
+  generateId,
+  getAllSessions,
+  removeNullFromObject,
+  studentFormSchema,
+} from "../services";
 
 interface StudentFormProps {
   handleDialogClose: () => void;
@@ -82,7 +89,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students, handleDialog
       ];
     }
     const dataNoNull = removeNullFromObject(data) as Student;
-    console.log(dataNoNull);
+    setDoc(doc(collection(db, "students"), dataNoNull.epId.toString()), dataNoNull);
     handleDialogClose();
   };
 
