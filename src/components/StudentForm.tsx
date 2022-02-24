@@ -359,10 +359,12 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students, handleDialog
                 </StudentFormLabel>
                 <Grid key={recordName} container>
                   <Grid item xs>
-                    <GridItemTextField
+                    <GridItemAutocomplete
+                      freeSolo
                       gridProps={{ padding: SPACING }}
                       label="Session"
                       name={`${recordName}.session`}
+                      options={getAllSessions(students)}
                     />
                     <GridItemAutocomplete
                       gridProps={{ padding: SPACING, paddingTop: 0 }}

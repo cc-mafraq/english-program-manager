@@ -52,7 +52,7 @@ const stringToNationality = (value: string, originalValue: string) => {
 };
 
 const stringToResult = (value: string, originalValue: string) => {
-  return FinalResult[originalValue as keyof typeof FinalResult];
+  return originalValue ? FinalResult[originalValue as keyof typeof FinalResult] : null;
 };
 
 const dateToString = (value: string, originalValue: string) => {
@@ -63,7 +63,13 @@ const emptyToNull = (value: string, originalValue: string) => {
   return isEmpty(originalValue) ? null : originalValue;
 };
 
-const percentageSchema = number().min(0).max(100).integer().optional();
+const percentageSchema = number()
+  .min(0)
+  .max(100)
+  .integer()
+  .transform(stringToInteger)
+  .nullable()
+  .optional();
 
 // https://www.regular-expressions.info/dates.html
 const dateSchema = string()
@@ -76,16 +82,17 @@ const dateSchema = string()
 const gradeSchema = object()
   .shape({
     notes: string().transform(emptyToNull).nullable().optional(),
-    percentage: percentageSchema.transform(emptyToNull).nullable(),
+    percentage: percentageSchema,
     result: mixed<FinalResult>()
       .oneOf(Object.values(FinalResult) as FinalResult[])
       .transform(stringToResult)
-      .required("Result is required"),
+      .nullable()
+      .optional(),
   })
   .optional();
 
 const academicRecordsSchema = object().shape({
-  attendance: percentageSchema.transform(emptyToNull).nullable(),
+  attendance: percentageSchema,
   certificate: bool().optional(),
   comments: string().transform(emptyToNull).nullable().optional(),
   electiveClass: string().transform(emptyToNull).nullable().optional(),
@@ -228,13 +235,7 @@ const workSchema = object().shape({
 
 export const studentFormSchema = object().shape({
   academicRecords: array().of(academicRecordsSchema),
-  age: number()
-    .transform(emptyToNull)
-    .transform(stringToInteger)
-    .min(13)
-    .max(99)
-    .integer()
-    .required("Age is required"),
+  age: number().transform(stringToInteger).min(13).max(99).integer().required("Age is required"),
   certificateRequests: string().transform(emptyToNull).nullable().optional(),
   classList: classListSchema,
   correspondence: array().of(correspondenceSchema),
