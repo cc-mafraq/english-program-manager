@@ -7,7 +7,7 @@ import {
   FormHelperText,
   useTheme,
 } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import { FieldError, useFormContext } from "react-hook-form";
 import { useInput } from "../hooks";
 
@@ -17,7 +17,6 @@ interface LabeledCheckboxProps {
   errorName?: string;
   label: string;
   name?: string;
-  parentStateIndex?: number;
 }
 
 export const LabeledCheckbox: React.FC<LabeledCheckboxProps> = ({
@@ -38,24 +37,19 @@ export const LabeledCheckbox: React.FC<LabeledCheckboxProps> = ({
     errorName ?? name,
   );
   const errorColor = errorMessage ? theme.palette.error.main : undefined;
-  const [checkboxVal, setCheckboxVal] = useState(checkboxProps?.defaultChecked ?? false);
 
   return (
     <Box marginTop={-1} {...containerProps}>
       <FormControlLabel
         control={
           <Checkbox
-            {...checkboxProps}
-            onChange={(event) => {
-              setCheckboxVal(event?.target.checked);
-            }}
             sx={{ color: errorColor }}
-            value={checkboxVal}
+            {...checkboxProps}
+            {...register(name ?? nameFallback)}
           />
         }
         label={label}
         sx={{ color: errorColor }}
-        {...register(name ?? nameFallback)}
       />
       <FormHelperText error={!!errorMessage}>{errorMessage}</FormHelperText>
     </Box>
@@ -67,5 +61,4 @@ LabeledCheckbox.defaultProps = {
   containerProps: undefined,
   errorName: undefined,
   name: undefined,
-  parentStateIndex: undefined,
 };

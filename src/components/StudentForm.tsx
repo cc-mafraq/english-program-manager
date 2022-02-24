@@ -191,7 +191,6 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students, handleDialog
                   errorName="phone.primaryPhone"
                   label="Primary"
                   name={`phone.primaryPhone[${i}]`}
-                  parentStateIndex={i}
                 />
               </Grid>
             );
