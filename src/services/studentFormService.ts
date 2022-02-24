@@ -29,7 +29,7 @@ import {
 
 const stringToArray = (value: string, originalValue: string) => {
   const separators = /,|;|\t/g;
-  return isEmpty(originalValue)
+  return originalValue
     ? originalValue.match(separators)
       ? map(split(originalValue, separators), (val) => {
           return trim(val);
