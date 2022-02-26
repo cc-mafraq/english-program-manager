@@ -152,13 +152,13 @@ export const StudentInfo = ({ student }: { student: Student }) => {
               <span key={i}>
                 <LabeledText
                   condition={dataVisibility.phoneNumbersAndWhatsApp.phoneNumbers}
-                  label={`Number ${i + 1}`}
+                  label={`Number ${Number(i) + 1}`}
                 >
                   {pn.number}
                 </LabeledText>
                 <LabeledText
                   condition={dataVisibility.phoneNumbersAndWhatsApp.phoneNumbers}
-                  label={`Number ${i + 1} Notes`}
+                  label={`Number ${Number(i) + 1} Notes`}
                 >
                   {pn.notes}
                 </LabeledText>
@@ -281,7 +281,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
             return (
               <LabeledContainer
                 key={i}
-                label={`Session ${i + 1}`}
+                label={`Session ${Number(i) + 1}`}
                 labelProps={{ fontWeight: "normal" }}
               >
                 <LabeledText condition={dataVisibility.academicRecords.session} label="Session">

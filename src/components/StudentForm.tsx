@@ -70,15 +70,13 @@ export const StudentForm: React.FC<StudentFormProps> = ({
     resolver: yupResolver(studentFormSchema),
   });
   const [phoneNumbers, setPhoneNumbers] = useState<PhoneNumber[]>(
-    selectedStudent?.phone.phoneNumbers.length
-      ? selectedStudent.phone.phoneNumbers
-      : [defaultPhone],
+    selectedStudent ? selectedStudent.phone.phoneNumbers : [defaultPhone],
   );
   const [academicRecords, setAcademicRecords] = useState<AcademicRecord[]>(
-    selectedStudent?.academicRecords?.length ? selectedStudent.academicRecords : [],
+    selectedStudent ? selectedStudent.academicRecords : [],
   );
   const [correspondence, setCorrespondence] = useState<Correspondence[]>(
-    selectedStudent?.correspondence?.length ? selectedStudent.correspondence : [],
+    selectedStudent ? selectedStudent?.correspondence : [],
   );
 
   const addOrEdit = selectedStudent ? "Edit" : "Add";
@@ -204,10 +202,13 @@ export const StudentForm: React.FC<StudentFormProps> = ({
             const phoneName = `phone.phoneNumbers[${i}]`;
             return (
               <Grid key={phoneName} item padding={SPACING} xs>
-                <GridItemTextField label={`Phone Number ${i + 1}`} name={`${phoneName}.number`} />
+                <GridItemTextField
+                  label={`Phone Number ${Number(i) + 1}`}
+                  name={`${phoneName}.number`}
+                />
                 <GridItemTextField
                   gridProps={{ marginTop: SPACING / 2 }}
-                  label={`Phone Notes ${i + 1}`}
+                  label={`Phone Notes ${Number(i) + 1}`}
                   name={`${phoneName}.notes`}
                 />
                 <LabeledCheckbox
@@ -379,7 +380,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
             return (
               <Grid key={recordName} container>
                 <StudentFormLabel textProps={{ marginLeft: SPACING, marginTop: SPACING }}>
-                  Academic Record {i + 1}
+                  Academic Record {Number(i) + 1}
                 </StudentFormLabel>
                 <Grid key={recordName} container>
                   <Grid item xs>

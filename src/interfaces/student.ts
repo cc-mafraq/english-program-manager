@@ -1,7 +1,7 @@
 /* eslint-disable typescript-sort-keys/string-enum */
 export interface Student {
   academicRecords: AcademicRecord[];
-  age?: number;
+  age: number | "Unknown";
   certificateRequests?: string;
   classList: ClassList;
   correspondence: Correspondence[];
@@ -245,6 +245,7 @@ export const withdrawReasons = [
 
 export const emptyStudent: Student = {
   academicRecords: [],
+  age: "Unknown",
   classList: {},
   correspondence: [],
   currentLevel: "PL1",
@@ -253,7 +254,7 @@ export const emptyStudent: Student = {
   initialSession: "",
   literacy: {},
   name: {
-    arabic: "",
+    arabic: "N/A",
     english: "",
   },
   nationality: Nationality.UNKNWN,
