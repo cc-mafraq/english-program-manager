@@ -60,7 +60,7 @@ export interface StudentWork {
   isEnglishTeacher?: boolean;
   isTeacher?: boolean;
   lookingForJob?: string;
-  occupation?: string;
+  occupation: string;
   teachingSubjectAreas?: string;
 }
 
@@ -75,7 +75,7 @@ export interface WhatsappInfo {
   otherWaBroadcastGroups?: string[];
   phoneNumbers: PhoneNumber[];
   // index of phoneNumbers
-  primaryPhone: number;
+  primaryPhone: number | boolean[];
   waBroadcastSAR?: string;
   whatsappNotes?: string;
 }
@@ -223,6 +223,7 @@ export const levelsPlus: LevelPlus[] = [
 export const statuses = [Status.NEW, Status.RET, Status.WD, Status.NCL];
 
 export const results = [FinalResult.P, FinalResult.F, FinalResult.WD];
+export const PF = [FinalResult.P, FinalResult.F];
 
 export const withdrawReasons = [
   DroppedOutReason.COVID,
@@ -273,5 +274,5 @@ export const emptyStudent: Student = {
     inviteTag: false,
     noContactList: false,
   },
-  work: {},
+  work: { occupation: "Unknown" },
 };

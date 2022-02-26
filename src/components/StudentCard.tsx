@@ -30,6 +30,10 @@ export const StudentCard: React.FC<StudentCardProps> = ({
   //   setImage();
   // }, []);
 
+  // useEffect(() => {
+  //   setStudentData(student);
+  // }, []);
+
   return (
     <Card sx={{ display: "flex", marginLeft: "5px", width: "100%" }}>
       <Box

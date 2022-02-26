@@ -20,6 +20,7 @@ import {
   levels,
   levelsPlus,
   nationalities,
+  PF,
   PhoneNumber,
   results,
   Status,
@@ -32,6 +33,7 @@ import {
   generateId,
   getAllSessions,
   removeNullFromObject,
+  setPrimaryNumberBooleanArray,
   studentFormSchema,
 } from "../services";
 
@@ -64,7 +66,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
 }) => {
   const methods = useForm<Student>({
     criteriaMode: "all",
-    defaultValues: selectedStudent,
+    defaultValues: setPrimaryNumberBooleanArray(selectedStudent),
     resolver: yupResolver(studentFormSchema),
   });
   const [phoneNumbers, setPhoneNumbers] = useState<PhoneNumber[]>(
@@ -79,6 +81,8 @@ export const StudentForm: React.FC<StudentFormProps> = ({
     selectedStudent?.correspondence?.length ? selectedStudent.correspondence : [],
   );
 
+  const addOrEdit = selectedStudent ? "Edit" : "Add";
+
   const addPhone = async () => {
     setPhoneNumbers([...phoneNumbers, defaultPhone]);
   };
@@ -92,7 +96,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
   };
 
   const onSubmit = (data: Student) => {
-    data.phone.primaryPhone = data.phone.phoneNumbers[data.phone.primaryPhone].number;
+    data.phone.primaryPhone = data.phone.phoneNumbers[data.phone.primaryPhone as number].number;
     if (isEmpty(data.academicRecords) && data.status.currentStatus === Status.NEW) {
       data.academicRecords = [
         {
@@ -111,7 +115,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
       <form>
         <Box>
           <Typography fontWeight={600} variant="h4">
-            Add Student
+            {addOrEdit} Student
           </Typography>
         </Box>
         <Grid container marginBottom={SPACING} marginTop={MARGIN} spacing={SPACING}>
@@ -419,7 +423,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
                     <GridItemRadioGroup
                       label="Writing Exit Exam Result"
                       name={`${recordName}.exitWritingExam.result`}
-                      options={results}
+                      options={PF}
                     />
                     <GridItemTextField
                       gridProps={{ padding: SPACING, paddingLeft: 0 }}
@@ -436,7 +440,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
                     <GridItemRadioGroup
                       label="Speaking Exit Exam Result"
                       name={`${recordName}.exitSpeakingExam.result`}
-                      options={results}
+                      options={PF}
                     />
                     <GridItemTextField
                       gridProps={{ padding: SPACING, paddingLeft: 0 }}
@@ -493,7 +497,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
           type="submit"
           variant="contained"
         >
-          Add Student
+          Submit
         </Button>
         <Grid item>
           <Typography variant="caption">

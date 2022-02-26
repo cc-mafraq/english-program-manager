@@ -13,6 +13,7 @@ import {
   trim,
   zip,
 } from "lodash";
+import moment from "moment";
 import {
   DroppedOutReason,
   FinalResult,
@@ -37,6 +38,14 @@ const splitAndTrim = (value: string, separator?: string | RegExp): string[] => {
     return trim(v);
   });
   return trimmedSplitValues;
+};
+
+const parseDate = (value?: string) => {
+  if (value) {
+    const date = moment(last(splitAndTrim(value)), ["L", "l", "M/D/YY", "MM/DD/YY"]);
+    return date.isValid() ? date.format("L") : undefined;
+  }
+  return undefined;
 };
 
 // https://stackoverflow.com/questions/14743536/multiple-key-names-same-pair-value
@@ -110,23 +119,37 @@ export const parseAudit = (key: string, value: string, student: Student) => {
 };
 
 export const parseFgrDate = (key: string, value: string, student: Student) => {
-  student.status.finalGradeSentDate = value;
+  const date = parseDate(value);
+  if (date) {
+    student.status.finalGradeSentDate = date;
+  }
 };
 
 export const parseLevelReevalDate = (key: string, value: string, student: Student) => {
-  student.status.levelReevalDate = value;
+  const date = parseDate(value);
+  if (date) {
+    student.status.levelReevalDate = last(splitAndTrim(date));
+  }
 };
 
 export const parseSectionsOffered = (key: string, value: string, student: Student) => {
-  student.placement.sectionsOffered = value;
+  if (!isEmpty(value)) {
+    student.placement.sectionsOffered = value;
+  }
 };
 
 export const parseReactivatedDate = (key: string, value: string, student: Student) => {
-  student.status.reactivatedDate = value;
+  const date = parseDate(value);
+  if (date) {
+    student.status.reactivatedDate = date;
+  }
 };
 
 export const parseWithdrawDate = (key: string, value: string, student: Student) => {
-  student.status.withdrawDate = value;
+  const date = parseDate(value);
+  if (date) {
+    student.status.withdrawDate = date;
+  }
 };
 
 export const parseCurrentStatus = (key: string, value: string, student: Student) => {
@@ -134,11 +157,15 @@ export const parseCurrentStatus = (key: string, value: string, student: Student)
 };
 
 export const parsePhotoContact = (key: string, value: string, student: Student) => {
-  student.placement.photoContact = value;
+  if (!isEmpty(value)) {
+    student.placement.photoContact = value;
+  }
 };
 
 export const parsePlacement = (key: string, value: string, student: Student) => {
-  student.placement.placement = value;
+  if (!isEmpty(value)) {
+    student.placement.placement = value;
+  }
 };
 
 export const parseNotified = (key: string, value: string, student: Student) => {
@@ -146,7 +173,10 @@ export const parseNotified = (key: string, value: string, student: Student) => {
 };
 
 export const parsePlacementConfDate = (key: string, value: string, student: Student) => {
-  student.placement.confDate = value;
+  const date = parseDate(value);
+  if (date) {
+    student.placement.confDate = date;
+  }
 };
 
 export const parsePendingPlacement = (key: string, value: string, student: Student) => {
@@ -156,7 +186,10 @@ export const parsePendingPlacement = (key: string, value: string, student: Stude
 };
 
 export const parseNoAnswerClassSchedule = (key: string, value: string, student: Student) => {
-  student.placement.noAnswerClassScheduleDate = value;
+  const date = parseDate(value);
+  if (date) {
+    student.placement.noAnswerClassScheduleDate = date;
+  }
 };
 
 export const parseCorrespondence = (key: string, value: string, student: Student) => {
@@ -166,9 +199,10 @@ export const parseCorrespondence = (key: string, value: string, student: Student
   ]);
   const dates = value.match(dateRegex);
   forEach(zip(dates, splitCorrespondence), ([date, notes]) => {
-    if (date !== undefined && notes !== undefined) {
+    const formattedDate = parseDate(date);
+    if (notes !== undefined && formattedDate !== undefined) {
       student.correspondence.push({
-        date,
+        date: formattedDate,
         notes,
       });
     }
@@ -178,11 +212,16 @@ export const parseCorrespondence = (key: string, value: string, student: Student
 export const parseClassListSent = (key: string, value: string, student: Student) => {
   student.classList.classListSent =
     value !== "N/A" && value !== "NA" && value !== "No WA" && value !== "";
-  student.classList.classListSentNotes = value;
+  if (!isEmpty(value)) {
+    student.classList.classListSentNotes = value;
+  }
 };
 
 export const parseClassListSentDate = (key: string, value: string, student: Student) => {
-  student.classList.classListSentDate = value;
+  const date = parseDate(value);
+  if (date) {
+    student.classList.classListSentDate = date;
+  }
 };
 
 export const parseGender = (key: string, value: string, student: Student) => {
@@ -196,11 +235,15 @@ export const parseAge = (key: string, value: string, student: Student) => {
 };
 
 export const parseOccupation = (key: string, value: string, student: Student) => {
-  student.work.occupation = value;
+  if (!isEmpty(value)) {
+    student.work.occupation = value;
+  }
 };
 
 export const parseLookingForJob = (key: string, value: string, student: Student) => {
-  student.work.lookingForJob = value;
+  if (!isEmpty(value)) {
+    student.work.lookingForJob = value;
+  }
 };
 
 export const parseTeacher = (key: string, value: string, student: Student) => {
@@ -210,7 +253,9 @@ export const parseTeacher = (key: string, value: string, student: Student) => {
 };
 
 export const parseTeachingSubjectAreas = (key: string, value: string, student: Student) => {
-  student.work.teachingSubjectAreas = value;
+  if (!isEmpty(value)) {
+    student.work.teachingSubjectAreas = value;
+  }
 };
 
 export const parseEnglishTeacher = (key: string, value: string, student: Student) => {
@@ -220,7 +265,9 @@ export const parseEnglishTeacher = (key: string, value: string, student: Student
 };
 
 export const parseEnglishTeacherLocation = (key: string, value: string, student: Student) => {
-  student.work.englishTeacherLocation = value;
+  if (!isEmpty(value)) {
+    student.work.englishTeacherLocation = value;
+  }
 };
 
 export const parseWAStatus = (key: string, value: string, student: Student) => {
@@ -251,7 +298,9 @@ export const parsePhone = (key: string, value: string, student: Student) => {
 };
 
 export const parseWABroadcastSAR = (key: string, value: string, student: Student) => {
-  student.phone.waBroadcastSAR = value;
+  if (!isEmpty(value)) {
+    student.phone.waBroadcastSAR = value;
+  }
 };
 
 export const parseWABroadcasts = (key: string, value: string, student: Student) => {
@@ -281,31 +330,45 @@ export const parseEnglishLiteracy = (key: string, value: string, student: Studen
 };
 
 export const parseLiteracyTutor = (key: string, value: string, student: Student) => {
-  student.literacy.tutorAndDate = value;
+  if (!isEmpty(value)) {
+    student.literacy.tutorAndDate = value;
+  }
 };
 
 export const parseZoomTutor = (key: string, value: string, student: Student) => {
-  student.zoom = value;
+  if (!isEmpty(value)) {
+    student.zoom = value;
+  }
 };
 
 export const parseCertRequests = (key: string, value: string, student: Student) => {
-  student.certificateRequests = value;
+  if (!isEmpty(value)) {
+    student.certificateRequests = value;
+  }
 };
 
 export const parseOrigPlacementWriting = (key: string, value: string, student: Student) => {
-  student.placement.origPlacementData.writing = value as Level;
+  if (!isEmpty(value)) {
+    student.placement.origPlacementData.writing = value as Level;
+  }
 };
 
 export const parseOrigPlacementSpeaking = (key: string, value: string, student: Student) => {
-  student.placement.origPlacementData.speaking = value as Level;
+  if (!isEmpty(value)) {
+    student.placement.origPlacementData.speaking = value as Level;
+  }
 };
 
 export const parseOrigPlacementLevel = (key: string, value: string, student: Student) => {
-  student.placement.origPlacementData.level = value as Level;
+  if (!isEmpty(value)) {
+    student.placement.origPlacementData.level = value as Level;
+  }
 };
 
 export const parseOrigPlacementAdjustment = (key: string, value: string, student: Student) => {
-  student.placement.origPlacementData.adjustment = value;
+  if (!isEmpty(value)) {
+    student.placement.origPlacementData.adjustment = value;
+  }
 };
 
 export const parseDropoutReason = (key: string, value: string, student: Student) => {
@@ -395,7 +458,9 @@ export const parseAcademicRecordFinalGrade = (key: string, value: string, studen
     if (!Number.isNaN(Number(percentGrade))) {
       lastAcademicRecord.finalResult.percentage = Number(percentGrade);
     }
-    lastAcademicRecord.finalResult.notes = gradeNotes;
+    if (!isEmpty(gradeNotes)) {
+      lastAcademicRecord.finalResult.notes = gradeNotes;
+    }
   }
 };
 
@@ -413,9 +478,11 @@ export const parseAcademicRecordExitWritingExam = (
   const lastAcademicRecord = last(student.academicRecords);
   if (lastAcademicRecord && examGrade) {
     const writingExamObject: Grade = {
-      notes: gradeNotes,
       result: FinalResult[examGrade[0] as keyof typeof FinalResult],
     };
+    if (!isEmpty(gradeNotes)) {
+      writingExamObject.notes = gradeNotes;
+    }
     if (!Number.isNaN(Number(percentGrade))) {
       writingExamObject.percentage = Number(percentGrade);
     }
@@ -437,9 +504,11 @@ export const parseAcademicRecordExitSpeakingExam = (
   const lastAcademicRecord = last(student.academicRecords);
   if (lastAcademicRecord && examGrade) {
     const speakingExamObject: Grade = {
-      notes: gradeNotes,
       result: FinalResult[examGrade[0] as keyof typeof FinalResult],
     };
+    if (!isEmpty(gradeNotes)) {
+      speakingExamObject.notes = gradeNotes;
+    }
     if (!Number.isNaN(Number(percentGrade))) {
       speakingExamObject.percentage = Number(percentGrade);
     }

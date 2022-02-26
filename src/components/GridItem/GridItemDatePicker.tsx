@@ -2,7 +2,7 @@ import { DatePicker, LocalizationProvider } from "@mui/lab";
 import AdapterMoment from "@mui/lab/AdapterMoment";
 import { Grid, GridProps, StandardTextFieldProps, TextField, useTheme } from "@mui/material";
 import { omit } from "lodash";
-import { Moment } from "moment";
+import moment, { Moment } from "moment";
 import React from "react";
 import { Controller, FieldError, useFormContext } from "react-hook-form";
 import { useInput } from "../../hooks/useInput";
@@ -65,6 +65,7 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
                     />
                   );
                 }}
+                value={moment(field.value, "L")}
               />
             </LocalizationProvider>
           );

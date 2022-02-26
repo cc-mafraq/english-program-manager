@@ -1,10 +1,12 @@
 import {
+  cloneDeep,
   indexOf,
   isArray,
   isEmpty,
   isNaN,
   isNull,
   isObject,
+  isUndefined,
   map,
   mapValues,
   merge,
@@ -27,6 +29,7 @@ import {
   levelsPlus,
   Nationality,
   Status,
+  Student,
 } from "../interfaces";
 
 const stringToArray = (value: string, originalValue: string) => {
@@ -207,7 +210,7 @@ const placementSchema = object().shape({
     .required(),
   pending: bool().optional(),
   photoContact: dateSchema.nullable().optional(),
-  placement: array().of(string()).transform(stringToArray).nullable().optional(),
+  placement: string().transform(emptyToNull).nullable().optional(),
   sectionsOffered: string().transform(emptyToNull).nullable().optional(),
 });
 
@@ -241,7 +244,7 @@ const workSchema = object().shape({
 
 export const studentFormSchema = object().shape({
   academicRecords: array().of(academicRecordsSchema),
-  age: number().transform(stringToInteger).min(13).max(99).integer().required("Age is required"),
+  age: number().transform(stringToInteger).min(13).max(99).integer().nullable().optional(),
   certificateRequests: string().transform(emptyToNull).nullable().optional(),
   classList: classListSchema,
   correspondence: array().of(correspondenceSchema),
@@ -267,8 +270,19 @@ export const studentFormSchema = object().shape({
 
 // https://stackoverflow.com/questions/38275753/how-to-remove-empty-values-from-object-using-lodash
 export const removeNullFromObject = (obj: object): object => {
-  const objNoNull = omitBy(obj, isNull);
+  const objNoNull = omitBy(omitBy(obj, isNull), isUndefined);
   const subObjects = mapValues(pickBy(objNoNull, isObject), removeNullFromObject);
   const subValues = omitBy(objNoNull, isObject);
   return merge(subObjects, subValues);
+};
+
+export const setPrimaryNumberBooleanArray = (student?: Student) => {
+  if (student) {
+    const studentCopy = cloneDeep(student);
+    studentCopy.phone.primaryPhone = map(studentCopy.phone.phoneNumbers, (num) => {
+      return num.number === studentCopy.phone.primaryPhone;
+    });
+    return studentCopy;
+  }
+  return undefined;
 };

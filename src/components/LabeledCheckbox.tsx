@@ -7,6 +7,7 @@ import {
   FormHelperText,
   useTheme,
 } from "@mui/material";
+import { omit } from "lodash";
 import React from "react";
 import { Controller, FieldError, useFormContext } from "react-hook-form";
 import { useInput } from "../hooks";
@@ -50,7 +51,7 @@ export const LabeledCheckbox: React.FC<LabeledCheckboxProps> = ({
               <FormControlLabel
                 control={
                   <Checkbox
-                    {...checkboxProps}
+                    {...omit(checkboxProps, ["defaultChecked"])}
                     checked={value}
                     inputRef={ref}
                     onBlur={onBlur}

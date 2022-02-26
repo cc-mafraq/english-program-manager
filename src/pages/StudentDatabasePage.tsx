@@ -70,12 +70,16 @@ export const StudentDatabasePage = () => {
       next: (snapshot) => {
         const studentData: Student[] = [];
         forEach(snapshot.docs, (d) => {
-          studentData.push({ ...d.data() } as Student);
+          const data = d.data();
+          if (data.name?.english) {
+            studentData.push({ ...d.data() } as Student);
+          }
         });
         const sortedStudentData = sortBy(studentData, (student) => {
           return student.name.english;
         });
         setState({
+          newSearchString: searchString,
           newStudents: sortedStudentData,
           shouldFilter: true,
         });

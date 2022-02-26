@@ -5,7 +5,7 @@ import { db, storage } from ".";
 import { Student } from "../interfaces";
 
 export const setStudentData = async (student: Student) => {
-  await setDoc(doc(collection(db, "students"), toString(student.epId)), student, { merge: true });
+  await setDoc(doc(collection(db, "students"), toString(student.epId)), student);
 };
 
 const imageExtensions = [".jpeg", ".jpg", ".png", ".jfif", ".JPG"];
