@@ -16,7 +16,7 @@ export const GridItemAutocomplete = (
   props: GridItemAutocomplete &
     Omit<AutocompleteProps<unknown, boolean, boolean, boolean>, "renderInput">,
 ) => {
-  const { defaultValue, label, name, gridProps } = props;
+  const { label, name, gridProps, defaultValue } = props;
   const {
     control,
     formState: { errors },
@@ -27,7 +27,7 @@ export const GridItemAutocomplete = (
     <Grid item xs {...gridProps}>
       <Controller
         control={control}
-        defaultValue={defaultValue}
+        defaultValue={defaultValue || null}
         name={name ?? nameFallback}
         render={({ field }) => {
           return (

@@ -44,7 +44,7 @@ export const GridItemRadioGroup = ({
         <FormLabel component="legend">{label}</FormLabel>
         <Controller
           control={control}
-          defaultValue={defaultValue}
+          defaultValue={defaultValue || null}
           name={name ?? nameFallback}
           render={({ field: { onChange, onBlur, ref, value } }) => {
             return (
