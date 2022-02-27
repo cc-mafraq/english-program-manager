@@ -297,10 +297,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
         <Divider />
         <StudentFormLabel textProps={{ marginTop: SPACING }}>Placement</StudentFormLabel>
         <Grid container marginTop={MARGIN} spacing={SPACING}>
-          <Grid item xs={2}>
-            <LabeledCheckbox label="Notified" name="placement.notified" />
-            <LabeledCheckbox label="Pending" name="placement.pending" />
-          </Grid>
+          <LabeledCheckbox label="Pending" name="placement.pending" />
           <GridItemTextField label="Sections Offered" name="placement.sectionsOffered" />
           <GridItemTextField label="Placement" name="placement.placement" />
         </Grid>

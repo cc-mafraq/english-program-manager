@@ -35,7 +35,6 @@ const studentFieldsUnexpanded: ValidFields = {
   NAMEAR: ps.parseArabicName,
   NAMEENG: ps.parseEnglishName,
   NCL: ps.parseNCL,
-  NOTIFIED: ps.parseNotified,
   OCCUPATION: ps.parseOccupation,
   PENDINGPLCM: ps.parsePendingPlacement,
   PHOTOCONTACT: ps.parsePhotoContact,

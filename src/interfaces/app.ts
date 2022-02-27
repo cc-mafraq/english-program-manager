@@ -35,7 +35,6 @@ export interface DataVisibility {
   };
   placement: {
     naClassSchedule: boolean;
-    notified: boolean;
     originalPlacementData: boolean;
     pending: boolean;
     photoContact: boolean;
@@ -127,7 +126,6 @@ export const initialAppState: AppState = {
     },
     placement: {
       naClassSchedule: true,
-      notified: true,
       originalPlacementData: true,
       pending: true,
       photoContact: true,

@@ -43,7 +43,7 @@ const splitAndTrim = (value: string, separator?: string | RegExp): string[] => {
 const parseDate = (value?: string) => {
   if (value) {
     const date = moment(last(splitAndTrim(value)), ["L", "l", "M/D/YY", "MM/DD/YY"]);
-    return date.isValid() ? date.format("L") : undefined;
+    return date.isValid() ? date.format("l") : undefined;
   }
   return undefined;
 };
@@ -168,10 +168,6 @@ export const parsePlacement = (key: string, value: string, student: Student) => 
   if (!isEmpty(value)) {
     student.placement.placement = value;
   }
-};
-
-export const parseNotified = (key: string, value: string, student: Student) => {
-  student.placement.notified = !!value;
 };
 
 export const parsePlacementConfDate = (key: string, value: string, student: Student) => {

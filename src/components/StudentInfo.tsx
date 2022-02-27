@@ -1,6 +1,6 @@
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { Box, IconButton, Typography } from "@mui/material";
-import { camelCase, forOwn, get, map, some, values } from "lodash";
+import { camelCase, forOwn, get, isUndefined, map, some, values } from "lodash";
 import React, { useContext } from "react";
 import { LabeledContainer, LabeledText, ProgressBox } from ".";
 import {
@@ -193,13 +193,6 @@ export const StudentInfo = ({ student }: { student: Student }) => {
           </LabeledText>
           <LabeledText condition={dataVisibility.placement.placement} label="Placement">
             {student.placement.placement}
-          </LabeledText>
-          <LabeledText condition={dataVisibility.placement.notified} label="Notified">
-            {student.placement.notified === undefined
-              ? student.placement.notified
-                ? "Yes"
-                : "No"
-              : undefined}
           </LabeledText>
           <LabeledText
             condition={dataVisibility.placement.placementConfirmed}
