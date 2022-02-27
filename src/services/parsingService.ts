@@ -81,7 +81,9 @@ export const parseEnglishName = (key: string, value: string, student: Student) =
 };
 
 export const parseArabicName = (key: string, value: string, student: Student) => {
-  student.name.arabic = value;
+  if (!isEmpty(value)) {
+    student.name.arabic = value;
+  }
 };
 
 export const parseID = (key: string, value: string, student: Student) => {

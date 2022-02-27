@@ -201,7 +201,7 @@ export const genderedLevels: GenderedLevel[] = [
 
 export const levels: Level[] = ["PL1", "L1", "L2", "L3", "L4", "L5"];
 
-export const levelsPlus: LevelPlus[] = [
+export const levelsPlus: (LevelPlus | "Exempt")[] = [
   "PL1",
   "PL1+",
   "L1-",
@@ -218,6 +218,7 @@ export const levelsPlus: LevelPlus[] = [
   "L4+",
   "L5-",
   "L5",
+  "Exempt",
 ];
 
 export const statuses = [Status.NEW, Status.RET, Status.WD, Status.NCL];

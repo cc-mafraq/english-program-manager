@@ -1,5 +1,7 @@
 import {
   cloneDeep,
+  forEach,
+  forOwn,
   indexOf,
   isArray,
   isEmpty,
@@ -200,10 +202,10 @@ const placementSchema = object().shape({
     .shape({
       adjustment: string().transform(emptyToNull).nullable().optional(),
       level: mixed<Level>().oneOf(levels).required("Original placement level is required"),
-      speaking: mixed<LevelPlus>()
+      speaking: mixed<LevelPlus | "Exempt">()
         .oneOf(levelsPlus)
         .required("Original speaking placement is required"),
-      writing: mixed<LevelPlus>()
+      writing: mixed<LevelPlus | "Exempt">()
         .oneOf(levelsPlus)
         .required("Original writing placement is required"),
     })
@@ -271,9 +273,17 @@ export const studentFormSchema = object().shape({
 // https://stackoverflow.com/questions/38275753/how-to-remove-empty-values-from-object-using-lodash
 export const removeNullFromObject = (obj: object): object => {
   const objNoNull = omitBy(omitBy(obj, isNull), isUndefined);
-  const subObjects = mapValues(pickBy(objNoNull, isObject), removeNullFromObject);
+  const subObjects = mapValues(omitBy(pickBy(objNoNull, isObject), isArray), removeNullFromObject);
   const subValues = omitBy(objNoNull, isObject);
-  return merge(subObjects, subValues);
+  const subArrays = pickBy(objNoNull, isArray);
+  forOwn(subArrays, (v, k) => {
+    const arr: unknown[] = [];
+    forEach(v, (item) => {
+      arr.push(removeNullFromObject(item));
+    });
+    subArrays[k] = arr;
+  });
+  return merge(subObjects, subValues, subArrays);
 };
 
 export const setPrimaryNumberBooleanArray = (student?: Student) => {
