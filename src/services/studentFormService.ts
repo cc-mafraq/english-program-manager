@@ -95,7 +95,7 @@ const gradeSchema = object()
     notes: string().transform(emptyToNull).nullable().optional(),
     percentage: percentageSchema,
     result: mixed<FinalResult>()
-      .oneOf(Object.values(FinalResult) as FinalResult[])
+      .oneOf([...(Object.values(FinalResult) as FinalResult[]), null])
       .transform(stringToResult)
       .nullable()
       .optional(),
@@ -112,7 +112,7 @@ const academicRecordsSchema = object().shape({
   finalResult: gradeSchema,
   level: mixed<GenderedLevel>().oneOf(genderedLevels).transform(emptyToNull).nullable().optional(),
   levelAudited: mixed<GenderedLevel>()
-    .oneOf(genderedLevels)
+    .oneOf([...genderedLevels, null])
     .transform(emptyToNull)
     .nullable()
     .optional(),
