@@ -75,7 +75,7 @@ export const StudentDatabasePage = () => {
   };
 
   useEffect(() => {
-    onSnapshot(collection(db, "students"), {
+    const unsubscribe = onSnapshot(collection(db, "students"), {
       error: (e) => {
         if (e.code === "permission-denied") {
           logout();
@@ -84,7 +84,10 @@ export const StudentDatabasePage = () => {
       },
       next: nextSnapshot,
     });
-  }, [page, searchString]);
+    return () => {
+      unsubscribe();
+    };
+  }, [page, rowsPerPage, searchString]);
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setState({ newPage });
