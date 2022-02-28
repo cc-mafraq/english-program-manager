@@ -359,12 +359,6 @@ export const StudentInfo = ({ student }: { student: Student }) => {
                   {ar.attendance !== undefined ? `${ar.attendance}%` : undefined}
                 </LabeledText>
                 <LabeledText
-                  condition={dataVisibility.academicRecords.certificate}
-                  label="Certificate"
-                >
-                  {ar.certificate ? "Yes" : ar.certificate === undefined ? undefined : "No"}
-                </LabeledText>
-                <LabeledText
                   condition={dataVisibility.academicRecords.teacherComments}
                   label="Teacher Comments"
                   textProps={{ fontSize: "11pt" }}

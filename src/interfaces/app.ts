@@ -4,7 +4,6 @@ import { Student } from ".";
 export interface DataVisibility {
   academicRecords: {
     attendance: boolean;
-    certificate: boolean;
     certificateRequests: boolean;
     electiveClass: boolean;
     exitSpeakingExam: boolean;
@@ -94,7 +93,6 @@ export const initialAppState: AppState = {
   dataVisibility: {
     academicRecords: {
       attendance: true,
-      certificate: true,
       certificateRequests: true,
       electiveClass: true,
       exitSpeakingExam: true,

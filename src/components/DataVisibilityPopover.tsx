@@ -12,7 +12,6 @@ const labels: { childLabels: string[]; parentLabel: string }[] = [
   {
     childLabels: [
       "Attendance",
-      "Certificate",
       "Certificate Requests",
       "Elective Class",
       "Exit Speaking Exam",

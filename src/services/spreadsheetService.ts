@@ -61,8 +61,6 @@ const maxAcademicRecordColumnNum = 200;
 studentFieldsUnexpanded[ps.generateKeys("Att", maxAcademicRecordColumnNum)] =
   ps.parseAcademicRecordAttendance;
 studentFieldsUnexpanded[ps.generateKeys("CORRESPONDENCE", 10)] = ps.parseCorrespondence;
-studentFieldsUnexpanded[ps.generateKeys("Cert", maxAcademicRecordColumnNum)] =
-  ps.parseAcademicRecordCertificate;
 studentFieldsUnexpanded[ps.generateKeys("ExitSpeakingExamPF", maxAcademicRecordColumnNum)] =
   ps.parseAcademicRecordExitSpeakingExam;
 studentFieldsUnexpanded[ps.generateKeys("ExitWritingExamPF", maxAcademicRecordColumnNum)] =

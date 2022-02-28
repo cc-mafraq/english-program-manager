@@ -104,7 +104,6 @@ const gradeSchema = object()
 
 const academicRecordsSchema = object().shape({
   attendance: percentageSchema,
-  certificate: bool().optional(),
   comments: string().transform(emptyToNull).nullable().optional(),
   electiveClass: string().transform(emptyToNull).nullable().optional(),
   exitSpeakingExam: gradeSchema,
@@ -222,7 +221,7 @@ const statusSchema = object().shape({
     .transform(stringToStatus)
     .required("Current status is required"),
   droppedOutReason: mixed<DroppedOutReason>()
-    .oneOf(Object.values(DroppedOutReason) as DroppedOutReason[])
+    .oneOf([...(Object.values(DroppedOutReason) as DroppedOutReason[]), null])
     .transform(emptyToNull)
     .nullable()
     .optional(),

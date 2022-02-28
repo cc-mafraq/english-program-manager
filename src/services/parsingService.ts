@@ -545,12 +545,3 @@ export const parseAcademicRecordTeacherComments = (
     }
   }
 };
-
-export const parseAcademicRecordCertificate = (key: string, value: string, student: Student) => {
-  if (!isEmpty(value)) {
-    const lastAcademicRecord = last(student.academicRecords);
-    if (lastAcademicRecord) {
-      lastAcademicRecord.certificate = includes(value, "Y");
-    }
-  }
-};

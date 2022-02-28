@@ -465,11 +465,6 @@ export const StudentForm: React.FC<StudentFormProps> = ({
                       label="Elective Class Attended"
                       name={`${recordName}.electiveClass`}
                     />
-                    <LabeledCheckbox
-                      containerProps={{ paddingLeft: SPACING }}
-                      label="Certificate"
-                      name={`${recordName}.certificate`}
-                    />
                   </Grid>
                   <Grid item xs>
                     <GridItemTextField

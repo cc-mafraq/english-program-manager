@@ -22,7 +22,6 @@ export interface Student {
 
 export interface AcademicRecord {
   attendance?: number;
-  certificate?: boolean;
   comments?: string;
   electiveClass?: string;
   exitSpeakingExam?: Grade;
