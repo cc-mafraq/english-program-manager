@@ -46,7 +46,7 @@ export const getLevelForNextSession = ({
     const levelIndex = isCoreClass
       ? indexOf(levels, recordLevel)
       : indexOf(levels, replace(student.currentLevel, /(-W)|(-M)/, ""));
-    const hasPassed = academicRecord.finalResult?.result === 0;
+    const hasPassed = academicRecord.finalResult?.result === "P";
     const sessionAcademicRecords = filter(student.academicRecords, (ar) => {
       return (
         !isOtherRecord &&
