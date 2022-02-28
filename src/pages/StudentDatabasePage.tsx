@@ -84,7 +84,7 @@ export const StudentDatabasePage = () => {
       },
       next: nextSnapshot,
     });
-  }, []);
+  }, [page, searchString]);
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setState({ newPage });
