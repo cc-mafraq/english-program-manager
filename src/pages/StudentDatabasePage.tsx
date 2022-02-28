@@ -1,5 +1,5 @@
-import { collection, onSnapshot } from "firebase/firestore";
-import { forEach, sortBy } from "lodash";
+import { collection, DocumentData, onSnapshot, QuerySnapshot } from "firebase/firestore";
+import { forEach } from "lodash";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -9,7 +9,7 @@ import {
   StudentList,
 } from "../components";
 import { Student } from "../interfaces";
-import { db, getStudentPage, logout, searchStudents } from "../services";
+import { db, getStudentPage, logout, searchStudents, sortStudents } from "../services";
 import { spreadsheetToStudentList } from "../services/spreadsheetService";
 
 interface SetStateOptions {
@@ -59,6 +59,21 @@ export const StudentDatabasePage = () => {
     );
   };
 
+  const nextSnapshot = (snapshot: QuerySnapshot<DocumentData>) => {
+    const studentData: Student[] = [];
+    forEach(snapshot.docs, (d) => {
+      const data = d.data();
+      if (data.name?.english) {
+        studentData.push({ ...d.data() } as Student);
+      }
+    });
+    const sortedStudentData = sortStudents(studentData);
+    setState({
+      newStudents: sortedStudentData,
+      shouldFilter: true,
+    });
+  };
+
   useEffect(() => {
     onSnapshot(collection(db, "students"), {
       error: (e) => {
@@ -67,23 +82,7 @@ export const StudentDatabasePage = () => {
           navigate("/");
         }
       },
-      next: (snapshot) => {
-        const studentData: Student[] = [];
-        forEach(snapshot.docs, (d) => {
-          const data = d.data();
-          if (data.name?.english) {
-            studentData.push({ ...d.data() } as Student);
-          }
-        });
-        const sortedStudentData = sortBy(studentData, (student) => {
-          return student.name.english;
-        });
-        setState({
-          newSearchString: searchString,
-          newStudents: sortedStudentData,
-          shouldFilter: true,
-        });
-      },
+      next: nextSnapshot,
     });
   }, []);
 

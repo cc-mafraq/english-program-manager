@@ -118,3 +118,9 @@ export const generateId = (students: Student[]): number => {
   }
   return randomId;
 };
+
+export const sortStudents = (students: Student[]) => {
+  return sortBy(students, (student) => {
+    return student.name.english;
+  });
+};

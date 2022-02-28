@@ -67,7 +67,8 @@ const stringToResult = (value: string, originalValue: string) => {
 };
 
 const dateToString = (value: string, originalValue: string) => {
-  return originalValue ? moment(originalValue).format("L") : null;
+  const momentVal = moment(originalValue);
+  return momentVal.isValid() ? momentVal.format("L") : null;
 };
 
 const emptyToNull = (value: string, originalValue: string) => {

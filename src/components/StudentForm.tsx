@@ -304,16 +304,8 @@ export const StudentForm: React.FC<StudentFormProps> = ({
           <GridItemTextField label="Placement" name="placement.placement" />
         </Grid>
         <Grid container marginBottom={SPACING * 2} marginTop={MARGIN} spacing={SPACING}>
-          <GridItemDatePicker
-            errorName="placement.confDate[0]"
-            label="Confirmed Date"
-            name="placement.confDate"
-          />
-          <GridItemDatePicker
-            errorName="placement.photoContact[0]"
-            label="Photo Contact"
-            name="placement.photoContact"
-          />
+          <GridItemDatePicker label="Confirmed Date" name="placement.confDate" />
+          <GridItemDatePicker label="Photo Contact" name="placement.photoContact" />
           <GridItemDatePicker
             label="No Answer Class Schedule"
             name="placement.noAnswerClassScheduleDate"
@@ -322,21 +314,13 @@ export const StudentForm: React.FC<StudentFormProps> = ({
         <Divider />
         <StudentFormLabel textProps={{ marginTop: SPACING }}>Status</StudentFormLabel>
         <Grid container marginTop={MARGIN} spacing={SPACING}>
-          <GridItemDatePicker
-            errorName="status.withdrawDate[0]"
-            label="Withdraw Date"
-            name="status.withdrawDate"
-          />
+          <GridItemDatePicker label="Withdraw Date" name="status.withdrawDate" />
           <GridItemAutocomplete
             label="Withdraw Reason"
             name="status.droppedOutReason"
             options={withdrawReasons}
           />
-          <GridItemDatePicker
-            errorName="status.reactivatedDate[0]"
-            label="Reactivated Date"
-            name="status.reactivatedDate"
-          />
+          <GridItemDatePicker label="Reactivated Date" name="status.reactivatedDate" />
         </Grid>
         <Grid container marginBottom={SPACING * 2} marginTop={MARGIN} spacing={SPACING}>
           <GridItemDatePicker label="Final Grade Report Sent" name="status.finalGradeSentDate" />
