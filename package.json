@@ -27,6 +27,7 @@
     "react-dom": "^17.0.0",
     "react-hook-form": "^7.25.3",
     "react-router-dom": "^6.0.2",
+    "react-usestateref": "^1.0.8",
     "vite": "^2.5.4",
     "yup": "^0.32.11"
   },

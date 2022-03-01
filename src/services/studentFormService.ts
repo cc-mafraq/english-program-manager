@@ -68,7 +68,7 @@ const stringToResult = (value: string, originalValue: string) => {
 
 const dateToString = (value: string, originalValue: string) => {
   const momentVal = moment(originalValue);
-  return momentVal.isValid() ? momentVal.format("L") : null;
+  return momentVal.isValid() ? momentVal.format("l") : null;
 };
 
 const emptyToNull = (value: string, originalValue: string) => {
@@ -86,7 +86,7 @@ const percentageSchema = number()
 // https://www.regular-expressions.info/dates.html
 const dateSchema = string()
   .matches(
-    /^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d$/,
+    /^([1-9]|1[012])[- /.]([1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d$/,
     "Invalid date format. The format must be MM-DD-YYYY",
   )
   .transform(dateToString);
@@ -110,12 +110,8 @@ const academicRecordsSchema = object().shape({
   exitSpeakingExam: gradeSchema,
   exitWritingExam: gradeSchema,
   finalResult: gradeSchema,
-  level: mixed<GenderedLevel>().oneOf(genderedLevels).transform(emptyToNull).nullable().optional(),
-  levelAudited: mixed<GenderedLevel>()
-    .oneOf([...genderedLevels, null])
-    .transform(emptyToNull)
-    .nullable()
-    .optional(),
+  level: mixed<GenderedLevel>().transform(emptyToNull).nullable().optional(),
+  levelAudited: mixed<GenderedLevel>().transform(emptyToNull).nullable().optional(),
   session: string().required("Session is required"),
 });
 
@@ -249,7 +245,9 @@ export const studentFormSchema = object().shape({
   certificateRequests: string().transform(emptyToNull).nullable().optional(),
   classList: classListSchema,
   correspondence: array().of(correspondenceSchema),
-  currentLevel: mixed<GenderedLevel>().oneOf(genderedLevels).required("Current level is required"),
+  currentLevel: mixed<GenderedLevel>()
+    .oneOf([...genderedLevels, "L5 GRAD"])
+    .required("Current level is required"),
   epId: number().min(10000).max(99999).integer().required("ID is required"),
   gender: mixed<"M" | "F">().oneOf(["M", "F"]).required("Gender is required"),
   initialSession: string()

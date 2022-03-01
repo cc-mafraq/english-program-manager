@@ -132,7 +132,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
         <StudentFormLabel textProps={{ marginTop: SPACING }}>Program Information</StudentFormLabel>
         <Grid container marginBottom={SPACING * 2} marginTop={MARGIN} spacing={SPACING}>
           <GridItemTextField label="ID" name="epId" value={generateId(students).toString()} />
-          <GridItemAutocomplete label="Current Level" options={genderedLevels} />
+          <GridItemAutocomplete label="Current Level" options={[...genderedLevels, "L5 GRAD"]} />
           <GridItemAutocomplete
             defaultValue="NEW"
             label="Current Status"
@@ -375,6 +375,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
                       options={getAllSessions(students)}
                     />
                     <GridItemAutocomplete
+                      freeSolo
                       gridProps={{ padding: SPACING, paddingTop: 0 }}
                       label="Level"
                       name={`${recordName}.level`}
@@ -439,6 +440,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
                   </Grid>
                   <Grid item xs>
                     <GridItemAutocomplete
+                      freeSolo
                       gridProps={{ padding: SPACING }}
                       label="Level Audited"
                       name={`${recordName}.levelAudited`}
