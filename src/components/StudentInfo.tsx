@@ -257,11 +257,11 @@ export const StudentInfo = ({ student }: { student: Student }) => {
         >
           {map(student.correspondence, (c) => {
             return (
-              <div key={`${c.date} ${c.notes}`}>
+              <Box key={`${c.date} ${c.notes}`} sx={{ paddingBottom: 1, paddingRight: 2 }}>
                 <Typography fontSize="11pt" variant="body2">
                   {c.date}: {c.notes}
                 </Typography>
-              </div>
+              </Box>
             );
           })}
         </LabeledContainer>

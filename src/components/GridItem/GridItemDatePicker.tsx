@@ -2,7 +2,7 @@ import { DatePicker, LocalizationProvider } from "@mui/lab";
 import AdapterMoment from "@mui/lab/AdapterMoment";
 import { Grid, GridProps, StandardTextFieldProps, TextField, useTheme } from "@mui/material";
 import { omit } from "lodash";
-import moment, { Moment } from "moment";
+import moment from "moment";
 import React from "react";
 import { Controller, FieldError, useFormContext } from "react-hook-form";
 import { useInput } from "../../hooks/useInput";
@@ -13,7 +13,7 @@ interface GridItemDatePickerProps {
   label: string;
   name?: string;
   textFieldProps?: StandardTextFieldProps;
-  value?: Moment | null;
+  value?: string | null;
 }
 
 /* A date picker to be used on forms */
@@ -36,12 +36,13 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
   );
   const theme = useTheme();
   const errorColor = errorMessage ? theme.palette.error.main : undefined;
+  const defaultValueMoment = moment(value, ["L", "l"]);
 
   return (
     <Grid item xs {...gridProps}>
       <Controller
         control={control}
-        defaultValue={value || null}
+        defaultValue={defaultValueMoment.isValid() ? defaultValueMoment.format() : null}
         name={name ?? nameFallback}
         render={({ field }) => {
           const dateMoment = moment(field.value, ["L", "l"]);
@@ -66,7 +67,13 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
                     />
                   );
                 }}
-                value={dateMoment.isValid() ? dateMoment.format() : null}
+                value={
+                  dateMoment.isValid()
+                    ? dateMoment.format()
+                    : defaultValueMoment.isValid()
+                    ? defaultValueMoment
+                    : null
+                }
               />
             </LocalizationProvider>
           );

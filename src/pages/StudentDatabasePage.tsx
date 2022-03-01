@@ -46,7 +46,7 @@ export const StudentDatabasePage = () => {
       newStudents && setStudents(newStudents);
       !isUndefined(newPage) && setPage(newPage);
       newRowsPerPage && setRowsPerPage(newRowsPerPage);
-      newSearchString && setSearchString(newSearchString);
+      !isUndefined(newSearchString) && setSearchString(newSearchString);
       setStudentsPage(
         getStudentPage(
           newFilteredStudents,

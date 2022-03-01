@@ -1,8 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Divider, Grid, Typography } from "@mui/material";
 import { collection, doc, setDoc } from "firebase/firestore";
-import { isEmpty, map } from "lodash";
-import moment from "moment";
+import { cloneDeep, isEmpty, isUndefined } from "lodash";
 import React, { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
@@ -20,9 +19,7 @@ import {
   levels,
   levelsPlus,
   nationalities,
-  PF,
   PhoneNumber,
-  results,
   Status,
   statuses,
   Student,
@@ -34,8 +31,13 @@ import {
   getAllSessions,
   removeNullFromObject,
   setPrimaryNumberBooleanArray,
+  SPACING,
   studentFormSchema,
 } from "../services";
+import { FormAcademicRecordItem } from "./FormAcademicRecordItem";
+import { FormCorrespondenceItem } from "./FormCorrespondenceItem";
+import { FormList } from "./FormList";
+import { FormPhoneItem } from "./FormPhoneItem";
 
 interface StudentFormProps {
   handleDialogClose: () => void;
@@ -56,7 +58,6 @@ const defaultCorrespondence: Correspondence = {
   notes: "",
 };
 
-const SPACING = 2;
 const MARGIN = 0;
 
 export const StudentForm: React.FC<StudentFormProps> = ({
@@ -73,10 +74,10 @@ export const StudentForm: React.FC<StudentFormProps> = ({
     selectedStudent ? selectedStudent.phone.phoneNumbers : [defaultPhone],
   );
   const [academicRecords, setAcademicRecords] = useState<AcademicRecord[]>(
-    selectedStudent ? selectedStudent.academicRecords : [],
+    selectedStudent && selectedStudent.academicRecords ? selectedStudent.academicRecords : [],
   );
   const [correspondence, setCorrespondence] = useState<Correspondence[]>(
-    selectedStudent ? selectedStudent?.correspondence : [],
+    selectedStudent && selectedStudent.correspondence ? selectedStudent?.correspondence : [],
   );
 
   const addOrEdit = selectedStudent ? "Edit" : "Add";
@@ -91,6 +92,45 @@ export const StudentForm: React.FC<StudentFormProps> = ({
 
   const addCorrespondence = async () => {
     setCorrespondence([...correspondence, defaultCorrespondence]);
+  };
+
+  const removeAcademicRecord = (index?: number) => {
+    return () => {
+      if (isUndefined(index)) return;
+      const newAcademicRecords = cloneDeep(academicRecords);
+      newAcademicRecords.splice(index, 1);
+      setAcademicRecords(newAcademicRecords);
+      methods.reset({
+        academicRecords: [],
+      });
+      methods.setValue("academicRecords", newAcademicRecords);
+    };
+  };
+
+  const removePhone = (index?: number) => {
+    return () => {
+      if (isUndefined(index)) return;
+      const newPhoneNumbers = cloneDeep(phoneNumbers);
+      newPhoneNumbers.splice(index, 1);
+      setPhoneNumbers(newPhoneNumbers);
+      methods.reset({
+        phone: {
+          phoneNumbers: [],
+        },
+      });
+      methods.setValue("phone.phoneNumbers", newPhoneNumbers);
+    };
+  };
+
+  const removeCorrespondence = (index?: number) => {
+    return () => {
+      if (isUndefined(index)) return;
+      const newCorrespondence = cloneDeep(correspondence);
+      newCorrespondence.splice(index, 1);
+      setCorrespondence(newCorrespondence);
+      methods.reset({ correspondence: [] });
+      methods.setValue("correspondence", newCorrespondence);
+    };
   };
 
   const onSubmit = (data: Student) => {
@@ -168,62 +208,29 @@ export const StudentForm: React.FC<StudentFormProps> = ({
         <Divider />
         <StudentFormLabel textProps={{ marginTop: SPACING }}>Correspondence</StudentFormLabel>
         <Grid container marginBottom={SPACING * 2} marginTop={MARGIN} spacing={SPACING}>
-          {map(correspondence, (c, i) => {
-            const correspondenceName = `correspondence[${i}]`;
-            return (
-              <Grid key={correspondenceName} container>
-                <GridItemDatePicker
-                  gridProps={{ margin: SPACING, xs: 2 }}
-                  label="Date"
-                  name={`${correspondenceName}.date`}
-                  value={moment()}
-                />
-                <GridItemTextField
-                  gridProps={{ marginTop: SPACING }}
-                  label="Correspondence"
-                  name={`${correspondenceName}.notes`}
-                  textFieldProps={{ multiline: true, rows: 4 }}
-                />
-              </Grid>
-            );
-          })}
-          <Grid item xs={3}>
-            <Button color="secondary" onClick={addCorrespondence} variant="contained">
-              Add Correspondence
-            </Button>
-          </Grid>
+          <FormList
+            addItem={addCorrespondence}
+            buttonLabel="Add Correspondence"
+            list={correspondence}
+            removeItem={removeCorrespondence}
+          >
+            <FormCorrespondenceItem />
+          </FormList>
         </Grid>
         <Divider />
         <StudentFormLabel textProps={{ marginTop: SPACING }}>
           Phone Numbers and WhatsApp
         </StudentFormLabel>
         <Grid container marginBottom={SPACING} marginTop={MARGIN} spacing={SPACING}>
-          {map(phoneNumbers, (phoneNumber, i) => {
-            const phoneName = `phone.phoneNumbers[${i}]`;
-            return (
-              <Grid key={phoneName} item padding={SPACING} xs>
-                <GridItemTextField
-                  label={`Phone Number ${Number(i) + 1}`}
-                  name={`${phoneName}.number`}
-                />
-                <GridItemTextField
-                  gridProps={{ marginTop: SPACING / 2 }}
-                  label={`Phone Notes ${Number(i) + 1}`}
-                  name={`${phoneName}.notes`}
-                />
-                <LabeledCheckbox
-                  containerProps={{ marginTop: 0 }}
-                  errorName="phone.primaryPhone"
-                  label="Primary"
-                  name={`phone.primaryPhone[${i}]`}
-                />
-              </Grid>
-            );
-          })}
+          <FormList
+            addItem={addPhone}
+            buttonLabel="Add Phone"
+            list={phoneNumbers}
+            removeItem={removePhone}
+          >
+            <FormPhoneItem />
+          </FormList>
           <Grid item xs>
-            <Button color="secondary" onClick={addPhone} variant="contained">
-              Add Phone
-            </Button>
             <GridItemTextField
               gridProps={{ padding: SPACING, paddingLeft: 0 }}
               label="WhatsApp Broadcast SAR"
@@ -358,117 +365,14 @@ export const StudentForm: React.FC<StudentFormProps> = ({
         </Grid>
         <Divider />
         <Grid container marginTop={MARGIN} spacing={SPACING}>
-          {map(academicRecords, (academicRecord, i) => {
-            const recordName = `academicRecords[${i}]`;
-            return (
-              <Grid key={recordName} container>
-                <StudentFormLabel textProps={{ marginLeft: SPACING, marginTop: SPACING }}>
-                  Academic Record {Number(i) + 1}
-                </StudentFormLabel>
-                <Grid key={recordName} container>
-                  <Grid item xs>
-                    <GridItemAutocomplete
-                      freeSolo
-                      gridProps={{ padding: SPACING }}
-                      label="Session"
-                      name={`${recordName}.session`}
-                      options={getAllSessions(students)}
-                    />
-                    <GridItemAutocomplete
-                      freeSolo
-                      gridProps={{ padding: SPACING, paddingTop: 0 }}
-                      label="Level"
-                      name={`${recordName}.level`}
-                      options={genderedLevels}
-                    />
-                    <GridItemTextField
-                      gridProps={{ padding: SPACING, paddingTop: 0 }}
-                      label="Attendance Percentage"
-                      name={`${recordName}.attendance`}
-                    />
-                  </Grid>
-                  <Grid item xs>
-                    <GridItemRadioGroup
-                      label="Result"
-                      name={`${recordName}.finalResult.result`}
-                      options={results}
-                    />
-                    <GridItemTextField
-                      gridProps={{ padding: SPACING, paddingLeft: 0 }}
-                      label="Final Grades"
-                      name={`${recordName}.finalResult.percentage`}
-                    />
-                    <GridItemTextField
-                      gridProps={{ paddingRight: SPACING }}
-                      label="Final Grades Notes"
-                      name={`${recordName}.finalResult.notes`}
-                    />
-                  </Grid>
-                  <Grid item xs>
-                    <GridItemRadioGroup
-                      label="Writing Exit Exam Result"
-                      name={`${recordName}.exitWritingExam.result`}
-                      options={PF}
-                    />
-                    <GridItemTextField
-                      gridProps={{ padding: SPACING, paddingLeft: 0 }}
-                      label="Writing Exit Exam Percentage"
-                      name={`${recordName}.exitWritingExam.percentage`}
-                    />
-                    <GridItemTextField
-                      gridProps={{ paddingRight: SPACING }}
-                      label="Writing Exit Exam Notes"
-                      name={`${recordName}.exitWritingExam.notes`}
-                    />
-                  </Grid>
-                  <Grid item xs>
-                    <GridItemRadioGroup
-                      label="Speaking Exit Exam Result"
-                      name={`${recordName}.exitSpeakingExam.result`}
-                      options={PF}
-                    />
-                    <GridItemTextField
-                      gridProps={{ padding: SPACING, paddingLeft: 0 }}
-                      label="Speaking Exit Exam Percentage"
-                      name={`${recordName}.exitSpeakingExam.percentage`}
-                    />
-                    <GridItemTextField
-                      gridProps={{ paddingRight: SPACING }}
-                      label="Speaking Exit Exam Notes"
-                      name={`${recordName}.exitSpeakingExam.notes`}
-                    />
-                  </Grid>
-                  <Grid item xs>
-                    <GridItemAutocomplete
-                      freeSolo
-                      gridProps={{ padding: SPACING }}
-                      label="Level Audited"
-                      name={`${recordName}.levelAudited`}
-                      options={genderedLevels}
-                    />
-                    <GridItemTextField
-                      gridProps={{ padding: SPACING, paddingTop: 0 }}
-                      label="Elective Class Attended"
-                      name={`${recordName}.electiveClass`}
-                    />
-                  </Grid>
-                  <Grid item xs>
-                    <GridItemTextField
-                      gridProps={{ padding: SPACING, paddingLeft: 0 }}
-                      label="Teacher Comments"
-                      name={`${recordName}.comments`}
-                      textFieldProps={{ multiline: true, rows: 7 }}
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
-            );
-          })}
-          <Grid item xs={3}>
-            <Button color="secondary" onClick={addAcademicRecord} variant="contained">
-              Add Academic Record
-            </Button>
-          </Grid>
+          <FormList
+            addItem={addAcademicRecord}
+            buttonLabel="Add Academic Record"
+            list={academicRecords}
+            removeItem={removeAcademicRecord}
+          >
+            <FormAcademicRecordItem students={students} />
+          </FormList>
         </Grid>
         <Button
           className="update-button"

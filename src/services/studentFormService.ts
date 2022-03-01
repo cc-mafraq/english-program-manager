@@ -34,6 +34,13 @@ import {
   Student,
 } from "../interfaces";
 
+export const SPACING = 2;
+
+export interface FormItem {
+  index?: number;
+  removeItem?: (index?: number) => () => void;
+}
+
 const stringToArray = (value: string, originalValue: string) => {
   const separators = /,|;|\t/g;
   return originalValue
@@ -67,7 +74,7 @@ const stringToResult = (value: string, originalValue: string) => {
 };
 
 const dateToString = (value: string, originalValue: string) => {
-  const momentVal = moment(originalValue);
+  const momentVal = moment(originalValue, ["l", "L"]);
   return momentVal.isValid() ? momentVal.format("l") : null;
 };
 
