@@ -44,6 +44,7 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
         defaultValue={value || null}
         name={name ?? nameFallback}
         render={({ field }) => {
+          const dateMoment = moment(field.value, ["L", "l"]);
           return (
             <LocalizationProvider dateAdapter={AdapterMoment}>
               <DatePicker
@@ -65,7 +66,7 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
                     />
                   );
                 }}
-                value={moment(field.value, "L")}
+                value={dateMoment.isValid() ? dateMoment.format() : null}
               />
             </LocalizationProvider>
           );
