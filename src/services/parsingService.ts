@@ -1,6 +1,5 @@
 import {
   forEach,
-  includes,
   isEmpty,
   join,
   last,
@@ -9,7 +8,6 @@ import {
   range,
   replace,
   split,
-  toLower,
   trim,
   zip,
 } from "lodash";
@@ -268,15 +266,6 @@ export const parseEnglishTeacherLocation = (key: string, value: string, student:
   }
 };
 
-export const parseWAStatus = (key: string, value: string, student: Student) => {
-  if (!isEmpty(value)) {
-    const lowerValue = toLower(value);
-    student.phone.hasWhatsapp =
-      includes(lowerValue, "has whatsapp") || includes(lowerValue, "has WA");
-    student.phone.whatsappNotes = value;
-  }
-};
-
 export const parsePhone = (key: string, value: string, student: Student) => {
   if (!isEmpty(value)) {
     const strippedValue = replace(value, /[" "]/g, "");
@@ -291,7 +280,6 @@ export const parsePhone = (key: string, value: string, student: Student) => {
       numberObject.notes = String(phoneNumberNotes);
     }
     phoneNumber && student.phone.phoneNumbers.push(numberObject);
-    value === "has whatsapp" && parseWAStatus(key, value, student);
   }
 };
 

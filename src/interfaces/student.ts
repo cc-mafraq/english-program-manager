@@ -69,13 +69,11 @@ export interface Literacy {
 }
 
 export interface WhatsappInfo {
-  hasWhatsapp: boolean;
   otherWaBroadcastGroups?: string[];
   phoneNumbers: PhoneNumber[];
   // index of phoneNumbers
   primaryPhone: number | boolean[];
   waBroadcastSAR?: string;
-  whatsappNotes?: string;
 }
 
 export interface StudentStatus {
@@ -102,7 +100,7 @@ export interface StudentName {
 }
 export interface PhoneNumber {
   notes?: string;
-  number: number;
+  number: number | null;
 }
 
 export interface Correspondence {
@@ -258,7 +256,6 @@ export const emptyStudent: Student = {
   },
   nationality: Nationality.UNKNWN,
   phone: {
-    hasWhatsapp: true,
     phoneNumbers: [],
     primaryPhone: -1,
   },

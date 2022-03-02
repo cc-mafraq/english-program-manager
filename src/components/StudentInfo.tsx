@@ -165,9 +165,6 @@ export const StudentInfo = ({ student }: { student: Student }) => {
               </span>
             );
           })}
-          <LabeledText condition={dataVisibility.phoneNumbersAndWhatsApp.waNotes} label="WA Notes">
-            {student.phone.whatsappNotes}
-          </LabeledText>
           <LabeledText
             condition={dataVisibility.phoneNumbersAndWhatsApp.waBroadcastSar}
             label="WA Broadcast SAR"

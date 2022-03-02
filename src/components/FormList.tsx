@@ -1,9 +1,10 @@
-import { Button, Grid } from "@mui/material";
+import { Button, Grid, GridProps } from "@mui/material";
 import { map } from "lodash";
 import React from "react";
 
 interface FormListProps {
   addItem: () => void;
+  buttonGridProps?: GridProps;
   buttonLabel: string;
   list: unknown[];
   removeItem: (index?: number) => () => void;
@@ -14,6 +15,7 @@ export const FormList: React.FC<FormListProps> = ({
   addItem,
   removeItem,
   buttonLabel,
+  buttonGridProps,
   children,
 }) => {
   return (
@@ -31,11 +33,15 @@ export const FormList: React.FC<FormListProps> = ({
           return child;
         });
       })}
-      <Grid item xs>
+      <Grid item xs {...buttonGridProps}>
         <Button color="secondary" onClick={addItem} variant="contained">
           {buttonLabel}
         </Button>
       </Grid>
     </>
   );
+};
+
+FormList.defaultProps = {
+  buttonGridProps: undefined,
 };

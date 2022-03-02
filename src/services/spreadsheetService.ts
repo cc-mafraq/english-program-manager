@@ -52,7 +52,6 @@ const studentFieldsUnexpanded: ValidFields = {
   WA: ps.parseWaPrimPhone,
   WABCSAR: ps.parseWABroadcastSAR,
   "WABCSARL35W,WABCSAREngTchrs,WABCSAREngTchrsL35,WABCPhotography,WABCGerman": ps.parseWABroadcasts,
-  WASTATUS: ps.parseWAStatus,
   WDDATE: ps.parseWithdrawDate,
   WRTG: ps.parseOrigPlacementWriting,
   Y: ps.parseInviteTag,

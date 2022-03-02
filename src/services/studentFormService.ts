@@ -171,7 +171,6 @@ const phoneNumberSchema = object()
 
 const phoneSchema = object()
   .shape({
-    hasWhatsapp: bool().required(),
     otherWaBroadcastGroups: array().of(string()).transform(stringToArray).nullable().optional(),
     phoneNumbers: array().of(phoneNumberSchema).min(1),
     primaryPhone: number()

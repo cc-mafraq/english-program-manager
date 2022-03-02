@@ -46,7 +46,7 @@ interface StudentFormProps {
 }
 
 const defaultPhone: PhoneNumber = {
-  number: -1,
+  number: null,
 };
 
 const defaultAcademicRecord: AcademicRecord = {
@@ -134,7 +134,10 @@ export const StudentForm: React.FC<StudentFormProps> = ({
   };
 
   const onSubmit = (data: Student) => {
-    data.phone.primaryPhone = data.phone.phoneNumbers[data.phone.primaryPhone as number].number;
+    const primaryPhone = data.phone.phoneNumbers[data.phone.primaryPhone as number].number;
+    if (primaryPhone) {
+      data.phone.primaryPhone = primaryPhone;
+    }
     if (isEmpty(data.academicRecords) && data.status.currentStatus === Status.NEW) {
       data.academicRecords = [
         {
@@ -199,10 +202,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
             <LabeledCheckbox label="English Teacher" name="work.isEnglishTeacher" />
           </Grid>
           <GridItemTextField label="Teaching Subject(s)" name="work.teachingSubjectAreas" />
-          <GridItemTextField
-            label="If ELT: public, private, university, refugee"
-            name="work.englishTeacherLocation"
-          />
+          <GridItemTextField label="English Teacher Location" name="work.englishTeacherLocation" />
           <GridItemTextField label="Looking for Job" name="work.lookingForJob" />
         </Grid>
         <Divider />
@@ -224,6 +224,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
         <Grid container marginBottom={SPACING} marginTop={MARGIN} spacing={SPACING}>
           <FormList
             addItem={addPhone}
+            buttonGridProps={{ xs: 2 }}
             buttonLabel="Add Phone"
             list={phoneNumbers}
             removeItem={removePhone}
@@ -232,22 +233,13 @@ export const StudentForm: React.FC<StudentFormProps> = ({
           </FormList>
           <Grid item xs>
             <GridItemTextField
-              gridProps={{ padding: SPACING, paddingLeft: 0 }}
+              gridProps={{ paddingBottom: SPACING, paddingLeft: 0 }}
               label="WhatsApp Broadcast SAR"
               name="phone.waBroadcastSAR"
             />
-            <LabeledCheckbox label="Has WhatsApp" name="phone.hasWhatsapp" />
-          </Grid>
-          <Grid item xs>
             <GridItemTextField
-              gridProps={{ paddingRight: SPACING }}
               label="Other WA Broadcast Groups"
               name="phone.otherWaBroadcastGroups"
-            />
-            <GridItemTextField
-              gridProps={{ paddingRight: SPACING, paddingTop: SPACING }}
-              label="WhatsApp Notes"
-              name="phone.whatsappNotes"
             />
           </Grid>
         </Grid>
