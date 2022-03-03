@@ -36,6 +36,8 @@ import {
 
 export const SPACING = 2;
 
+export const MOMENT_FORMAT = "l";
+
 export interface FormItem {
   index?: number;
   removeItem?: (index?: number) => () => void;
@@ -74,8 +76,8 @@ const stringToResult = (value: string, originalValue: string) => {
 };
 
 const dateToString = (value: string, originalValue: string) => {
-  const momentVal = moment(originalValue, ["l", "L"]);
-  return momentVal.isValid() ? momentVal.format("l") : null;
+  const momentVal = moment(originalValue, MOMENT_FORMAT);
+  return momentVal.isValid() ? momentVal.format(MOMENT_FORMAT) : null;
 };
 
 const emptyToNull = (value: string, originalValue: string) => {

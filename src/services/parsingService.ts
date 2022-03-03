@@ -12,6 +12,7 @@ import {
   zip,
 } from "lodash";
 import moment from "moment";
+import { MOMENT_FORMAT } from ".";
 import {
   DroppedOutReason,
   FinalResult,
@@ -41,7 +42,7 @@ const splitAndTrim = (value: string, separator?: string | RegExp): string[] => {
 const parseDate = (value?: string) => {
   if (value) {
     const date = moment(last(splitAndTrim(value)), ["L", "l", "M/D/YY", "MM/DD/YY"]);
-    return date.isValid() ? date.format("l") : undefined;
+    return date.isValid() ? date.format(MOMENT_FORMAT) : undefined;
   }
   return undefined;
 };

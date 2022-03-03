@@ -3,18 +3,18 @@ import { Grid, IconButton } from "@mui/material";
 import moment from "moment";
 import React from "react";
 import { GridItemDatePicker, GridItemTextField } from ".";
-import { FormItem, SPACING } from "../services";
+import { FormItem, MOMENT_FORMAT, SPACING } from "../services";
 
 export const FormCorrespondenceItem: React.FC<FormItem> = ({ index, removeItem }) => {
   const correspondenceName = `correspondence[${index}]`;
   return (
     <>
-      <Grid key={correspondenceName} container>
+      <Grid container>
         <GridItemDatePicker
           gridProps={{ margin: SPACING, xs: 2 }}
           label="Date"
           name={`${correspondenceName}.date`}
-          value={moment().format("l")}
+          value={moment().format(MOMENT_FORMAT)}
         />
         <GridItemTextField
           gridProps={{ marginTop: SPACING }}

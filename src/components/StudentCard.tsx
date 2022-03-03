@@ -1,9 +1,10 @@
 import EditIcon from "@mui/icons-material/Edit";
 import PersonIcon from "@mui/icons-material/Person";
 import { Box, Card, CardActions, CardContent, CardMedia, IconButton } from "@mui/material";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { StudentInfo } from ".";
 import { Student } from "../interfaces";
+import { getStudentImage } from "../services";
 
 interface StudentCardProps {
   handleEditStudentClick: () => void;
@@ -16,23 +17,19 @@ export const StudentCard: React.FC<StudentCardProps> = ({
   setSelectedStudent,
   handleEditStudentClick,
 }) => {
-  // const [img, setImg] = useState("");
+  const [img, setImg] = useState("");
 
-  // useEffect(() => {
-  //   const setImage = async () => {
-  //     try {
-  //       const studentImage = await getStudentImage(student);
-  //       setImg(studentImage);
-  //     } catch {
-  //       setImg("");
-  //     }
-  //   };
-  //   setImage();
-  // }, []);
-
-  // useEffect(() => {
-  //   setStudentData(student);
-  // }, []);
+  useEffect(() => {
+    const setImage = async () => {
+      try {
+        const studentImage = await getStudentImage(student);
+        setImg(studentImage);
+      } catch {
+        setImg("");
+      }
+    };
+    setImage();
+  }, [student]);
 
   return (
     <Card sx={{ display: "flex", marginLeft: "5px", width: "100%" }}>
@@ -42,7 +39,7 @@ export const StudentCard: React.FC<StudentCardProps> = ({
           minWidth: "150px",
         }}
       >
-        <CardMedia component="img" /* image={img} */ sx={{ height: "35vh", minHeight: "200px" }} />
+        <CardMedia component="img" image={img} sx={{ height: "35vh", minHeight: "200px" }} />
       </Box>
       <Box sx={{ flexGrow: 5, maxWidth: "85%" }}>
         <CardContent>

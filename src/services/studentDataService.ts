@@ -1,11 +1,11 @@
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, setDoc, SetOptions } from "firebase/firestore";
 import { getDownloadURL, getMetadata, ref, StorageReference } from "firebase/storage";
 import { isEmpty, map, toString } from "lodash";
 import { db, storage } from ".";
 import { Student } from "../interfaces";
 
-export const setStudentData = async (student: Student) => {
-  await setDoc(doc(collection(db, "students"), toString(student.epId)), student);
+export const setStudentData = async (student: Student, options?: SetOptions) => {
+  await setDoc(doc(collection(db, "students"), toString(student.epId)), student, options ?? {});
 };
 
 const imageExtensions = [".jpeg", ".jpg", ".png", ".jfif", ".JPG"];
@@ -36,7 +36,7 @@ export const getStudentImage = async (student: Student): Promise<string> => {
       }),
     );
     student.imageName = student.imageName ? student.imageName : "";
-    // setStudentData(student);
+    setStudentData(student, { merge: true });
     return downloadURL;
   }
   return "";

@@ -7,7 +7,7 @@ import { FormItem, SPACING } from "../services";
 export const FormPhoneItem: React.FC<FormItem> = ({ index, removeItem }) => {
   const phoneName = `phone.phoneNumbers[${index}]`;
   return (
-    <Grid key={phoneName} item padding={SPACING} xs>
+    <Grid item padding={SPACING} xs>
       <Grid container>
         <GridItemTextField
           label={`Phone Number ${Number(index) + 1}`}
@@ -23,7 +23,6 @@ export const FormPhoneItem: React.FC<FormItem> = ({ index, removeItem }) => {
         name={`${phoneName}.notes`}
       />
       <LabeledCheckbox
-        containerProps={{ marginTop: 0 }}
         errorName="phone.primaryPhone"
         label="Primary"
         name={`phone.primaryPhone[${index}]`}

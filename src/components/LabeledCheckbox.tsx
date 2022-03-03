@@ -40,7 +40,7 @@ export const LabeledCheckbox: React.FC<LabeledCheckboxProps> = ({
   const errorColor = errorMessage ? theme.palette.error.main : undefined;
 
   return (
-    <Box marginTop={-1} {...containerProps}>
+    <Box {...containerProps}>
       <Controller
         control={control}
         defaultValue={checkboxProps?.defaultChecked ?? false}

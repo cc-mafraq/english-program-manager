@@ -55,13 +55,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
     resolver: yupResolver(studentFormSchema),
   });
   const [phoneNumbers, addPhone, removePhone] = useFormList(
-    selectedStudent
-      ? selectedStudent.phone.phoneNumbers
-      : [
-          {
-            number: null,
-          },
-        ],
+    selectedStudent ? selectedStudent.phone.phoneNumbers : [{ number: null }],
     "phone.phoneNumbers",
     methods,
   );
@@ -110,10 +104,15 @@ export const StudentForm: React.FC<StudentFormProps> = ({
           <Grid item>
             <LabeledCheckbox
               checkboxProps={{ defaultChecked: true }}
+              containerProps={{ marginTop: -1 }}
               label="Invite"
               name="status.inviteTag"
             />
-            <LabeledCheckbox label="NCL" name="status.noContactList" />
+            <LabeledCheckbox
+              containerProps={{ marginTop: -1 }}
+              label="NCL"
+              name="status.noContactList"
+            />
           </Grid>
         </GridContainer>
         <Divider />
@@ -143,8 +142,16 @@ export const StudentForm: React.FC<StudentFormProps> = ({
         </GridContainer>
         <GridContainer>
           <Grid item xs={2}>
-            <LabeledCheckbox label="Teacher" name="work.isTeacher" />
-            <LabeledCheckbox label="English Teacher" name="work.isEnglishTeacher" />
+            <LabeledCheckbox
+              containerProps={{ marginTop: -1 }}
+              label="Teacher"
+              name="work.isTeacher"
+            />
+            <LabeledCheckbox
+              containerProps={{ marginTop: -1 }}
+              label="English Teacher"
+              name="work.isEnglishTeacher"
+            />
           </Grid>
           <GridItemTextField label="Teaching Subject(s)" name="work.teachingSubjectAreas" />
           <GridItemTextField label="English Teacher Location" name="work.englishTeacherLocation" />
@@ -222,8 +229,16 @@ export const StudentForm: React.FC<StudentFormProps> = ({
         </Grid>
         <GridContainer>
           <Grid item xs>
-            <LabeledCheckbox label="Illiterate - AR" name="literacy.illiterateAr" />
-            <LabeledCheckbox label="Illiterate - ENG" name="literacy.illiterateEng" />
+            <LabeledCheckbox
+              containerProps={{ marginTop: -1 }}
+              label="Illiterate - AR"
+              name="literacy.illiterateAr"
+            />
+            <LabeledCheckbox
+              containerProps={{ marginTop: -1 }}
+              label="Illiterate - ENG"
+              name="literacy.illiterateEng"
+            />
             <GridItemTextField
               gridProps={{ paddingRight: SPACING, paddingTop: SPACING / 2 }}
               label="Tutor and Date"

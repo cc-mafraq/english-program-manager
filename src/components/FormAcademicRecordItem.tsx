@@ -12,7 +12,7 @@ export const FormAcademicRecordItem: React.FC<FormItem & { students: Student[] }
 }) => {
   const recordName = `academicRecords[${index}]`;
   return (
-    <Grid key={recordName} container>
+    <Grid container>
       <StudentFormLabel textProps={{ marginLeft: SPACING, marginTop: SPACING }}>
         Academic Record {Number(index) + 1}
       </StudentFormLabel>
