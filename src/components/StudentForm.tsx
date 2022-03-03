@@ -36,14 +36,13 @@ import { FormAcademicRecordItem } from "./FormAcademicRecordItem";
 import { FormCorrespondenceItem } from "./FormCorrespondenceItem";
 import { FormList } from "./FormList";
 import { FormPhoneItem } from "./FormPhoneItem";
+import { GridContainer } from "./GridContainer";
 
 interface StudentFormProps {
   handleDialogClose: () => void;
   selectedStudent?: Student;
   students: Student[];
 }
-
-const MARGIN = 0;
 
 export const StudentForm: React.FC<StudentFormProps> = ({
   students,
@@ -105,7 +104,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
             {addOrEdit} Student
           </Typography>
         </Box>
-        <Grid container marginBottom={SPACING} marginTop={MARGIN} spacing={SPACING}>
+        <GridContainer marginBottom={SPACING}>
           <GridItemTextField label="Name - ENG" name="name.english" />
           <GridItemTextField label="Name - AR" name="name.arabic" />
           <Grid item>
@@ -116,10 +115,10 @@ export const StudentForm: React.FC<StudentFormProps> = ({
             />
             <LabeledCheckbox label="NCL" name="status.noContactList" />
           </Grid>
-        </Grid>
+        </GridContainer>
         <Divider />
         <StudentFormLabel textProps={{ marginTop: SPACING }}>Program Information</StudentFormLabel>
-        <Grid container marginBottom={SPACING * 2} marginTop={MARGIN} spacing={SPACING}>
+        <GridContainer>
           <GridItemTextField label="ID" name="epId" value={generateId(students).toString()} />
           <GridItemAutocomplete label="Current Level" options={[...genderedLevels, "L5 GRAD"]} />
           <GridItemAutocomplete
@@ -133,16 +132,16 @@ export const StudentForm: React.FC<StudentFormProps> = ({
             label="Initial Session"
             options={getAllSessions(students)}
           />
-        </Grid>
+        </GridContainer>
         <Divider />
         <StudentFormLabel textProps={{ marginTop: SPACING }}>Student Information</StudentFormLabel>
-        <Grid container marginTop={MARGIN} spacing={SPACING}>
+        <GridContainer marginBottom={0}>
           <GridItemAutocomplete label="Nationality" options={nationalities} />
           <GridItemTextField label="Age" />
           <GridItemTextField label="Occupation" name="work.occupation" />
           <GridItemRadioGroup gridProps={{ xs: 2 }} label="Gender" options={["M", "F"]} />
-        </Grid>
-        <Grid container marginBottom={SPACING * 2} marginTop={MARGIN} spacing={SPACING}>
+        </GridContainer>
+        <GridContainer>
           <Grid item xs={2}>
             <LabeledCheckbox label="Teacher" name="work.isTeacher" />
             <LabeledCheckbox label="English Teacher" name="work.isEnglishTeacher" />
@@ -150,10 +149,10 @@ export const StudentForm: React.FC<StudentFormProps> = ({
           <GridItemTextField label="Teaching Subject(s)" name="work.teachingSubjectAreas" />
           <GridItemTextField label="English Teacher Location" name="work.englishTeacherLocation" />
           <GridItemTextField label="Looking for Job" name="work.lookingForJob" />
-        </Grid>
+        </GridContainer>
         <Divider />
         <StudentFormLabel textProps={{ marginTop: SPACING }}>Correspondence</StudentFormLabel>
-        <Grid container marginBottom={SPACING * 2} marginTop={MARGIN} spacing={SPACING}>
+        <GridContainer>
           <FormList
             addItem={addCorrespondence}
             buttonLabel="Add Correspondence"
@@ -162,12 +161,12 @@ export const StudentForm: React.FC<StudentFormProps> = ({
           >
             <FormCorrespondenceItem />
           </FormList>
-        </Grid>
+        </GridContainer>
         <Divider />
         <StudentFormLabel textProps={{ marginTop: SPACING }}>
           Phone Numbers and WhatsApp
         </StudentFormLabel>
-        <Grid container marginBottom={SPACING} marginTop={MARGIN} spacing={SPACING}>
+        <GridContainer marginBottom={SPACING}>
           <FormList
             addItem={addPhone}
             buttonGridProps={{ xs: 2 }}
@@ -188,10 +187,10 @@ export const StudentForm: React.FC<StudentFormProps> = ({
               name="phone.otherWaBroadcastGroups"
             />
           </Grid>
-        </Grid>
+        </GridContainer>
         <Divider />
         <StudentFormLabel textProps={{ marginTop: SPACING }}>Original Placement</StudentFormLabel>
-        <Grid container marginBottom={SPACING * 2} marginTop={MARGIN} spacing={SPACING}>
+        <GridContainer>
           <GridItemAutocomplete
             label="Writing Placement"
             name="placement.origPlacementData.writing"
@@ -211,7 +210,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
             label="Placement Adjustment"
             name="placement.origPlacementData.adjustment"
           />
-        </Grid>
+        </GridContainer>
         <Divider />
         <Grid container>
           <Grid item xs>
@@ -221,7 +220,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
             <StudentFormLabel textProps={{ marginTop: SPACING }}>Zoom</StudentFormLabel>
           </Grid>
         </Grid>
-        <Grid container marginBottom={SPACING * 2} marginTop={SPACING / 2}>
+        <GridContainer>
           <Grid item xs>
             <LabeledCheckbox label="Illiterate - AR" name="literacy.illiterateAr" />
             <LabeledCheckbox label="Illiterate - ENG" name="literacy.illiterateEng" />
@@ -238,27 +237,27 @@ export const StudentForm: React.FC<StudentFormProps> = ({
               textFieldProps={{ multiline: true, rows: 4 }}
             />
           </Grid>
-        </Grid>
+        </GridContainer>
         <Divider />
         <StudentFormLabel textProps={{ marginTop: SPACING }}>Placement</StudentFormLabel>
-        <Grid container marginTop={MARGIN} spacing={SPACING}>
+        <GridContainer marginBottom={0}>
           <Grid item xs={2}>
             <LabeledCheckbox label="Pending" name="placement.pending" />
           </Grid>
           <GridItemTextField label="Sections Offered" name="placement.sectionsOffered" />
           <GridItemTextField label="Placement" name="placement.placement" />
-        </Grid>
-        <Grid container marginBottom={SPACING * 2} marginTop={MARGIN} spacing={SPACING}>
+        </GridContainer>
+        <GridContainer>
           <GridItemDatePicker label="Confirmed Date" name="placement.confDate" />
           <GridItemDatePicker label="Photo Contact" name="placement.photoContact" />
           <GridItemDatePicker
             label="No Answer Class Schedule"
             name="placement.noAnswerClassScheduleDate"
           />
-        </Grid>
+        </GridContainer>
         <Divider />
         <StudentFormLabel textProps={{ marginTop: SPACING }}>Status</StudentFormLabel>
-        <Grid container marginTop={MARGIN} spacing={SPACING}>
+        <GridContainer marginBottom={0}>
           <GridItemDatePicker label="Withdraw Date" name="status.withdrawDate" />
           <GridItemAutocomplete
             label="Withdraw Reason"
@@ -266,14 +265,14 @@ export const StudentForm: React.FC<StudentFormProps> = ({
             options={withdrawReasons}
           />
           <GridItemDatePicker label="Reactivated Date" name="status.reactivatedDate" />
-        </Grid>
-        <Grid container marginBottom={SPACING * 2} marginTop={MARGIN} spacing={SPACING}>
+        </GridContainer>
+        <GridContainer>
           <GridItemDatePicker label="Final Grade Report Sent" name="status.finalGradeSentDate" />
           <GridItemDatePicker label="Level Reeval Date" name="status.levelReevalDate" />
           <Grid item xs>
             <LabeledCheckbox label="Audit" name="status.audit" />
           </Grid>
-        </Grid>
+        </GridContainer>
         <Divider />
         <Grid container>
           <Grid item xs={7}>
@@ -285,7 +284,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
             </StudentFormLabel>
           </Grid>
         </Grid>
-        <Grid container marginBottom={SPACING * 2} marginTop={MARGIN} spacing={SPACING}>
+        <GridContainer>
           <Grid item xs={1}>
             <LabeledCheckbox label="Sent" name="classList.classListSent" />
           </Grid>
@@ -300,9 +299,9 @@ export const StudentForm: React.FC<StudentFormProps> = ({
             name="classList.classListSentNotes"
           />
           <GridItemTextField label="Request and Date" name="certificateRequests" />
-        </Grid>
+        </GridContainer>
         <Divider />
-        <Grid container marginTop={MARGIN} spacing={SPACING}>
+        <GridContainer marginBottom={0}>
           <FormList
             addItem={addAcademicRecord}
             buttonLabel="Add Academic Record"
@@ -311,7 +310,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
           >
             <FormAcademicRecordItem students={students} />
           </FormList>
-        </Grid>
+        </GridContainer>
         <Button
           className="update-button"
           color="primary"
