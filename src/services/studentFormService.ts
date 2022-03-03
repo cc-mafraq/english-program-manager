@@ -76,8 +76,11 @@ const stringToResult = (value: string, originalValue: string) => {
 };
 
 const dateToString = (value: string, originalValue: string) => {
+  if (isEmpty(originalValue)) return null;
   const momentVal = moment(originalValue, MOMENT_FORMAT);
-  return momentVal.isValid() ? momentVal.format(MOMENT_FORMAT) : null;
+  return momentVal.isValid()
+    ? momentVal.format(MOMENT_FORMAT)
+    : moment(originalValue).format(MOMENT_FORMAT);
 };
 
 const emptyToNull = (value: string, originalValue: string) => {
