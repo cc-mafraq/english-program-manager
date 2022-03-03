@@ -5,7 +5,6 @@ export interface DataVisibility {
   academicRecords: {
     attendance: boolean;
     certificateRequests: boolean;
-    electiveClass: boolean;
     exitSpeakingExam: boolean;
     exitWritingExam: boolean;
     finalGrade: boolean;
@@ -94,7 +93,6 @@ export const initialAppState: AppState = {
     academicRecords: {
       attendance: true,
       certificateRequests: true,
-      electiveClass: true,
       exitSpeakingExam: true,
       exitWritingExam: true,
       finalGrade: true,

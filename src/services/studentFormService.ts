@@ -115,7 +115,6 @@ const gradeSchema = object()
 const academicRecordsSchema = object().shape({
   attendance: percentageSchema,
   comments: string().transform(emptyToNull).nullable().optional(),
-  electiveClass: string().transform(emptyToNull).nullable().optional(),
   exitSpeakingExam: gradeSchema,
   exitWritingExam: gradeSchema,
   finalResult: gradeSchema,

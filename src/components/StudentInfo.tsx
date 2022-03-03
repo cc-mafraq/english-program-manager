@@ -281,12 +281,6 @@ export const StudentInfo = ({ student }: { student: Student }) => {
                   {ar.level}
                 </LabeledText>
                 <LabeledText
-                  condition={dataVisibility.academicRecords.electiveClass}
-                  label="Elective Class"
-                >
-                  {ar.electiveClass}
-                </LabeledText>
-                <LabeledText
                   condition={dataVisibility.academicRecords.levelAudited}
                   label="Level Audited"
                 >

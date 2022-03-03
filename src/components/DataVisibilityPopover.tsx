@@ -13,7 +13,6 @@ const labels: { childLabels: string[]; parentLabel: string }[] = [
     childLabels: [
       "Attendance",
       "Certificate Requests",
-      "Elective Class",
       "Exit Speaking Exam",
       "Exit Writing Exam",
       "Final Grade",

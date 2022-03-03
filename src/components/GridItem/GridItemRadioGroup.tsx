@@ -16,7 +16,7 @@ import { useInput } from "../../hooks";
 interface GridItemRadioGroup {
   defaultValue?: string;
   gridProps?: GridProps;
-  label: string;
+  label?: string;
   name?: string;
   options: string[];
 }
@@ -34,14 +34,14 @@ export const GridItemRadioGroup = ({
     control,
     formState: { errors },
   } = useFormContext();
-  const { name: nameFallback, errorMessage } = useInput(label, errors as FieldError, name);
+  const { name: nameFallback, errorMessage } = useInput(label ?? "", errors as FieldError, name);
   const theme = useTheme();
   const errorColor = errorMessage ? theme.palette.error.main : undefined;
 
   return (
     <Grid item xs {...gridProps}>
       <FormControl component="fieldset" error={!!errorMessage}>
-        <FormLabel component="legend">{label}</FormLabel>
+        {label ? <FormLabel component="legend">{label}</FormLabel> : <></>}
         <Controller
           control={control}
           defaultValue={defaultValue || null}
@@ -80,5 +80,6 @@ export const GridItemRadioGroup = ({
 GridItemRadioGroup.defaultProps = {
   defaultValue: undefined,
   gridProps: undefined,
+  label: undefined,
   name: undefined,
 };

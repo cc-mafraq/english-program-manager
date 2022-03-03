@@ -8,6 +8,7 @@ export * from "./FinalGradeReportDialog";
 export * from "./FinalGradeReportList";
 export * from "./FormAcademicRecordItem";
 export * from "./FormCorrespondenceItem";
+export * from "./FormGrade";
 export * from "./FormList";
 export * from "./FormPhoneItem";
 export * from "./GridContainer";
