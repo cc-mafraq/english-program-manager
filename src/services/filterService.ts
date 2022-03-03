@@ -9,7 +9,7 @@ export const searchStudents = (students: Student[], searchString: string) => {
       includes(s.name.arabic, searchString) ||
       includes(s.epId.toString(), searchString) ||
       some(map(s.phone.phoneNumbers, "number"), (n) => {
-        return includes(n.toString(), searchString);
+        return includes(n?.toString(), searchString);
       })
     );
   });
