@@ -5,6 +5,11 @@ import { isEmpty } from "lodash";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
+  FormAcademicRecordItem,
+  FormCorrespondenceItem,
+  FormList,
+  FormPhoneItem,
+  GridContainer,
   GridItemAutocomplete,
   GridItemDatePicker,
   GridItemRadioGroup,
@@ -32,11 +37,6 @@ import {
   SPACING,
   studentFormSchema,
 } from "../services";
-import { FormAcademicRecordItem } from "./FormAcademicRecordItem";
-import { FormCorrespondenceItem } from "./FormCorrespondenceItem";
-import { FormList } from "./FormList";
-import { FormPhoneItem } from "./FormPhoneItem";
-import { GridContainer } from "./GridContainer";
 
 interface StudentFormProps {
   handleDialogClose: () => void;
