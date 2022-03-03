@@ -1,8 +1,8 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Divider, Grid, Typography } from "@mui/material";
 import { collection, doc, setDoc } from "firebase/firestore";
-import { cloneDeep, isEmpty, isUndefined } from "lodash";
-import React, { useState } from "react";
+import { isEmpty } from "lodash";
+import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
   GridItemAutocomplete,
@@ -12,14 +12,12 @@ import {
   LabeledCheckbox,
   StudentFormLabel,
 } from ".";
+import { useFormList } from "../hooks";
 import {
-  AcademicRecord,
-  Correspondence,
   genderedLevels,
   levels,
   levelsPlus,
   nationalities,
-  PhoneNumber,
   Status,
   statuses,
   Student,
@@ -45,19 +43,6 @@ interface StudentFormProps {
   students: Student[];
 }
 
-const defaultPhone: PhoneNumber = {
-  number: null,
-};
-
-const defaultAcademicRecord: AcademicRecord = {
-  session: "",
-};
-
-const defaultCorrespondence: Correspondence = {
-  date: "",
-  notes: "",
-};
-
 const MARGIN = 0;
 
 export const StudentForm: React.FC<StudentFormProps> = ({
@@ -70,68 +55,29 @@ export const StudentForm: React.FC<StudentFormProps> = ({
     defaultValues: setPrimaryNumberBooleanArray(selectedStudent),
     resolver: yupResolver(studentFormSchema),
   });
-  const [phoneNumbers, setPhoneNumbers] = useState<PhoneNumber[]>(
-    selectedStudent ? selectedStudent.phone.phoneNumbers : [defaultPhone],
+  const [phoneNumbers, addPhone, removePhone] = useFormList(
+    selectedStudent
+      ? selectedStudent.phone.phoneNumbers
+      : [
+          {
+            number: null,
+          },
+        ],
+    "phone.phoneNumbers",
+    methods,
   );
-  const [academicRecords, setAcademicRecords] = useState<AcademicRecord[]>(
+  const [academicRecords, addAcademicRecord, removeAcademicRecord] = useFormList(
     selectedStudent && selectedStudent.academicRecords ? selectedStudent.academicRecords : [],
+    "academicRecords",
+    methods,
   );
-  const [correspondence, setCorrespondence] = useState<Correspondence[]>(
+  const [correspondence, addCorrespondence, removeCorrespondence] = useFormList(
     selectedStudent && selectedStudent.correspondence ? selectedStudent?.correspondence : [],
+    "correspondence",
+    methods,
   );
 
   const addOrEdit = selectedStudent ? "Edit" : "Add";
-
-  const addPhone = async () => {
-    setPhoneNumbers([...phoneNumbers, defaultPhone]);
-  };
-
-  const addAcademicRecord = async () => {
-    setAcademicRecords([...academicRecords, defaultAcademicRecord]);
-  };
-
-  const addCorrespondence = async () => {
-    setCorrespondence([...correspondence, defaultCorrespondence]);
-  };
-
-  const removeAcademicRecord = (index?: number) => {
-    return () => {
-      if (isUndefined(index)) return;
-      const newAcademicRecords = cloneDeep(academicRecords);
-      newAcademicRecords.splice(index, 1);
-      setAcademicRecords(newAcademicRecords);
-      methods.reset({
-        academicRecords: [],
-      });
-      methods.setValue("academicRecords", newAcademicRecords);
-    };
-  };
-
-  const removePhone = (index?: number) => {
-    return () => {
-      if (isUndefined(index)) return;
-      const newPhoneNumbers = cloneDeep(phoneNumbers);
-      newPhoneNumbers.splice(index, 1);
-      setPhoneNumbers(newPhoneNumbers);
-      methods.reset({
-        phone: {
-          phoneNumbers: [],
-        },
-      });
-      methods.setValue("phone.phoneNumbers", newPhoneNumbers);
-    };
-  };
-
-  const removeCorrespondence = (index?: number) => {
-    return () => {
-      if (isUndefined(index)) return;
-      const newCorrespondence = cloneDeep(correspondence);
-      newCorrespondence.splice(index, 1);
-      setCorrespondence(newCorrespondence);
-      methods.reset({ correspondence: [] });
-      methods.setValue("correspondence", newCorrespondence);
-    };
-  };
 
   const onSubmit = (data: Student) => {
     const primaryPhone = data.phone.phoneNumbers[data.phone.primaryPhone as number].number;

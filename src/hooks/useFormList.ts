@@ -1,13 +1,21 @@
 import { cloneDeep, isUndefined, set } from "lodash";
 import { useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { ArrayPath, FieldArrayPathValue, Path, PathValue, UseFormReturn } from "react-hook-form";
+import { Student } from "../interfaces";
 
-export const useFormList = <T>(initialState: T[], listPath: string) => {
-  const [list, setList] = useState<T[]>(initialState);
-  const { setValue, reset } = useFormContext();
+export const useFormList = (
+  initialState: FieldArrayPathValue<Student, ArrayPath<Student>>,
+  listPath: Path<Student>,
+  methods: UseFormReturn<Student, object>,
+): [
+  FieldArrayPathValue<Student, ArrayPath<Student>>,
+  () => void,
+  (index?: number) => () => void,
+] => {
+  const [list, setList] = useState<FieldArrayPathValue<Student, ArrayPath<Student>>>(initialState);
 
-  const addListItem = async () => {
-    setList([...list, {} as T]);
+  const addListItem = () => {
+    setList([...list, {}] as PathValue<Student, ArrayPath<Student>>);
   };
 
   const removeListItem = (index?: number) => {
@@ -18,8 +26,8 @@ export const useFormList = <T>(initialState: T[], listPath: string) => {
       setList(newList);
       const resetObject = {};
       set(resetObject, listPath, []);
-      reset(resetObject);
-      setValue(listPath, newList);
+      methods.reset(resetObject);
+      methods.setValue(listPath, newList);
     };
   };
 
