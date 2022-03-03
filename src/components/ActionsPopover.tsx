@@ -7,13 +7,15 @@ import { LabeledIconButton } from ".";
 
 interface ActionsPopoverProps {
   anchorEl: HTMLButtonElement | null;
+  handleAddStudentClick: (e: React.MouseEvent<HTMLElement>) => void;
   handleClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  handleGenerateFGRClick: (e: React.MouseEvent<HTMLLIElement>) => void;
+  handleGenerateFGRClick: (e: React.MouseEvent<HTMLElement>) => void;
   handleImportClick: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const ActionsPopover: React.FC<ActionsPopoverProps> = ({
   anchorEl,
+  handleAddStudentClick,
   handleClose,
   handleGenerateFGRClick,
   handleImportClick,
@@ -39,7 +41,7 @@ export const ActionsPopover: React.FC<ActionsPopoverProps> = ({
           maxWidth: "15vw",
         }}
       >
-        <LabeledIconButton label="ADD STUDENT">
+        <LabeledIconButton label="ADD STUDENT" onClick={handleAddStudentClick}>
           <AddIcon color="primary" />
         </LabeledIconButton>
         <label htmlFor="importSpreadsheet">
@@ -50,7 +52,7 @@ export const ActionsPopover: React.FC<ActionsPopoverProps> = ({
             onChange={handleImportClick}
             type="file"
           />
-          <LabeledIconButton label="IMPORT SPREADSHEET">
+          <LabeledIconButton buttonProps={{ component: "span" }} label="IMPORT SPREADSHEET">
             <UploadIcon color="primary" />
           </LabeledIconButton>
         </label>

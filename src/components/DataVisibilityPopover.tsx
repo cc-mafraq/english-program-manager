@@ -12,9 +12,7 @@ const labels: { childLabels: string[]; parentLabel: string }[] = [
   {
     childLabels: [
       "Attendance",
-      "Certificate",
       "Certificate Requests",
-      "Elective Class",
       "Exit Speaking Exam",
       "Exit Writing Exam",
       "Final Grade",
@@ -42,7 +40,6 @@ const labels: { childLabels: string[]; parentLabel: string }[] = [
   {
     childLabels: [
       "NA Class Schedule",
-      "Notified",
       "Original Placement Data",
       "Pending",
       "Photo Contact",
@@ -59,7 +56,7 @@ const labels: { childLabels: string[]; parentLabel: string }[] = [
       "ID Number",
       "Initial Session",
       "Invite Tag",
-      "No Call List",
+      "No Contact List",
       "Status",
     ],
     parentLabel: "Program Information",
@@ -68,7 +65,7 @@ const labels: { childLabels: string[]; parentLabel: string }[] = [
     childLabels: [
       "Audit",
       "Final GR Sent",
-      "Level Reveal Date",
+      "Level Reeval Date",
       "Reactivated Date",
       "Repeat Number",
       "Sections Offered",

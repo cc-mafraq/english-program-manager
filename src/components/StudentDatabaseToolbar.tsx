@@ -24,11 +24,12 @@ const handlePopoverClose = (
 };
 
 interface StudentDatabaseToolbarProps {
+  handleAddStudentClick: (e: React.MouseEvent<HTMLElement>) => void;
   handleChangePage: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
   handleChangeRowsPerPage: (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
-  handleGenerateFGRClick: (e: React.MouseEvent<HTMLLIElement>) => void;
+  handleGenerateFGRClick: (e: React.MouseEvent<HTMLElement>) => void;
   handleImportClick: (e: ChangeEvent<HTMLInputElement>) => void;
   handleSearchStringChange: (value: string) => void;
   page: number;
@@ -40,6 +41,7 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
   students,
   page,
   rowsPerPage,
+  handleAddStudentClick,
   handleChangePage,
   handleChangeRowsPerPage,
   handleImportClick,
@@ -64,6 +66,7 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
         </IconButton>
         <ActionsPopover
           anchorEl={actionsAnchorEl}
+          handleAddStudentClick={handleAddStudentClick}
           handleClose={handlePopoverClose(setActionsAnchorEl)}
           handleGenerateFGRClick={handleGenerateFGRClick}
           handleImportClick={handleImportClick}
@@ -88,7 +91,7 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
           onRowsPerPageChange={handleChangeRowsPerPage}
           page={page}
           rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[10, 50, 100, 200, 500, 1000, 2000]}
+          rowsPerPageOptions={[10, 50, 100, 200, 1000]}
         />
       </Toolbar>
     </AppBar>

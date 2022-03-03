@@ -26,7 +26,7 @@ const studentFieldsUnexpanded: ValidFields = {
   IlliterateAR: ps.parseArabicLiteracy,
   IlliterateENG: ps.parseEnglishLiteracy,
   "JDN,SYR,IRQ,EGY,INDNES,YEM,CEAFRRE,CHI,KOR,UNKNWN": ps.parseNationality,
-  LEVELREVEALDATE: ps.parseLevelRevealDate,
+  LEVELREEVALDATE: ps.parseLevelReevalDate,
   "LackofChildCare,LackofTransport,TimeConflict,IllnessorPregnancy,VisionProblems,GotaJob,Moved,GraduatedfromL5,FailedtoThriveinClsrmEnv,LackofLifeMgmSkills,LackofFamilialSupport,LackofCommitmentorMotivation,FamilyMemberorEmployerForbidFurtherStudy,COVID19PandemicRelated,Unknown":
     ps.parseDropoutReason,
   LookingforaJobDate: ps.parseLookingForJob,
@@ -35,13 +35,12 @@ const studentFieldsUnexpanded: ValidFields = {
   NAMEAR: ps.parseArabicName,
   NAMEENG: ps.parseEnglishName,
   NCL: ps.parseNCL,
-  NOTIFIED: ps.parseNotified,
   OCCUPATION: ps.parseOccupation,
   PENDINGPLCM: ps.parsePendingPlacement,
   PHOTOCONTACT: ps.parsePhotoContact,
+  PLCM: ps.parsePlacement,
   PLCMCONFDATE: ps.parsePlacementConfDate,
   PLCMLVL: ps.parseOrigPlacementLevel,
-  PLCMNOCONTACT: ps.parsePlacement,
   REACTIVATEDDATE: ps.parseReactivatedDate,
   SECSOFFERED: ps.parseSectionsOffered,
   SENTTEXTEDCL: ps.parseClassListSent,
@@ -53,7 +52,6 @@ const studentFieldsUnexpanded: ValidFields = {
   WA: ps.parseWaPrimPhone,
   WABCSAR: ps.parseWABroadcastSAR,
   "WABCSARL35W,WABCSAREngTchrs,WABCSAREngTchrsL35,WABCPhotography,WABCGerman": ps.parseWABroadcasts,
-  WASTATUS: ps.parseWAStatus,
   WDDATE: ps.parseWithdrawDate,
   WRTG: ps.parseOrigPlacementWriting,
   Y: ps.parseInviteTag,
@@ -62,8 +60,6 @@ const maxAcademicRecordColumnNum = 200;
 studentFieldsUnexpanded[ps.generateKeys("Att", maxAcademicRecordColumnNum)] =
   ps.parseAcademicRecordAttendance;
 studentFieldsUnexpanded[ps.generateKeys("CORRESPONDENCE", 10)] = ps.parseCorrespondence;
-studentFieldsUnexpanded[ps.generateKeys("Cert", maxAcademicRecordColumnNum)] =
-  ps.parseAcademicRecordCertificate;
 studentFieldsUnexpanded[ps.generateKeys("ExitSpeakingExamPF", maxAcademicRecordColumnNum)] =
   ps.parseAcademicRecordExitSpeakingExam;
 studentFieldsUnexpanded[ps.generateKeys("ExitWritingExamPF", maxAcademicRecordColumnNum)] =

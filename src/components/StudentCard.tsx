@@ -1,16 +1,22 @@
 import EditIcon from "@mui/icons-material/Edit";
 import PersonIcon from "@mui/icons-material/Person";
 import { Box, Card, CardActions, CardContent, CardMedia, IconButton } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { StudentInfo } from ".";
 import { Student } from "../interfaces";
 import { getStudentImage } from "../services";
 
 interface StudentCardProps {
+  handleEditStudentClick: () => void;
+  setSelectedStudent: Dispatch<SetStateAction<Student | undefined>>;
   student: Student;
 }
 
-export const StudentCard: React.FC<StudentCardProps> = ({ student }) => {
+export const StudentCard: React.FC<StudentCardProps> = ({
+  student,
+  setSelectedStudent,
+  handleEditStudentClick,
+}) => {
   const [img, setImg] = useState("");
 
   useEffect(() => {
@@ -23,7 +29,7 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student }) => {
       }
     };
     setImage();
-  }, []);
+  }, [student]);
 
   return (
     <Card sx={{ display: "flex", marginLeft: "5px", width: "100%" }}>
@@ -51,7 +57,12 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student }) => {
         <IconButton>
           <PersonIcon />
         </IconButton>
-        <IconButton>
+        <IconButton
+          onClick={() => {
+            setSelectedStudent(student);
+            handleEditStudentClick();
+          }}
+        >
           <EditIcon />
         </IconButton>
       </CardActions>

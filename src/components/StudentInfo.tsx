@@ -1,6 +1,6 @@
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { Box, IconButton, Typography } from "@mui/material";
-import { camelCase, forOwn, get, join, map, some, values } from "lodash";
+import { camelCase, forOwn, get, map, some, values } from "lodash";
 import React, { useContext } from "react";
 import { LabeledContainer, LabeledText, ProgressBox } from ".";
 import {
@@ -30,16 +30,9 @@ export const StudentInfo = ({ student }: { student: Student }) => {
       </Typography>
       <Box sx={{ flexDirection: "row", flexGrow: 1, float: "right" }}>
         <Typography display="inline" marginRight="5px" variant="h5">
-          {/* {student.phone.phoneNumbers[student.phone.primaryPhone].number} */}
           {student.phone.primaryPhone}
         </Typography>
-        <IconButton
-          href={`https://wa.me/962${
-            // student.phone.phoneNumbers[student.phone.primaryPhone].number
-            student.phone.primaryPhone
-          }`}
-          target="_blank"
-        >
+        <IconButton href={`https://wa.me/962${student.phone.primaryPhone}`} target="_blank">
           <WhatsAppIcon />
         </IconButton>
       </Box>
@@ -55,11 +48,11 @@ export const StudentInfo = ({ student }: { student: Student }) => {
             {student.status.inviteTag ? "Yes" : "No"}
           </LabeledText>
           <LabeledText
-            condition={dataVisibility.programInformation.noCallList}
-            label="No Call List"
+            condition={dataVisibility.programInformation.noContactList}
+            label="No Contact List"
             textProps={{ color: "red" }}
           >
-            {student.status.noCallList ? "NCL" : undefined}
+            {student.status.noContactList ? "NCL" : undefined}
           </LabeledText>
           <LabeledText
             condition={dataVisibility.programInformation.currentLevel}
@@ -87,23 +80,20 @@ export const StudentInfo = ({ student }: { student: Student }) => {
           <LabeledText condition={dataVisibility.status.finalGrSent} label="Final GR Sent">
             {student.status.finalGradeSentDate}
           </LabeledText>
-          <LabeledText condition={dataVisibility.status.levelRevealDate} label="Level Reveal Date">
-            {student.status.levelRevealDate}
+          <LabeledText condition={dataVisibility.status.levelReevalDate} label="Level Reeval Date">
+            {student.status.levelReevalDate}
           </LabeledText>
           <LabeledText condition={dataVisibility.status.reactivatedDate} label="Reactivated Date">
-            {join(student.status.reactivatedDate, ", ")}
+            {student.status.reactivatedDate}
           </LabeledText>
           <LabeledText condition={dataVisibility.status.withdrawDate} label="Withdraw Date">
-            {join(student.status.withdrawDate, ", ")}
+            {student.status.withdrawDate}
           </LabeledText>
           <LabeledText condition={dataVisibility.status.withdrawReason} label="Withdraw Reason">
-            {student.droppedOutReason}
+            {student.status.droppedOutReason}
           </LabeledText>
           <LabeledText condition={dataVisibility.status.repeatNumber} label="Repeat Number">
             {getRepeatNum(student)}
-          </LabeledText>
-          <LabeledText condition={dataVisibility.status.sectionsOffered} label="Sections Offered">
-            {join(student.status.sectionsOffered, ", ")}
           </LabeledText>
         </LabeledContainer>
         <LabeledContainer
@@ -162,22 +152,19 @@ export const StudentInfo = ({ student }: { student: Student }) => {
               <span key={i}>
                 <LabeledText
                   condition={dataVisibility.phoneNumbersAndWhatsApp.phoneNumbers}
-                  label={`Number ${i + 1}`}
+                  label={`Number ${Number(i) + 1}`}
                 >
                   {pn.number}
                 </LabeledText>
                 <LabeledText
                   condition={dataVisibility.phoneNumbersAndWhatsApp.phoneNumbers}
-                  label={`Number ${i + 1} Notes`}
+                  label={`Number ${Number(i) + 1} Notes`}
                 >
                   {pn.notes}
                 </LabeledText>
               </span>
             );
           })}
-          <LabeledText condition={dataVisibility.phoneNumbersAndWhatsApp.waNotes} label="WA Notes">
-            {student.phone.whatsappNotes}
-          </LabeledText>
           <LabeledText
             condition={dataVisibility.phoneNumbersAndWhatsApp.waBroadcastSar}
             label="WA Broadcast SAR"
@@ -188,24 +175,27 @@ export const StudentInfo = ({ student }: { student: Student }) => {
             condition={dataVisibility.phoneNumbersAndWhatsApp.waBroadcastOtherGroups}
             label="WA Broadcast Other Groups"
           >
-            {join(student.phone.otherWaBroadcastGroups, ", ")}
+            {student.phone.otherWaBroadcastGroups}
           </LabeledText>
         </LabeledContainer>
         <LabeledContainer condition={allCheckboxesFalse("Placement")} label="Placement">
           <LabeledText condition={dataVisibility.placement.photoContact} label="Photo Contact">
-            {join(student.placement.photoContact, ", ")}
+            {student.placement.photoContact}
+          </LabeledText>
+          <LabeledText
+            condition={dataVisibility.placement.sectionsOffered}
+            label="Sections Offered"
+          >
+            {student.placement.sectionsOffered}
           </LabeledText>
           <LabeledText condition={dataVisibility.placement.placement} label="Placement">
-            {join(student.placement.placement, ", ")}
-          </LabeledText>
-          <LabeledText condition={dataVisibility.placement.notified} label="Notified">
-            {student.placement.notified ? "Yes" : "No"}
+            {student.placement.placement}
           </LabeledText>
           <LabeledText
             condition={dataVisibility.placement.placementConfirmed}
             label="Placement Confirmed"
           >
-            {join(student.placement.confDate, ", ")}
+            {student.placement.confDate}
           </LabeledText>
           <LabeledText
             condition={dataVisibility.placement.naClassSchedule}
@@ -264,11 +254,11 @@ export const StudentInfo = ({ student }: { student: Student }) => {
         >
           {map(student.correspondence, (c) => {
             return (
-              <div key={`${c.date} ${c.notes}`}>
+              <Box key={`${c.date} ${c.notes}`} sx={{ paddingBottom: 1, paddingRight: 2 }}>
                 <Typography fontSize="11pt" variant="body2">
                   {c.date}: {c.notes}
                 </Typography>
-              </div>
+              </Box>
             );
           })}
         </LabeledContainer>
@@ -281,7 +271,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
             return (
               <LabeledContainer
                 key={i}
-                label={`Session ${i + 1}`}
+                label={`Session ${Number(i) + 1}`}
                 labelProps={{ fontWeight: "normal" }}
               >
                 <LabeledText condition={dataVisibility.academicRecords.session} label="Session">
@@ -289,12 +279,6 @@ export const StudentInfo = ({ student }: { student: Student }) => {
                 </LabeledText>
                 <LabeledText condition={dataVisibility.academicRecords.level} label="Level">
                   {ar.level}
-                </LabeledText>
-                <LabeledText
-                  condition={dataVisibility.academicRecords.electiveClass}
-                  label="Elective Class"
-                >
-                  {ar.electiveClass}
                 </LabeledText>
                 <LabeledText
                   condition={dataVisibility.academicRecords.levelAudited}
@@ -364,12 +348,6 @@ export const StudentInfo = ({ student }: { student: Student }) => {
                   label="Attendance"
                 >
                   {ar.attendance !== undefined ? `${ar.attendance}%` : undefined}
-                </LabeledText>
-                <LabeledText
-                  condition={dataVisibility.academicRecords.certificate}
-                  label="Certificate"
-                >
-                  {ar.certificate ? "Yes" : ar.certificate === undefined ? undefined : "No"}
                 </LabeledText>
                 <LabeledText
                   condition={dataVisibility.academicRecords.teacherComments}

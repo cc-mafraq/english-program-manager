@@ -18,7 +18,7 @@ export const ProgressBox = ({
           backgroundColor:
             sessionResults?.length === 0
               ? "none"
-              : last(sessionResults)?.result === 0
+              : last(sessionResults)?.result === "P"
               ? "rgba(198,224,180,1)"
               : last(sessionResults)?.result === undefined
               ? "rgba(245,255,150,1)"

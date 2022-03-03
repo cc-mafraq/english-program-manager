@@ -4,9 +4,7 @@ import { Student } from ".";
 export interface DataVisibility {
   academicRecords: {
     attendance: boolean;
-    certificate: boolean;
     certificateRequests: boolean;
-    electiveClass: boolean;
     exitSpeakingExam: boolean;
     exitWritingExam: boolean;
     finalGrade: boolean;
@@ -35,12 +33,12 @@ export interface DataVisibility {
   };
   placement: {
     naClassSchedule: boolean;
-    notified: boolean;
     originalPlacementData: boolean;
     pending: boolean;
     photoContact: boolean;
     placement: boolean;
     placementConfirmed: boolean;
+    sectionsOffered: boolean;
   };
   programInformation: {
     active: boolean;
@@ -49,16 +47,15 @@ export interface DataVisibility {
     idNumber: boolean;
     initialSession: boolean;
     inviteTag: boolean;
-    noCallList: boolean;
+    noContactList: boolean;
     status: boolean;
   };
   status: {
     audit: boolean;
     finalGrSent: boolean;
-    levelRevealDate: boolean;
+    levelReevalDate: boolean;
     reactivatedDate: boolean;
     repeatNumber: boolean;
-    sectionsOffered: boolean;
     withdrawDate: boolean;
     withdrawReason: boolean;
   };
@@ -95,9 +92,7 @@ export const initialAppState: AppState = {
   dataVisibility: {
     academicRecords: {
       attendance: true,
-      certificate: true,
       certificateRequests: true,
-      electiveClass: true,
       exitSpeakingExam: true,
       exitWritingExam: true,
       finalGrade: true,
@@ -127,12 +122,12 @@ export const initialAppState: AppState = {
     },
     placement: {
       naClassSchedule: true,
-      notified: true,
       originalPlacementData: true,
       pending: true,
       photoContact: true,
       placement: true,
       placementConfirmed: true,
+      sectionsOffered: true,
     },
     programInformation: {
       active: true,
@@ -141,16 +136,15 @@ export const initialAppState: AppState = {
       idNumber: true,
       initialSession: true,
       inviteTag: true,
-      noCallList: true,
+      noContactList: true,
       status: true,
     },
     status: {
       audit: true,
       finalGrSent: true,
-      levelRevealDate: true,
+      levelReevalDate: true,
       reactivatedDate: true,
       repeatNumber: true,
-      sectionsOffered: true,
       withdrawDate: true,
       withdrawReason: true,
     },
