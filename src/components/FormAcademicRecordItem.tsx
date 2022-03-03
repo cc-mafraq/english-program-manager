@@ -51,9 +51,9 @@ export const FormAcademicRecordItem: React.FC<FormItem & { students: Student[] }
           options={genderedLevels}
         />
       </GridContainer>
-      <FormGrade gradePath={`${recordName}.finalResult}`} label="Final Grade" />
-      <FormGrade gradePath={`${recordName}.exitWritingExam}`} label="Exit Writing Exam" />
-      <FormGrade gradePath={`${recordName}.exitSpeakingExam}`} label="Exit Speaking Exam" />
+      <FormGrade gradePath={`${recordName}.finalResult`} label="Final Grade" />
+      <FormGrade gradePath={`${recordName}.exitWritingExam`} label="Exit Writing Exam" />
+      <FormGrade gradePath={`${recordName}.exitSpeakingExam`} label="Exit Speaking Exam" />
       <GridContainer marginBottom={0} marginLeft={0}>
         <GridItemTextField
           label="Teacher Comments"
