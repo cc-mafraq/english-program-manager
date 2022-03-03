@@ -1,6 +1,6 @@
 import { FirebaseError } from "firebase/app";
 import { collection, DocumentData, onSnapshot, QuerySnapshot } from "firebase/firestore";
-import { forEach, isUndefined } from "lodash";
+import { forEach, get, isString, isUndefined, join, values } from "lodash";
 import React, { ChangeEvent, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useState from "react-usestateref";
@@ -74,6 +74,13 @@ export const StudentDatabasePage = () => {
       const studentData: Student[] = [];
       forEach(snapshot.docs, (d) => {
         const data = d.data();
+        const firstOtherWAGroup = get(data, "phone.otherWaBroadcastGroups");
+        if (firstOtherWAGroup?.length) {
+          forEach(firstOtherWAGroup, (group, i) => {
+            if (isString(group)) return;
+            data.phone.otherWaBroadcastGroups[i] = join(values(group), "");
+          });
+        }
         if (data.name?.english) {
           studentData.push({ ...d.data() } as Student);
         }

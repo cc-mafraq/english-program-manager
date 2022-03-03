@@ -14,7 +14,6 @@ import {
   merge,
   omitBy,
   pickBy,
-  some,
   split,
   trim,
 } from "lodash";
@@ -44,15 +43,11 @@ export interface FormItem {
 }
 
 const stringToArray = (value: string, originalValue: string) => {
-  const separators = /,|;|\t/g;
+  const separators = /,|;/;
   return originalValue
-    ? isArray(originalValue)
-      ? some(originalValue)
-        ? originalValue
-        : null
-      : originalValue.match(separators)
-      ? map(split(originalValue, separators), (val) => {
-          return trim(val);
+    ? originalValue.match(separators)
+      ? map(split(originalValue, separators), (v) => {
+          return trim(v);
         })
       : [originalValue]
     : null;
