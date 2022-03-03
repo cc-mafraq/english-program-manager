@@ -23,7 +23,10 @@ export const FormAcademicRecordItem: React.FC<FormItem & { students: Student[] }
         <StudentFormLabel textProps={{ marginTop: SPACING }}>
           Academic Record {Number(index) + 1}
         </StudentFormLabel>
-        <IconButton onClick={removeItem && removeItem(index)}>
+        <IconButton
+          onClick={removeItem && removeItem(index)}
+          sx={{ marginLeft: SPACING / 2, top: "15%" }}
+        >
           <CloseIcon />
         </IconButton>
       </Grid>
