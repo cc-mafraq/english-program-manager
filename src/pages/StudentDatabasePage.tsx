@@ -82,7 +82,7 @@ export const StudentDatabasePage = () => {
           });
         }
         if (data.name?.english) {
-          studentData.push({ ...d.data() } as Student);
+          studentData.push(data as Student);
         }
       });
       const sortedStudentData = sortStudents(studentData);
