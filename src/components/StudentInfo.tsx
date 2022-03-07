@@ -1,6 +1,6 @@
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { Box, IconButton, Typography } from "@mui/material";
-import { camelCase, forOwn, get, map, some, values } from "lodash";
+import { camelCase, forOwn, get, join, map, some, values } from "lodash";
 import React, { useContext } from "react";
 import { LabeledContainer, LabeledText, ProgressBox } from ".";
 import {
@@ -175,7 +175,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
             condition={dataVisibility.phoneNumbersAndWhatsApp.waBroadcastOtherGroups}
             label="WA Broadcast Other Groups"
           >
-            {student.phone.otherWaBroadcastGroups}
+            {join(student.phone.otherWaBroadcastGroups, ", ")}
           </LabeledText>
         </LabeledContainer>
         <LabeledContainer condition={allCheckboxesFalse("Placement")} label="Placement">
