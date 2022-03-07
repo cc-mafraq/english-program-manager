@@ -13,7 +13,6 @@ import {
   slice,
   sortBy,
   uniq,
-  zip,
 } from "lodash";
 import { FinalResult, GenderedLevel, Status, Student } from "../interfaces";
 
@@ -39,17 +38,14 @@ export const isActive = (student: Student): boolean => {
 };
 
 export const getProgress = (student: Student): StudentProgress => {
-  const sessions = map(student.academicRecords, "session");
-  const levels = map(student.academicRecords, "level");
-  const results = map(student.academicRecords, "finalResult.result");
   // eslint-disable-next-line sort-keys-fix/sort-keys-fix
   const progress: StudentProgress = { PL1: [], L1: [], L2: [], L3: [], L4: [], L5: [] };
-  forEach(zip(sessions, levels, results), ([s, l, r]) => {
-    let level: GenderedLevel = "PL1";
-    switch (l) {
+  forEach(student.academicRecords, (ar) => {
+    let level: GenderedLevel;
+    if (!ar.level) return;
+    switch (ar.level) {
       case "PL1-M":
       case "PL1-W":
-      case undefined:
         level = "PL1";
         break;
       case "L1-M":
@@ -61,9 +57,9 @@ export const getProgress = (student: Student): StudentProgress => {
         level = "L2";
         break;
       default:
-        level = l;
+        level = ar.level;
     }
-    progress[level]?.push({ result: r, session: s });
+    progress[level]?.push({ result: ar.finalResult?.result, session: ar.session });
   });
   return progress;
 };
