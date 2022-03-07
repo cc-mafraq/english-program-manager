@@ -29,12 +29,12 @@
     "react-router-dom": "^6.0.2",
     "react-usestateref": "^1.0.8",
     "vite": "^2.5.4",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "csstype": "3.0.10"
   },
   "devDependencies": {
     "@types/downloadjs": "^1.4.2",
     "@types/jest": "^27.0.1",
-    "@types/jszip": "^3.4.1",
     "@types/lodash": "^4.14.175",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
@@ -52,8 +52,5 @@
     "eslint-plugin-typescript-sort-keys": "^2.1.0",
     "prettier": "^2.4.1",
     "typescript": "^4.3.2"
-  },
-  "resolutions": {
-    "csstype": "3.0.10"
   }
 }
