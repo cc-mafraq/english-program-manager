@@ -256,7 +256,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
             return (
               <Box key={`${c.date} ${c.notes}`} sx={{ paddingBottom: 1, paddingRight: 2 }}>
                 <Typography fontSize="11pt" variant="body2">
-                  {c.date}: {c.notes}
+                  {c.date ? `${c.date}: ${c.notes}` : c.notes}
                 </Typography>
               </Box>
             );

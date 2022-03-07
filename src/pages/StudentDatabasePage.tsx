@@ -103,12 +103,12 @@ export const StudentDatabasePage = () => {
     [navigate],
   );
 
-  useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "students"), nextSnapshot, errorSnapshot);
-    return () => {
-      unsubscribe();
-    };
-  }, [errorSnapshot, nextSnapshot]);
+  // useEffect(() => {
+  //   const unsubscribe = onSnapshot(collection(db, "students"), nextSnapshot, errorSnapshot);
+  //   return () => {
+  //     unsubscribe();
+  //   };
+  // }, [errorSnapshot, nextSnapshot]);
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setState({ newPage });
