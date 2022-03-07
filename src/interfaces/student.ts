@@ -103,7 +103,7 @@ export interface PhoneNumber {
 }
 
 export interface Correspondence {
-  date: string;
+  date: string | null;
   notes: string;
 }
 

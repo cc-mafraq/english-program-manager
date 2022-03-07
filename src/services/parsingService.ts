@@ -1,4 +1,5 @@
 import {
+  first,
   forEach,
   isEmpty,
   join,
@@ -8,6 +9,7 @@ import {
   range,
   replace,
   split,
+  startsWith,
   trim,
   zip,
 } from "lodash";
@@ -27,7 +29,6 @@ import {
 import { ValidFields } from "./spreadsheetService";
 
 const separatorRegex = /[;,]/g;
-const dateRegex = /\d{1,2}([/])\d{1,2}\1\d{2}/g;
 const phoneRegex = /\d{9,10}/g;
 
 const splitAndTrim = (value: string, separator?: string | RegExp): string[] => {
@@ -41,7 +42,7 @@ const splitAndTrim = (value: string, separator?: string | RegExp): string[] => {
 
 const parseDate = (value?: string) => {
   if (!value) return undefined;
-  const date = moment(last(splitAndTrim(value)), ["L", "l", "M/D/YY", "MM/DD/YY"]);
+  const date = moment(last(splitAndTrim(value)), ["L", "l", "M/D/YY", "MM/DD/YY", "M-D-YY"]);
   return date.isValid() ? date.format(MOMENT_FORMAT) : undefined;
 };
 
@@ -175,20 +176,51 @@ export const parseNoAnswerClassSchedule = (key: string, value: string, student: 
 };
 
 export const parseCorrespondence = (key: string, value: string, student: Student) => {
-  const splitCorrespondence = pullAll(splitAndTrim(replace(value, /[:]/g, ""), dateRegex), [
-    "",
-    "/",
-  ]);
+  if (isEmpty(value)) return;
+  const dateRegex = /\d{1,2}(\/|-)\d{1,2}\1\d{2,4}:/g;
+  const splitCorrespondence = pullAll(splitAndTrim(value, dateRegex), ["", "/", "-"]);
   const dates = value.match(dateRegex);
-  forEach(zip(dates, splitCorrespondence), ([date, notes]) => {
-    const formattedDate = parseDate(date);
-    if (notes !== undefined && formattedDate !== undefined) {
+
+  // Handle if the value doesn't start with a date
+  if (!startsWith(trim(value), first(dates))) {
+    const lastCorrespondence = last(student.correspondence);
+    if (lastCorrespondence) {
+      lastCorrespondence.notes += ` ${splitCorrespondence[0]}`;
+      student.correspondence.pop();
+      student.correspondence.push(lastCorrespondence);
+    } else {
       student.correspondence.push({
-        date: formattedDate,
-        notes,
+        date: null,
+        notes: splitCorrespondence[0],
       });
     }
-  });
+    splitCorrespondence.shift();
+  }
+  forEach(
+    zip(
+      map(dates, (date) => {
+        return replace(date, /[:]/g, "");
+      }),
+      splitCorrespondence,
+    ),
+    ([date, notes]) => {
+      let newDate = date;
+      let newNotes = notes;
+      const firstTwoChars = Number(notes?.slice(0, 2));
+      // Handle if the date was formatted with 4 numbers for the year
+      if (!Number.isNaN(firstTwoChars)) {
+        newDate = `${date}${firstTwoChars}`;
+        newNotes = notes?.slice(2);
+      }
+      const formattedDate = parseDate(newDate);
+      if (newNotes !== undefined && formattedDate !== undefined) {
+        student.correspondence.push({
+          date: formattedDate,
+          notes: newNotes,
+        });
+      }
+    },
+  );
 };
 
 export const parseClassListSent = (key: string, value: string, student: Student) => {
