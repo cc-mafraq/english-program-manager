@@ -1,6 +1,7 @@
 import {
   first,
   forEach,
+  includes,
   isEmpty,
   join,
   last,
@@ -297,7 +298,7 @@ export const parseWABroadcastSAR = (key: string, value: string, student: Student
 };
 
 export const parseWABroadcasts = (key: string, value: string, student: Student) => {
-  if (Number(value) !== 1) return;
+  if (Number(value) !== 1 && !includes(value, "Y")) return;
   student.phone.otherWaBroadcastGroups
     ? student.phone.otherWaBroadcastGroups.push(key)
     : (student.phone.otherWaBroadcastGroups = [key]);
