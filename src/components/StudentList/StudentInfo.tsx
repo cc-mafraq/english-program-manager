@@ -49,11 +49,25 @@ export const StudentInfo = ({ student }: { student: Student }) => {
           condition={allCheckboxesFalse("Program Information")}
           label="Program Information"
         >
+          <LabeledText
+            condition={dataVisibility.programInformation.inviteTag}
+            containerProps={{
+              marginRight: "5vw",
+              padding: 0.5,
+              paddingLeft: 2,
+              paddingRight: 2,
+              sx: {
+                backgroundColor: student.status.inviteTag
+                  ? "rgba(198,224,180,1)"
+                  : "rgba(255,175,175,1)",
+              },
+            }}
+            label="Invite"
+          >
+            {student.status.inviteTag ? "Yes" : "No"}
+          </LabeledText>
           <LabeledText condition={dataVisibility.programInformation.idNumber} label="ID Number">
             {student.epId}
-          </LabeledText>
-          <LabeledText condition={dataVisibility.programInformation.inviteTag} label="Invite Tag">
-            {student.status.inviteTag ? "Yes" : "No"}
           </LabeledText>
           <LabeledText
             condition={dataVisibility.programInformation.noContactList}
