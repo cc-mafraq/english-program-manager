@@ -4,13 +4,13 @@ import JSZip from "jszip";
 import { cloneDeep, isEqual, nth, pull, replace } from "lodash";
 import React, { useState } from "react";
 import { FGRDialogHeader, FinalGradeReportList } from ".";
-import { Student } from "../interfaces";
+import { Student } from "../../interfaces";
 import {
   getAllSessions,
   getFGRStudents,
   getSortedSARIndexArray,
   StudentAcademicRecordIndex,
-} from "../services";
+} from "../../services";
 
 interface FinalGradeReportDialogProps {
   handleDialogClose: () => void;

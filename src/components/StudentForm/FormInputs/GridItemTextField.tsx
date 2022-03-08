@@ -1,7 +1,7 @@
 import { Grid, GridProps, StandardTextFieldProps, TextField } from "@mui/material";
 import React from "react";
 import { FieldError, useFormContext } from "react-hook-form";
-import { useInput } from "../../hooks/useInput";
+import { useInput } from "../../../hooks";
 
 interface GridItemTextField {
   gridProps?: GridProps;

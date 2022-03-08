@@ -2,7 +2,7 @@ import { Autocomplete, AutocompleteProps, Grid, GridProps, TextField } from "@mu
 import { omit } from "lodash";
 import React from "react";
 import { Controller, FieldError, useFormContext } from "react-hook-form";
-import { useInput } from "../../hooks/useInput";
+import { useInput } from "../../../hooks";
 
 interface GridItemAutocomplete {
   defaultValue?: string[] | string;

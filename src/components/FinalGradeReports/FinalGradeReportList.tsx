@@ -3,8 +3,8 @@ import JSZip from "jszip";
 import { map } from "lodash";
 import React from "react";
 import { FinalGradeReport } from ".";
-import { Student } from "../interfaces";
-import { StudentAcademicRecordIndex } from "../services";
+import { Student } from "../../interfaces";
+import { StudentAcademicRecordIndex } from "../../services";
 
 interface FinalGradeReportListProps {
   fgrStudents: StudentAcademicRecordIndex[];

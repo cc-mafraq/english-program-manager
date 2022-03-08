@@ -2,7 +2,7 @@ import { List, ListItem } from "@mui/material";
 import { map } from "lodash";
 import React, { Dispatch, SetStateAction } from "react";
 import { StudentCard } from ".";
-import { Student } from "../interfaces";
+import { Student } from "../../interfaces";
 
 interface StudentListProps {
   handleEditStudentClick: () => void;

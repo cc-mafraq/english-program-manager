@@ -1,7 +1,7 @@
 import { Box, Dialog } from "@mui/material";
 import React from "react";
+import { Student } from "../../interfaces";
 import { StudentForm } from "./StudentForm";
-import { Student } from "../interfaces";
 
 interface StudentFormDialogProps {
   handleDialogClose: () => void;

@@ -4,8 +4,8 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { AppBar, Box, IconButton, TablePagination, Toolbar } from "@mui/material";
 import React, { ChangeEvent } from "react";
 import { ActionsPopover, Searchbar } from ".";
-import { Student } from "../interfaces";
-import { DataVisibilityPopover } from "./DataVisibilityPopover";
+import { DataVisibilityPopover } from "..";
+import { Student } from "../../interfaces";
 
 const handlePopoverClick = (
   setFn: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>,

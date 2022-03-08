@@ -43,3 +43,9 @@ export const FGRGridRow: React.FC<FGRGridRowProps> = ({
     </Grid>
   );
 };
+
+FGRGridRow.defaultProps = {
+  colText3Props: undefined,
+  scale: undefined,
+  smallBorderSize: undefined,
+};

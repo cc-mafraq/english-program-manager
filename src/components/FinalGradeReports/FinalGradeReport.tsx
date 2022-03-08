@@ -8,7 +8,7 @@ import JSZip from "jszip";
 import { map, nth, replace } from "lodash";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FGRGridRow, FGRGridRowProps, FGRHeader } from ".";
-import { FinalResult, Student } from "../interfaces";
+import { FinalResult, Student } from "../../interfaces";
 import {
   getElectiveFullName,
   getLevelForNextSession,
@@ -16,7 +16,7 @@ import {
   getStudentShortName,
   isElective,
   StudentAcademicRecordIndex,
-} from "../services";
+} from "../../services";
 
 interface FinalGradeReportProps {
   handleDownloadFinished: (studentAcademicRecord: StudentAcademicRecordIndex) => void;
@@ -81,7 +81,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
         return null;
       };
     },
-    [fileName, width],
+    [fileName, primaryColor, scale, width],
   );
 
   useEffect(() => {
@@ -97,7 +97,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
       }
     };
     downloadAllCalled();
-  }, [shouldDownload]);
+  }, [downloadFGR, fileName, handleDownloadFinished, shouldDownload, studentAcademicRecord, zip]);
 
   const fgrGridRowData: FGRGridRowMapProps[] = [
     {
