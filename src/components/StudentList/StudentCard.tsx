@@ -1,5 +1,4 @@
 import EditIcon from "@mui/icons-material/Edit";
-import PersonIcon from "@mui/icons-material/Person";
 import { Box, Card, CardActions, CardContent, CardMedia, IconButton } from "@mui/material";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { StudentInfo } from "..";
@@ -54,9 +53,9 @@ export const StudentCard: React.FC<StudentCardProps> = ({
           maxWidth: "5%",
         }}
       >
-        <IconButton>
+        {/* <IconButton>
           <PersonIcon />
-        </IconButton>
+        </IconButton> */}
         <IconButton
           onClick={() => {
             setSelectedStudent(student);

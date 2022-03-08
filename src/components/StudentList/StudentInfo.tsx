@@ -29,12 +29,20 @@ export const StudentInfo = ({ student }: { student: Student }) => {
         {student.name.english} {student.name.arabic}
       </Typography>
       <Box sx={{ flexDirection: "row", flexGrow: 1, float: "right" }}>
-        <Typography display="inline" marginRight="5px" variant="h5">
-          {student.phone.primaryPhone}
-        </Typography>
-        <IconButton href={`https://wa.me/962${student.phone.primaryPhone}`} target="_blank">
-          <WhatsAppIcon />
-        </IconButton>
+        {student.phone.primaryPhone > 700000000 ? (
+          <>
+            <Typography display="inline" marginRight="5px" variant="h5">
+              {student.phone.primaryPhone}
+            </Typography>
+            <IconButton href={`https://wa.me/962${student.phone.primaryPhone}`} target="_blank">
+              <WhatsAppIcon />
+            </IconButton>
+          </>
+        ) : (
+          <Typography display="inline" marginRight="5px" variant="h5">
+            WA Number Invalid
+          </Typography>
+        )}
       </Box>
       <Box sx={{ display: "flex", flexWrap: "wrap", marginBottom: "1%", marginTop: "1%" }}>
         <LabeledContainer
