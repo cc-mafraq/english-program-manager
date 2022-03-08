@@ -30,7 +30,7 @@ import {
 import { ValidFields } from "./spreadsheetService";
 
 const separatorRegex = /[;,]/g;
-const phoneRegex = /\d{9,10}/g;
+const phoneRegex = /([\d]+)/;
 
 const splitAndTrim = (value: string, separator?: string | RegExp): string[] => {
   const sep = separator || separatorRegex;
@@ -85,12 +85,17 @@ export const parseArabicName = (key: string, value: string, student: Student) =>
 };
 
 export const parseID = (key: string, value: string, student: Student) => {
-  student.epId = Number(value);
+  const id = Number(value);
+  if (Number.isNaN(id)) return;
+  student.epId = id;
 };
 
 export const parseWaPrimPhone = (key: string, value: string, student: Student) => {
   const strippedValue = replace(value, /[" "]/g, "");
-  student.phone.primaryPhone = Number(phoneRegex.exec(strippedValue));
+  const matchValue = first(phoneRegex.exec(strippedValue));
+  const primaryNumber = Number(matchValue);
+  if (Number.isNaN(primaryNumber)) return;
+  student.phone.primaryPhone = primaryNumber;
 };
 
 export const parseNationality = (key: string, value: string, student: Student) => {

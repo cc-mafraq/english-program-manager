@@ -50,7 +50,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
           label="Program Information"
         >
           <LabeledText condition={dataVisibility.programInformation.idNumber} label="ID Number">
-            {student.epId}
+            {student.epId ? student.epId : "Invalid"}
           </LabeledText>
           <LabeledText
             condition={dataVisibility.programInformation.noContactList}
