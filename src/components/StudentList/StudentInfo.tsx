@@ -52,9 +52,6 @@ export const StudentInfo = ({ student }: { student: Student }) => {
           <LabeledText condition={dataVisibility.programInformation.idNumber} label="ID Number">
             {student.epId}
           </LabeledText>
-          <LabeledText condition={dataVisibility.programInformation.inviteTag} label="Invite Tag">
-            {student.status.inviteTag ? "Yes" : "No"}
-          </LabeledText>
           <LabeledText
             condition={dataVisibility.programInformation.noContactList}
             label="No Contact List"
