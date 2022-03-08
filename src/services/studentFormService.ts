@@ -5,10 +5,12 @@ import {
   indexOf,
   isArray,
   isEmpty,
+  isInteger,
   isNaN,
   isNull,
   isObject,
   isUndefined,
+  lowerCase,
   map,
   mapValues,
   merge,
@@ -16,6 +18,8 @@ import {
   pickBy,
   some,
   split,
+  startsWith,
+  toString,
   trim,
 } from "lodash";
 import moment from "moment";
@@ -59,6 +63,7 @@ const stringToArray = (value: string, originalValue: string) => {
 };
 
 const stringToInteger = (value: string, originalValue: string) => {
+  if (lowerCase(originalValue) === "unknown") return originalValue;
   const parsedInt = parseInt(originalValue);
   return isNaN(parsedInt) ? undefined : parsedInt;
 };
@@ -135,7 +140,7 @@ const classListSchema = object().shape({
 const correspondenceSchema = object().shape({
   date: dateSchema.required("Date is required"),
   notes: string().required(
-    "Correspondence notes are required if added. You can remove the correspondence by clicking the X button",
+    "Correspondence notes are required if added. You can remove the correspondence by clicking the ❌ button",
   ),
 });
 
@@ -163,12 +168,11 @@ const phoneNumberSchema = object()
       .test("valid-phone-number", "The phone number is not valid", (value) => {
         return (
           value !== undefined &&
-          ((value > 700000000 && value < 800000000) ||
-            (value > 201200000000 && value < 201300000000))
+          ((value > 700000000 && value < 800000000) || startsWith(toString(value), "2012"))
         );
       })
       .required(
-        "Phone number is required if added. You can remove the correspondence by clicking the X button",
+        "Phone number is required if added. You can remove the phone number by clicking the ❌ button",
       ),
   })
   .required();
@@ -251,7 +255,19 @@ const workSchema = object().shape({
 
 export const studentFormSchema = object().shape({
   academicRecords: array().of(academicRecordsSchema),
-  age: number().transform(stringToInteger).min(13).max(99).integer().nullable().optional(),
+  age: mixed<number | "Unknown">()
+    .transform(stringToInteger)
+    .test(
+      "valid-age",
+      'Age must be an integer greater than 12 and less than 100. You can enter "Unknown"',
+      (value) => {
+        return (
+          (isInteger(value) && value && value > 12 && value < 100) ||
+          lowerCase(value as string) === "unknown"
+        );
+      },
+    )
+    .required("Age is required"),
   certificateRequests: string().transform(emptyToNull).nullable().optional(),
   classList: classListSchema,
   correspondence: array().of(correspondenceSchema),
