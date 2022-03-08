@@ -47,7 +47,7 @@ describe("test expand", () => {
 describe("parses names", () => {
   it("parses English name", () => {
     parseEnglishName("", "Jon Ellis", student);
-    expect(student.name.english).toEqual("Jon Elli");
+    expect(student.name.english).toEqual("Jon Ellis");
   });
   it("parses Arabic name", () => {
     parseArabicName("", "جون إليس", student);
