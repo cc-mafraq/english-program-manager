@@ -1,8 +1,8 @@
 import EditIcon from "@mui/icons-material/Edit";
 import { Box, Card, CardActions, CardContent, CardMedia, IconButton } from "@mui/material";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { StudentInfo } from "..";
-import { Student } from "../../interfaces";
+import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
+import { LabeledText, StudentInfo } from "..";
+import { AppContext, Student } from "../../interfaces";
 import { getStudentImage } from "../../services";
 
 interface StudentCardProps {
@@ -17,6 +17,9 @@ export const StudentCard: React.FC<StudentCardProps> = ({
   handleEditStudentClick,
 }) => {
   const [img, setImg] = useState("");
+  const {
+    appState: { dataVisibility },
+  } = useContext(AppContext);
 
   useEffect(() => {
     const setImage = async () => {
@@ -34,11 +37,26 @@ export const StudentCard: React.FC<StudentCardProps> = ({
     <Card sx={{ display: "flex", marginLeft: "5px", width: "100%" }}>
       <Box
         sx={{
-          display: "flex",
           minWidth: "150px",
         }}
       >
         <CardMedia component="img" image={img} sx={{ height: "35vh", minHeight: "200px" }} />
+        <LabeledText
+          condition={dataVisibility.programInformation.inviteTag}
+          containerProps={{
+            marginTop: 1,
+            padding: 0.5,
+            sx: {
+              backgroundColor: student.status.inviteTag
+                ? "rgba(198,224,180,1)"
+                : "rgba(255,175,175,1)",
+            },
+            textAlign: "center",
+          }}
+          label="Invite"
+        >
+          {student.status.inviteTag ? "Yes" : "No"}
+        </LabeledText>
       </Box>
       <Box sx={{ flexGrow: 5, maxWidth: "85%" }}>
         <CardContent>
