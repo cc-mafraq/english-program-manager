@@ -57,38 +57,27 @@ const studentFieldsUnexpanded: ValidFields = {
   Y: ps.parseInviteTag,
 };
 const maxAcademicRecordColumnNum = 200;
-studentFieldsUnexpanded[ps.generateKeys("Att", maxAcademicRecordColumnNum)] =
-  ps.parseAcademicRecordAttendance;
+studentFieldsUnexpanded[ps.generateKeys("Att", maxAcademicRecordColumnNum)] = ps.parseAcademicRecordAttendance;
 studentFieldsUnexpanded[ps.generateKeys("CORRESPONDENCE", 10)] = ps.parseCorrespondence;
 studentFieldsUnexpanded[ps.generateKeys("ExitSpeakingExamPF", maxAcademicRecordColumnNum)] =
   ps.parseAcademicRecordExitSpeakingExam;
 studentFieldsUnexpanded[ps.generateKeys("ExitWritingExamPF", maxAcademicRecordColumnNum)] =
   ps.parseAcademicRecordExitWritingExam;
-studentFieldsUnexpanded[ps.generateKeys("FinalGrades", maxAcademicRecordColumnNum)] =
-  ps.parseAcademicRecordFinalGrade;
-studentFieldsUnexpanded[ps.generateKeys("LevelAttended", maxAcademicRecordColumnNum)] =
-  ps.parseAcademicRecordLevel;
-studentFieldsUnexpanded[ps.generateKeys("LevelAudited", maxAcademicRecordColumnNum)] =
-  ps.parseAcademicRecordAudit;
-studentFieldsUnexpanded[ps.generateKeys("P", maxAcademicRecordColumnNum)] =
-  ps.parseAcademicRecordResult;
-studentFieldsUnexpanded[ps.generateKeys("F", maxAcademicRecordColumnNum, true)] =
-  ps.parseAcademicRecordResult;
-studentFieldsUnexpanded[ps.generateKeys("WD", maxAcademicRecordColumnNum, true)] =
-  ps.parseAcademicRecordResult;
+studentFieldsUnexpanded[ps.generateKeys("FinalGrades", maxAcademicRecordColumnNum)] = ps.parseAcademicRecordFinalGrade;
+studentFieldsUnexpanded[ps.generateKeys("LevelAttended", maxAcademicRecordColumnNum)] = ps.parseAcademicRecordLevel;
+studentFieldsUnexpanded[ps.generateKeys("LevelAudited", maxAcademicRecordColumnNum)] = ps.parseAcademicRecordAudit;
+studentFieldsUnexpanded[ps.generateKeys("P", maxAcademicRecordColumnNum)] = ps.parseAcademicRecordResult;
+studentFieldsUnexpanded[ps.generateKeys("F", maxAcademicRecordColumnNum, true)] = ps.parseAcademicRecordResult;
+studentFieldsUnexpanded[ps.generateKeys("WD", maxAcademicRecordColumnNum, true)] = ps.parseAcademicRecordResult;
 studentFieldsUnexpanded[ps.generateKeys("PHONE", 50)] = ps.parsePhone;
-studentFieldsUnexpanded[ps.generateKeys("Ses", maxAcademicRecordColumnNum)] =
-  ps.parseAcademicRecordSession;
+studentFieldsUnexpanded[ps.generateKeys("Ses", maxAcademicRecordColumnNum)] = ps.parseAcademicRecordSession;
 studentFieldsUnexpanded[ps.generateKeys("TeacherComments", maxAcademicRecordColumnNum)] =
   ps.parseAcademicRecordTeacherComments;
 const studentFields = ps.expand(studentFieldsUnexpanded);
 
 export const spreadsheetToStudentList = (csvString: string): Student[] => {
   // Remove junk and title rows from Excel export to CSV
-  const csvStringClean = join(
-    slice(replace(replace(csvString, "ï»¿", ""), "\t", ",").split("\n"), 3),
-    "\n",
-  );
+  const csvStringClean = join(slice(replace(replace(csvString, "ï»¿", ""), "\t", ",").split("\n"), 3), "\n");
   const objects: papa.ParseResult<never> = papa.parse(csvStringClean, {
     header: true,
     skipEmptyLines: "greedy",
