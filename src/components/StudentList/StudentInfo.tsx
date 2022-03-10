@@ -3,14 +3,7 @@ import { Box, IconButton, Typography } from "@mui/material";
 import { camelCase, forOwn, get, join, map, some, values } from "lodash";
 import React, { useContext } from "react";
 import { LabeledContainer, LabeledText, ProgressBox } from "..";
-import {
-  AppContext,
-  FinalResult,
-  GenderedLevel,
-  Nationality,
-  Status,
-  Student,
-} from "../../interfaces";
+import { AppContext, FinalResult, GenderedLevel, Nationality, Status, Student } from "../../interfaces";
 import { getProgress, getRepeatNum, isActive } from "../../services";
 
 export const StudentInfo = ({ student }: { student: Student }) => {
@@ -45,10 +38,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
         )}
       </Box>
       <Box sx={{ display: "flex", flexWrap: "wrap", marginBottom: "1%", marginTop: "1%" }}>
-        <LabeledContainer
-          condition={allCheckboxesFalse("Program Information")}
-          label="Program Information"
-        >
+        <LabeledContainer condition={allCheckboxesFalse("Program Information")} label="Program Information">
           <LabeledText condition={dataVisibility.programInformation.idNumber} label="ID Number">
             {student.epId ? student.epId : "Invalid"}
           </LabeledText>
@@ -59,10 +49,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
           >
             {student.status.noContactList ? "NCL" : undefined}
           </LabeledText>
-          <LabeledText
-            condition={dataVisibility.programInformation.currentLevel}
-            label="Current Level"
-          >
+          <LabeledText condition={dataVisibility.programInformation.currentLevel} label="Current Level">
             {student.currentLevel}
           </LabeledText>
           <LabeledText condition={dataVisibility.programInformation.status} label="Status">
@@ -71,10 +58,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
           <LabeledText condition={dataVisibility.programInformation.active} label="Active">
             {isActive(student) ? "Yes" : "No"}
           </LabeledText>
-          <LabeledText
-            condition={dataVisibility.programInformation.initialSession}
-            label="Initial Session"
-          >
+          <LabeledText condition={dataVisibility.programInformation.initialSession} label="Initial Session">
             {student.initialSession}
           </LabeledText>
         </LabeledContainer>
@@ -101,14 +85,8 @@ export const StudentInfo = ({ student }: { student: Student }) => {
             {getRepeatNum(student)}
           </LabeledText>
         </LabeledContainer>
-        <LabeledContainer
-          condition={allCheckboxesFalse("Student Information")}
-          label="Student Information"
-        >
-          <LabeledText
-            condition={dataVisibility.studentInformation.nationality}
-            label="Nationality"
-          >
+        <LabeledContainer condition={allCheckboxesFalse("Student Information")} label="Student Information">
+          <LabeledText condition={dataVisibility.studentInformation.nationality} label="Nationality">
             {Nationality[student.nationality]}
           </LabeledText>
           <LabeledText condition={dataVisibility.studentInformation.gender} label="Gender">
@@ -120,25 +98,16 @@ export const StudentInfo = ({ student }: { student: Student }) => {
           <LabeledText condition={dataVisibility.studentInformation.occupation} label="Occupation">
             {student.work?.occupation}
           </LabeledText>
-          <LabeledText
-            condition={dataVisibility.studentInformation.lookingForJob}
-            label="Looking For Job"
-          >
+          <LabeledText condition={dataVisibility.studentInformation.lookingForJob} label="Looking For Job">
             {student.work?.lookingForJob}
           </LabeledText>
           <LabeledText condition={dataVisibility.studentInformation.teacher} label="Teacher">
             {student.work?.isTeacher ? "Yes" : undefined}
           </LabeledText>
-          <LabeledText
-            condition={dataVisibility.studentInformation.teachingSubjectArea}
-            label="Teaching Subject Area"
-          >
+          <LabeledText condition={dataVisibility.studentInformation.teachingSubjectArea} label="Teaching Subject Area">
             {student.work?.isTeacher ? student.work.teachingSubjectAreas : undefined}
           </LabeledText>
-          <LabeledText
-            condition={dataVisibility.studentInformation.englishTeacher}
-            label="English Teacher"
-          >
+          <LabeledText condition={dataVisibility.studentInformation.englishTeacher} label="English Teacher">
             {student.work?.isEnglishTeacher ? "Yes" : undefined}
           </LabeledText>
           <LabeledText
@@ -170,10 +139,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
               </span>
             );
           })}
-          <LabeledText
-            condition={dataVisibility.phoneNumbersAndWhatsApp.waBroadcastSar}
-            label="WA Broadcast SAR"
-          >
+          <LabeledText condition={dataVisibility.phoneNumbersAndWhatsApp.waBroadcastSar} label="WA Broadcast SAR">
             {student.phone.waBroadcastSAR}
           </LabeledText>
           <LabeledText
@@ -187,63 +153,36 @@ export const StudentInfo = ({ student }: { student: Student }) => {
           <LabeledText condition={dataVisibility.placement.photoContact} label="Photo Contact">
             {student.placement.photoContact}
           </LabeledText>
-          <LabeledText
-            condition={dataVisibility.placement.sectionsOffered}
-            label="Sections Offered"
-          >
-            {student.placement.sectionsOffered}
-          </LabeledText>
           <LabeledText condition={dataVisibility.placement.placement} label="Placement">
             {student.placement.placement}
           </LabeledText>
-          <LabeledText
-            condition={dataVisibility.placement.placementConfirmed}
-            label="Placement Confirmed"
-          >
+          <LabeledText condition={dataVisibility.placement.classListSentDate} label="Class List Sent Date">
+            {student.placement.classListSentDate}
+          </LabeledText>
+          <LabeledText condition={dataVisibility.placement.sectionsOffered} label="Sections Offered">
+            {student.placement.sectionsOffered}
+          </LabeledText>
+          <LabeledText condition={dataVisibility.placement.placementConfirmed} label="Placement Confirmed">
             {student.placement.confDate}
           </LabeledText>
-          <LabeledText
-            condition={dataVisibility.placement.naClassSchedule}
-            label="NA Class Schedule"
-          >
+          <LabeledText condition={dataVisibility.placement.naClassSchedule} label="NA Class Schedule">
             {student.placement.noAnswerClassScheduleDate}
           </LabeledText>
           <LabeledText condition={dataVisibility.placement.pending} label="Pending">
             {student.placement.pending ? "Yes" : undefined}
           </LabeledText>
         </LabeledContainer>
-        <LabeledContainer
-          condition={dataVisibility.placement.originalPlacementData}
-          label="Original Placement Data"
-        >
+        <LabeledContainer condition={dataVisibility.placement.originalPlacementData} label="Original Placement Data">
           <LabeledText label="Writing">{student.placement.origPlacementData.writing}</LabeledText>
           <LabeledText label="Speaking">{student.placement.origPlacementData.speaking}</LabeledText>
-          <LabeledText label="Placement Level">
-            {student.placement.origPlacementData.level}
-          </LabeledText>
-          <LabeledText label="Adjustment">
-            {student.placement.origPlacementData.adjustment}
-          </LabeledText>
-        </LabeledContainer>
-        <LabeledContainer condition={allCheckboxesFalse("Class List")} label="Class List">
-          <LabeledText condition={dataVisibility.classList.sent} label="Sent">
-            {student.classList?.classListSent ? "Yes" : "No"}
-          </LabeledText>
-          <LabeledText condition={dataVisibility.classList.sentDate} label="Sent Date">
-            {student.classList?.classListSentDate}
-          </LabeledText>
-          <LabeledText condition={dataVisibility.classList.notes} label="Notes">
-            {student.classList?.classListSentNotes}
-          </LabeledText>
+          <LabeledText label="Placement Level">{student.placement.origPlacementData.level}</LabeledText>
+          <LabeledText label="Adjustment">{student.placement.origPlacementData.adjustment}</LabeledText>
         </LabeledContainer>
         <LabeledContainer condition={allCheckboxesFalse("Literacy")} label="Literacy">
           <LabeledText condition={dataVisibility.literacy.arabicLiteracy} label="Illiterate Arabic">
             {student.literacy?.illiterateAr ? "Yes" : undefined}
           </LabeledText>
-          <LabeledText
-            condition={dataVisibility.literacy.englishLiteracy}
-            label="Illiterate English"
-          >
+          <LabeledText condition={dataVisibility.literacy.englishLiteracy} label="Illiterate English">
             {student.literacy?.illiterateEng ? "Yes" : undefined}
           </LabeledText>
           <LabeledText condition={dataVisibility.literacy.tutorAndDate} label="Tutor and Date">
@@ -253,10 +192,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
         <LabeledContainer condition={dataVisibility.zoom.tutorAndDetails} label="Zoom">
           <LabeledText label="Tutor/Club and Details">{student.zoom}</LabeledText>
         </LabeledContainer>
-        <LabeledContainer
-          condition={dataVisibility.programInformation.correspondence}
-          label="Correspondence"
-        >
+        <LabeledContainer condition={dataVisibility.programInformation.correspondence} label="Correspondence">
           {map(student.correspondence, (c) => {
             return (
               <Box key={`${c.date} ${c.notes}`} sx={{ paddingBottom: 1, paddingRight: 2 }}>
@@ -267,80 +203,42 @@ export const StudentInfo = ({ student }: { student: Student }) => {
             );
           })}
         </LabeledContainer>
-        <LabeledContainer
-          condition={allCheckboxesFalse("Academic Records")}
-          label="Academic Records"
-          showWhenEmpty
-        >
+        <LabeledContainer condition={allCheckboxesFalse("Academic Records")} label="Academic Records" showWhenEmpty>
           {map(student.academicRecords, (ar, i) => {
             return (
-              <LabeledContainer
-                key={i}
-                label={`Session ${Number(i) + 1}`}
-                labelProps={{ fontWeight: "normal" }}
-              >
+              <LabeledContainer key={i} label={`Session ${Number(i) + 1}`} labelProps={{ fontWeight: "normal" }}>
                 <LabeledText condition={dataVisibility.academicRecords.session} label="Session">
                   {ar.session}
                 </LabeledText>
                 <LabeledText condition={dataVisibility.academicRecords.level} label="Level">
                   {ar.level}
                 </LabeledText>
-                <LabeledText
-                  condition={dataVisibility.academicRecords.levelAudited}
-                  label="Level Audited"
-                >
+                <LabeledText condition={dataVisibility.academicRecords.levelAudited} label="Level Audited">
                   {ar.levelAudited}
                 </LabeledText>
                 <LabeledText condition={dataVisibility.academicRecords.result} label="Result">
                   {ar.finalResult ? FinalResult[ar.finalResult?.result] : undefined}
                 </LabeledText>
-                <LabeledText
-                  condition={dataVisibility.academicRecords.finalGrade}
-                  label="Final Grade"
-                >
-                  {ar.finalResult?.percentage !== undefined
-                    ? `${ar.finalResult?.percentage}%`
-                    : undefined}
+                <LabeledText condition={dataVisibility.academicRecords.finalGrade} label="Final Grade">
+                  {ar.finalResult?.percentage !== undefined ? `${ar.finalResult?.percentage}%` : undefined}
                 </LabeledText>
-                <LabeledText
-                  condition={dataVisibility.academicRecords.finalGrade}
-                  label="Final Grade Notes"
-                >
+                <LabeledText condition={dataVisibility.academicRecords.finalGrade} label="Final Grade Notes">
                   {ar.finalResult?.notes}
                 </LabeledText>
-                <LabeledText
-                  condition={dataVisibility.academicRecords.exitWritingExam}
-                  label="Exit Writing Exam"
-                >
+                <LabeledText condition={dataVisibility.academicRecords.exitWritingExam} label="Exit Writing Exam">
                   {ar.exitWritingExam ? FinalResult[ar.exitWritingExam?.result] : undefined}
                 </LabeledText>
-                <LabeledText
-                  condition={dataVisibility.academicRecords.exitWritingExam}
-                  label="Exit Writing %"
-                >
-                  {ar.exitWritingExam?.percentage !== undefined
-                    ? `${ar.exitWritingExam?.percentage}%`
-                    : undefined}
+                <LabeledText condition={dataVisibility.academicRecords.exitWritingExam} label="Exit Writing %">
+                  {ar.exitWritingExam?.percentage !== undefined ? `${ar.exitWritingExam?.percentage}%` : undefined}
                 </LabeledText>
-                <LabeledText
-                  condition={dataVisibility.academicRecords.exitWritingExam}
-                  label="Exit Writing Exam Notes"
-                >
+                <LabeledText condition={dataVisibility.academicRecords.exitWritingExam} label="Exit Writing Exam Notes">
                   {ar.exitWritingExam?.notes}
                 </LabeledText>
-                <LabeledText
-                  condition={dataVisibility.academicRecords.exitSpeakingExam}
-                  label="Exit Speaking Exam"
-                >
+                <LabeledText condition={dataVisibility.academicRecords.exitSpeakingExam} label="Exit Speaking Exam">
                   {ar.exitSpeakingExam ? FinalResult[ar.exitSpeakingExam?.result] : undefined}
                 </LabeledText>
-                <LabeledText
-                  condition={dataVisibility.academicRecords.exitSpeakingExam}
-                  label="Exit Speaking Exam %"
-                >
-                  {ar.exitSpeakingExam?.percentage !== undefined
-                    ? `${ar.exitSpeakingExam?.percentage}%`
-                    : undefined}
+                <LabeledText condition={dataVisibility.academicRecords.exitSpeakingExam} label="Exit Speaking Exam %">
+                  {ar.exitSpeakingExam?.percentage !== undefined ? `${ar.exitSpeakingExam?.percentage}%` : undefined}
                 </LabeledText>
                 <LabeledText
                   condition={dataVisibility.academicRecords.exitSpeakingExam}
@@ -348,10 +246,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
                 >
                   {ar.exitSpeakingExam?.notes}
                 </LabeledText>
-                <LabeledText
-                  condition={dataVisibility.academicRecords.attendance}
-                  label="Attendance"
-                >
+                <LabeledText condition={dataVisibility.academicRecords.attendance} label="Attendance">
                   {ar.attendance !== undefined ? `${ar.attendance}%` : undefined}
                 </LabeledText>
                 <LabeledText
@@ -364,18 +259,11 @@ export const StudentInfo = ({ student }: { student: Student }) => {
               </LabeledContainer>
             );
           })}
-          <LabeledText
-            condition={dataVisibility.academicRecords.certificateRequests}
-            label="Certificate Requests"
-          >
+          <LabeledText condition={dataVisibility.academicRecords.certificateRequests} label="Certificate Requests">
             {student?.certificateRequests}
           </LabeledText>
         </LabeledContainer>
-        <LabeledContainer
-          condition={dataVisibility.academicRecords.progress}
-          label="Progress"
-          showWhenEmpty
-        >
+        <LabeledContainer condition={dataVisibility.academicRecords.progress} label="Progress" showWhenEmpty>
           {map(forOwn(progress), (v, k) => {
             return <ProgressBox key={k} level={k as GenderedLevel} sessionResults={v} />;
           })}
