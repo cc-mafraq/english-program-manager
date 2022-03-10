@@ -15,14 +15,10 @@ export const FormPlacement: React.FC = () => {
         </Grid>
       </GridContainer>
       <GridContainer>
-        <GridItemDatePicker gridProps={{ xs: 3 }} label="Class List Sent Date" name="placement.classListSentDate" />
-        <GridItemDatePicker
-          gridProps={{ xs: 3 }}
-          label="No Answer Class Schedule"
-          name="placement.noAnswerClassScheduleDate"
-        />
-        <GridItemDatePicker gridProps={{ xs: 2 }} label="Confirmed Date" name="placement.confDate" />
-        <GridItemDatePicker gridProps={{ xs: 2 }} label="Photo Contact" name="placement.photoContact" />
+        <GridItemDatePicker label="Class List Sent Date" name="placement.classListSentDate" />
+        <GridItemDatePicker label="No Answer Class Schedule" name="placement.noAnswerClassScheduleDate" />
+        <GridItemDatePicker label="Confirmed Date" name="placement.confDate" />
+        <GridItemDatePicker label="Photo Contact" name="placement.photoContact" />
       </GridContainer>
     </>
   );
