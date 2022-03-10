@@ -15,11 +15,6 @@ export interface DataVisibility {
     session: boolean;
     teacherComments: boolean;
   };
-  classList: {
-    notes: boolean;
-    sent: boolean;
-    sentDate: boolean;
-  };
   literacy: {
     arabicLiteracy: boolean;
     englishLiteracy: boolean;
@@ -32,6 +27,7 @@ export interface DataVisibility {
     waNotes: boolean;
   };
   placement: {
+    classListSentDate: boolean;
     naClassSchedule: boolean;
     originalPlacementData: boolean;
     pending: boolean;
@@ -103,12 +99,6 @@ export const initialAppState: AppState = {
       session: true,
       teacherComments: true,
     },
-    classList: {
-      notes: true,
-      sent: true,
-      sentDate: true,
-    },
-
     literacy: {
       arabicLiteracy: true,
       englishLiteracy: true,
@@ -121,6 +111,7 @@ export const initialAppState: AppState = {
       waNotes: true,
     },
     placement: {
+      classListSentDate: true,
       naClassSchedule: true,
       originalPlacementData: true,
       pending: true,

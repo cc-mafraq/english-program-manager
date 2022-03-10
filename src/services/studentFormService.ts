@@ -83,22 +83,14 @@ const stringToResult = (value: string, originalValue: string) => {
 const dateToString = (value: string, originalValue: string) => {
   if (isEmpty(originalValue)) return null;
   const momentVal = moment(originalValue, MOMENT_FORMAT);
-  return momentVal.isValid()
-    ? momentVal.format(MOMENT_FORMAT)
-    : moment(originalValue).format(MOMENT_FORMAT);
+  return momentVal.isValid() ? momentVal.format(MOMENT_FORMAT) : moment(originalValue).format(MOMENT_FORMAT);
 };
 
 const emptyToNull = (value: string, originalValue: string) => {
   return isEmpty(originalValue) ? null : originalValue;
 };
 
-const percentageSchema = number()
-  .min(0)
-  .max(100)
-  .integer()
-  .transform(stringToInteger)
-  .nullable()
-  .optional();
+const percentageSchema = number().min(0).max(100).integer().transform(stringToInteger).nullable().optional();
 
 // https://www.regular-expressions.info/dates.html
 const dateSchema = string()
@@ -131,12 +123,6 @@ const academicRecordsSchema = object().shape({
   session: string().required("Session is required"),
 });
 
-const classListSchema = object().shape({
-  classListSent: bool().optional(),
-  classListSentDate: dateSchema.nullable().optional(),
-  classListSentNotes: string().transform(emptyToNull).nullable().optional(),
-});
-
 const correspondenceSchema = object().shape({
   date: dateSchema.required("Date is required"),
   notes: string().required(
@@ -166,14 +152,9 @@ const phoneNumberSchema = object()
       .transform(emptyToNull)
       .transform(stringToInteger)
       .test("valid-phone-number", "The phone number is not valid", (value) => {
-        return (
-          value !== undefined &&
-          ((value > 700000000 && value < 800000000) || startsWith(toString(value), "2012"))
-        );
+        return value !== undefined && ((value > 700000000 && value < 800000000) || startsWith(toString(value), "2012"));
       })
-      .required(
-        "Phone number is required if added. You can remove the phone number by clicking the ❌ button",
-      ),
+      .required("Phone number is required if added. You can remove the phone number by clicking the ❌ button"),
   })
   .required();
 
@@ -205,18 +186,15 @@ const phoneSchema = object()
   .required();
 
 const placementSchema = object().shape({
+  classListSentDate: dateSchema.nullable().optional(),
   confDate: dateSchema.nullable().optional(),
   noAnswerClassScheduleDate: dateSchema.nullable().optional(),
   origPlacementData: object()
     .shape({
       adjustment: string().transform(emptyToNull).nullable().optional(),
       level: mixed<Level>().oneOf(levels).required("Original placement level is required"),
-      speaking: mixed<LevelPlus | "Exempt">()
-        .oneOf(levelsPlus)
-        .required("Original speaking placement is required"),
-      writing: mixed<LevelPlus | "Exempt">()
-        .oneOf(levelsPlus)
-        .required("Original writing placement is required"),
+      speaking: mixed<LevelPlus | "Exempt">().oneOf(levelsPlus).required("Original speaking placement is required"),
+      writing: mixed<LevelPlus | "Exempt">().oneOf(levelsPlus).required("Original writing placement is required"),
     })
     .required(),
   pending: bool().optional(),
@@ -257,19 +235,11 @@ export const studentFormSchema = object().shape({
   academicRecords: array().of(academicRecordsSchema),
   age: mixed<number | "Unknown">()
     .transform(stringToInteger)
-    .test(
-      "valid-age",
-      'Age must be an integer greater than 12 and less than 100. You can enter "Unknown"',
-      (value) => {
-        return (
-          (isInteger(value) && value && value > 12 && value < 100) ||
-          lowerCase(value as string) === "unknown"
-        );
-      },
-    )
+    .test("valid-age", 'Age must be an integer greater than 12 and less than 100. You can enter "Unknown"', (value) => {
+      return (isInteger(value) && value && value > 12 && value < 100) || lowerCase(value as string) === "unknown";
+    })
     .required("Age is required"),
   certificateRequests: string().transform(emptyToNull).nullable().optional(),
-  classList: classListSchema,
   correspondence: array().of(correspondenceSchema),
   currentLevel: mixed<GenderedLevel>()
     .oneOf([...genderedLevels, "L5 GRAD"])

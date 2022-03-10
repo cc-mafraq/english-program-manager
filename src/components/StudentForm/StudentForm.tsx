@@ -6,7 +6,7 @@ import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
   FormAcademicRecords,
-  FormClassListsAndCertRequests,
+  FormCertRequests,
   FormCorrespondence,
   FormLiteracyAndZoom,
   FormName,
@@ -18,13 +18,7 @@ import {
   FormStudentInformation,
 } from "..";
 import { Status, Student } from "../../interfaces";
-import {
-  db,
-  removeNullFromObject,
-  setPrimaryNumberBooleanArray,
-  SPACING,
-  studentFormSchema,
-} from "../../services";
+import { db, removeNullFromObject, setPrimaryNumberBooleanArray, SPACING, studentFormSchema } from "../../services";
 
 interface StudentFormProps {
   handleDialogClose: () => void;
@@ -32,11 +26,7 @@ interface StudentFormProps {
   students: Student[];
 }
 
-export const StudentForm: React.FC<StudentFormProps> = ({
-  students,
-  selectedStudent,
-  handleDialogClose,
-}) => {
+export const StudentForm: React.FC<StudentFormProps> = ({ students, selectedStudent, handleDialogClose }) => {
   const methods = useForm<Student>({
     criteriaMode: "all",
     defaultValues: setPrimaryNumberBooleanArray(selectedStudent),
@@ -89,7 +79,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
         <Divider />
         <FormStatus />
         <Divider />
-        <FormClassListsAndCertRequests />
+        <FormCertRequests />
         <Divider />
         <FormAcademicRecords selectedStudent={selectedStudent} students={students} />
         <Button
@@ -104,9 +94,8 @@ export const StudentForm: React.FC<StudentFormProps> = ({
         </Button>
         <Grid item>
           <Typography variant="caption">
-            Tip: use <b>tab</b> and <b>shift + tab</b> to navigate, <b>space bar</b> to select
-            checkboxes, <b>arrow keys</b> to select radio buttons, and <b>return</b> to submit and
-            click buttons.
+            Tip: use <b>tab</b> and <b>shift + tab</b> to navigate, <b>space bar</b> to select checkboxes,{" "}
+            <b>arrow keys</b> to select radio buttons, and <b>return</b> to submit and click buttons.
           </Typography>
         </Grid>
       </form>

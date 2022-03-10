@@ -43,7 +43,6 @@ const studentFieldsUnexpanded: ValidFields = {
   PLCMLVL: ps.parseOrigPlacementLevel,
   REACTIVATEDDATE: ps.parseReactivatedDate,
   SECSOFFERED: ps.parseSectionsOffered,
-  SENTTEXTEDCL: ps.parseClassListSent,
   SPKG: ps.parseOrigPlacementSpeaking,
   TeacherorProfessor: ps.parseTeacher,
   TeachingSubjectAreas: ps.parseTeachingSubjectAreas,

@@ -201,13 +201,7 @@ export const parseCorrespondence = (key: string, value: string, student: Student
   );
 };
 
-export const parseClassListSent = (key: string, value: string, student: Student) => {
-  student.classList.classListSent = value !== "N/A" && value !== "NA" && value !== "No WA" && value !== "";
-  if (isEmpty(value)) return;
-  student.classList.classListSentNotes = value;
-};
-
-export const parseClassListSentDate = parseDateField("classList.classListSentDate");
+export const parseClassListSentDate = parseDateField("placement.classListSentDate");
 
 export const parseGender = (key: string, value: string, student: Student) => {
   Number(value) === 1 ? (student.gender = "M") : (student.gender = "F");

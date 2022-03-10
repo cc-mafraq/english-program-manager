@@ -25,7 +25,6 @@ import {
   parseArabicName,
   parseAudit,
   parseCertRequests,
-  parseClassListSent,
   parseClassListSentDate,
   parseCorrespondence,
   parseCurrentLevel,
@@ -207,7 +206,7 @@ dateTests({
   testName: "parses no answer class schedule",
 });
 dateTests({
-  fieldPath: "classList.classListSentDate",
+  fieldPath: "placement.classListSentDate",
   parseFn: parseClassListSentDate,
   testName: "parses class list sent date",
 });
@@ -265,12 +264,6 @@ stringOrNumTests({
   fieldPath: "placement.placement",
   parseFn: parsePlacement,
   testName: "parses placement",
-  testVal: "CSWL PL1-M 2/10/22; sent CS 2/17/22; pending",
-});
-stringOrNumTests({
-  fieldPath: "classList.classListSentNotes",
-  parseFn: parseClassListSent,
-  testName: "parses class list sent notes",
   testVal: "CSWL PL1-M 2/10/22; sent CS 2/17/22; pending",
 });
 stringOrNumTests({

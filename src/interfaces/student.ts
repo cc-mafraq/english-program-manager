@@ -3,7 +3,6 @@ export interface Student {
   academicRecords: AcademicRecord[];
   age: number | "Unknown";
   certificateRequests?: string;
-  classList: ClassList;
   correspondence: Correspondence[];
   currentLevel: GenderedLevel;
   epId: number;
@@ -38,6 +37,7 @@ export interface Grade {
 }
 
 export interface Placement {
+  classListSentDate?: string;
   confDate?: string;
   noAnswerClassScheduleDate?: string;
   origPlacementData: {
@@ -87,12 +87,6 @@ export interface StudentStatus {
   withdrawDate?: string;
 }
 
-export interface ClassList {
-  classListSent?: boolean;
-  classListSentDate?: string;
-  classListSentNotes?: string;
-}
-
 export interface StudentName {
   arabic: string;
   english: string;
@@ -111,9 +105,7 @@ export type Level = "PL1" | "L1" | "L2" | "L3" | "L4" | "L5" | "L5 GRAD";
 
 export type GenderedLevel = Level | ("PL1-M" | "PL1-W" | "L1-M" | "L1-W" | "L2-M" | "L2-W");
 
-export type LevelPlus =
-  | Level
-  | ("PL1+" | "L1-" | "L1+" | "L2-" | "L2+" | "L3-" | "L3+" | "L4-" | "L4+" | "L5-");
+export type LevelPlus = Level | ("PL1+" | "L1-" | "L1+" | "L2-" | "L2+" | "L3-" | "L3+" | "L4-" | "L4+" | "L5-");
 
 export enum Nationality {
   JDN = "JDN",
@@ -182,17 +174,7 @@ export const nationalities = [
   Nationality.UNKNWN,
 ];
 
-export const genderedLevels: GenderedLevel[] = [
-  "PL1-M",
-  "PL1-W",
-  "L1-M",
-  "L1-W",
-  "L2-M",
-  "L2-W",
-  "L3",
-  "L4",
-  "L5",
-];
+export const genderedLevels: GenderedLevel[] = ["PL1-M", "PL1-W", "L1-M", "L1-W", "L2-M", "L2-W", "L3", "L4", "L5"];
 
 export const levels: Level[] = ["PL1", "L1", "L2", "L3", "L4", "L5"];
 
@@ -242,7 +224,6 @@ export const withdrawReasons = [
 export const emptyStudent: Student = {
   academicRecords: [],
   age: "Unknown",
-  classList: {},
   correspondence: [],
   currentLevel: "PL1",
   epId: 0,
