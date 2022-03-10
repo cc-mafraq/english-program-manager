@@ -1,8 +1,25 @@
 import { cloneDeep, first, forEach, get } from "lodash";
-import { DroppedOutReason, emptyStudent, Nationality, Status, Student } from "../interfaces";
+import {
+  AcademicRecord,
+  DroppedOutReason,
+  emptyStudent,
+  FinalResult,
+  Nationality,
+  Status,
+  Student,
+} from "../interfaces";
 import {
   expand,
   generateKeys,
+  parseAcademicRecordAttendance,
+  parseAcademicRecordAudit,
+  parseAcademicRecordExitSpeakingExam,
+  parseAcademicRecordExitWritingExam,
+  parseAcademicRecordFinalGrade,
+  parseAcademicRecordLevel,
+  parseAcademicRecordResult,
+  parseAcademicRecordSession,
+  parseAcademicRecordTeacherComments,
   parseAge,
   parseArabicLiteracy,
   parseArabicName,
@@ -612,5 +629,132 @@ describe("parses dropped out reason", () => {
   it("doesn't parse empty", () => {
     parseDropoutReason("Lack of Familial Support", "", student);
     expect(student.status.droppedOutReason).toBeUndefined();
+  });
+});
+
+describe("parses academic record", () => {
+  const basicRecord: AcademicRecord = {
+    attendance: 96,
+    comments: "Ahmed was a great student",
+    exitSpeakingExam: {
+      percentage: 92,
+      result: FinalResult.P,
+    },
+    exitWritingExam: {
+      notes: "Failed last time",
+      percentage: 88,
+      result: FinalResult.P,
+    },
+    finalResult: {
+      percentage: 85,
+      result: FinalResult.P,
+    },
+    level: "L2-M",
+    session: "Fa II 21",
+  };
+  const basicRecordFields = [
+    "Fa II 21",
+    "L2-M",
+    "",
+    "1",
+    "",
+    "",
+    "85%",
+    "P 88% (Failed last time)",
+    "P 92%",
+    "96%",
+    "Ahmed was a great student",
+  ];
+  const withdrawnRecord: AcademicRecord = {
+    attendance: 10,
+    finalResult: {
+      notes: "No FGR",
+      result: FinalResult.WD,
+    },
+    level: "L3",
+    session: "Sp I 21",
+  };
+  const withdrawnRecordFields = ["Sp I 21", "L3", "", "", "", "1", "No FGR", "", "", "10%", ""];
+  const oldRecord: AcademicRecord = {
+    attendance: 69,
+    exitWritingExam: {
+      result: FinalResult.F,
+    },
+    finalResult: {
+      notes: "R4 Fa I 17",
+      percentage: 76,
+      result: FinalResult.F,
+    },
+    level: "L4",
+    levelAudited: "L3",
+    session: "Fa I 17",
+  };
+  const oldRecordFields = ["Fa I 17", "L4", "L3", "", "1", "", "R4 Fa I 17 (76%);", "F", "", "R4: 69%"];
+  const speakingInWritingRecord: AcademicRecord = {
+    attendance: 94,
+    comments: "Teacher does not recommend passing.",
+    exitSpeakingExam: {
+      percentage: 83,
+      result: FinalResult.P,
+    },
+    exitWritingExam: {
+      percentage: 71,
+      result: FinalResult.F,
+    },
+    finalResult: {
+      percentage: 90,
+      result: FinalResult.F,
+    },
+    level: "PL1-M",
+    session: "Sp I 21",
+  };
+  const speakingInWritingRecordFields = [
+    "Sp I 21",
+    "PL1-M",
+    "",
+    "",
+    "1",
+    "",
+    "90%",
+    "Wrtg: F (71); Spkg: P (83)",
+    "",
+    "94%",
+    "Teacher does not recommend passing.",
+  ];
+
+  const recordParse = (values: string[]) => {
+    const [session, level, audit, P, F, WD, finalGrades, exitWriting, exitSpeaking, attendance, comments] = values;
+    parseAcademicRecordSession("", session, student);
+    parseAcademicRecordLevel("", level, student);
+    parseAcademicRecordAudit("", audit, student);
+    parseAcademicRecordResult("P", P, student);
+    parseAcademicRecordResult("F", F, student);
+    parseAcademicRecordResult("WD", WD, student);
+    parseAcademicRecordFinalGrade("", finalGrades, student);
+    parseAcademicRecordExitWritingExam("", exitWriting, student);
+    parseAcademicRecordExitSpeakingExam("", exitSpeaking, student);
+    parseAcademicRecordAttendance("", attendance, student);
+    parseAcademicRecordTeacherComments("", comments, student);
+  };
+  it("parses basic record", () => {
+    recordParse(basicRecordFields);
+    expect(student.academicRecords).toEqual([basicRecord]);
+  });
+  it("parses withdrawn record", () => {
+    recordParse(withdrawnRecordFields);
+    expect(student.academicRecords).toEqual([withdrawnRecord]);
+  });
+  it("parses multiple records", () => {
+    recordParse(withdrawnRecordFields);
+    recordParse(basicRecordFields);
+    expect(student.academicRecords).toEqual([withdrawnRecord, basicRecord]);
+  });
+  it("parses old record", () => {
+    recordParse(oldRecordFields);
+    expect(student.academicRecords).toEqual([oldRecord]);
+  });
+  it("parses speaking exam in writing field", () => {
+    recordParse(speakingInWritingRecordFields);
+    expect(student.academicRecords).toEqual([speakingInWritingRecord]);
   });
 });

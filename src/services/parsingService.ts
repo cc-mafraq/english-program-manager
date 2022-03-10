@@ -353,12 +353,21 @@ export const parseAcademicRecordResult = (key: string, value: string, student: S
   }
 };
 
-const percentRegex = /\d{1,3}/;
-const removeFromNotesRegex = /[()%]/g;
+const numberRegex = /[\d]+/;
+const percentRegex = /[\d]{1,3}%/;
+const removeFromNotesRegex = /[()%;:]|Wrtg|Spkg|P\s|F\s|W\s|S\s/g;
+
+const getPercent = (value: string) => {
+  return first(value.match(percentRegex)?.toString().match(numberRegex)) || first(value.match(numberRegex))?.toString();
+};
+
+const getGradeNotes = (value: string) => {
+  return trim(replace(replace(value, percentRegex, ""), removeFromNotesRegex, ""));
+};
 
 export const parseAcademicRecordFinalGrade = (key: string, value: string, student: Student) => {
-  const percentGrade = value.match(percentRegex)?.toString();
-  const gradeNotes = trim(replace(replace(value, percentRegex, ""), removeFromNotesRegex, ""));
+  const percentGrade = getPercent(value);
+  const gradeNotes = getGradeNotes(value);
   const lastAcademicRecord = last(student.academicRecords);
   if (lastAcademicRecord && lastAcademicRecord.finalResult) {
     if (!Number.isNaN(Number(percentGrade))) {
@@ -374,20 +383,23 @@ const parseAcademicRecordExam = (fieldPath: string) => {
   return (key: string, value: string, student: Student) => {
     const resultRegex = /P|F/;
     const examGrade = value.match(resultRegex);
-    const percentGrade = value.match(percentRegex)?.toString();
-    const gradeNotes = trim(replace(replace(replace(value, percentRegex, ""), removeFromNotesRegex, ""), /P|F/, ""));
+    const percentGrade = getPercent(value);
+    const gradeNotes = getGradeNotes(replace(value, resultRegex, ""));
     const lastAcademicRecord = last(student.academicRecords);
     if (lastAcademicRecord && examGrade) {
       const examObject: Grade = {
         result: FinalResult[examGrade[0] as keyof typeof FinalResult],
       };
-      if (!isEmpty(gradeNotes)) {
+      if (!isEmpty(gradeNotes) && Number.isNaN(Number(replace(gradeNotes, /\s/g, "")))) {
         examObject.notes = gradeNotes;
       }
       if (!Number.isNaN(Number(percentGrade))) {
         examObject.percentage = Number(percentGrade);
       }
       set(lastAcademicRecord, fieldPath, examObject);
+      if (value.match(/Spkg|S\s/) && fieldPath !== "exitSpeakingExam") {
+        parseAcademicRecordExam("exitSpeakingExam")(key, value.slice(value.indexOf("S")), student);
+      }
     }
   };
 };
@@ -404,7 +416,7 @@ export const parseAcademicRecordAudit = (key: string, value: string, student: St
 
 export const parseAcademicRecordAttendance = (key: string, value: string, student: Student) => {
   if (isEmpty(value)) return;
-  const percentAttendance = value.match(percentRegex)?.toString();
+  const percentAttendance = getPercent(value);
   const lastAcademicRecord = last(student.academicRecords);
   if (lastAcademicRecord && !Number.isNaN(Number(percentAttendance))) {
     lastAcademicRecord.attendance = Number(percentAttendance);
