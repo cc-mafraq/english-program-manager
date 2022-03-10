@@ -9,6 +9,7 @@ import {
   pullAll,
   range,
   replace,
+  set,
   split,
   startsWith,
   trim,
@@ -22,6 +23,7 @@ import {
   GenderedLevel,
   Grade,
   Level,
+  LevelPlus,
   Nationality,
   PhoneNumber,
   Status,
@@ -30,7 +32,7 @@ import {
 import { ValidFields } from "./spreadsheetService";
 
 const separatorRegex = /[;,]/g;
-const phoneRegex = /\d{9,10}/g;
+const phoneRegex = /([\d]+)/;
 
 const splitAndTrim = (value: string, separator?: string | RegExp): string[] => {
   const sep = separator || separatorRegex;
@@ -41,8 +43,8 @@ const splitAndTrim = (value: string, separator?: string | RegExp): string[] => {
   return trimmedSplitValues;
 };
 
-const parseDate = (value?: string) => {
-  if (!value) return undefined;
+const parseDateVal = (value?: string) => {
+  if (!value || value.match(/[a-z]|[A-Z]/)) return undefined;
   const date = moment(last(splitAndTrim(value)), ["L", "l", "M/D/YY", "MM/DD/YY", "M-D-YY"]);
   return date.isValid() ? date.format(MOMENT_FORMAT) : undefined;
 };
@@ -61,11 +63,29 @@ export const expand = (obj: ValidFields) => {
   return obj;
 };
 
-export const generateKeys = (
-  keyName: string,
-  endNum: number,
-  noIncludeKeyName?: boolean,
-): string => {
+const parseDateField = (fieldPath: string) => {
+  return (key: string, value: string, student: Student) => {
+    const date = parseDateVal(value);
+    if (!date && !value) return;
+    set(student, fieldPath, date || value);
+  };
+};
+
+const parseOptionalString = (fieldPath: string) => {
+  return (key: string, value: string, student: Student) => {
+    if (isEmpty(value)) return;
+    set(student, fieldPath, value);
+  };
+};
+
+const parseOptionalBoolean = (fieldPath: string) => {
+  return (key: string, value: string, student: Student) => {
+    if (Number(value) !== 1) return;
+    set(student, fieldPath, true);
+  };
+};
+
+export const generateKeys = (keyName: string, endNum: number, noIncludeKeyName?: boolean): string => {
   const nums = range(0, endNum);
   const keyArr: string[] = [];
   !noIncludeKeyName && keyArr.push(keyName);
@@ -85,18 +105,22 @@ export const parseArabicName = (key: string, value: string, student: Student) =>
 };
 
 export const parseID = (key: string, value: string, student: Student) => {
-  student.epId = Number(value);
+  const id = Number(value);
+  if (Number.isNaN(id)) return;
+  student.epId = id;
 };
 
 export const parseWaPrimPhone = (key: string, value: string, student: Student) => {
   const strippedValue = replace(value, /[" "]/g, "");
-  student.phone.primaryPhone = Number(phoneRegex.exec(strippedValue));
+  const matchValue = first(phoneRegex.exec(strippedValue));
+  const primaryNumber = Number(matchValue);
+  if (Number.isNaN(primaryNumber)) return;
+  student.phone.primaryPhone = primaryNumber;
 };
 
 export const parseNationality = (key: string, value: string, student: Student) => {
   if (Number(value) !== 1) return;
-  student.nationality =
-    Nationality[replace(replace(key, "-", ""), /\s/g, "") as keyof typeof Nationality];
+  student.nationality = Nationality[replace(replace(key, "-", ""), /\s/g, "") as keyof typeof Nationality];
 };
 
 export const parseInviteTag = (key: string, value: string, student: Student) => {
@@ -111,69 +135,22 @@ export const parseCurrentLevel = (key: string, value: string, student: Student) 
   student.currentLevel = value as GenderedLevel;
 };
 
-export const parseAudit = (key: string, value: string, student: Student) => {
-  if (Number(value) !== 1) return;
-  student.status.audit = true;
-};
+export const parseAudit = parseOptionalBoolean("status.audit");
+export const parsePendingPlacement = parseOptionalBoolean("placement.pending");
 
-export const parseFgrDate = (key: string, value: string, student: Student) => {
-  const date = parseDate(value);
-  if (!date) return;
-  student.status.finalGradeSentDate = date;
-};
+export const parseFgrDate = parseDateField("status.finalGradeSentDate");
+export const parseLevelReevalDate = parseDateField("status.levelReevalDate");
+export const parseReactivatedDate = parseDateField("status.reactivatedDate");
+export const parseWithdrawDate = parseDateField("status.withdrawDate");
+export const parsePlacementConfDate = parseDateField("placement.confDate");
+export const parseNoAnswerClassSchedule = parseDateField("placement.noAnswerClassSchedule");
 
-export const parseLevelReevalDate = (key: string, value: string, student: Student) => {
-  const date = parseDate(value);
-  if (!date) return;
-  student.status.levelReevalDate = last(splitAndTrim(date));
-};
-
-export const parseSectionsOffered = (key: string, value: string, student: Student) => {
-  if (isEmpty(value)) return;
-  student.placement.sectionsOffered = value;
-};
-
-export const parseReactivatedDate = (key: string, value: string, student: Student) => {
-  const date = parseDate(value);
-  if (!date) return;
-  student.status.reactivatedDate = date;
-};
-
-export const parseWithdrawDate = (key: string, value: string, student: Student) => {
-  const date = parseDate(value);
-  if (!date) return;
-  student.status.withdrawDate = date;
-};
+export const parseSectionsOffered = parseOptionalString("placement.sectionsOffered");
+export const parsePhotoContact = parseOptionalString("placement.photoContact");
+export const parsePlacement = parseOptionalString("placement.placement");
 
 export const parseCurrentStatus = (key: string, value: string, student: Student) => {
   student.status.currentStatus = Status[value as keyof typeof Status];
-};
-
-export const parsePhotoContact = (key: string, value: string, student: Student) => {
-  if (isEmpty(value)) return;
-  student.placement.photoContact = value;
-};
-
-export const parsePlacement = (key: string, value: string, student: Student) => {
-  if (isEmpty(value)) return;
-  student.placement.placement = value;
-};
-
-export const parsePlacementConfDate = (key: string, value: string, student: Student) => {
-  const date = parseDate(value);
-  if (!date) return;
-  student.placement.confDate = date;
-};
-
-export const parsePendingPlacement = (key: string, value: string, student: Student) => {
-  if (Number(value) !== 1) return;
-  student.placement.pending = true;
-};
-
-export const parseNoAnswerClassSchedule = (key: string, value: string, student: Student) => {
-  const date = parseDate(value);
-  if (!date) return;
-  student.placement.noAnswerClassScheduleDate = date;
 };
 
 export const parseCorrespondence = (key: string, value: string, student: Student) => {
@@ -213,7 +190,7 @@ export const parseCorrespondence = (key: string, value: string, student: Student
         newDate = `${date}${firstTwoChars}`;
         newNotes = notes?.slice(2);
       }
-      const formattedDate = parseDate(newDate);
+      const formattedDate = parseDateVal(newDate);
       if (newNotes !== undefined && formattedDate !== undefined) {
         student.correspondence.push({
           date: formattedDate,
@@ -225,56 +202,30 @@ export const parseCorrespondence = (key: string, value: string, student: Student
 };
 
 export const parseClassListSent = (key: string, value: string, student: Student) => {
-  student.classList.classListSent =
-    value !== "N/A" && value !== "NA" && value !== "No WA" && value !== "";
+  student.classList.classListSent = value !== "N/A" && value !== "NA" && value !== "No WA" && value !== "";
   if (isEmpty(value)) return;
   student.classList.classListSentNotes = value;
 };
 
-export const parseClassListSentDate = (key: string, value: string, student: Student) => {
-  const date = parseDate(value);
-  if (!date) return;
-  student.classList.classListSentDate = date;
-};
+export const parseClassListSentDate = parseDateField("classList.classListSentDate");
 
 export const parseGender = (key: string, value: string, student: Student) => {
   Number(value) === 1 ? (student.gender = "M") : (student.gender = "F");
 };
 
 export const parseAge = (key: string, value: string, student: Student) => {
-  if (isEmpty(value)) return;
-  student.age = Number(value);
+  const numValue = Number(value);
+  if (isEmpty(value) || Number.isNaN(numValue)) return;
+  student.age = numValue;
 };
 
-export const parseOccupation = (key: string, value: string, student: Student) => {
-  if (isEmpty(value)) return;
-  student.work.occupation = value;
-};
+export const parseOccupation = parseOptionalString("work.occupation");
+export const parseLookingForJob = parseOptionalString("work.lookingForJob");
+export const parseTeachingSubjectAreas = parseOptionalString("work.teachingSubjectAreas");
+export const parseEnglishTeacherLocation = parseOptionalString("work.englishTeacherLocation");
 
-export const parseLookingForJob = (key: string, value: string, student: Student) => {
-  if (isEmpty(value)) return;
-  student.work.lookingForJob = value;
-};
-
-export const parseTeacher = (key: string, value: string, student: Student) => {
-  if (Number(value) !== 1) return;
-  student.work.isTeacher = true;
-};
-
-export const parseTeachingSubjectAreas = (key: string, value: string, student: Student) => {
-  if (isEmpty(value)) return;
-  student.work.teachingSubjectAreas = value;
-};
-
-export const parseEnglishTeacher = (key: string, value: string, student: Student) => {
-  if (Number(value) !== 1) return;
-  student.work.isEnglishTeacher = true;
-};
-
-export const parseEnglishTeacherLocation = (key: string, value: string, student: Student) => {
-  if (isEmpty(value)) return;
-  student.work.englishTeacherLocation = value;
-};
+export const parseTeacher = parseOptionalBoolean("work.isTeacher");
+export const parseEnglishTeacher = parseOptionalBoolean("work.isEnglishTeacher");
 
 export const parsePhone = (key: string, value: string, student: Student) => {
   if (isEmpty(value)) return;
@@ -284,7 +235,7 @@ export const parsePhone = (key: string, value: string, student: Student) => {
   const phoneNumberNotesMatches = value.match(insideParenRegex);
   const phoneNumberNotes = phoneNumberNotesMatches !== null && phoneNumberNotesMatches[1];
   const numberObject: PhoneNumber = {
-    number: Number(phoneNumber),
+    number: Number(first(phoneNumber)),
   };
   if (phoneNumberNotes) {
     numberObject.notes = String(phoneNumberNotes);
@@ -292,10 +243,7 @@ export const parsePhone = (key: string, value: string, student: Student) => {
   phoneNumber && student.phone.phoneNumbers.push(numberObject);
 };
 
-export const parseWABroadcastSAR = (key: string, value: string, student: Student) => {
-  if (isEmpty(value)) return;
-  student.phone.waBroadcastSAR = value;
-};
+export const parseWABroadcastSAR = parseOptionalString("phone.waBroadcastSAR");
 
 export const parseWABroadcasts = (key: string, value: string, student: Student) => {
   if (Number(value) !== 1 && !includes(value, "Y")) return;
@@ -309,50 +257,26 @@ export const parseInitialSession = (key: string, value: string, student: Student
   student.initialSession = key;
 };
 
-export const parseArabicLiteracy = (key: string, value: string, student: Student) => {
-  if (Number(value) !== 1) return;
-  student.literacy.illiterateAr = true;
-};
+export const parseArabicLiteracy = parseOptionalBoolean("literacy.illiterateAr");
+export const parseEnglishLiteracy = parseOptionalBoolean("literacy.illiterateEng");
+export const parseLiteracyTutor = parseOptionalString("literacy.tutorAndDate");
+export const parseZoomTutor = parseOptionalString("zoom");
 
-export const parseEnglishLiteracy = (key: string, value: string, student: Student) => {
-  if (Number(value) !== 1) return;
-  student.literacy.illiterateEng = true;
-};
-
-export const parseLiteracyTutor = (key: string, value: string, student: Student) => {
-  if (isEmpty(value)) return;
-  student.literacy.tutorAndDate = value;
-};
-
-export const parseZoomTutor = (key: string, value: string, student: Student) => {
-  if (isEmpty(value)) return;
-  student.zoom = value;
-};
-
-export const parseCertRequests = (key: string, value: string, student: Student) => {
-  if (isEmpty(value)) return;
-  student.certificateRequests = value;
-};
+export const parseCertRequests = parseOptionalString("certificateRequests");
 
 export const parseOrigPlacementWriting = (key: string, value: string, student: Student) => {
-  if (isEmpty(value)) return;
-  student.placement.origPlacementData.writing = value as Level;
+  student.placement.origPlacementData.writing = value as LevelPlus;
 };
 
 export const parseOrigPlacementSpeaking = (key: string, value: string, student: Student) => {
-  if (isEmpty(value)) return;
-  student.placement.origPlacementData.speaking = value as Level;
+  student.placement.origPlacementData.speaking = value as LevelPlus;
 };
 
 export const parseOrigPlacementLevel = (key: string, value: string, student: Student) => {
-  if (isEmpty(value)) return;
   student.placement.origPlacementData.level = value as Level;
 };
 
-export const parseOrigPlacementAdjustment = (key: string, value: string, student: Student) => {
-  if (isEmpty(value)) return;
-  student.placement.origPlacementData.adjustment = value;
-};
+export const parseOrigPlacementAdjustment = parseOptionalString("placement.origPlacementData.adjustment");
 
 export const parseDropoutReason = (key: string, value: string, student: Student) => {
   if (Number(value) !== 1) return;
@@ -429,12 +353,21 @@ export const parseAcademicRecordResult = (key: string, value: string, student: S
   }
 };
 
-const percentRegex = /\d{1,3}/;
-const removeFromNotesRegex = /[()%]/g;
+const numberRegex = /[\d]+/;
+const percentRegex = /[\d]{1,3}%/;
+const removeFromNotesRegex = /[()%;:]|Wrtg|Spkg|P\s|F\s|W\s|S\s/g;
+
+const getPercent = (value: string) => {
+  return first(value.match(percentRegex)?.toString().match(numberRegex)) || first(value.match(numberRegex))?.toString();
+};
+
+const getGradeNotes = (value: string) => {
+  return trim(replace(replace(value, percentRegex, ""), removeFromNotesRegex, ""));
+};
 
 export const parseAcademicRecordFinalGrade = (key: string, value: string, student: Student) => {
-  const percentGrade = value.match(percentRegex)?.toString();
-  const gradeNotes = trim(replace(replace(value, percentRegex, ""), removeFromNotesRegex, ""));
+  const percentGrade = getPercent(value);
+  const gradeNotes = getGradeNotes(value);
   const lastAcademicRecord = last(student.academicRecords);
   if (lastAcademicRecord && lastAcademicRecord.finalResult) {
     if (!Number.isNaN(Number(percentGrade))) {
@@ -446,57 +379,33 @@ export const parseAcademicRecordFinalGrade = (key: string, value: string, studen
   }
 };
 
-export const parseAcademicRecordExitWritingExam = (
-  key: string,
-  value: string,
-  student: Student,
-) => {
-  const resultRegex = /P|F/;
-  const examGrade = value.match(resultRegex);
-  const percentGrade = value.match(percentRegex)?.toString();
-  const gradeNotes = trim(
-    replace(replace(replace(value, percentRegex, ""), removeFromNotesRegex, ""), /P|F/, ""),
-  );
-  const lastAcademicRecord = last(student.academicRecords);
-  if (lastAcademicRecord && examGrade) {
-    const writingExamObject: Grade = {
-      result: FinalResult[examGrade[0] as keyof typeof FinalResult],
-    };
-    if (!isEmpty(gradeNotes)) {
-      writingExamObject.notes = gradeNotes;
+const parseAcademicRecordExam = (fieldPath: string) => {
+  return (key: string, value: string, student: Student) => {
+    const resultRegex = /P|F/;
+    const examGrade = value.match(resultRegex);
+    const percentGrade = getPercent(value);
+    const gradeNotes = getGradeNotes(replace(value, resultRegex, ""));
+    const lastAcademicRecord = last(student.academicRecords);
+    if (lastAcademicRecord && examGrade) {
+      const examObject: Grade = {
+        result: FinalResult[examGrade[0] as keyof typeof FinalResult],
+      };
+      if (!isEmpty(gradeNotes) && Number.isNaN(Number(replace(gradeNotes, /\s/g, "")))) {
+        examObject.notes = gradeNotes;
+      }
+      if (!Number.isNaN(Number(percentGrade))) {
+        examObject.percentage = Number(percentGrade);
+      }
+      set(lastAcademicRecord, fieldPath, examObject);
+      if (value.match(/Spkg|S\s/) && fieldPath !== "exitSpeakingExam") {
+        parseAcademicRecordExam("exitSpeakingExam")(key, value.slice(value.indexOf("S")), student);
+      }
     }
-    if (!Number.isNaN(Number(percentGrade))) {
-      writingExamObject.percentage = Number(percentGrade);
-    }
-    lastAcademicRecord.exitWritingExam = writingExamObject;
-  }
+  };
 };
 
-export const parseAcademicRecordExitSpeakingExam = (
-  key: string,
-  value: string,
-  student: Student,
-) => {
-  const resultRegex = /P|F/;
-  const examGrade = value.match(resultRegex);
-  const percentGrade = value.match(percentRegex)?.toString();
-  const gradeNotes = trim(
-    replace(replace(replace(value, percentRegex, ""), removeFromNotesRegex, ""), /P|F/, ""),
-  );
-  const lastAcademicRecord = last(student.academicRecords);
-  if (lastAcademicRecord && examGrade) {
-    const speakingExamObject: Grade = {
-      result: FinalResult[examGrade[0] as keyof typeof FinalResult],
-    };
-    if (!isEmpty(gradeNotes)) {
-      speakingExamObject.notes = gradeNotes;
-    }
-    if (!Number.isNaN(Number(percentGrade))) {
-      speakingExamObject.percentage = Number(percentGrade);
-    }
-    lastAcademicRecord.exitSpeakingExam = speakingExamObject;
-  }
-};
+export const parseAcademicRecordExitWritingExam = parseAcademicRecordExam("exitWritingExam");
+export const parseAcademicRecordExitSpeakingExam = parseAcademicRecordExam("exitSpeakingExam");
 
 export const parseAcademicRecordAudit = (key: string, value: string, student: Student) => {
   if (isEmpty(value)) return;
@@ -507,18 +416,14 @@ export const parseAcademicRecordAudit = (key: string, value: string, student: St
 
 export const parseAcademicRecordAttendance = (key: string, value: string, student: Student) => {
   if (isEmpty(value)) return;
-  const percentAttendance = value.match(percentRegex)?.toString();
+  const percentAttendance = getPercent(value);
   const lastAcademicRecord = last(student.academicRecords);
   if (lastAcademicRecord && !Number.isNaN(Number(percentAttendance))) {
     lastAcademicRecord.attendance = Number(percentAttendance);
   }
 };
 
-export const parseAcademicRecordTeacherComments = (
-  key: string,
-  value: string,
-  student: Student,
-) => {
+export const parseAcademicRecordTeacherComments = (key: string, value: string, student: Student) => {
   if (isEmpty(value)) return;
   const lastAcademicRecord = last(student.academicRecords);
   if (!lastAcademicRecord) return;
