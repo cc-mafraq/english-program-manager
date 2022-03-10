@@ -214,8 +214,9 @@ export const parseGender = (key: string, value: string, student: Student) => {
 };
 
 export const parseAge = (key: string, value: string, student: Student) => {
-  if (isEmpty(value)) return;
-  student.age = Number(value);
+  const numValue = Number(value);
+  if (isEmpty(value) || Number.isNaN(numValue)) return;
+  student.age = numValue;
 };
 
 export const parseOccupation = parseOptionalString("work.occupation");
@@ -234,7 +235,7 @@ export const parsePhone = (key: string, value: string, student: Student) => {
   const phoneNumberNotesMatches = value.match(insideParenRegex);
   const phoneNumberNotes = phoneNumberNotesMatches !== null && phoneNumberNotesMatches[1];
   const numberObject: PhoneNumber = {
-    number: Number(phoneNumber),
+    number: Number(first(phoneNumber)),
   };
   if (phoneNumberNotes) {
     numberObject.notes = String(phoneNumberNotes);
@@ -264,17 +265,14 @@ export const parseZoomTutor = parseOptionalString("zoom");
 export const parseCertRequests = parseOptionalString("certificateRequests");
 
 export const parseOrigPlacementWriting = (key: string, value: string, student: Student) => {
-  if (isEmpty(value)) return;
   student.placement.origPlacementData.writing = value as LevelPlus;
 };
 
 export const parseOrigPlacementSpeaking = (key: string, value: string, student: Student) => {
-  if (isEmpty(value)) return;
   student.placement.origPlacementData.speaking = value as LevelPlus;
 };
 
 export const parseOrigPlacementLevel = (key: string, value: string, student: Student) => {
-  if (isEmpty(value)) return;
   student.placement.origPlacementData.level = value as Level;
 };
 
