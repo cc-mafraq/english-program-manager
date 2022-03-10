@@ -26,10 +26,6 @@ const labels: { childLabels: string[]; parentLabel: string }[] = [
     parentLabel: "Academic Records",
   },
   {
-    childLabels: ["Notes", "Sent", "Sent Date"],
-    parentLabel: "Class List",
-  },
-  {
     childLabels: ["Arabic Literacy", "English Literacy", "Tutor And Date"],
     parentLabel: "Literacy",
   },
@@ -39,6 +35,7 @@ const labels: { childLabels: string[]; parentLabel: string }[] = [
   },
   {
     childLabels: [
+      "Class List Sent Date",
       "NA Class Schedule",
       "Original Placement Data",
       "Pending",
@@ -94,10 +91,7 @@ const labels: { childLabels: string[]; parentLabel: string }[] = [
   },
 ];
 
-export const DataVisibilityPopover: React.FC<DataVisibilityPopoverProps> = ({
-  anchorEl,
-  handleClose,
-}) => {
+export const DataVisibilityPopover: React.FC<DataVisibilityPopoverProps> = ({ anchorEl, handleClose }) => {
   const open = Boolean(anchorEl);
 
   return (
@@ -117,10 +111,7 @@ export const DataVisibilityPopover: React.FC<DataVisibilityPopoverProps> = ({
       {map(labels, (labelObj) => {
         return (
           <IndeterminateCheckbox key={labelObj.parentLabel} label={labelObj.parentLabel}>
-            <DataVisibilityCheckboxGroup
-              labels={labelObj.childLabels}
-              parentLabel={labelObj.parentLabel}
-            />
+            <DataVisibilityCheckboxGroup labels={labelObj.childLabels} parentLabel={labelObj.parentLabel} />
           </IndeterminateCheckbox>
         );
       })}
