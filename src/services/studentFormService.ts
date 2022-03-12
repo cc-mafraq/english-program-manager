@@ -247,7 +247,7 @@ export const studentFormSchema = object().shape({
   epId: number().min(10000).max(99999).integer().required("ID is required"),
   gender: mixed<"M" | "F">().oneOf(["M", "F"]).required("Gender is required"),
   initialSession: string()
-    .matches(/(FA|SP) (I|II) \d{2}/, "Initial session must be FA/SP I/II year (e.g. SP I 22)")
+    .matches(/(Fa|Sp) (I|II) \d{2}/, "Initial session must be Fa/Sp I/II year (e.g. Sp I 22)")
     .typeError("Initial session is required")
     .required("Initial session is required"),
   literacy: literacySchema,

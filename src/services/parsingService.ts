@@ -5,6 +5,7 @@ import {
   isEmpty,
   join,
   last,
+  lowerCase,
   map,
   pullAll,
   range,
@@ -248,7 +249,7 @@ export const parseWABroadcasts = (key: string, value: string, student: Student) 
 
 export const parseInitialSession = (key: string, value: string, student: Student) => {
   if (Number(value) !== 1) return;
-  student.initialSession = key;
+  student.initialSession = key.charAt(0) + lowerCase(key.charAt(1)) + key.slice(2);
 };
 
 export const parseArabicLiteracy = parseOptionalBoolean("literacy.illiterateAr");

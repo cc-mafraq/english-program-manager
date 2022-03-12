@@ -591,7 +591,7 @@ describe("parses initial session", () => {
   const [session1, session2, session3] = ["SP I 21", "FA 1 21", "FA II 21"];
   it("parses 1", () => {
     parseInitialSession(session1, "1", student);
-    expect(student.initialSession).toEqual(session1);
+    expect(student.initialSession).toEqual("Sp I 21");
   });
   it("doesn't parse empty string", () => {
     parseInitialSession(session1, "", student);
@@ -601,13 +601,13 @@ describe("parses initial session", () => {
     parseInitialSession(session1, "1", student);
     parseInitialSession(session2, "", student);
     parseInitialSession(session3, "", student);
-    expect(student.initialSession).toEqual(session1);
+    expect(student.initialSession).toEqual("Sp I 21");
   });
   it("parses newer session", () => {
     parseInitialSession(session1, "", student);
     parseInitialSession(session2, "", student);
     parseInitialSession(session3, "1", student);
-    expect(student.initialSession).toEqual(session3);
+    expect(student.initialSession).toEqual("Fa II 21");
   });
 });
 

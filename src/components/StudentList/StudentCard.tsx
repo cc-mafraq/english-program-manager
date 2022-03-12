@@ -3,7 +3,7 @@ import { Box, Card, CardActions, CardContent, CardMedia, IconButton } from "@mui
 import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import { LabeledText, StudentInfo } from "..";
 import { AppContext, Student } from "../../interfaces";
-import { getStudentImage } from "../../services";
+import { getStudentImage, setStudentData } from "../../services";
 
 interface StudentCardProps {
   handleEditStudentClick: () => void;
@@ -11,11 +11,7 @@ interface StudentCardProps {
   student: Student;
 }
 
-export const StudentCard: React.FC<StudentCardProps> = ({
-  student,
-  setSelectedStudent,
-  handleEditStudentClick,
-}) => {
+export const StudentCard: React.FC<StudentCardProps> = ({ student, setSelectedStudent, handleEditStudentClick }) => {
   const [img, setImg] = useState("");
   const {
     appState: { dataVisibility },
@@ -33,6 +29,10 @@ export const StudentCard: React.FC<StudentCardProps> = ({
     setImage();
   }, [student]);
 
+  // useEffect(() => {
+  //   setStudentData(student, { merge: true });
+  // }, [student]);
+
   return (
     <Card sx={{ display: "flex", marginLeft: "5px", width: "100%" }}>
       <Box
@@ -47,9 +47,7 @@ export const StudentCard: React.FC<StudentCardProps> = ({
             marginTop: 1,
             padding: 0.5,
             sx: {
-              backgroundColor: student.status.inviteTag
-                ? "rgba(198,224,180,1)"
-                : "rgba(255,175,175,1)",
+              backgroundColor: student.status.inviteTag ? "rgba(198,224,180,1)" : "rgba(255,175,175,1)",
             },
             textAlign: "center",
           }}
