@@ -1,5 +1,4 @@
-import EditIcon from "@mui/icons-material/Edit";
-import { Box, Card, CardActions, CardContent, CardMedia, IconButton } from "@mui/material";
+import { Box, Card, CardContent, CardMedia } from "@mui/material";
 import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import { LabeledText, StudentInfo } from "..";
 import { AppContext, Student } from "../../interfaces";
@@ -61,12 +60,16 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student, setSelectedSt
           {student.status.inviteTag ? "Yes" : "No"}
         </LabeledText>
       </Box>
-      <Box sx={{ flexGrow: 5, maxWidth: "85%" }}>
+      <Box>
         <CardContent>
-          <StudentInfo student={student} />
+          <StudentInfo
+            handleEditStudentClick={handleEditStudentClick}
+            setSelectedStudent={setSelectedStudent}
+            student={student}
+          />
         </CardContent>
       </Box>
-      <CardActions
+      {/* <CardActions
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -74,18 +77,11 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student, setSelectedSt
           maxWidth: "5%",
         }}
       >
-        {/* <IconButton>
+        <IconButton>
           <PersonIcon />
-        </IconButton> */}
-        <IconButton
-          onClick={() => {
-            setSelectedStudent(student);
-            handleEditStudentClick();
-          }}
-        >
-          <EditIcon />
         </IconButton>
-      </CardActions>
+
+      </CardActions> */}
     </Card>
   );
 };

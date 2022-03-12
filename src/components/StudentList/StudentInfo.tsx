@@ -1,12 +1,19 @@
+import EditIcon from "@mui/icons-material/Edit";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { Box, IconButton, Typography } from "@mui/material";
 import { camelCase, forOwn, get, join, map, some, values } from "lodash";
-import React, { useContext } from "react";
+import React, { Dispatch, SetStateAction, useContext } from "react";
 import { LabeledContainer, LabeledText, ProgressBox } from "..";
 import { AppContext, FinalResult, GenderedLevel, Nationality, Status, Student } from "../../interfaces";
 import { defaultBackgroundColor, defaultBorderColor, getProgress, getRepeatNum, isActive } from "../../services";
 
-export const StudentInfo = ({ student }: { student: Student }) => {
+interface StudentInfoProps {
+  handleEditStudentClick: () => void;
+  setSelectedStudent: Dispatch<SetStateAction<Student | undefined>>;
+  student: Student;
+}
+
+export const StudentInfo: React.FC<StudentInfoProps> = ({ student, handleEditStudentClick, setSelectedStudent }) => {
   const {
     appState: { dataVisibility },
   } = useContext(AppContext);
@@ -36,6 +43,14 @@ export const StudentInfo = ({ student }: { student: Student }) => {
             WA Number Invalid
           </Typography>
         )}
+        <IconButton
+          onClick={() => {
+            setSelectedStudent(student);
+            handleEditStudentClick();
+          }}
+        >
+          <EditIcon />
+        </IconButton>
       </Box>
       <Box sx={{ display: "flex", flexWrap: "wrap" }}>
         <LabeledContainer condition={allCheckboxesFalse("Program Information")} label="Program Information">
