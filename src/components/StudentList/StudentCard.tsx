@@ -52,6 +52,7 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student, setSelectedSt
             padding: 0.5,
             sx: {
               backgroundColor: student.status.inviteTag ? "rgba(198,224,180,1)" : "rgba(255,175,175,1)",
+              float: "none",
             },
             textAlign: "center",
           }}

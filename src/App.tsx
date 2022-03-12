@@ -1,4 +1,5 @@
 import { createTheme, ThemeProvider } from "@mui/material";
+import { green } from "@mui/material/colors";
 import React, { useReducer } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
@@ -14,8 +15,7 @@ const theme = createTheme({
       main: "#002060",
     },
     secondary: {
-      // main: '#b3e5fc',
-      main: "#196da7",
+      main: green[500],
     },
   },
 });

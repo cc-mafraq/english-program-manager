@@ -4,7 +4,7 @@ import { camelCase, forOwn, get, join, map, some, values } from "lodash";
 import React, { useContext } from "react";
 import { LabeledContainer, LabeledText, ProgressBox } from "..";
 import { AppContext, FinalResult, GenderedLevel, Nationality, Status, Student } from "../../interfaces";
-import { getProgress, getRepeatNum, isActive } from "../../services";
+import { defaultBackgroundColor, defaultBorderColor, getProgress, getRepeatNum, isActive } from "../../services";
 
 export const StudentInfo = ({ student }: { student: Student }) => {
   const {
@@ -18,7 +18,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
 
   return (
     <>
-      <Typography component="div" display="inline" gutterBottom variant="h5">
+      <Typography component="div" display="inline" fontSize={28} gutterBottom>
         {student.name.english} {student.name.arabic}
       </Typography>
       <Box sx={{ flexDirection: "row", flexGrow: 1, float: "right" }}>
@@ -37,7 +37,7 @@ export const StudentInfo = ({ student }: { student: Student }) => {
           </Typography>
         )}
       </Box>
-      <Box sx={{ display: "flex", flexWrap: "wrap", marginBottom: "1%", marginTop: "1%" }}>
+      <Box sx={{ display: "flex", flexWrap: "wrap" }}>
         <LabeledContainer condition={allCheckboxesFalse("Program Information")} label="Program Information">
           <LabeledText condition={dataVisibility.programInformation.idNumber} label="ID Number">
             {student.epId ? student.epId : "Invalid"}
@@ -195,7 +195,17 @@ export const StudentInfo = ({ student }: { student: Student }) => {
         <LabeledContainer condition={dataVisibility.programInformation.correspondence} label="Correspondence">
           {map(student.correspondence, (c) => {
             return (
-              <Box key={`${c.date} ${c.notes}`} sx={{ paddingBottom: 1, paddingRight: 2 }}>
+              <Box
+                key={`${c.date} ${c.notes}`}
+                sx={{
+                  backgroundColor: defaultBackgroundColor,
+                  border: 1,
+                  borderColor: defaultBorderColor,
+                  marginRight: 1,
+                  marginTop: 1,
+                  padding: 1,
+                }}
+              >
                 <Typography fontSize="11pt" variant="body2">
                   {c.date ? `${c.date}: ${c.notes}` : c.notes}
                 </Typography>

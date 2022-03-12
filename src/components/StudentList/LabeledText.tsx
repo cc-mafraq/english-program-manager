@@ -1,5 +1,6 @@
-import { Box, BoxProps, Typography, TypographyProps } from "@mui/material";
+import { Box, BoxProps, SxProps, Theme, Typography, TypographyProps } from "@mui/material";
 import React from "react";
+import { defaultBackgroundColor, defaultBorderColor } from "../../services";
 
 interface LabeledTextProps {
   condition?: boolean;
@@ -11,7 +12,17 @@ interface LabeledTextProps {
 }
 
 const defaultContainerProps: BoxProps = {
-  sx: { float: "left", marginRight: "5vw" },
+  sx: {
+    backgroundColor: defaultBackgroundColor,
+    border: 1,
+    borderColor: defaultBorderColor,
+    float: "left",
+    marginRight: 0.5,
+    marginTop: 0.5,
+    padding: 2,
+    paddingBottom: 1,
+    paddingTop: 1,
+  },
 };
 
 const defaultLabelProps: TypographyProps = {
@@ -33,8 +44,11 @@ export const LabeledText: React.FC<LabeledTextProps> = ({
   textProps,
   children,
 }) => {
+  const sx: SxProps<Theme> | undefined = containerProps?.sx
+    ? ({ ...defaultContainerProps.sx, ...containerProps.sx } as SxProps<Theme>)
+    : defaultContainerProps.sx;
   return condition && (children || showWhenEmpty) ? (
-    <Box {...defaultContainerProps} {...containerProps}>
+    <Box {...defaultContainerProps} {...containerProps} sx={sx}>
       <Typography {...defaultLabelProps} {...labelProps}>
         {label}
       </Typography>

@@ -35,7 +35,15 @@ export const LabeledContainer: React.FC<LabeledContainerProps> = ({
   });
 
   return condition && (!everyChildIsEmpty || showWhenEmpty) ? (
-    <Box display="block" sx={{ float: "left", marginRight: "2vh", marginTop: "1vh" }}>
+    <Box
+      display="block"
+      sx={{
+        float: "left",
+        marginRight: "2vh",
+        marginTop: "1vh",
+        padding: 0.5,
+      }}
+    >
       <Typography {...defaultLabelProps} {...labelProps}>
         {label}
       </Typography>

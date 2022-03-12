@@ -350,7 +350,7 @@ export const parseAcademicRecordResult = (key: string, value: string, student: S
 
 const numberRegex = /[\d]+/;
 const percentRegex = /[\d]{1,3}%/;
-const removeFromNotesRegex = /[()%;:]|Wrtg|Spkg|P\s|F\s|W\s|S\s/g;
+const removeFromNotesRegex = /[();:]|Wrtg|Spkg|P\s|F\s|W\s|S\s/g;
 
 const getPercent = (value: string) => {
   return first(value.match(percentRegex)?.toString().match(numberRegex)) || first(value.match(numberRegex))?.toString();

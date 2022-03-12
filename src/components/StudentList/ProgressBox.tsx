@@ -2,22 +2,16 @@ import { join, last, map } from "lodash";
 import React from "react";
 import { LabeledText } from "..";
 import { FinalResult, GenderedLevel } from "../../interfaces";
-import { SessionResult } from "../../services";
+import { defaultBackgroundColor, SessionResult } from "../../services";
 
-export const ProgressBox = ({
-  level,
-  sessionResults,
-}: {
-  level: GenderedLevel;
-  sessionResults?: SessionResult[];
-}) => {
+export const ProgressBox = ({ level, sessionResults }: { level: GenderedLevel; sessionResults?: SessionResult[] }) => {
   return (
     <LabeledText
       containerProps={{
         sx: {
           backgroundColor:
             sessionResults?.length === 0
-              ? "none"
+              ? defaultBackgroundColor
               : last(sessionResults)?.result === "P"
               ? "rgba(198,224,180,1)"
               : last(sessionResults)?.result === undefined
