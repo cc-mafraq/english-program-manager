@@ -4,12 +4,7 @@ import { forEach, get, isString, isUndefined, join, values } from "lodash";
 import React, { ChangeEvent, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useState from "react-usestateref";
-import {
-  FinalGradeReportDialog,
-  StudentDatabaseToolbar,
-  StudentFormDialog,
-  StudentList,
-} from "../components";
+import { FinalGradeReportDialog, StudentDatabaseToolbar, StudentFormDialog, StudentList } from "../components";
 import { Student } from "../interfaces";
 import { db, getStudentPage, logout, searchStudents, sortStudents } from "../services";
 import { spreadsheetToStudentList } from "../services/spreadsheetService";
@@ -115,9 +110,7 @@ export const StudentDatabasePage = () => {
     window.scrollTo(0, 0);
   };
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const newRowsPerPage = parseInt(event.target.value, 10);
     setState({ newPage: 0, newRowsPerPage });
   };
@@ -170,11 +163,7 @@ export const StudentDatabasePage = () => {
         students={searchString ? filteredStudents : students}
       />
       {students.length > 0 ? (
-        <FinalGradeReportDialog
-          handleDialogClose={handleFGRDialogClose}
-          open={openFGRDialog}
-          students={students}
-        />
+        <FinalGradeReportDialog handleDialogClose={handleFGRDialogClose} open={openFGRDialog} students={students} />
       ) : (
         <></>
       )}
