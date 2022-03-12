@@ -58,11 +58,26 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student, handleEditStu
             {student.epId ? student.epId : "Invalid"}
           </LabeledText>
           <LabeledText
-            condition={dataVisibility.programInformation.noContactList}
-            label="No Contact List"
-            textProps={{ color: "red" }}
+            condition={dataVisibility.programInformation.inviteTag}
+            containerProps={{
+              sx: {
+                backgroundColor: student.status.inviteTag ? "rgba(198,224,180,1)" : "rgba(255,175,175,1)",
+              },
+            }}
+            label="Invite"
           >
-            {student.status.noContactList ? "NCL" : undefined}
+            {student.status.inviteTag ? "Yes" : "No"}
+          </LabeledText>
+          <LabeledText
+            condition={dataVisibility.programInformation.noContactList}
+            containerProps={{
+              sx: {
+                backgroundColor: student.status.noContactList ? "rgba(255,175,175,1)" : defaultBackgroundColor,
+              },
+            }}
+            label="NCL"
+          >
+            {student.status.noContactList ? "Yes" : undefined}
           </LabeledText>
           <LabeledText condition={dataVisibility.programInformation.currentLevel} label="Current Level">
             {student.currentLevel}

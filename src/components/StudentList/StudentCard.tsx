@@ -44,21 +44,6 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student, setSelectedSt
         ) : (
           <></>
         )}
-        <LabeledText
-          condition={dataVisibility.programInformation.inviteTag}
-          containerProps={{
-            marginTop: 1,
-            padding: 0.5,
-            sx: {
-              backgroundColor: student.status.inviteTag ? "rgba(198,224,180,1)" : "rgba(255,175,175,1)",
-              float: "none",
-            },
-            textAlign: "center",
-          }}
-          label="Invite"
-        >
-          {student.status.inviteTag ? "Yes" : "No"}
-        </LabeledText>
       </Box>
       <Box>
         <CardContent>
