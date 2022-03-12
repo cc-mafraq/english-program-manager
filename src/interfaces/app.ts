@@ -63,6 +63,7 @@ export interface DataVisibility {
     lookingForJob: boolean;
     nationality: boolean;
     occupation: boolean;
+    photo: boolean;
     teacher: boolean;
     teachingSubjectArea: boolean;
   };
@@ -147,6 +148,7 @@ export const initialAppState: AppState = {
       lookingForJob: true,
       nationality: true,
       occupation: true,
+      photo: true,
       teacher: true,
       teachingSubjectArea: true,
     },

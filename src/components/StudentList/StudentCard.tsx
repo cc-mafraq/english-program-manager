@@ -3,7 +3,7 @@ import { Box, Card, CardActions, CardContent, CardMedia, IconButton } from "@mui
 import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import { LabeledText, StudentInfo } from "..";
 import { AppContext, Student } from "../../interfaces";
-import { getStudentImage, setStudentData } from "../../services";
+import { getStudentImage } from "../../services";
 
 interface StudentCardProps {
   handleEditStudentClick: () => void;
@@ -40,7 +40,11 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student, setSelectedSt
           minWidth: "150px",
         }}
       >
-        <CardMedia component="img" image={img} sx={{ height: "35vh", minHeight: "200px" }} />
+        {dataVisibility.studentInformation.photo ? (
+          <CardMedia component="img" image={img} sx={{ height: "35vh", minHeight: "200px" }} />
+        ) : (
+          <></>
+        )}
         <LabeledText
           condition={dataVisibility.programInformation.inviteTag}
           containerProps={{

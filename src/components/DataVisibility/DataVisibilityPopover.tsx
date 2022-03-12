@@ -80,6 +80,7 @@ const labels: { childLabels: string[]; parentLabel: string }[] = [
       "Looking For Job",
       "Nationality",
       "Occupation",
+      "Photo",
       "Teacher",
       "Teaching Subject Area",
     ],
