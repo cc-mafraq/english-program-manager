@@ -56,7 +56,7 @@ export const StudentCard: React.FC<StudentCardProps> = ({
             <></>
           )}
         </Box>
-        <Box>
+        <Box width="100%">
           <CardContent>
             <StudentCardHeader
               handleEditStudentClick={handleEditStudentClick}

@@ -24,9 +24,6 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         condition={allCheckboxesFalse("Program Information")}
         label="Program Information"
       >
-        <LabeledText condition={dataVisibility.programInformation.idNumber} label="ID Number">
-          {student.epId ? student.epId : "Invalid"}
-        </LabeledText>
         <LabeledText
           condition={dataVisibility.programInformation.inviteTag}
           containerProps={{

@@ -18,7 +18,6 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
     <>
       <LabeledContainer
         condition={dataVisibility.academicRecords.progress}
-        containerProps={{ display: "block" }}
         label="Progress"
         showWhenEmpty
       >
@@ -26,11 +25,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
           return <ProgressBox key={k} level={k as GenderedLevel} sessionResults={v} />;
         })}
       </LabeledContainer>
-      <LabeledContainer
-        containerProps={{ display: "block" }}
-        label="Academic Records"
-        showWhenEmpty
-      >
+      <LabeledContainer label="Academic Records" showWhenEmpty>
         {map(student.academicRecords, (ar, i) => {
           return (
             <LabeledContainer

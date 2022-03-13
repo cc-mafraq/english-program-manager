@@ -1,6 +1,6 @@
 import EditIcon from "@mui/icons-material/Edit";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
 import React, { Dispatch, SetStateAction } from "react";
 import { Student } from "../../interfaces";
 
@@ -15,6 +15,7 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({
   handleEditStudentClick,
   setSelectedStudent,
 }) => {
+  const theme = useTheme();
   return (
     <>
       <Typography component="div" display="inline" fontSize={28} gutterBottom>
@@ -44,6 +45,12 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({
           <EditIcon />
         </IconButton>
       </Box>
+      <Box paddingBottom={1}>
+        <Typography color={theme.palette.secondary.main} variant="h6">
+          {student.epId ? student.epId : "Invalid"}
+        </Typography>
+      </Box>
+      <Divider />
     </>
   );
 };
