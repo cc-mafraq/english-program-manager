@@ -26,6 +26,21 @@ const labels: { childLabels: string[]; parentLabel: string }[] = [
     parentLabel: "Academic Records",
   },
   {
+    childLabels: [
+      "Age",
+      "English Teacher",
+      "English Teacher Location",
+      "Gender",
+      "Looking For Job",
+      "Nationality",
+      "Occupation",
+      "Photo",
+      "Teacher",
+      "Teaching Subject Area",
+    ],
+    parentLabel: "Demographics",
+  },
+  {
     childLabels: ["Arabic Literacy", "English Literacy", "Tutor And Date"],
     parentLabel: "Literacy",
   },
@@ -48,7 +63,6 @@ const labels: { childLabels: string[]; parentLabel: string }[] = [
   {
     childLabels: [
       "Active",
-      "Correspondence",
       "Current Level",
       "ID Number",
       "Initial Session",
@@ -72,27 +86,15 @@ const labels: { childLabels: string[]; parentLabel: string }[] = [
     parentLabel: "Status",
   },
   {
-    childLabels: [
-      "Age",
-      "English Teacher",
-      "English Teacher Location",
-      "Gender",
-      "Looking For Job",
-      "Nationality",
-      "Occupation",
-      "Photo",
-      "Teacher",
-      "Teaching Subject Area",
-    ],
-    parentLabel: "Student Information",
-  },
-  {
     childLabels: ["Tutor and Details"],
     parentLabel: "Zoom",
   },
 ];
 
-export const DataVisibilityPopover: React.FC<DataVisibilityPopoverProps> = ({ anchorEl, handleClose }) => {
+export const DataVisibilityPopover: React.FC<DataVisibilityPopoverProps> = ({
+  anchorEl,
+  handleClose,
+}) => {
   const open = Boolean(anchorEl);
 
   return (
@@ -112,7 +114,10 @@ export const DataVisibilityPopover: React.FC<DataVisibilityPopoverProps> = ({ an
       {map(labels, (labelObj) => {
         return (
           <IndeterminateCheckbox key={labelObj.parentLabel} label={labelObj.parentLabel}>
-            <DataVisibilityCheckboxGroup labels={labelObj.childLabels} parentLabel={labelObj.parentLabel} />
+            <DataVisibilityCheckboxGroup
+              labels={labelObj.childLabels}
+              parentLabel={labelObj.parentLabel}
+            />
           </IndeterminateCheckbox>
         );
       })}

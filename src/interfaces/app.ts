@@ -15,6 +15,18 @@ export interface DataVisibility {
     session: boolean;
     teacherComments: boolean;
   };
+  demographics: {
+    age: boolean;
+    englishTeacher: boolean;
+    englishTeacherLocation: boolean;
+    gender: boolean;
+    lookingForJob: boolean;
+    nationality: boolean;
+    occupation: boolean;
+    photo: boolean;
+    teacher: boolean;
+    teachingSubjectArea: boolean;
+  };
   literacy: {
     arabicLiteracy: boolean;
     englishLiteracy: boolean;
@@ -38,7 +50,6 @@ export interface DataVisibility {
   };
   programInformation: {
     active: boolean;
-    correspondence: boolean;
     currentLevel: boolean;
     idNumber: boolean;
     initialSession: boolean;
@@ -54,18 +65,6 @@ export interface DataVisibility {
     repeatNumber: boolean;
     withdrawDate: boolean;
     withdrawReason: boolean;
-  };
-  studentInformation: {
-    age: boolean;
-    englishTeacher: boolean;
-    englishTeacherLocation: boolean;
-    gender: boolean;
-    lookingForJob: boolean;
-    nationality: boolean;
-    occupation: boolean;
-    photo: boolean;
-    teacher: boolean;
-    teachingSubjectArea: boolean;
   };
   zoom: {
     tutorAndDetails: boolean;
@@ -100,6 +99,18 @@ export const initialAppState: AppState = {
       session: true,
       teacherComments: true,
     },
+    demographics: {
+      age: true,
+      englishTeacher: true,
+      englishTeacherLocation: true,
+      gender: true,
+      lookingForJob: true,
+      nationality: true,
+      occupation: true,
+      photo: true,
+      teacher: true,
+      teachingSubjectArea: true,
+    },
     literacy: {
       arabicLiteracy: true,
       englishLiteracy: true,
@@ -123,7 +134,6 @@ export const initialAppState: AppState = {
     },
     programInformation: {
       active: true,
-      correspondence: true,
       currentLevel: true,
       idNumber: true,
       initialSession: true,
@@ -139,18 +149,6 @@ export const initialAppState: AppState = {
       repeatNumber: true,
       withdrawDate: true,
       withdrawReason: true,
-    },
-    studentInformation: {
-      age: true,
-      englishTeacher: true,
-      englishTeacherLocation: true,
-      gender: true,
-      lookingForJob: true,
-      nationality: true,
-      occupation: true,
-      photo: true,
-      teacher: true,
-      teachingSubjectArea: true,
     },
     zoom: {
       tutorAndDetails: true,
