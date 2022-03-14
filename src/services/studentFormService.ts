@@ -152,7 +152,9 @@ const phoneNumberSchema = object()
       .transform(emptyToNull)
       .transform(stringToInteger)
       .test("valid-phone-number", "The phone number is not valid", (value) => {
-        return value !== undefined && ((value > 700000000 && value < 800000000) || startsWith(toString(value), "2012"));
+        return (
+          value !== undefined && ((value > 700000000 && value < 800000000) || startsWith(toString(value), "2012"))
+        );
       })
       .required("Phone number is required if added. You can remove the phone number by clicking the ❌ button"),
   })
@@ -193,7 +195,9 @@ const placementSchema = object().shape({
     .shape({
       adjustment: string().transform(emptyToNull).nullable().optional(),
       level: mixed<Level>().oneOf(levels).required("Original placement level is required"),
-      speaking: mixed<LevelPlus | "Exempt">().oneOf(levelsPlus).required("Original speaking placement is required"),
+      speaking: mixed<LevelPlus | "Exempt">()
+        .oneOf(levelsPlus)
+        .required("Original speaking placement is required"),
       writing: mixed<LevelPlus | "Exempt">().oneOf(levelsPlus).required("Original writing placement is required"),
     })
     .required(),
@@ -235,9 +239,15 @@ export const studentFormSchema = object().shape({
   academicRecords: array().of(academicRecordsSchema),
   age: mixed<number | "Unknown">()
     .transform(stringToInteger)
-    .test("valid-age", 'Age must be an integer greater than 12 and less than 100. You can enter "Unknown"', (value) => {
-      return (isInteger(value) && value && value > 12 && value < 100) || lowerCase(value as string) === "unknown";
-    })
+    .test(
+      "valid-age",
+      'Age must be an integer greater than 12 and less than 100. You can enter "Unknown"',
+      (value) => {
+        return (
+          (isInteger(value) && value && value > 12 && value < 100) || lowerCase(value as string) === "unknown"
+        );
+      },
+    )
     .required("Age is required"),
   certificateRequests: string().transform(emptyToNull).nullable().optional(),
   correspondence: array().of(correspondenceSchema),

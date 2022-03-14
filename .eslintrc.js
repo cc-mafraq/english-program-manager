@@ -5,12 +5,7 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: [
-    "airbnb",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:react/recommended",
-    "prettier",
-  ],
+  extends: ["airbnb", "plugin:@typescript-eslint/recommended", "plugin:react/recommended", "prettier"],
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly",
@@ -23,14 +18,7 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: "module",
   },
-  plugins: [
-    "react",
-    "@typescript-eslint",
-    "typescript-sort-keys",
-    "react-hooks",
-    "sort-keys-fix",
-    "import",
-  ],
+  plugins: ["react", "@typescript-eslint", "typescript-sort-keys", "react-hooks", "sort-keys-fix", "import"],
   rules: {
     // Disable some AirBnB rules.
     // Allow any linebreak type.

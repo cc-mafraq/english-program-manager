@@ -20,10 +20,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
 
   return (
     <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-      <LabeledContainer
-        condition={allCheckboxesFalse("Program Information")}
-        label="Program Information"
-      >
+      <LabeledContainer condition={allCheckboxesFalse("Program Information")} label="Program Information">
         <LabeledText
           condition={dataVisibility.programInformation.inviteTag}
           containerProps={{
@@ -46,10 +43,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         >
           {student.status.noContactList ? "Yes" : undefined}
         </LabeledText>
-        <LabeledText
-          condition={dataVisibility.programInformation.currentLevel}
-          label="Current Level"
-        >
+        <LabeledText condition={dataVisibility.programInformation.currentLevel} label="Current Level">
           {student.currentLevel}
         </LabeledText>
         <LabeledText condition={dataVisibility.programInformation.status} label="Status">
@@ -58,10 +52,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         <LabeledText condition={dataVisibility.programInformation.active} label="Active">
           {isActive(student) ? "Yes" : "No"}
         </LabeledText>
-        <LabeledText
-          condition={dataVisibility.programInformation.initialSession}
-          label="Initial Session"
-        >
+        <LabeledText condition={dataVisibility.programInformation.initialSession} label="Initial Session">
           {student.initialSession}
         </LabeledText>
       </LabeledContainer>
@@ -107,10 +98,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         <LabeledText condition={dataVisibility.demographics.teacher} label="Teacher">
           {student.work?.isTeacher ? "Yes" : undefined}
         </LabeledText>
-        <LabeledText
-          condition={dataVisibility.demographics.teachingSubjectArea}
-          label="Teaching Subject Area"
-        >
+        <LabeledText condition={dataVisibility.demographics.teachingSubjectArea} label="Teaching Subject Area">
           {student.work?.isTeacher ? student.work.teachingSubjectAreas : undefined}
         </LabeledText>
         <LabeledText condition={dataVisibility.demographics.englishTeacher} label="English Teacher">
@@ -145,10 +133,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
             </span>
           );
         })}
-        <LabeledText
-          condition={dataVisibility.phoneNumbersAndWhatsApp.waBroadcastSar}
-          label="WA Broadcast SAR"
-        >
+        <LabeledText condition={dataVisibility.phoneNumbersAndWhatsApp.waBroadcastSar} label="WA Broadcast SAR">
           {student.phone.waBroadcastSAR}
         </LabeledText>
         <LabeledText
@@ -165,19 +150,13 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         <LabeledText condition={dataVisibility.placement.placement} label="Placement">
           {student.placement.placement}
         </LabeledText>
-        <LabeledText
-          condition={dataVisibility.placement.classListSentDate}
-          label="Class List Sent Date"
-        >
+        <LabeledText condition={dataVisibility.placement.classListSentDate} label="Class List Sent Date">
           {student.placement.classListSentDate}
         </LabeledText>
         <LabeledText condition={dataVisibility.placement.sectionsOffered} label="Sections Offered">
           {student.placement.sectionsOffered}
         </LabeledText>
-        <LabeledText
-          condition={dataVisibility.placement.placementConfirmed}
-          label="Placement Confirmed"
-        >
+        <LabeledText condition={dataVisibility.placement.placementConfirmed} label="Placement Confirmed">
           {student.placement.confDate}
         </LabeledText>
         <LabeledText condition={dataVisibility.placement.naClassSchedule} label="NA Class Schedule">
@@ -187,18 +166,11 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
           {student.placement.pending ? "Yes" : undefined}
         </LabeledText>
       </LabeledContainer>
-      <LabeledContainer
-        condition={dataVisibility.placement.originalPlacementData}
-        label="Original Placement Data"
-      >
+      <LabeledContainer condition={dataVisibility.placement.originalPlacementData} label="Original Placement Data">
         <LabeledText label="Writing">{student.placement.origPlacementData.writing}</LabeledText>
         <LabeledText label="Speaking">{student.placement.origPlacementData.speaking}</LabeledText>
-        <LabeledText label="Placement Level">
-          {student.placement.origPlacementData.level}
-        </LabeledText>
-        <LabeledText label="Adjustment">
-          {student.placement.origPlacementData.adjustment}
-        </LabeledText>
+        <LabeledText label="Placement Level">{student.placement.origPlacementData.level}</LabeledText>
+        <LabeledText label="Adjustment">{student.placement.origPlacementData.adjustment}</LabeledText>
       </LabeledContainer>
       <LabeledContainer condition={allCheckboxesFalse("Literacy")} label="Literacy">
         <LabeledText condition={dataVisibility.literacy.arabicLiteracy} label="Illiterate Arabic">

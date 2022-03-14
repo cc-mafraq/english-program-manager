@@ -30,11 +30,7 @@ export const StudentFormDialog: React.FC<StudentFormDialogProps> = ({
       }}
     >
       <Box sx={{ padding: "10px" }}>
-        <StudentForm
-          handleDialogClose={handleDialogClose}
-          selectedStudent={selectedStudent}
-          students={students}
-        />
+        <StudentForm handleDialogClose={handleDialogClose} selectedStudent={selectedStudent} students={students} />
       </Box>
     </Dialog>
   );

@@ -12,13 +12,7 @@ interface GridItemTextField {
 }
 
 /* A text field to be used on forms */
-export const GridItemTextField = ({
-  label,
-  gridProps,
-  textFieldProps,
-  value,
-  name,
-}: GridItemTextField) => {
+export const GridItemTextField = ({ label, gridProps, textFieldProps, value, name }: GridItemTextField) => {
   const {
     register,
     formState: { errors },

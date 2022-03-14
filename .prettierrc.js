@@ -1,5 +1,5 @@
 module.exports = {
-  printWidth: 100,
+  printWidth: 115,
   tabWidth: 2,
   useTabs: false,
   semi: true,
@@ -12,5 +12,5 @@ module.exports = {
   arrowParens: "always",
   proseWrap: "preserve",
   htmlWhitespaceSensitivity: "css",
-  endOfLine: "lf",
+  endOfLine: "crlf",
 };

@@ -1,12 +1,6 @@
 import { Grid } from "@mui/material";
 import React from "react";
-import {
-  GridContainer,
-  GridItemAutocomplete,
-  GridItemDatePicker,
-  LabeledCheckbox,
-  StudentFormLabel,
-} from "..";
+import { GridContainer, GridItemAutocomplete, GridItemDatePicker, LabeledCheckbox, StudentFormLabel } from "..";
 import { withdrawReasons } from "../../../interfaces";
 import { SPACING } from "../../../services";
 
@@ -16,11 +10,7 @@ export const FormStatus: React.FC = () => {
       <StudentFormLabel textProps={{ marginTop: SPACING }}>Status</StudentFormLabel>
       <GridContainer marginBottom={0}>
         <GridItemDatePicker label="Withdraw Date" name="status.withdrawDate" />
-        <GridItemAutocomplete
-          label="Withdraw Reason"
-          name="status.droppedOutReason"
-          options={withdrawReasons}
-        />
+        <GridItemAutocomplete label="Withdraw Reason" name="status.droppedOutReason" options={withdrawReasons} />
         <GridItemDatePicker label="Reactivated Date" name="status.reactivatedDate" />
       </GridContainer>
       <GridContainer>

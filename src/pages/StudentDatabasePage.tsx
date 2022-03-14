@@ -163,7 +163,11 @@ export const StudentDatabasePage = () => {
         students={searchString ? filteredStudents : students}
       />
       {students.length > 0 ? (
-        <FinalGradeReportDialog handleDialogClose={handleFGRDialogClose} open={openFGRDialog} students={students} />
+        <FinalGradeReportDialog
+          handleDialogClose={handleFGRDialogClose}
+          open={openFGRDialog}
+          students={students}
+        />
       ) : (
         <></>
       )}

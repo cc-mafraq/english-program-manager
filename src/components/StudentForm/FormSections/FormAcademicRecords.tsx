@@ -9,10 +9,7 @@ interface FormAcademicRecordsProps {
   students: Student[];
 }
 
-export const FormAcademicRecords: React.FC<FormAcademicRecordsProps> = ({
-  selectedStudent,
-  students,
-}) => {
+export const FormAcademicRecords: React.FC<FormAcademicRecordsProps> = ({ selectedStudent, students }) => {
   const methods = useFormContext<Student>();
   const [academicRecords, addAcademicRecord, removeAcademicRecord] = useFormList(
     selectedStudent && selectedStudent.academicRecords ? selectedStudent.academicRecords : [],

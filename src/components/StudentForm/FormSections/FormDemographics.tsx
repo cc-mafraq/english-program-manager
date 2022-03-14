@@ -23,11 +23,7 @@ export const FormDemographics: React.FC = () => {
       </GridContainer>
       <GridContainer>
         <Grid item xs={2}>
-          <LabeledCheckbox
-            containerProps={{ marginTop: -1 }}
-            label="Teacher"
-            name="work.isTeacher"
-          />
+          <LabeledCheckbox containerProps={{ marginTop: -1 }} label="Teacher" name="work.isTeacher" />
           <LabeledCheckbox
             containerProps={{ marginTop: -1 }}
             label="English Teacher"

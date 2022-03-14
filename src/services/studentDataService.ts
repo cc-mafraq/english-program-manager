@@ -26,9 +26,7 @@ export const getStudentImage = async (student: Student): Promise<string> => {
       map(imageExtensions, async (ext) => {
         try {
           await setImageName(ref(storage, `${imageFolderName}${student.epId}${ext}`));
-          downloadURL = await getDownloadURL(
-            ref(storage, `${imageFolderName}${student.epId}${ext}`),
-          );
+          downloadURL = await getDownloadURL(ref(storage, `${imageFolderName}${student.epId}${ext}`));
         } catch (e) {
           // eslint-disable-next-line no-useless-return
           return;

@@ -15,9 +15,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange }
   const theme = useTheme();
   const [value, setValue] = useState("");
 
-  const handleLocalSearchStringChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-  ) => {
+  const handleLocalSearchStringChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     setValue(e.target.value);
     if (e.target.value.length >= minSearchLength || isEmpty(e.target.value)) {
       setTimeout(() => {

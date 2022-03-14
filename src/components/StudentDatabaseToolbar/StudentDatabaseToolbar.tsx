@@ -7,17 +7,13 @@ import { ActionsPopover, Searchbar } from ".";
 import { DataVisibilityPopover } from "..";
 import { Student } from "../../interfaces";
 
-const handlePopoverClick = (
-  setFn: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>,
-) => {
+const handlePopoverClick = (setFn: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>) => {
   return (event: React.MouseEvent<HTMLButtonElement>) => {
     setFn(event.currentTarget);
   };
 };
 
-const handlePopoverClose = (
-  setFn: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>,
-) => {
+const handlePopoverClose = (setFn: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>) => {
   return () => {
     setFn(null);
   };
@@ -26,9 +22,7 @@ const handlePopoverClose = (
 interface StudentDatabaseToolbarProps {
   handleAddStudentClick: (e: React.MouseEvent<HTMLElement>) => void;
   handleChangePage: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
-  handleChangeRowsPerPage: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => void;
+  handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   handleGenerateFGRClick: (e: React.MouseEvent<HTMLElement>) => void;
   handleImportClick: (e: ChangeEvent<HTMLInputElement>) => void;
   handleSearchStringChange: (value: string) => void;
@@ -49,9 +43,7 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
   handleSearchStringChange,
 }) => {
   const [actionsAnchorEl, setActionsAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-  const [dataFilterAnchorEl, setDataFilterAnchorEl] = React.useState<HTMLButtonElement | null>(
-    null,
-  );
+  const [dataFilterAnchorEl, setDataFilterAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
   return (
     <AppBar color="default" elevation={0} position="sticky">

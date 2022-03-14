@@ -30,11 +30,7 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
     formState: { errors },
     control,
   } = useFormContext();
-  const { name: nameFallback, errorMessage } = useInput(
-    label,
-    errors as FieldError,
-    errorName ?? name,
-  );
+  const { name: nameFallback, errorMessage } = useInput(label, errors as FieldError, errorName ?? name);
   const theme = useTheme();
   const errorColor = errorMessage ? theme.palette.error.main : undefined;
   const defaultValueMoment = moment(value, MOMENT_FORMAT);

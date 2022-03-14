@@ -62,8 +62,10 @@ studentFieldsUnexpanded[ps.generateKeys("ExitSpeakingExamPF", maxAcademicRecordC
   ps.parseAcademicRecordExitSpeakingExam;
 studentFieldsUnexpanded[ps.generateKeys("ExitWritingExamPF", maxAcademicRecordColumnNum)] =
   ps.parseAcademicRecordExitWritingExam;
-studentFieldsUnexpanded[ps.generateKeys("FinalGrades", maxAcademicRecordColumnNum)] = ps.parseAcademicRecordFinalGrade;
-studentFieldsUnexpanded[ps.generateKeys("LevelAttended", maxAcademicRecordColumnNum)] = ps.parseAcademicRecordLevel;
+studentFieldsUnexpanded[ps.generateKeys("FinalGrades", maxAcademicRecordColumnNum)] =
+  ps.parseAcademicRecordFinalGrade;
+studentFieldsUnexpanded[ps.generateKeys("LevelAttended", maxAcademicRecordColumnNum)] =
+  ps.parseAcademicRecordLevel;
 studentFieldsUnexpanded[ps.generateKeys("LevelAudited", maxAcademicRecordColumnNum)] = ps.parseAcademicRecordAudit;
 studentFieldsUnexpanded[ps.generateKeys("P", maxAcademicRecordColumnNum)] = ps.parseAcademicRecordResult;
 studentFieldsUnexpanded[ps.generateKeys("F", maxAcademicRecordColumnNum, true)] = ps.parseAcademicRecordResult;

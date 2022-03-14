@@ -174,7 +174,17 @@ export const nationalities = [
   Nationality.UNKNWN,
 ];
 
-export const genderedLevels: GenderedLevel[] = ["PL1-M", "PL1-W", "L1-M", "L1-W", "L2-M", "L2-W", "L3", "L4", "L5"];
+export const genderedLevels: GenderedLevel[] = [
+  "PL1-M",
+  "PL1-W",
+  "L1-M",
+  "L1-W",
+  "L2-M",
+  "L2-W",
+  "L3",
+  "L4",
+  "L5",
+];
 
 export const levels: Level[] = ["PL1", "L1", "L2", "L3", "L4", "L5"];
 

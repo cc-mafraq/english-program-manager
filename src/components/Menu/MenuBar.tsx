@@ -22,13 +22,7 @@ export const MenuBar = () => {
         }}
       >
         <MenuDrawer />
-        <Typography
-          color="white"
-          display="inline"
-          fontWeight="bold"
-          textAlign="center"
-          variant="h6"
-        >
+        <Typography color="white" display="inline" fontWeight="bold" textAlign="center" variant="h6">
           {pageName}
         </Typography>
         <IconButton onClick={handleLogout}>

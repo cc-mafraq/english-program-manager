@@ -7,11 +7,7 @@ export const useFormList = (
   initialState: FieldArrayPathValue<Student, ArrayPath<Student>>,
   listPath: Path<Student>,
   methods: UseFormReturn<Student, object>,
-): [
-  FieldArrayPathValue<Student, ArrayPath<Student>>,
-  () => void,
-  (index?: number) => () => void,
-] => {
+): [FieldArrayPathValue<Student, ArrayPath<Student>>, () => void, (index?: number) => () => void] => {
   const [list, setList] = useState<FieldArrayPathValue<Student, ArrayPath<Student>>>(initialState);
 
   const addListItem = () => {

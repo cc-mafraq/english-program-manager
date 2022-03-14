@@ -8,12 +8,7 @@ interface FGRHeaderProps {
   spacing: number;
 }
 
-export const FGRHeader: React.FC<FGRHeaderProps> = ({
-  borderSize,
-  smallBorderSize,
-  spacing,
-  scale,
-}) => {
+export const FGRHeader: React.FC<FGRHeaderProps> = ({ borderSize, smallBorderSize, spacing, scale }) => {
   const theme = useTheme();
   const primaryColor = theme.palette.primary.main;
   const englishFontSize = `${20 * scale}pt`;

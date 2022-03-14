@@ -70,19 +70,12 @@ export const getProgress = (student: Student): StudentProgress => {
   return progress;
 };
 
-export const getStudentPage = (
-  students: Student[],
-  page: number,
-  rowsPerPage: number,
-): Student[] => {
+export const getStudentPage = (students: Student[], page: number, rowsPerPage: number): Student[] => {
   const newRowsPerPage = rowsPerPage > students.length ? students.length : rowsPerPage;
   return slice(students, page * newRowsPerPage, (page + 1) * newRowsPerPage);
 };
 
-export const filterBySession = (
-  students: Student[],
-  session: Student["initialSession"],
-): Student[] => {
+export const filterBySession = (students: Student[], session: Student["initialSession"]): Student[] => {
   return filter(students, (s) => {
     return includes(map(s.academicRecords, "session"), session);
   });

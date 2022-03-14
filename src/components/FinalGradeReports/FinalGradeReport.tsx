@@ -121,17 +121,13 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
     {
       colText1: "Level:",
       colText2: "المستوى",
-      colText3: academicRecord
-        ? getLevelForNextSession({ academicRecord, noIncrement: true, student })
-        : "",
+      colText3: academicRecord ? getLevelForNextSession({ academicRecord, noIncrement: true, student }) : "",
       labelBackgroundColor: backgroundColorMain,
     },
     {
       colText1: "Name of Class:",
       colText2: "إسم الصف",
-      colText3: academicRecord?.level
-        ? getElectiveFullName(academicRecord.level)
-        : "Not Applicable",
+      colText3: academicRecord?.level ? getElectiveFullName(academicRecord.level) : "Not Applicable",
       conditionToShow: academicRecord && isElective(academicRecord),
       labelBackgroundColor: backgroundColorSecondary,
     },
@@ -147,10 +143,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
     {
       colText1: "Class Attendance:",
       colText2: "الحضور",
-      colText3:
-        academicRecord?.attendance !== undefined
-          ? `${academicRecord.attendance}%`
-          : "Not Applicable",
+      colText3: academicRecord?.attendance !== undefined ? `${academicRecord.attendance}%` : "Not Applicable",
       labelBackgroundColor: backgroundColorSecondary,
     },
     {
@@ -179,9 +172,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
       colText1: "Level: Pass or Repeat",
       colText2: "المستوى: ناجح او راسب, لازم تبقى بنفس السمتوى",
       colText3:
-        academicRecord?.finalResult && FinalResult[academicRecord.finalResult.result] === "P"
-          ? "Pass"
-          : "Repeat",
+        academicRecord?.finalResult && FinalResult[academicRecord.finalResult.result] === "P" ? "Pass" : "Repeat",
       conditionToShow: academicRecord?.finalResult?.result !== undefined,
       labelBackgroundColor: backgroundColorSecondary,
     },
@@ -220,26 +211,14 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
         >
           <img alt="FGR Border" src="./assets/fgr-border.jpg" width={imageWidth} />
         </Box>
-        <Grid
-          container
-          marginLeft={0}
-          marginTop={0}
-          sx={{ backgroundColor: "white" }}
-          width={width}
-        >
+        <Grid container marginLeft={0} marginTop={0} sx={{ backgroundColor: "white" }} width={width}>
           <FGRHeader
             borderSize={borderSize}
             scale={scale}
             smallBorderSize={smallBorderSize}
             spacing={headerSpacing}
           />
-          <Grid
-            border={borderSize}
-            borderBottom={0}
-            borderColor={primaryColor}
-            borderTop={0}
-            container
-          >
+          <Grid border={borderSize} borderBottom={0} borderColor={primaryColor} borderTop={0} container>
             {map(fgrGridRowData, (fgrData) => {
               return fgrData.conditionToShow === undefined || fgrData.conditionToShow ? (
                 <FGRGridRow scale={scale} smallBorderSize={smallBorderSize} {...fgrData} />
