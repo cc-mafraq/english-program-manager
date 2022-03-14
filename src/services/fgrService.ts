@@ -49,10 +49,7 @@ export const getLevelForNextSession = ({
     const hasPassed = academicRecord.finalResult?.result === "P";
     const sessionAcademicRecords = filter(student.academicRecords, (ar) => {
       return (
-        !isOtherRecord &&
-        !noIncrement &&
-        ar.session === academicRecord.session &&
-        !isEqual(ar, academicRecord)
+        !isOtherRecord && !noIncrement && ar.session === academicRecord.session && !isEqual(ar, academicRecord)
       );
     });
     const sessionAcademicRecordNextLevels = map(sessionAcademicRecords, (sessionAR) => {
@@ -63,10 +60,7 @@ export const getLevelForNextSession = ({
       some(sessionAcademicRecordNextLevels, (sessionARNL) => {
         return sessionARNL !== recordLevel;
       });
-    if (
-      !noIncrement &&
-      ((isCoreClass && hasPassed) || (!isCoreClass && passedDifferentCoreClass))
-    ) {
+    if (!noIncrement && ((isCoreClass && hasPassed) || (!isCoreClass && passedDifferentCoreClass))) {
       return getFullLevelName(levels[levelIndex + 1]);
     }
     return getFullLevelName(levels[levelIndex]);
@@ -101,11 +95,7 @@ export const isElective = (academicRecord: AcademicRecord): boolean => {
 };
 
 export const getElectiveFullName = (electiveName: string): string => {
-  return replace(
-    replace(electiveName, "I&T", "IELTS & TOEFL"),
-    /(Ac Rdg)|(Adv Rdg)/,
-    "Advanced Reading",
-  );
+  return replace(replace(electiveName, "I&T", "IELTS & TOEFL"), /(Ac Rdg)|(Adv Rdg)/, "Advanced Reading");
 };
 
 export const getSessionFullName = (session: string): string => {

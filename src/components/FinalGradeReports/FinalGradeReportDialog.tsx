@@ -39,12 +39,7 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({
 
   const handleDownloadAllFinished = async (studentAcademicRecord: StudentAcademicRecordIndex) => {
     zippedStudentAcademicRecords.push(studentAcademicRecord);
-    if (
-      isEqual(
-        getSortedSARIndexArray(zippedStudentAcademicRecords),
-        getSortedSARIndexArray(fgrStudents),
-      )
-    ) {
+    if (isEqual(getSortedSARIndexArray(zippedStudentAcademicRecords), getSortedSARIndexArray(fgrStudents))) {
       setShouldDownload(false);
       const content = await zip.generateAsync({ type: "blob" });
       await download(content, `${replace(fgrSession, /\s/g, "-")}-FGRs`);

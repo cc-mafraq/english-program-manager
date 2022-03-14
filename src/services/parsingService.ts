@@ -86,11 +86,7 @@ const parseOptionalBoolean = (fieldPath: string) => {
   };
 };
 
-export const generateKeys = (
-  keyName: string,
-  endNum: number,
-  noIncludeKeyName?: boolean,
-): string => {
+export const generateKeys = (keyName: string, endNum: number, noIncludeKeyName?: boolean): string => {
   const nums = range(0, endNum);
   const keyArr: string[] = [];
   !noIncludeKeyName && keyArr.push(keyName);
@@ -125,8 +121,7 @@ export const parseWaPrimPhone = (key: string, value: string, student: Student) =
 
 export const parseNationality = (key: string, value: string, student: Student) => {
   if (Number(value) !== 1) return;
-  student.nationality =
-    Nationality[replace(replace(key, "-", ""), /\s/g, "") as keyof typeof Nationality];
+  student.nationality = Nationality[replace(replace(key, "-", ""), /\s/g, "") as keyof typeof Nationality];
 };
 
 export const parseInviteTag = (key: string, value: string, student: Student) => {
@@ -276,9 +271,7 @@ export const parseOrigPlacementLevel = (key: string, value: string, student: Stu
   student.placement.origPlacementData.level = value as Level;
 };
 
-export const parseOrigPlacementAdjustment = parseOptionalString(
-  "placement.origPlacementData.adjustment",
-);
+export const parseOrigPlacementAdjustment = parseOptionalString("placement.origPlacementData.adjustment");
 
 export const parseDropoutReason = (key: string, value: string, student: Student) => {
   if (Number(value) !== 1) return;
@@ -361,8 +354,7 @@ const removeFromNotesRegex = /[();:]|Wrtg|Spkg|Exit|P\s|F\s|W\s|S\s/g;
 
 const getPercent = (value: string) => {
   return (
-    first(value.match(percentRegex)?.toString().match(numberRegex)) ||
-    first(value.match(numberRegex))?.toString()
+    first(value.match(percentRegex)?.toString().match(numberRegex)) || first(value.match(numberRegex))?.toString()
   );
 };
 
@@ -428,11 +420,7 @@ export const parseAcademicRecordAttendance = (key: string, value: string, studen
   }
 };
 
-export const parseAcademicRecordTeacherComments = (
-  key: string,
-  value: string,
-  student: Student,
-) => {
+export const parseAcademicRecordTeacherComments = (key: string, value: string, student: Student) => {
   if (isEmpty(value)) return;
   const lastAcademicRecord = last(student.academicRecords);
   if (!lastAcademicRecord) return;

@@ -90,10 +90,7 @@ const labels: { childLabels: string[]; parentLabel: string }[] = [
   },
 ];
 
-export const DataVisibilityPopover: React.FC<DataVisibilityPopoverProps> = ({
-  anchorEl,
-  handleClose,
-}) => {
+export const DataVisibilityPopover: React.FC<DataVisibilityPopoverProps> = ({ anchorEl, handleClose }) => {
   const open = Boolean(anchorEl);
 
   return (
@@ -113,10 +110,7 @@ export const DataVisibilityPopover: React.FC<DataVisibilityPopoverProps> = ({
       {map(labels, (labelObj) => {
         return (
           <IndeterminateCheckbox key={labelObj.parentLabel} label={labelObj.parentLabel}>
-            <DataVisibilityCheckboxGroup
-              labels={labelObj.childLabels}
-              parentLabel={labelObj.parentLabel}
-            />
+            <DataVisibilityCheckboxGroup labels={labelObj.childLabels} parentLabel={labelObj.parentLabel} />
           </IndeterminateCheckbox>
         );
       })}

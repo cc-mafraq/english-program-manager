@@ -23,13 +23,7 @@ interface GridItemRadioGroup {
 
 /* Renders a group of radio buttons for a form.
 Ref: https://stackoverflow.com/questions/64042394/react-hook-form-and-material-ui-formcontrol */
-export const GridItemRadioGroup = ({
-  defaultValue,
-  gridProps,
-  label,
-  name,
-  options,
-}: GridItemRadioGroup) => {
+export const GridItemRadioGroup = ({ defaultValue, gridProps, label, name, options }: GridItemRadioGroup) => {
   const {
     control,
     formState: { errors },
@@ -54,12 +48,7 @@ export const GridItemRadioGroup = ({
                     <FormControlLabel
                       key={opt}
                       control={
-                        <Radio
-                          inputRef={ref}
-                          onBlur={onBlur}
-                          onChange={onChange}
-                          sx={{ color: errorColor }}
-                        />
+                        <Radio inputRef={ref} onBlur={onBlur} onChange={onChange} sx={{ color: errorColor }} />
                       }
                       label={opt}
                       sx={{ color: errorColor }}

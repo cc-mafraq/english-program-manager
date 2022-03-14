@@ -15,11 +15,7 @@ export const FormName: React.FC = () => {
           label="Invite"
           name="status.inviteTag"
         />
-        <LabeledCheckbox
-          containerProps={{ marginTop: -1 }}
-          label="NCL"
-          name="status.noContactList"
-        />
+        <LabeledCheckbox containerProps={{ marginTop: -1 }} label="NCL" name="status.noContactList" />
       </Grid>
     </GridContainer>
   );

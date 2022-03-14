@@ -150,7 +150,9 @@ const stringOrNumTests = ({
       parseFn("", value, student);
       const defaultValNum = Number(defaultVal);
       defaultVal !== undefined
-        ? expect(get(student, fieldPath)).toEqual(!Number.isNaN(defaultValNum) && isNum ? defaultValNum : defaultVal)
+        ? expect(get(student, fieldPath)).toEqual(
+            !Number.isNaN(defaultValNum) && isNum ? defaultValNum : defaultVal,
+          )
         : expect(get(student, fieldPath)).toBeUndefined();
     };
     it("parses value", () => {
@@ -196,10 +198,22 @@ optionalBooleanTests({
 });
 
 dateTests({ fieldPath: "status.finalGradeSentDate", parseFn: parseFgrDate, testName: "parses FGR date" });
-dateTests({ fieldPath: "status.levelReevalDate", parseFn: parseLevelReevalDate, testName: "parses level reeval date" });
-dateTests({ fieldPath: "status.reactivatedDate", parseFn: parseReactivatedDate, testName: "parses reactivated date" });
+dateTests({
+  fieldPath: "status.levelReevalDate",
+  parseFn: parseLevelReevalDate,
+  testName: "parses level reeval date",
+});
+dateTests({
+  fieldPath: "status.reactivatedDate",
+  parseFn: parseReactivatedDate,
+  testName: "parses reactivated date",
+});
 dateTests({ fieldPath: "status.withdrawDate", parseFn: parseWithdrawDate, testName: "parses withdraw date" });
-dateTests({ fieldPath: "placement.confDate", parseFn: parsePlacementConfDate, testName: "parses placement conf date" });
+dateTests({
+  fieldPath: "placement.confDate",
+  parseFn: parsePlacementConfDate,
+  testName: "parses placement conf date",
+});
 dateTests({
   fieldPath: "placement.noAnswerClassSchedule",
   parseFn: parseNoAnswerClassSchedule,

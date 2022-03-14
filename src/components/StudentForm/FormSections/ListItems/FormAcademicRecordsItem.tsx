@@ -1,13 +1,7 @@
 import CloseIcon from "@mui/icons-material/Close";
 import { Grid, IconButton } from "@mui/material";
 import React from "react";
-import {
-  FormGrade,
-  GridContainer,
-  GridItemAutocomplete,
-  GridItemTextField,
-  StudentFormLabel,
-} from "../../..";
+import { FormGrade, GridContainer, GridItemAutocomplete, GridItemTextField, StudentFormLabel } from "../../..";
 import { genderedLevels, Student } from "../../../../interfaces";
 import { FormItem, getAllSessions, SPACING } from "../../../../services";
 
@@ -20,13 +14,8 @@ export const FormAcademicRecordsItem: React.FC<FormItem & { students: Student[] 
   return (
     <>
       <Grid container marginLeft={SPACING}>
-        <StudentFormLabel textProps={{ marginTop: SPACING }}>
-          Academic Record {Number(index) + 1}
-        </StudentFormLabel>
-        <IconButton
-          onClick={removeItem && removeItem(index)}
-          sx={{ marginLeft: SPACING / 2, top: "15%" }}
-        >
+        <StudentFormLabel textProps={{ marginTop: SPACING }}>Academic Record {Number(index) + 1}</StudentFormLabel>
+        <IconButton onClick={removeItem && removeItem(index)} sx={{ marginLeft: SPACING / 2, top: "15%" }}>
           <CloseIcon />
         </IconButton>
       </Grid>
@@ -37,12 +26,7 @@ export const FormAcademicRecordsItem: React.FC<FormItem & { students: Student[] 
           name={`${recordName}.session`}
           options={getAllSessions(students)}
         />
-        <GridItemAutocomplete
-          freeSolo
-          label="Level"
-          name={`${recordName}.level`}
-          options={genderedLevels}
-        />
+        <GridItemAutocomplete freeSolo label="Level" name={`${recordName}.level`} options={genderedLevels} />
         <GridItemTextField label="Attendance Percentage" name={`${recordName}.attendance`} />
         <GridItemAutocomplete
           freeSolo

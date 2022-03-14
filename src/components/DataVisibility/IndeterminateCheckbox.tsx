@@ -16,10 +16,7 @@ interface IndeterminateCheckboxProps {
   label: string;
 }
 
-export const IndeterminateCheckbox: React.FC<IndeterminateCheckboxProps> = ({
-  children,
-  label,
-}) => {
+export const IndeterminateCheckbox: React.FC<IndeterminateCheckboxProps> = ({ children, label }) => {
   const {
     appState: { dataVisibility },
     appDispatch,

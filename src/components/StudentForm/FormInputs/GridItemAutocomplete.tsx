@@ -13,8 +13,7 @@ interface GridItemAutocomplete {
 
 /* A text field to be used on forms */
 export const GridItemAutocomplete = (
-  props: GridItemAutocomplete &
-    Omit<AutocompleteProps<unknown, boolean, boolean, boolean>, "renderInput">,
+  props: GridItemAutocomplete & Omit<AutocompleteProps<unknown, boolean, boolean, boolean>, "renderInput">,
 ) => {
   const { label, name, gridProps, defaultValue } = props;
   const {

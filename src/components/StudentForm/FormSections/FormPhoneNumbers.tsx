@@ -20,9 +20,7 @@ export const FormPhoneNumbers: React.FC<FormPhoneNumbersProps> = ({ selectedStud
 
   return (
     <>
-      <StudentFormLabel textProps={{ marginTop: SPACING }}>
-        Phone Numbers and WhatsApp
-      </StudentFormLabel>
+      <StudentFormLabel textProps={{ marginTop: SPACING }}>Phone Numbers and WhatsApp</StudentFormLabel>
       <GridContainer marginBottom={SPACING}>
         <FormList
           addItem={addPhone}
@@ -39,10 +37,7 @@ export const FormPhoneNumbers: React.FC<FormPhoneNumbersProps> = ({ selectedStud
             label="WhatsApp Broadcast SAR"
             name="phone.waBroadcastSAR"
           />
-          <GridItemTextField
-            label="Other WA Broadcast Groups"
-            name="phone.otherWaBroadcastGroups"
-          />
+          <GridItemTextField label="Other WA Broadcast Groups" name="phone.otherWaBroadcastGroups" />
         </Grid>
       </GridContainer>
     </>

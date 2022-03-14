@@ -45,13 +45,7 @@ export const ActionsPopover: React.FC<ActionsPopoverProps> = ({
           <AddIcon color="primary" />
         </LabeledIconButton>
         <label htmlFor="importSpreadsheet">
-          <input
-            accept=".txt"
-            hidden
-            id="importSpreadsheet"
-            onChange={handleImportClick}
-            type="file"
-          />
+          <input accept=".txt" hidden id="importSpreadsheet" onChange={handleImportClick} type="file" />
           <LabeledIconButton buttonProps={{ component: "span" }} label="IMPORT SPREADSHEET">
             <UploadIcon color="primary" />
           </LabeledIconButton>

@@ -28,11 +28,7 @@ const GradeInfo: React.FC<GradeInfoProps> = ({ grade, label, gradeVisibility }) 
 
   return (
     <LabeledContainer condition={gradeVisibility} label={label} labelProps={labelProps}>
-      <LabeledText
-        condition={gradeVisibility}
-        containerProps={gradeContainerProps(grade?.result)}
-        label="Result"
-      >
+      <LabeledText condition={gradeVisibility} containerProps={gradeContainerProps(grade?.result)} label="Result">
         {grade ? FinalResult[grade.result] : undefined}
       </LabeledText>
       <LabeledText condition={gradeVisibility} label="Percentage">
@@ -57,11 +53,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
 
   return (
     <>
-      <LabeledContainer
-        condition={dataVisibility.academicRecords.progress}
-        label="Progress"
-        showWhenEmpty
-      >
+      <LabeledContainer condition={dataVisibility.academicRecords.progress} label="Progress" showWhenEmpty>
         {map(forOwn(progress), (v, k) => {
           return <ProgressBox key={k} level={k as GenderedLevel} sessionResults={v} />;
         })}
@@ -113,16 +105,10 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
                 <LabeledText condition={dataVisibility.academicRecords.level} label="Level">
                   {ar.level}
                 </LabeledText>
-                <LabeledText
-                  condition={dataVisibility.academicRecords.levelAudited}
-                  label="Level Audited"
-                >
+                <LabeledText condition={dataVisibility.academicRecords.levelAudited} label="Level Audited">
                   {ar.levelAudited}
                 </LabeledText>
-                <LabeledText
-                  condition={dataVisibility.academicRecords.attendance}
-                  label="Attendance"
-                >
+                <LabeledText condition={dataVisibility.academicRecords.attendance} label="Attendance">
                   {ar.attendance !== undefined ? `${ar.attendance}%` : undefined}
                 </LabeledText>
               </LabeledContainer>
@@ -153,10 +139,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
             </LabeledContainer>
           );
         })}
-        <LabeledText
-          condition={dataVisibility.academicRecords.certificateRequests}
-          label="Certificate Requests"
-        >
+        <LabeledText condition={dataVisibility.academicRecords.certificateRequests} label="Certificate Requests">
           {student?.certificateRequests}
         </LabeledText>
       </LabeledContainer>

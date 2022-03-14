@@ -19,7 +19,10 @@ export const FormPhoneItem: React.FC<FormItem> = ({ index, removeItem }) => {
         />
         <LabeledCheckbox errorName="phone.primaryPhone" label="Primary" name={`phone.primaryPhone[${index}]`} />
       </Grid>
-      <IconButton onClick={removeItem && removeItem(index)} sx={{ height: "15%", marginLeft: -1, marginTop: SPACING }}>
+      <IconButton
+        onClick={removeItem && removeItem(index)}
+        sx={{ height: "15%", marginLeft: -1, marginTop: SPACING }}
+      >
         <CloseIcon />
       </IconButton>
     </>

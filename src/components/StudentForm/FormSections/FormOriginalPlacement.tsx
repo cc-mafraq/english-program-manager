@@ -18,15 +18,8 @@ export const FormOriginalPlacement: React.FC = () => {
           name="placement.origPlacementData.speaking"
           options={levelsPlus}
         />
-        <GridItemAutocomplete
-          label="Placement Level"
-          name="placement.origPlacementData.level"
-          options={levels}
-        />
-        <GridItemTextField
-          label="Placement Adjustment"
-          name="placement.origPlacementData.adjustment"
-        />
+        <GridItemAutocomplete label="Placement Level" name="placement.origPlacementData.level" options={levels} />
+        <GridItemTextField label="Placement Adjustment" name="placement.origPlacementData.adjustment" />
       </GridContainer>
     </>
   );
