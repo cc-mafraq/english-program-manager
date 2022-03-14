@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { TypographyProps } from "@mui/material";
 import { forOwn, map } from "lodash";
 import React, { useContext } from "react";
 import { LabeledContainer, LabeledText, ProgressBox } from ".";
@@ -14,6 +14,8 @@ interface GradeInfoProps {
   label: string;
 }
 
+const labelProps: TypographyProps = { fontWeight: "normal", variant: "subtitle1" };
+
 const GradeInfo: React.FC<GradeInfoProps> = ({ grade, label }) => {
   const {
     appState: { dataVisibility },
@@ -28,7 +30,7 @@ const GradeInfo: React.FC<GradeInfoProps> = ({ grade, label }) => {
   };
 
   return (
-    <LabeledContainer label={label} labelProps={{ fontWeight: "normal", variant: "subtitle1" }}>
+    <LabeledContainer label={label} labelProps={labelProps}>
       <LabeledText
         condition={dataVisibility.academicRecords.result}
         containerProps={gradeContainerProps(grade?.result)}
@@ -83,7 +85,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
                 paddingTop: 1,
               }}
             >
-              <Box width="100%">
+              <LabeledContainer label="Record Information" labelProps={labelProps}>
                 <LabeledText condition={dataVisibility.academicRecords.session} label="Session">
                   {ar.session}
                 </LabeledText>
@@ -102,19 +104,19 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
                 >
                   {ar.attendance !== undefined ? `${ar.attendance}%` : undefined}
                 </LabeledText>
-              </Box>
+              </LabeledContainer>
               <GradeInfo grade={ar.finalResult} label="Final Grade" />
               <GradeInfo grade={ar.exitWritingExam} label="Exit Writing Exam" />
               <GradeInfo grade={ar.exitSpeakingExam} label="Exit Speaking Exam" />
-              <Box marginTop={ar.comments ? 2 : 0} width="100%">
+              <LabeledContainer label="Teacher Comments" labelProps={labelProps}>
                 <LabeledText
                   condition={dataVisibility.academicRecords.teacherComments}
-                  label="Teacher Comments"
+                  label=""
                   textProps={{ fontSize: "11pt" }}
                 >
                   {ar.comments}
                 </LabeledText>
-              </Box>
+              </LabeledContainer>
             </LabeledContainer>
           );
         })}
