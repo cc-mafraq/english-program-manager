@@ -3,7 +3,7 @@ import { camelCase, get, join, map, some, values } from "lodash";
 import React, { useContext } from "react";
 import { LabeledContainer, LabeledText } from "..";
 import { AppContext, Nationality, Status, Student } from "../../interfaces";
-import { defaultBackgroundColor, getRepeatNum, isActive } from "../../services";
+import { defaultBackgroundColor, getRepeatNum, GREEN, isActive, RED } from "../../services";
 
 interface StudentInfoProps {
   student: Student;
@@ -28,9 +28,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
           condition={dataVisibility.programInformation.inviteTag}
           containerProps={{
             sx: {
-              backgroundColor: student.status.inviteTag
-                ? "rgba(198,224,180,1)"
-                : "rgba(255,175,175,1)",
+              backgroundColor: student.status.inviteTag ? GREEN : RED,
             },
           }}
           label="Invite"
@@ -41,9 +39,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
           condition={dataVisibility.programInformation.noContactList}
           containerProps={{
             sx: {
-              backgroundColor: student.status.noContactList
-                ? "rgba(255,175,175,1)"
-                : defaultBackgroundColor,
+              backgroundColor: student.status.noContactList ? RED : defaultBackgroundColor,
             },
           }}
           label="NCL"

@@ -27,6 +27,9 @@ export interface SessionResult {
 
 export const defaultBackgroundColor = "rgba(0,0,0,.06)";
 export const defaultBorderColor = "rgba(0,0,0,.5)";
+export const RED = "rgba(255,175,175,1)";
+export const GREEN = "rgba(198,224,180,1)";
+export const YELLOW = "rgba(245,255,150,1)";
 
 export const getRepeatNum = (student: Student): string | undefined => {
   const levelsTaken = map(student.academicRecords, "level");
@@ -67,12 +70,19 @@ export const getProgress = (student: Student): StudentProgress => {
   return progress;
 };
 
-export const getStudentPage = (students: Student[], page: number, rowsPerPage: number): Student[] => {
+export const getStudentPage = (
+  students: Student[],
+  page: number,
+  rowsPerPage: number,
+): Student[] => {
   const newRowsPerPage = rowsPerPage > students.length ? students.length : rowsPerPage;
   return slice(students, page * newRowsPerPage, (page + 1) * newRowsPerPage);
 };
 
-export const filterBySession = (students: Student[], session: Student["initialSession"]): Student[] => {
+export const filterBySession = (
+  students: Student[],
+  session: Student["initialSession"],
+): Student[] => {
   return filter(students, (s) => {
     return includes(map(s.academicRecords, "session"), session);
   });

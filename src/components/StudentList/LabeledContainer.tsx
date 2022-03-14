@@ -3,15 +3,26 @@ import { every, get, map } from "lodash";
 import React from "react";
 
 interface LabeledContainerProps {
+  childContainerProps?: BoxProps;
   condition?: boolean;
-  containerProps?: BoxProps;
   label: string;
   labelProps?: TypographyProps;
+  parentContainerProps?: BoxProps;
   showWhenEmpty?: boolean;
 }
 
-const defaultContainerProps: BoxProps = {
+const defaultChildContainerProps: BoxProps = {
   sx: { display: "flex", flexWrap: "wrap" },
+};
+
+const defaultParentContainerProps: BoxProps = {
+  display: "block",
+  marginRight: "2vh",
+  marginTop: "1vh",
+  padding: 0.5,
+  sx: {
+    float: "left",
+  },
 };
 
 const defaultLabelProps: TypographyProps = {
@@ -22,9 +33,10 @@ const defaultLabelProps: TypographyProps = {
 
 export const LabeledContainer: React.FC<LabeledContainerProps> = ({
   condition,
-  containerProps,
+  childContainerProps,
   labelProps,
   label,
+  parentContainerProps,
   showWhenEmpty,
   children,
 }) => {
@@ -35,19 +47,11 @@ export const LabeledContainer: React.FC<LabeledContainerProps> = ({
   });
 
   return condition && (!everyChildIsEmpty || showWhenEmpty) ? (
-    <Box
-      display="block"
-      sx={{
-        float: "left",
-        marginRight: "2vh",
-        marginTop: "1vh",
-        padding: 0.5,
-      }}
-    >
+    <Box {...defaultParentContainerProps} {...parentContainerProps}>
       <Typography {...defaultLabelProps} {...labelProps}>
         {label}
       </Typography>
-      <Box {...defaultContainerProps} {...containerProps}>
+      <Box {...defaultChildContainerProps} {...childContainerProps}>
         {children}
       </Box>
     </Box>
@@ -57,8 +61,9 @@ export const LabeledContainer: React.FC<LabeledContainerProps> = ({
 };
 
 LabeledContainer.defaultProps = {
+  childContainerProps: defaultChildContainerProps,
   condition: true,
-  containerProps: defaultContainerProps,
   labelProps: defaultLabelProps,
+  parentContainerProps: defaultParentContainerProps,
   showWhenEmpty: false,
 };

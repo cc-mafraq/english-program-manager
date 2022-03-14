@@ -11,7 +11,7 @@ interface CorrespondenceProps {
 
 export const Correspondence: React.FC<CorrespondenceProps> = ({ student }) => {
   return (
-    <LabeledContainer label="Correspondence">
+    <LabeledContainer label="Correspondence" parentContainerProps={{ marginBottom: 2 }}>
       {map(student.correspondence, (c) => {
         return (
           <Box

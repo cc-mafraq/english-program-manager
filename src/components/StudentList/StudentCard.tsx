@@ -43,7 +43,7 @@ export const StudentCard: React.FC<StudentCardProps> = ({
   // }, [student]);
 
   return (
-    <Card sx={{ marginLeft: "5px", paddingBottom: "5px", width: "100%" }}>
+    <Card sx={{ marginLeft: "5px", width: "100%" }}>
       <Box display="flex">
         <Box
           sx={{
