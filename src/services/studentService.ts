@@ -25,12 +25,6 @@ export interface SessionResult {
   session?: string;
 }
 
-export const defaultBackgroundColor = "rgba(0,0,0,.06)";
-export const defaultBorderColor = "rgba(0,0,0,.5)";
-export const RED = "rgba(255,175,175,1)";
-export const GREEN = "rgba(198,224,180,1)";
-export const YELLOW = "rgba(245,255,150,1)";
-
 export const getRepeatNum = (student: Student): string | undefined => {
   const levelsTaken = map(student.academicRecords, "level");
   const levelCounts = countBy(levelsTaken);

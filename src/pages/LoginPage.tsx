@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Card, Container } from "@mui/material";
+import { Avatar, Box, Button, Card, Container, useTheme } from "@mui/material";
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { loginWithGoogle } from "../services";
@@ -9,6 +9,7 @@ export const LoginPage = () => {
     await loginWithGoogle();
     navigate("/epd");
   };
+  const theme = useTheme();
 
   return (
     <Container
@@ -37,12 +38,12 @@ export const LoginPage = () => {
           width: "30vw",
         }}
       >
-        <Avatar src="./assets/ep-logo-full.png" sx={{ height: 56, width: 56 }} />
+        <Avatar src="./assets/ep-logo-full-white.png" sx={{ height: 56, width: 56 }} />
         <Box sx={{ mt: 1 }}>
           <Button
             fullWidth
             onClick={handleLogin}
-            // sx={{ color: "secondary.main" }}
+            sx={{ backgroundColor: theme.palette.mode === "light" ? "primary.main" : "primary.dark" }}
             variant="contained"
           >
             Sign In With Google

@@ -1,6 +1,6 @@
 import { Box, BoxProps, SxProps, Theme, Typography, TypographyProps } from "@mui/material";
 import React from "react";
-import { defaultBackgroundColor, defaultBorderColor } from "../../services";
+import { useColors } from "../../hooks";
 
 interface LabeledTextProps {
   condition?: boolean;
@@ -10,20 +10,6 @@ interface LabeledTextProps {
   showWhenEmpty?: boolean;
   textProps?: TypographyProps;
 }
-
-const defaultContainerProps: BoxProps = {
-  sx: {
-    backgroundColor: defaultBackgroundColor,
-    border: 1,
-    borderColor: defaultBorderColor,
-    float: "left",
-    marginRight: 0.5,
-    marginTop: 0.5,
-    padding: 2,
-    paddingBottom: 1,
-    paddingTop: 1,
-  },
-};
 
 const defaultLabelProps: TypographyProps = {
   color: "text.secondary",
@@ -44,9 +30,24 @@ export const LabeledText: React.FC<LabeledTextProps> = ({
   textProps,
   children,
 }) => {
+  const { defaultBackgroundColor, defaultBorderColor } = useColors();
+  const defaultContainerProps: BoxProps = {
+    sx: {
+      backgroundColor: defaultBackgroundColor,
+      border: 1,
+      borderColor: defaultBorderColor,
+      float: "left",
+      marginRight: 0.5,
+      marginTop: 0.5,
+      padding: 2,
+      paddingBottom: 1,
+      paddingTop: 1,
+    },
+  };
   const sx: SxProps<Theme> | undefined = containerProps?.sx
     ? ({ ...defaultContainerProps.sx, ...containerProps.sx } as SxProps<Theme>)
     : defaultContainerProps.sx;
+
   return condition && (children || showWhenEmpty) ? (
     <Box {...defaultContainerProps} {...containerProps} sx={sx}>
       <Typography {...defaultLabelProps} {...labelProps}>
@@ -63,7 +64,7 @@ export const LabeledText: React.FC<LabeledTextProps> = ({
 
 LabeledText.defaultProps = {
   condition: true,
-  containerProps: defaultContainerProps,
+  containerProps: undefined,
   labelProps: defaultLabelProps,
   showWhenEmpty: false,
   textProps: defaultTextProps,

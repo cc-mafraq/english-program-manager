@@ -1,5 +1,5 @@
 import LogoutIcon from "@mui/icons-material/Logout";
-import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
+import { AppBar, IconButton, Toolbar, Typography, useTheme } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { MenuDrawer } from "..";
@@ -8,6 +8,7 @@ import { logout } from "../../services";
 const pageName = "Student Database";
 
 export const MenuBar = () => {
+  const theme = useTheme();
   const navigate = useNavigate();
   const handleLogout = async () => {
     await logout();
@@ -15,7 +16,10 @@ export const MenuBar = () => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar
+      position="static"
+      sx={{ background: theme.palette.mode === "light" ? theme.palette.primary.main : "#1B2027" }}
+    >
       <Toolbar
         sx={{
           justifyContent: "space-between",

@@ -2,8 +2,9 @@ import { Box } from "@mui/material";
 import { camelCase, get, join, map, some, values } from "lodash";
 import React, { useContext } from "react";
 import { LabeledContainer, LabeledText } from "..";
+import { useColors } from "../../hooks";
 import { AppContext, Nationality, Status, Student } from "../../interfaces";
-import { defaultBackgroundColor, getRepeatNum, GREEN, isActive, RED } from "../../services";
+import { getRepeatNum, isActive } from "../../services";
 
 interface StudentInfoProps {
   student: Student;
@@ -13,6 +14,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
   const {
     appState: { dataVisibility },
   } = useContext(AppContext);
+  const { defaultBackgroundColor, green, red } = useColors();
 
   const allCheckboxesFalse = (label: string): boolean => {
     return some(values(get(dataVisibility, camelCase(label))));
@@ -25,7 +27,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
           condition={dataVisibility.programInformation.inviteTag}
           containerProps={{
             sx: {
-              backgroundColor: student.status.inviteTag ? GREEN : RED,
+              backgroundColor: student.status.inviteTag ? green : red,
             },
           }}
           label="Invite"
@@ -36,7 +38,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
           condition={dataVisibility.programInformation.noContactList}
           containerProps={{
             sx: {
-              backgroundColor: student.status.noContactList ? RED : defaultBackgroundColor,
+              backgroundColor: student.status.noContactList ? red : defaultBackgroundColor,
             },
           }}
           label="NCL"

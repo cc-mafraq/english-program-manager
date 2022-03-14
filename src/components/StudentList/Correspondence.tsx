@@ -2,14 +2,16 @@ import { Box, Typography } from "@mui/material";
 import { map } from "lodash";
 import React from "react";
 import { LabeledContainer } from ".";
+import { useColors } from "../../hooks";
 import { Student } from "../../interfaces";
-import { defaultBackgroundColor, defaultBorderColor } from "../../services";
 
 interface CorrespondenceProps {
   student: Student;
 }
 
 export const Correspondence: React.FC<CorrespondenceProps> = ({ student }) => {
+  const { defaultBackgroundColor, defaultBorderColor } = useColors();
+
   return (
     <LabeledContainer label="Correspondence" parentContainerProps={{ marginBottom: 2 }}>
       {map(student.correspondence, (c) => {

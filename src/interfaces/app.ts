@@ -1,5 +1,54 @@
+import { PaletteMode, ThemeOptions } from "@mui/material";
+import { grey } from "@mui/material/colors";
 import { createContext, Dispatch } from "react";
 import { Student } from ".";
+
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+export const voidFn = () => {};
+
+export const getDesignTokens = (mode: PaletteMode): ThemeOptions => {
+  const lightPrimaryColor = "#002060";
+  const lightSecondaryColor = "#196da7";
+  const darkPrimaryColor = "#58a6ff";
+  const darkBackgroundColor = "#161b22";
+  const darkSecondaryColor = "#599bd9";
+
+  return {
+    palette: {
+      mode,
+      ...(mode === "light"
+        ? {
+            primary: {
+              main: lightPrimaryColor,
+            },
+            secondary: {
+              main: lightSecondaryColor,
+            },
+          }
+        : {
+            background: {
+              default: darkBackgroundColor,
+              paper: darkBackgroundColor,
+            },
+            primary: {
+              main: darkPrimaryColor,
+            },
+            secondary: {
+              main: darkSecondaryColor,
+            },
+            text: {
+              primary: grey[300],
+              secondary: grey[400],
+            },
+          }),
+    },
+  };
+};
+
+export interface AppAction {
+  payload: Partial<AppState>;
+  type: "setDataVisibility"; // add | to add more actions in the future
+}
 
 export interface DataVisibility {
   academicRecords: {
@@ -74,14 +123,6 @@ export interface AppState {
   dataVisibility: DataVisibility;
   students: Student[];
 }
-
-export interface AppAction {
-  payload: Partial<AppState>;
-  type: "setDataVisibility"; // add | to add more actions in the future
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-export const voidFn = () => {};
 
 export const initialAppState: AppState = {
   dataVisibility: {
