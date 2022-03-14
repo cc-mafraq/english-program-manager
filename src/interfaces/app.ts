@@ -11,7 +11,6 @@ export interface DataVisibility {
     level: boolean;
     levelAudited: boolean;
     progress: boolean;
-    result: boolean;
     session: boolean;
     teacherComments: boolean;
   };
@@ -95,7 +94,6 @@ export const initialAppState: AppState = {
       level: true,
       levelAudited: true,
       progress: true,
-      result: true,
       session: true,
       teacherComments: true,
     },
