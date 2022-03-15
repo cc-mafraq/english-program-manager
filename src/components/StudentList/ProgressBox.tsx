@@ -1,3 +1,5 @@
+import { useTheme } from "@mui/material";
+import { grey } from "@mui/material/colors";
 import { join, last, map } from "lodash";
 import React from "react";
 import { LabeledText } from "..";
@@ -12,6 +14,10 @@ export const ProgressBox = ({
   level: GenderedLevel;
   sessionResults?: SessionResult[];
 }) => {
+  const theme = useTheme();
+  const lastSessionResult = last(sessionResults)?.result;
+  const isDarkAndYellow =
+    theme.palette.mode === "dark" && lastSessionResult === undefined && sessionResults?.length;
   const { defaultBackgroundColor, green, yellow, red } = useColors();
 
   return (
@@ -21,9 +27,9 @@ export const ProgressBox = ({
           backgroundColor:
             sessionResults?.length === 0
               ? defaultBackgroundColor
-              : last(sessionResults)?.result === "P"
+              : lastSessionResult === "P"
               ? green
-              : last(sessionResults)?.result === undefined
+              : lastSessionResult === undefined
               ? yellow
               : red,
 
@@ -33,8 +39,14 @@ export const ProgressBox = ({
         },
       }}
       label={level}
-      labelProps={{ fontWeight: "bold" }}
+      labelProps={{
+        color: isDarkAndYellow ? grey[800] : theme.palette.text.secondary,
+        fontWeight: "bold",
+      }}
       showWhenEmpty
+      textProps={{
+        color: isDarkAndYellow ? grey[900] : theme.palette.text.primary,
+      }}
     >
       {join(
         map(sessionResults, (sr) => {
