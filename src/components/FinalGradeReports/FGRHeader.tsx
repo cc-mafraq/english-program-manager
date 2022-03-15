@@ -26,7 +26,7 @@ export const FGRHeader: React.FC<FGRHeaderProps> = ({ borderSize, smallBorderSiz
       }}
     >
       <Grid item marginBottom="auto" marginTop="auto" xs={1}>
-        <img alt="EP Logo" src="./assets/ep-logo-full-white.png" width={logoSize} />
+        <img alt="EP Logo" src="./assets/ep-logo-full.png" width={logoSize} />
       </Grid>
       <Grid item xs={7}>
         <Typography color="black" fontSize={englishFontSize} fontWeight="bold" textAlign="center" variant="h5">
