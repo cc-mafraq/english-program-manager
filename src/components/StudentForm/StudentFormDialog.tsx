@@ -1,5 +1,6 @@
-import { Box, Dialog, useTheme } from "@mui/material";
+import { Box, Dialog } from "@mui/material";
 import React from "react";
+import { useColors } from "../../hooks";
 import { Student } from "../../interfaces";
 import { StudentForm } from "./StudentForm";
 
@@ -16,7 +17,7 @@ export const StudentFormDialog: React.FC<StudentFormDialogProps> = ({
   selectedStudent,
   students,
 }) => {
-  const theme = useTheme();
+  const { popoverColor } = useColors();
 
   return (
     <Dialog
@@ -25,7 +26,7 @@ export const StudentFormDialog: React.FC<StudentFormDialogProps> = ({
       open={open}
       PaperProps={{
         style: {
-          backgroundColor: theme.palette.mode === "light" ? "#f5f5f5" : "#020208",
+          backgroundColor: popoverColor,
           overflowX: "hidden",
         },
       }}

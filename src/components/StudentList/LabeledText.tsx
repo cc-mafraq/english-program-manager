@@ -1,6 +1,7 @@
 import { Box, BoxProps, SxProps, Theme, Typography, TypographyProps } from "@mui/material";
 import React from "react";
 import { useColors } from "../../hooks";
+import { defaultBorderColor } from "../../interfaces";
 
 interface LabeledTextProps {
   condition?: boolean;
@@ -30,7 +31,7 @@ export const LabeledText: React.FC<LabeledTextProps> = ({
   textProps,
   children,
 }) => {
-  const { defaultBackgroundColor, defaultBorderColor } = useColors();
+  const { defaultBackgroundColor } = useColors();
   const defaultContainerProps: BoxProps = {
     sx: {
       backgroundColor: defaultBackgroundColor,

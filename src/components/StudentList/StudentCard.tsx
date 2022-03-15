@@ -1,8 +1,7 @@
 import { Box, Card, CardContent, CardMedia, Tab, Tabs, useTheme } from "@mui/material";
 import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import { Correspondence, StudentCardHeader, StudentInfo } from "..";
-import { useColors } from "../../hooks";
-import { AppContext, Student } from "../../interfaces";
+import { AppContext, darkBlueBackground, Student } from "../../interfaces";
 import { getStudentImage } from "../../services";
 import { AcademicRecords } from "./AcademicRecords";
 
@@ -23,7 +22,6 @@ export const StudentCard: React.FC<StudentCardProps> = ({
   } = useContext(AppContext);
   const [tabValue, setTabValue] = React.useState(0);
   const theme = useTheme();
-  const { darkBlueBackground } = useColors();
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);

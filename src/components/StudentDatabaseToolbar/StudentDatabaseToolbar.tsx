@@ -48,7 +48,7 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
   const { iconColor } = useColors();
 
   return (
-    <AppBar elevation={0} position="sticky">
+    <AppBar color="default" elevation={0} position="sticky">
       <Toolbar
         sx={{
           justifyContent: "space-between",

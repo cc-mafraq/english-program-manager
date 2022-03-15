@@ -4,6 +4,7 @@ import JSZip from "jszip";
 import { cloneDeep, isEqual, nth, pull, replace } from "lodash";
 import React, { useState } from "react";
 import { FGRDialogHeader, FinalGradeReportList } from ".";
+import { useColors } from "../../hooks";
 import { Student } from "../../interfaces";
 import {
   getAllSessions,
@@ -23,6 +24,7 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({
   open,
   students,
 }) => {
+  const { popoverColor } = useColors();
   const scale = 0.5;
   const fgrWidth = 640 * scale;
   const dialogWidth = `${fgrWidth * 3 + 80 * scale + 42}px`;
@@ -67,7 +69,7 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({
       fullScreen
       onClose={handleDialogClose}
       open={open}
-      PaperProps={{ style: { backgroundColor: "#f5f5f5", overflowX: "hidden" } }}
+      PaperProps={{ style: { backgroundColor: popoverColor, overflowX: "hidden" } }}
       sx={{
         marginLeft: "50%",
         marginTop: "5%",

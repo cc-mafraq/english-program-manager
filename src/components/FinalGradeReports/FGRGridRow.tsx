@@ -24,19 +24,19 @@ export const FGRGridRow: React.FC<FGRGridRowProps> = ({
   const fontSize = `${12 * (scale || 1)}pt`;
 
   return (
-    <Grid borderBottom={smallBorderSize} borderColor="#222222" container>
+    <Grid container sx={{ borderBottom: smallBorderSize, borderColor: "#222222" }}>
       <Grid item padding={spacing} sx={{ backgroundColor: labelBackgroundColor }} xs={4}>
-        <Typography fontSize={fontSize} fontWeight="bold" variant="body1">
+        <Typography color="black" fontSize={fontSize} fontWeight="bold" variant="body1">
           {colText1}
         </Typography>
       </Grid>
       <Grid item padding={spacing} sx={{ backgroundColor: labelBackgroundColor }} xs={4}>
-        <Typography fontSize={fontSize} fontWeight="bold" textAlign="right" variant="body1">
+        <Typography color="black" fontSize={fontSize} fontWeight="bold" textAlign="right" variant="body1">
           {colText2}
         </Typography>
       </Grid>
       <Grid item marginBottom="auto" marginTop="auto" padding={spacing} xs={4}>
-        <Typography fontSize={fontSize} textAlign="center" variant="body1" {...colText3Props}>
+        <Typography color="black" fontSize={fontSize} textAlign="center" variant="body1" {...colText3Props}>
           {colText3}
         </Typography>
       </Grid>

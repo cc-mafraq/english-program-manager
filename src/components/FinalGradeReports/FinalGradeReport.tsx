@@ -1,14 +1,14 @@
 import CloseIcon from "@mui/icons-material/Close";
 import DownloadIcon from "@mui/icons-material/Download";
 import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
-import { Box, Card, Grid, IconButton, useTheme } from "@mui/material";
+import { Box, Card, Grid, IconButton } from "@mui/material";
 import download from "downloadjs";
 import { toPng } from "html-to-image";
 import JSZip from "jszip";
 import { map, nth, replace } from "lodash";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FGRGridRow, FGRGridRowProps, FGRHeader } from ".";
-import { FinalResult, Student } from "../../interfaces";
+import { FinalResult, lightPrimaryColor, Student } from "../../interfaces";
 import {
   getElectiveFullName,
   getLevelForNextSession,
@@ -47,17 +47,15 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
   const academicRecord = nth(student.academicRecords, studentAcademicRecord.academicRecordIndex);
   const fileName = `${student.epId}_${studentAcademicRecord.academicRecordIndex + 1}.png`;
 
-  const imageWidth = width - 30 * scale;
+  const imageWidth = width - 32 * scale;
   const fgrHeight = 870;
   const headerSpacing = 2 * scale;
-  const borderSize = 15 * scale;
+  const borderSize = 16 * scale;
   const smallBorderSize = 1;
   const cardMargin = `${5 * scale}px`;
   const cardPadding = `${10 * scale}px`;
   const backgroundColorMain = "rgba(255,242,204,1)";
   const backgroundColorSecondary = "rgba(117,219,255,1)";
-  const theme = useTheme();
-  const primaryColor = theme.palette.primary.main;
 
   const [isDownloaded, setIsDownloaded] = useState(false);
   const componentRef = useRef(null);
@@ -67,7 +65,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
       return async () => {
         if (componentRef.current) {
           const imgData = await toPng(componentRef.current, {
-            backgroundColor: primaryColor,
+            backgroundColor: lightPrimaryColor,
             canvasHeight: fgrHeight,
             canvasWidth: width / scale,
             skipAutoScale: true,
@@ -81,7 +79,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
         return null;
       };
     },
-    [fileName, primaryColor, scale, width],
+    [fileName, scale, width],
   );
 
   useEffect(() => {
@@ -204,24 +202,30 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
       <div ref={componentRef} style={{ width }}>
         <Box
           sx={{
+            backgroundColor: "white",
             border: borderSize,
-            borderBottom: 0,
-            borderColor: { primaryColor },
+            borderBottom: smallBorderSize,
+            borderColor: lightPrimaryColor,
           }}
         >
           <img alt="FGR Border" src="./assets/fgr-border.jpg" width={imageWidth} />
         </Box>
-        <Grid container marginLeft={0} marginTop={0} sx={{ backgroundColor: "white" }} width={width}>
+        <Grid container sx={{ backgroundColor: "white" }} width={width}>
           <FGRHeader
             borderSize={borderSize}
             scale={scale}
             smallBorderSize={smallBorderSize}
             spacing={headerSpacing}
           />
-          <Grid border={borderSize} borderBottom={0} borderColor={primaryColor} borderTop={0} container>
-            {map(fgrGridRowData, (fgrData) => {
+          <Grid border={borderSize} borderBottom={0} borderColor={lightPrimaryColor} borderTop={0} container>
+            {map(fgrGridRowData, (fgrData, i) => {
               return fgrData.conditionToShow === undefined || fgrData.conditionToShow ? (
-                <FGRGridRow scale={scale} smallBorderSize={smallBorderSize} {...fgrData} />
+                <FGRGridRow
+                  key={`fgr-row-${i}-${JSON.stringify(studentAcademicRecord)}`}
+                  scale={scale}
+                  smallBorderSize={i === fgrGridRowData.length - 1 ? 0 : smallBorderSize}
+                  {...fgrData}
+                />
               ) : (
                 <></>
               );
@@ -230,9 +234,10 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
         </Grid>
         <Box
           sx={{
+            backgroundColor: "white",
             border: borderSize,
-            borderBottom: 0,
-            borderColor: { primaryColor },
+            borderBottom: smallBorderSize,
+            borderColor: lightPrimaryColor,
             transform: "scaleY(-1)",
           }}
         >

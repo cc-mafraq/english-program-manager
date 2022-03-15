@@ -4,6 +4,7 @@ import UploadIcon from "@mui/icons-material/Upload";
 import { Box, Popover, useTheme } from "@mui/material";
 import React, { ChangeEvent } from "react";
 import { LabeledIconButton } from "..";
+import { useColors } from "../../hooks";
 
 interface ActionsPopoverProps {
   anchorEl: HTMLButtonElement | null;
@@ -22,6 +23,7 @@ export const ActionsPopover: React.FC<ActionsPopoverProps> = ({
 }) => {
   const open = Boolean(anchorEl);
   const theme = useTheme();
+  const { popoverColor } = useColors();
 
   return (
     <Popover
@@ -32,7 +34,7 @@ export const ActionsPopover: React.FC<ActionsPopoverProps> = ({
       }}
       onClose={handleClose}
       open={open}
-      PaperProps={{ style: { backgroundColor: theme.palette.mode === "light" ? "#f5f5f5" : "black" } }}
+      PaperProps={{ style: { backgroundColor: theme.palette.mode === "light" ? "white" : popoverColor } }}
     >
       <Box
         sx={{

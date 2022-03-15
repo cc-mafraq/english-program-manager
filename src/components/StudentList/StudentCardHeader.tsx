@@ -49,7 +49,10 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({
         </IconButton>
       </Box>
       <Box paddingBottom={1}>
-        <Typography color={theme.palette.secondary.main} variant="h6">
+        <Typography
+          color={theme.palette.mode === "light" ? theme.palette.secondary.main : theme.palette.primary.light}
+          variant="h6"
+        >
           {student.epId ? student.epId : "Invalid"}
         </Typography>
       </Box>

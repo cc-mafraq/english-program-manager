@@ -1,5 +1,5 @@
-import { createTheme, PaletteMode, ThemeProvider } from "@mui/material";
-import React, { useReducer } from "react";
+import { createTheme, PaletteMode, ThemeProvider, useMediaQuery } from "@mui/material";
+import React, { useEffect, useReducer } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { MenuBar } from "./components";
 import { useLocal } from "./hooks";
@@ -14,7 +14,8 @@ export const ColorModeContext = React.createContext({
 export const App = () => {
   const { save } = useLocal("appState");
   const [appState, appDispatch] = useReducer(reducer(save), initialAppState);
-  const [mode, setMode] = React.useState<PaletteMode>("dark");
+  const isDarkPreference = useMediaQuery("(prefers-color-scheme: dark)");
+  const [mode, setMode] = React.useState<PaletteMode>(isDarkPreference ? "dark" : "light");
   const colorMode = React.useMemo(() => {
     return {
       toggleColorMode: () => {
@@ -24,6 +25,10 @@ export const App = () => {
       },
     };
   }, []);
+
+  useEffect(() => {
+    setMode(isDarkPreference ? "dark" : "light");
+  }, [isDarkPreference]);
 
   const theme = React.useMemo(() => {
     return createTheme(getDesignTokens(mode));
