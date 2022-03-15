@@ -1,5 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Divider, Grid, Typography } from "@mui/material";
+import { green, grey } from "@mui/material/colors";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { isEmpty } from "lodash";
 import React from "react";
@@ -8,6 +9,7 @@ import {
   FormAcademicRecords,
   FormCertRequests,
   FormCorrespondence,
+  FormDemographics,
   FormLiteracyAndZoom,
   FormName,
   FormOriginalPlacement,
@@ -15,7 +17,6 @@ import {
   FormPlacement,
   FormProgramInformation,
   FormStatus,
-  FormDemographics,
 } from "..";
 import { Status, Student } from "../../interfaces";
 import {
@@ -90,9 +91,15 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students, selectedStud
         <FormAcademicRecords selectedStudent={selectedStudent} students={students} />
         <Button
           className="update-button"
-          color="primary"
           onClick={methods.handleSubmit(onSubmit)}
-          sx={{ marginTop: SPACING }}
+          sx={{
+            "&:hover": {
+              backgroundColor: green[900],
+            },
+            backgroundColor: green[800],
+            color: grey[200],
+            marginTop: SPACING,
+          }}
           type="submit"
           variant="contained"
         >

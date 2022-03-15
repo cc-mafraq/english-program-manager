@@ -13,8 +13,8 @@ export const lightPrimaryColor = "#002060";
 export const getDesignTokens = (mode: PaletteMode): ThemeOptions => {
   const lightSecondaryColor = "#196da7";
   const darkPrimaryColor = "#58a6ff";
+  const darkSecondaryColor = "#004d9a";
   const darkBackgroundColor = "#161b22";
-  const darkSecondaryColor = "#599bd9";
 
   return {
     palette: {
