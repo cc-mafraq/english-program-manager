@@ -2,6 +2,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Grid, IconButton } from "@mui/material";
 import React from "react";
 import { FormGrade, GridContainer, GridItemAutocomplete, GridItemTextField, StudentFormLabel } from "../../..";
+import { useColors } from "../../../../hooks";
 import { genderedLevels, Student } from "../../../../interfaces";
 import { FormItem, getAllSessions, SPACING } from "../../../../services";
 
@@ -11,11 +12,16 @@ export const FormAcademicRecordsItem: React.FC<FormItem & { students: Student[] 
   students,
 }) => {
   const recordName = `academicRecords[${index}]`;
+  const { iconColor } = useColors();
+
   return (
     <>
       <Grid container marginLeft={SPACING}>
         <StudentFormLabel textProps={{ marginTop: SPACING }}>Academic Record {Number(index) + 1}</StudentFormLabel>
-        <IconButton onClick={removeItem && removeItem(index)} sx={{ marginLeft: SPACING / 2, top: "15%" }}>
+        <IconButton
+          onClick={removeItem && removeItem(index)}
+          sx={{ color: iconColor, marginLeft: SPACING / 2, top: "15%" }}
+        >
           <CloseIcon />
         </IconButton>
       </Grid>

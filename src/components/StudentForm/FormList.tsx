@@ -1,4 +1,5 @@
-import { Button, Grid, GridProps } from "@mui/material";
+import { Button, Grid, GridProps, useTheme } from "@mui/material";
+import { grey } from "@mui/material/colors";
 import { map } from "lodash";
 import React from "react";
 
@@ -18,6 +19,8 @@ export const FormList: React.FC<FormListProps> = ({
   buttonGridProps,
   children,
 }) => {
+  const theme = useTheme();
+
   return (
     <>
       {map(list, (item, i) => {
@@ -34,7 +37,23 @@ export const FormList: React.FC<FormListProps> = ({
         });
       })}
       <Grid item xs {...buttonGridProps}>
-        <Button color="secondary" onClick={addItem} variant="contained">
+        <Button
+          color={theme.palette.mode === "light" ? "secondary" : "primary"}
+          onClick={addItem}
+          sx={
+            theme.palette.mode === "dark"
+              ? {
+                  backgroundColor: "#2C313A",
+                  border: 1,
+                  borderColor: grey[700],
+                  borderRadius: 2,
+                  fontWeight: "bold",
+                  textTransform: "none",
+                }
+              : {}
+          }
+          variant={theme.palette.mode === "light" ? "contained" : "text"}
+        >
           {buttonLabel}
         </Button>
       </Grid>
