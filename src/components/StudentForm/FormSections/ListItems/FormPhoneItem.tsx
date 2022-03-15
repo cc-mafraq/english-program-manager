@@ -2,10 +2,13 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Grid, IconButton } from "@mui/material";
 import React from "react";
 import { GridItemTextField, LabeledCheckbox } from "../..";
+import { useColors } from "../../../../hooks";
 import { FormItem, SPACING } from "../../../../services";
 
 export const FormPhoneItem: React.FC<FormItem> = ({ index, removeItem }) => {
   const phoneName = `phone.phoneNumbers[${index}]`;
+  const { iconColor } = useColors();
+
   return (
     <>
       <Grid item padding={SPACING} xs>
@@ -21,7 +24,7 @@ export const FormPhoneItem: React.FC<FormItem> = ({ index, removeItem }) => {
       </Grid>
       <IconButton
         onClick={removeItem && removeItem(index)}
-        sx={{ height: "15%", marginLeft: -1, marginTop: SPACING }}
+        sx={{ color: iconColor, height: "15%", marginLeft: -1, marginTop: SPACING }}
       >
         <CloseIcon />
       </IconButton>

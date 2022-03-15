@@ -3,10 +3,13 @@ import { Grid, IconButton } from "@mui/material";
 import moment from "moment";
 import React from "react";
 import { GridItemDatePicker, GridItemTextField } from "../..";
+import { useColors } from "../../../../hooks";
 import { FormItem, MOMENT_FORMAT, SPACING } from "../../../../services";
 
 export const FormCorrespondenceItem: React.FC<FormItem> = ({ index, removeItem }) => {
   const correspondenceName = `correspondence[${index}]`;
+  const { iconColor } = useColors();
+
   return (
     <>
       <Grid container>
@@ -22,7 +25,7 @@ export const FormCorrespondenceItem: React.FC<FormItem> = ({ index, removeItem }
           name={`${correspondenceName}.notes`}
           textFieldProps={{ multiline: true, rows: 4 }}
         />
-        <IconButton onClick={removeItem && removeItem(index)} sx={{ height: "30%" }}>
+        <IconButton onClick={removeItem && removeItem(index)} sx={{ color: iconColor, height: "30%" }}>
           <CloseIcon />
         </IconButton>
       </Grid>
