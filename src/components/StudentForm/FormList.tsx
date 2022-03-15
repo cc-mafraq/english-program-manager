@@ -50,7 +50,7 @@ export const FormList: React.FC<FormListProps> = ({
                   fontWeight: "bold",
                   textTransform: "none",
                 }
-              : {}
+              : { borderRadius: 2, fontWeight: "bold", textTransform: "none" }
           }
           variant={theme.palette.mode === "light" ? "contained" : "text"}
         >
