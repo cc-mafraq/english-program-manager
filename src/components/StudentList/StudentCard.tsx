@@ -1,7 +1,7 @@
-import { Box, Card, CardContent, CardMedia, Tab, Tabs } from "@mui/material";
+import { Box, Card, CardContent, CardMedia, Tab, Tabs, useTheme } from "@mui/material";
 import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import { Correspondence, StudentCardHeader, StudentInfo } from "..";
-import { AppContext, Student } from "../../interfaces";
+import { AppContext, darkBlueBackground, Student } from "../../interfaces";
 import { getStudentImage } from "../../services";
 import { AcademicRecords } from "./AcademicRecords";
 
@@ -21,6 +21,7 @@ export const StudentCard: React.FC<StudentCardProps> = ({
     appState: { dataVisibility },
   } = useContext(AppContext);
   const [tabValue, setTabValue] = React.useState(0);
+  const theme = useTheme();
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -43,7 +44,13 @@ export const StudentCard: React.FC<StudentCardProps> = ({
   // }, [student]);
 
   return (
-    <Card sx={{ marginLeft: "5px", width: "100%" }}>
+    <Card
+      sx={{
+        backgroundColor: theme.palette.mode === "dark" ? darkBlueBackground : undefined,
+        marginLeft: "5px",
+        width: "100%",
+      }}
+    >
       <Box display="flex">
         <Box
           sx={{

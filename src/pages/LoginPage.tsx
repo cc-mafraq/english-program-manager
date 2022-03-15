@@ -1,6 +1,8 @@
-import { Avatar, Box, Button, Card, Container } from "@mui/material";
+import { Avatar, Box, Button, Card, Container, useTheme } from "@mui/material";
+import { grey } from "@mui/material/colors";
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
+import { lightPrimaryColor } from "../interfaces";
 import { loginWithGoogle } from "../services";
 
 export const LoginPage = () => {
@@ -9,6 +11,8 @@ export const LoginPage = () => {
     await loginWithGoogle();
     navigate("/epd");
   };
+  const theme = useTheme();
+  const whiteOrGrey = theme.palette.mode === "light" ? "white" : grey[300];
 
   return (
     <Container
@@ -26,6 +30,7 @@ export const LoginPage = () => {
       <Card
         sx={{
           alignItems: "center",
+          backgroundColor: whiteOrGrey,
           display: "flex",
           flexDirection: "column",
           left: "50%",
@@ -42,7 +47,13 @@ export const LoginPage = () => {
           <Button
             fullWidth
             onClick={handleLogin}
-            // sx={{ color: "secondary.main" }}
+            sx={{
+              "&:hover": {
+                backgroundColor: "#000B44",
+              },
+              backgroundColor: lightPrimaryColor,
+              color: whiteOrGrey,
+            }}
             variant="contained"
           >
             Sign In With Google

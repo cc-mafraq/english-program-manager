@@ -1,9 +1,10 @@
-import { TypographyProps } from "@mui/material";
+import { TypographyProps, useTheme } from "@mui/material";
 import { forOwn, map, omit, some, values } from "lodash";
 import React, { useContext } from "react";
 import { LabeledContainer, LabeledText, ProgressBox } from ".";
+import { useColors } from "../../hooks";
 import { AppContext, FinalResult, GenderedLevel, Grade, Student } from "../../interfaces";
-import { getProgress, GREEN, RED } from "../../services";
+import { getProgress } from "../../services";
 
 interface AcademicRecordsProps {
   student: Student;
@@ -18,10 +19,12 @@ interface GradeInfoProps {
 const labelProps: TypographyProps = { fontWeight: "normal", variant: "subtitle1" };
 
 const GradeInfo: React.FC<GradeInfoProps> = ({ grade, label, gradeVisibility }) => {
+  const { green, red } = useColors();
+
   const gradeContainerProps = (result?: FinalResult) => {
     return {
       sx: {
-        backgroundColor: result === "P" ? GREEN : RED,
+        backgroundColor: result === "P" ? green : red,
       },
     };
   };
@@ -50,6 +53,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
     appState: { dataVisibility },
   } = useContext(AppContext);
   const progress = getProgress(student);
+  const theme = useTheme();
 
   return (
     <>
@@ -83,7 +87,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
               labelProps={{ fontSize: 20, fontWeight: "normal" }}
               parentContainerProps={{
                 border: 1,
-                borderColor: "rgba(0,0,0,0.4)",
+                borderColor: theme.palette.mode === "light" ? "#999999" : "#666666",
                 marginBottom: 1,
                 padding: 2,
                 paddingTop: 1,

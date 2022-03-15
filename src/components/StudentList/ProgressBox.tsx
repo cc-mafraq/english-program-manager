@@ -1,8 +1,11 @@
+import { useTheme } from "@mui/material";
+import { grey } from "@mui/material/colors";
 import { join, last, map } from "lodash";
 import React from "react";
 import { LabeledText } from "..";
+import { useColors } from "../../hooks";
 import { FinalResult, GenderedLevel } from "../../interfaces";
-import { defaultBackgroundColor, GREEN, RED, SessionResult, YELLOW } from "../../services";
+import { SessionResult } from "../../services";
 
 export const ProgressBox = ({
   level,
@@ -11,6 +14,12 @@ export const ProgressBox = ({
   level: GenderedLevel;
   sessionResults?: SessionResult[];
 }) => {
+  const theme = useTheme();
+  const lastSessionResult = last(sessionResults)?.result;
+  const isDarkAndYellow =
+    theme.palette.mode === "dark" && lastSessionResult === undefined && sessionResults?.length;
+  const { defaultBackgroundColor, green, yellow, red } = useColors();
+
   return (
     <LabeledText
       containerProps={{
@@ -18,11 +27,11 @@ export const ProgressBox = ({
           backgroundColor:
             sessionResults?.length === 0
               ? defaultBackgroundColor
-              : last(sessionResults)?.result === "P"
-              ? GREEN
-              : last(sessionResults)?.result === undefined
-              ? YELLOW
-              : RED,
+              : lastSessionResult === "P"
+              ? green
+              : lastSessionResult === undefined
+              ? yellow
+              : red,
 
           marginRight: "0.5vw",
           minWidth: "3vw",
@@ -30,8 +39,14 @@ export const ProgressBox = ({
         },
       }}
       label={level}
-      labelProps={{ fontWeight: "bold" }}
+      labelProps={{
+        color: isDarkAndYellow ? grey[800] : theme.palette.text.secondary,
+        fontWeight: "bold",
+      }}
       showWhenEmpty
+      textProps={{
+        color: isDarkAndYellow ? grey[900] : theme.palette.text.primary,
+      }}
     >
       {join(
         map(sessionResults, (sr) => {

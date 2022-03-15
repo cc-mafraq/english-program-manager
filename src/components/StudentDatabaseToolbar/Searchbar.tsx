@@ -3,6 +3,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { alpha, Box, IconButton, InputBase, useTheme } from "@mui/material";
 import { isEmpty } from "lodash";
 import React, { useState } from "react";
+import { useColors } from "../../hooks";
 
 interface SearchbarProps {
   handleSearchStringChange: (value: string) => void;
@@ -13,6 +14,7 @@ const searchDelay = 500;
 
 export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange }) => {
   const theme = useTheme();
+  const { iconColor } = useColors();
   const [value, setValue] = useState("");
 
   const handleLocalSearchStringChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -94,7 +96,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange }
           top: 0,
         }}
       >
-        <CloseIcon />
+        <CloseIcon sx={{ color: iconColor }} />
       </IconButton>
     </Box>
   );

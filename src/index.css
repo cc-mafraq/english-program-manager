@@ -9,3 +9,11 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
+
+/* https://stackoverflow.com/questions/38428322/react-component-full-screen-with-height-100 */
+html,
+body,
+#root,
+#root > div {
+  min-height: 100vh;
+}

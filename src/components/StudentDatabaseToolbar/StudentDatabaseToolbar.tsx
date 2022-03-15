@@ -1,10 +1,11 @@
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { AppBar, Box, IconButton, TablePagination, Toolbar } from "@mui/material";
+import { AppBar, Box, Divider, IconButton, TablePagination, Toolbar } from "@mui/material";
 import React, { ChangeEvent } from "react";
 import { ActionsPopover, Searchbar } from ".";
 import { DataVisibilityPopover } from "..";
+import { useColors } from "../../hooks";
 import { Student } from "../../interfaces";
 
 const handlePopoverClick = (setFn: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>) => {
@@ -44,6 +45,7 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
 }) => {
   const [actionsAnchorEl, setActionsAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const [dataFilterAnchorEl, setDataFilterAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const { iconColor } = useColors();
 
   return (
     <AppBar color="default" elevation={0} position="sticky">
@@ -66,10 +68,10 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
         <Box>
           <Searchbar handleSearchStringChange={handleSearchStringChange} />
           <IconButton>
-            <FilterAltIcon />
+            <FilterAltIcon sx={{ color: iconColor }} />
           </IconButton>
           <IconButton onClick={handlePopoverClick(setDataFilterAnchorEl)}>
-            <VisibilityOffIcon />
+            <VisibilityOffIcon sx={{ color: iconColor }} />
           </IconButton>
           <DataVisibilityPopover
             anchorEl={dataFilterAnchorEl}
@@ -86,6 +88,7 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
           rowsPerPageOptions={[10, 50, 100, 200, 1000]}
         />
       </Toolbar>
+      <Divider />
     </AppBar>
   );
 };

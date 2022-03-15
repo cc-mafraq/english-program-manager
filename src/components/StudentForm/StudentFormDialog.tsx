@@ -1,5 +1,6 @@
 import { Box, Dialog } from "@mui/material";
 import React from "react";
+import { useColors } from "../../hooks";
 import { Student } from "../../interfaces";
 import { StudentForm } from "./StudentForm";
 
@@ -16,12 +17,19 @@ export const StudentFormDialog: React.FC<StudentFormDialogProps> = ({
   selectedStudent,
   students,
 }) => {
+  const { popoverColor } = useColors();
+
   return (
     <Dialog
       fullScreen
       onClose={handleDialogClose}
       open={open}
-      PaperProps={{ style: { backgroundColor: "#f5f5f5", overflowX: "hidden" } }}
+      PaperProps={{
+        style: {
+          backgroundColor: popoverColor,
+          overflowX: "hidden",
+        },
+      }}
       sx={{
         marginLeft: "50%",
         marginTop: "1%",
