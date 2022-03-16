@@ -72,7 +72,8 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
           containerProps={{
             sx: {
               backgroundColor:
-                student.covidVaccine?.status === CovidStatus.FULL
+                student.covidVaccine?.status === CovidStatus.FULL ||
+                student.covidVaccine?.status === CovidStatus.EXEMPT
                   ? green
                   : student.covidVaccine?.status === CovidStatus.PART
                   ? yellow
@@ -85,7 +86,6 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
               theme.palette.mode === "dark" && student.covidVaccine?.status === CovidStatus.PART
                 ? grey[800]
                 : theme.palette.text.secondary,
-            fontWeight: "bold",
           }}
           textProps={{
             color:
