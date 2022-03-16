@@ -21,10 +21,12 @@ import {
   startsWith,
   toString,
   trim,
+  values,
 } from "lodash";
 import moment from "moment";
 import { array, bool, mixed, number, object, string } from "yup";
 import {
+  CovidStatus,
   DroppedOutReason,
   FinalResult,
   GenderedLevel,
@@ -70,6 +72,10 @@ const stringToInteger = (value: string, originalValue: string) => {
 
 const stringToStatus = (value: string, originalValue: string) => {
   return Status[originalValue as keyof typeof Status];
+};
+
+const stringToCovidStatus = (value: string, originalValue: string) => {
+  return originalValue as CovidStatus;
 };
 
 const stringToNationality = (value: string, originalValue: string) => {
@@ -128,6 +134,17 @@ const correspondenceSchema = object().shape({
   notes: string().required(
     "Correspondence notes are required if added. You can remove the correspondence by clicking the ❌ button",
   ),
+});
+
+const covidSchema = object().shape({
+  date: dateSchema.nullable().optional(),
+  reason: string().transform(emptyToNull).nullable().optional(),
+  status: mixed<CovidStatus>()
+    .oneOf(values(CovidStatus))
+    .transform(stringToCovidStatus)
+    .required("Vaccine status is required"),
+  suspectedFraud: bool().optional(),
+  suspectedFraudReason: string().transform(emptyToNull).nullable().optional(),
 });
 
 const literacySchema = object().shape({
@@ -251,10 +268,12 @@ export const studentFormSchema = object().shape({
     .required("Age is required"),
   certificateRequests: string().transform(emptyToNull).nullable().optional(),
   correspondence: array().of(correspondenceSchema),
+  covidVaccine: covidSchema,
   currentLevel: mixed<GenderedLevel>()
     .oneOf([...genderedLevels, "L5 GRAD"])
     .required("Current level is required"),
   epId: number().min(10000).max(99999).integer().required("ID is required"),
+  familyCoordinatorEntry: string().transform(emptyToNull).nullable().optional(),
   gender: mixed<"M" | "F">().oneOf(["M", "F"]).required("Gender is required"),
   initialSession: string()
     .matches(/(Fa|Sp) (I|II) \d{2}/, "Initial session must be Fa/Sp I/II year (e.g. Sp I 22)")

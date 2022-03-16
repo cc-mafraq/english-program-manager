@@ -2,7 +2,7 @@ import { Box, Card, CardContent, CardMedia, Tab, Tabs, useTheme } from "@mui/mat
 import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import { Correspondence, StudentCardHeader, StudentInfo } from "..";
 import { AppContext, darkBlueBackground, Student } from "../../interfaces";
-import { getStudentImage } from "../../services";
+import { getStudentImage, setStudentData } from "../../services";
 import { AcademicRecords } from "./AcademicRecords";
 
 interface StudentCardProps {
@@ -39,9 +39,9 @@ export const StudentCard: React.FC<StudentCardProps> = ({
     setImage();
   }, [student]);
 
-  // useEffect(() => {
-  //   setStudentData(student, { merge: true });
-  // }, [student]);
+  useEffect(() => {
+    setStudentData(student, { merge: true });
+  }, [student]);
 
   return (
     <Card

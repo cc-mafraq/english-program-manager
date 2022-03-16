@@ -19,6 +19,7 @@ import {
 import moment from "moment";
 import { MOMENT_FORMAT } from ".";
 import {
+  CovidStatus,
   DroppedOutReason,
   FinalResult,
   GenderedLevel,
@@ -426,3 +427,44 @@ export const parseAcademicRecordTeacherComments = (key: string, value: string, s
   if (!lastAcademicRecord) return;
   lastAcademicRecord.comments = value;
 };
+
+export const parseCovidStatus = (key: string, value: string, student: Student) => {
+  if (Number(value) !== 1) return;
+  switch (key) {
+    case "JORDANIAN UNVACC'D":
+    case "SYRIAN UNVACC'D":
+    case "OTHER NATIONALITY UNVACC'D":
+      student.covidVaccine.status = CovidStatus.UNV;
+      break;
+    case "JORDANIAN PARTIALLY VACC'D":
+    case "SYRIAN PARTIALLY VACC'D":
+    case "OTHER NATIONALITY PARTIALLY VACC'D":
+      student.covidVaccine.status = CovidStatus.PART;
+      break;
+    case "JORDANIAN FULLY VACC'D":
+    case "SYRIAN FULLY VACC'D":
+    case "OTHER NATIONALITY FULLY VACC'D":
+      student.covidVaccine.status = CovidStatus.FULL;
+      break;
+    case "EXEMPT FROM VACCINE":
+      student.covidVaccine.status = CovidStatus.EXEMPT;
+      break;
+    case "BOOSTER (THIRD DOSE)":
+      student.covidVaccine.status = CovidStatus.BOOST;
+      break;
+    case "ANSWERED BUT ANSWER UNCLEAR":
+      student.covidVaccine.status = CovidStatus.UNCL;
+      break;
+    case "DECLINED TO PROVIDE VACCINE INFO":
+      student.covidVaccine.status = CovidStatus.DECL;
+      break;
+    default:
+      break;
+  }
+};
+
+export const parseCovidDate = parseDateField("covidVaccine.date");
+export const parseCovidReason = parseOptionalString("covidVaccine.reason");
+export const parseCovidSuspectedFraud = parseOptionalBoolean("covidVaccine.suspectedFraud");
+export const parseCovidSuspectedFraudReason = parseOptionalString("covidVaccine.suspectedFraudReason");
+export const parseFamilyCoordinator = parseOptionalString("familyCoordinatorEntry");

@@ -21,6 +21,7 @@ export const FormProgramInformation: React.FC<FormProgramInformationProps> = ({ 
           options={statuses}
         />
         <GridItemAutocomplete freeSolo label="Initial Session" options={getAllSessions(students)} />
+        <GridItemTextField label="Family Coordinator Entry" name="familyCoordinatorEntry" />
       </GridContainer>
     </>
   );

@@ -1,6 +1,7 @@
 import { cloneDeep, first, forEach, get } from "lodash";
 import {
   AcademicRecord,
+  CovidStatus,
   DroppedOutReason,
   emptyStudent,
   FinalResult,
@@ -27,6 +28,11 @@ import {
   parseCertRequests,
   parseClassListSentDate,
   parseCorrespondence,
+  parseCovidDate,
+  parseCovidReason,
+  parseCovidStatus,
+  parseCovidSuspectedFraud,
+  parseCovidSuspectedFraudReason,
   parseCurrentLevel,
   parseCurrentStatus,
   parseDropoutReason,
@@ -34,6 +40,7 @@ import {
   parseEnglishName,
   parseEnglishTeacher,
   parseEnglishTeacherLocation,
+  parseFamilyCoordinator,
   parseFgrDate,
   parseGender,
   parseID,
@@ -196,6 +203,11 @@ optionalBooleanTests({
   parseFn: parseEnglishLiteracy,
   testName: "parses english literacy",
 });
+optionalBooleanTests({
+  fieldPath: "covidVaccine.suspectedFraud",
+  parseFn: parseCovidSuspectedFraud,
+  testName: "parses covidVaccine suspected fraud",
+});
 
 dateTests({ fieldPath: "status.finalGradeSentDate", parseFn: parseFgrDate, testName: "parses FGR date" });
 dateTests({
@@ -223,6 +235,11 @@ dateTests({
   fieldPath: "placement.classListSentDate",
   parseFn: parseClassListSentDate,
   testName: "parses class list sent date",
+});
+dateTests({
+  fieldPath: "covidVaccine.date",
+  parseFn: parseCovidDate,
+  testName: "parses covidVaccine date",
 });
 
 stringOrNumTests({
@@ -350,6 +367,24 @@ stringOrNumTests({
   parseFn: parseOrigPlacementAdjustment,
   testName: "parses original placement adjustment",
   testVal: "Move to L4",
+});
+stringOrNumTests({
+  fieldPath: "covidVaccine.reason",
+  parseFn: parseCovidReason,
+  testName: "parses covidVaccine reason",
+  testVal: "Age",
+});
+stringOrNumTests({
+  fieldPath: "covidVaccine.suspectedFraudReason",
+  parseFn: parseCovidSuspectedFraudReason,
+  testName: "parses covidVaccine suspected fraud reason",
+  testVal: "Full name on certificate does not match",
+});
+stringOrNumTests({
+  fieldPath: "familyCoordinatorEntry",
+  parseFn: parseFamilyCoordinator,
+  testName: "parses family coordinator",
+  testVal: "Ellis",
 });
 
 describe("test expand", () => {
@@ -763,5 +798,74 @@ describe("parses academic record", () => {
   it("parses speaking exam in writing field", () => {
     recordParse(speakingInWritingRecordFields);
     expect(student.academicRecords).toEqual([speakingInWritingRecord]);
+  });
+});
+
+describe("parses covidVaccine status", () => {
+  it("parses jordanian unvaccd", () => {
+    parseCovidStatus("JORDANIAN UNVACC'D", "1", student);
+    expect(student.covidVaccine.status).toEqual(CovidStatus.UNV);
+  });
+  it("parses syrian unvaccd", () => {
+    parseCovidStatus("SYRIAN UNVACC'D", "1", student);
+    expect(student.covidVaccine.status).toEqual(CovidStatus.UNV);
+  });
+  it("parses other nationality unvaccd", () => {
+    parseCovidStatus("OTHER NATIONALITY UNVACC'D", "1", student);
+    expect(student.covidVaccine.status).toEqual(CovidStatus.UNV);
+  });
+  it("parses jordanian partially vaccd", () => {
+    parseCovidStatus("JORDANIAN PARTIALLY VACC'D", "1", student);
+    expect(student.covidVaccine.status).toEqual(CovidStatus.PART);
+  });
+  it("parses syrian partially vaccd", () => {
+    parseCovidStatus("SYRIAN PARTIALLY VACC'D", "1", student);
+    expect(student.covidVaccine.status).toEqual(CovidStatus.PART);
+  });
+  it("parses other nationality partially vaccd", () => {
+    parseCovidStatus("OTHER NATIONALITY PARTIALLY VACC'D", "1", student);
+    expect(student.covidVaccine.status).toEqual(CovidStatus.PART);
+  });
+  it("parses jordanian fully vaccd", () => {
+    parseCovidStatus("JORDANIAN FULLY VACC'D", "1", student);
+    expect(student.covidVaccine.status).toEqual(CovidStatus.FULL);
+  });
+  it("parses syrian fully vaccd", () => {
+    parseCovidStatus("SYRIAN FULLY VACC'D", "1", student);
+    expect(student.covidVaccine.status).toEqual(CovidStatus.FULL);
+  });
+  it("parses other nationality fully vaccd", () => {
+    parseCovidStatus("OTHER NATIONALITY FULLY VACC'D", "1", student);
+    expect(student.covidVaccine.status).toEqual(CovidStatus.FULL);
+  });
+  it("parses exempt from vaccine", () => {
+    parseCovidStatus("EXEMPT FROM VACCINE", "1", student);
+    expect(student.covidVaccine.status).toEqual(CovidStatus.EXEMPT);
+  });
+  it("parses boosted vaccine", () => {
+    parseCovidStatus("BOOSTER (THIRD DOSE)", "1", student);
+    expect(student.covidVaccine.status).toEqual(CovidStatus.BOOST);
+  });
+  it("parses boosted vaccine", () => {
+    parseCovidStatus("BOOSTER (THIRD DOSE)", "1", student);
+    expect(student.covidVaccine.status).toEqual(CovidStatus.BOOST);
+  });
+  it("parses unclear answer", () => {
+    parseCovidStatus("ANSWERED BUT ANSWER UNCLEAR", "1", student);
+    expect(student.covidVaccine.status).toEqual(CovidStatus.UNCL);
+  });
+  it("parses declined answer", () => {
+    parseCovidStatus("DECLINED TO PROVIDE VACCINE INFO", "1", student);
+    expect(student.covidVaccine.status).toEqual(CovidStatus.DECL);
+  });
+  it("doesn't parse empty", () => {
+    parseCovidStatus("DECLINED TO PROVIDE VACCINE INFO", "", student);
+    expect(student.covidVaccine.status).toEqual(CovidStatus.NORPT);
+  });
+  it("doesn't parse non-1", () => {
+    parseCovidStatus("DECLINED TO PROVIDE VACCINE INFO", "2", student);
+    expect(student.covidVaccine.status).toEqual(CovidStatus.NORPT);
+    parseCovidStatus("DECLINED TO PROVIDE VACCINE INFO", "No", student);
+    expect(student.covidVaccine.status).toEqual(CovidStatus.NORPT);
   });
 });

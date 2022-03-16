@@ -66,6 +66,13 @@ export interface DataVisibility {
     session: boolean;
     teacherComments: boolean;
   };
+  covidVaccine: {
+    date: boolean;
+    reason: boolean;
+    status: boolean;
+    suspectedFraud: boolean;
+    suspectedFraudReason: boolean;
+  };
   demographics: {
     age: boolean;
     englishTeacher: boolean;
@@ -102,6 +109,7 @@ export interface DataVisibility {
   programInformation: {
     active: boolean;
     currentLevel: boolean;
+    familyCoordinatorEntry: boolean;
     idNumber: boolean;
     initialSession: boolean;
     inviteTag: boolean;
@@ -141,6 +149,13 @@ export const initialAppState: AppState = {
       session: true,
       teacherComments: true,
     },
+    covidVaccine: {
+      date: true,
+      reason: true,
+      status: true,
+      suspectedFraud: true,
+      suspectedFraudReason: true,
+    },
     demographics: {
       age: true,
       englishTeacher: true,
@@ -177,6 +192,7 @@ export const initialAppState: AppState = {
     programInformation: {
       active: true,
       currentLevel: true,
+      familyCoordinatorEntry: true,
       idNumber: true,
       initialSession: true,
       inviteTag: true,
