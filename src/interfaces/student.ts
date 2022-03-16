@@ -1,3 +1,5 @@
+import { values } from "lodash";
+
 /* eslint-disable typescript-sort-keys/string-enum */
 export interface Student {
   academicRecords: AcademicRecord[];
@@ -230,6 +232,7 @@ export const levelsPlus: (LevelPlus | "Exempt")[] = [
 ];
 
 export const statuses = [Status.NEW, Status.RET, Status.WD, Status.NCL];
+export const covidStatuses = values(CovidStatus);
 
 export const results = [FinalResult.P, FinalResult.F, FinalResult.WD];
 export const PF = [FinalResult.P, FinalResult.F];

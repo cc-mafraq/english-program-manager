@@ -26,6 +26,7 @@ import {
   SPACING,
   studentFormSchema,
 } from "../../services";
+import { FormCovidVaccine } from "./FormSections";
 
 interface StudentFormProps {
   handleDialogClose: () => void;
@@ -76,6 +77,8 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students, selectedStud
         <FormDemographics />
         <Divider />
         <FormCorrespondence selectedStudent={selectedStudent} />
+        <Divider />
+        <FormCovidVaccine />
         <Divider />
         <FormPhoneNumbers selectedStudent={selectedStudent} />
         <Divider />

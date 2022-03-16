@@ -1,6 +1,8 @@
 export * from "./FormAcademicRecords";
 export * from "./FormCertRequests";
 export * from "./FormCorrespondence";
+export * from "./FormCovidVaccine";
+export * from "./FormDemographics";
 export * from "./FormGrade";
 export * from "./FormLiteracyAndZoom";
 export * from "./FormName";
@@ -9,5 +11,4 @@ export * from "./FormPhoneNumbers";
 export * from "./FormPlacement";
 export * from "./FormProgramInformation";
 export * from "./FormStatus";
-export * from "./FormDemographics";
 export * from "./ListItems";
