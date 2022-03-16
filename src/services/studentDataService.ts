@@ -1,5 +1,5 @@
 import { collection, doc, setDoc, SetOptions } from "firebase/firestore";
-import { getDownloadURL, getMetadata, ref, StorageReference } from "firebase/storage";
+import { getDownloadURL, getMetadata, ref, StorageReference, uploadBytes } from "firebase/storage";
 import { isEmpty, map, toString } from "lodash";
 import { db, storage } from ".";
 import { Student } from "../interfaces";
@@ -38,4 +38,12 @@ export const getStudentImage = async (student: Student): Promise<string> => {
     return downloadURL;
   }
   return "";
+};
+
+export const setStudentImage = async (student: Student, file: File) => {
+  const imagePath = `${imageFolderName}${student.epId}${file.name.slice(file.name.indexOf("."))}`;
+  const storageRef = ref(storage, imagePath);
+  await uploadBytes(storageRef, file);
+  student.imageName = imagePath;
+  await setStudentData(student, { merge: true });
 };
