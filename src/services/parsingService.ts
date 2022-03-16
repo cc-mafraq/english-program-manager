@@ -434,36 +434,36 @@ export const parseCovidStatus = (key: string, value: string, student: Student) =
     case "JORDANIAN UNVACC'D":
     case "SYRIAN UNVACC'D":
     case "OTHER NATIONALITY UNVACC'D":
-      student.covid.status = CovidStatus.UNV;
+      student.covidVaccine.status = CovidStatus.UNV;
       break;
     case "JORDANIAN PARTIALLY VACC'D":
     case "SYRIAN PARTIALLY VACC'D":
     case "OTHER NATIONALITY PARTIALLY VACC'D":
-      student.covid.status = CovidStatus.PART;
+      student.covidVaccine.status = CovidStatus.PART;
       break;
     case "JORDANIAN FULLY VACC'D":
     case "SYRIAN FULLY VACC'D":
     case "OTHER NATIONALITY FULLY VACC'D":
-      student.covid.status = CovidStatus.FULL;
+      student.covidVaccine.status = CovidStatus.FULL;
       break;
     case "EXEMPT FROM VACCINE":
-      student.covid.status = CovidStatus.EXEMPT;
+      student.covidVaccine.status = CovidStatus.EXEMPT;
       break;
     case "BOOSTER (THIRD DOSE)":
-      student.covid.status = CovidStatus.BOOST;
+      student.covidVaccine.status = CovidStatus.BOOST;
       break;
     case "ANSWERED BUT ANSWER UNCLEAR":
-      student.covid.status = CovidStatus.UNCL;
+      student.covidVaccine.status = CovidStatus.UNCL;
       break;
     case "DECLINED TO PROVIDE VACCINE INFO":
-      student.covid.status = CovidStatus.DECL;
+      student.covidVaccine.status = CovidStatus.DECL;
       break;
     default:
       break;
   }
 };
 
-export const parseCovidDate = parseDateField("covid.date");
-export const parseCovidReason = parseOptionalString("covid.reason");
-export const parseCovidSuspectedFraud = parseOptionalBoolean("covid.suspectedFraud");
-export const parseCovidSuspectedFraudReason = parseOptionalString("covid.suspectedFraudReason");
+export const parseCovidDate = parseDateField("covidVaccine.date");
+export const parseCovidReason = parseOptionalString("covidVaccine.reason");
+export const parseCovidSuspectedFraud = parseOptionalBoolean("covidVaccine.suspectedFraud");
+export const parseCovidSuspectedFraudReason = parseOptionalString("covidVaccine.suspectedFraudReason");

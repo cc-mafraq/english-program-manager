@@ -3,7 +3,7 @@ import { camelCase, get, join, map, some, values } from "lodash";
 import React, { useContext } from "react";
 import { LabeledContainer, LabeledText } from "..";
 import { useColors } from "../../hooks";
-import { AppContext, Nationality, Status, Student } from "../../interfaces";
+import { AppContext, CovidStatus, Nationality, Status, Student } from "../../interfaces";
 import { getRepeatNum, isActive } from "../../services";
 
 interface StudentInfoProps {
@@ -14,7 +14,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
   const {
     appState: { dataVisibility },
   } = useContext(AppContext);
-  const { defaultBackgroundColor, green, red } = useColors();
+  const { defaultBackgroundColor, green, red, yellow } = useColors();
 
   const allCheckboxesFalse = (label: string): boolean => {
     return some(values(get(dataVisibility, camelCase(label))));
@@ -56,6 +56,44 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         </LabeledText>
         <LabeledText condition={dataVisibility.programInformation.initialSession} label="Initial Session">
           {student.initialSession}
+        </LabeledText>
+      </LabeledContainer>
+      <LabeledContainer condition={allCheckboxesFalse("COVID Vaccine")} label="COVID Vaccine">
+        <LabeledText
+          condition={dataVisibility.covidVaccine.status}
+          containerProps={{
+            sx: {
+              backgroundColor:
+                student.covidVaccine?.status === CovidStatus.FULL
+                  ? green
+                  : student.covidVaccine?.status === CovidStatus.PART
+                  ? yellow
+                  : red,
+            },
+          }}
+          label="Status"
+        >
+          {student.covidVaccine?.status}
+        </LabeledText>
+        <LabeledText condition={dataVisibility.covidVaccine.date} label="Date">
+          {student.covidVaccine?.date}
+        </LabeledText>
+        <LabeledText condition={dataVisibility.covidVaccine.reason} label="Reason">
+          {student.covidVaccine?.reason}
+        </LabeledText>
+        <LabeledText
+          condition={dataVisibility.covidVaccine.suspectedFraud}
+          containerProps={{
+            sx: {
+              backgroundColor: student.covidVaccine?.suspectedFraud ? red : undefined,
+            },
+          }}
+          label="Suspected Fraud"
+        >
+          {student.covidVaccine?.suspectedFraud ? "Yes" : undefined}
+        </LabeledText>
+        <LabeledText condition={dataVisibility.covidVaccine.suspectedFraudReason} label="Suspected Fraud Reason">
+          {student.covidVaccine?.suspectedFraudReason}
         </LabeledText>
       </LabeledContainer>
       <LabeledContainer condition={allCheckboxesFalse("Status")} label="Status">

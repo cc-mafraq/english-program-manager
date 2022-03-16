@@ -66,6 +66,13 @@ export interface DataVisibility {
     session: boolean;
     teacherComments: boolean;
   };
+  covidVaccine: {
+    date: boolean;
+    reason: boolean;
+    status: boolean;
+    suspectedFraud: boolean;
+    suspectedFraudReason: boolean;
+  };
   demographics: {
     age: boolean;
     englishTeacher: boolean;
@@ -140,6 +147,13 @@ export const initialAppState: AppState = {
       progress: true,
       session: true,
       teacherComments: true,
+    },
+    covidVaccine: {
+      date: true,
+      reason: true,
+      status: true,
+      suspectedFraud: true,
+      suspectedFraudReason: true,
     },
     demographics: {
       age: true,

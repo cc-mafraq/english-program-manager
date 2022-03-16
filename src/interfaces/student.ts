@@ -4,7 +4,7 @@ export interface Student {
   age: number | "Unknown";
   certificateRequests?: string;
   correspondence: Correspondence[];
-  covid: Covid;
+  covidVaccine: Covid;
   currentLevel: GenderedLevel;
   epId: number;
   gender: "M" | "F";
@@ -34,7 +34,7 @@ export interface AcademicRecord {
 export interface Covid {
   date?: string;
   reason?: string;
-  status?: CovidStatus;
+  status: CovidStatus;
   suspectedFraud?: boolean;
   suspectedFraudReason?: string;
 }
@@ -124,6 +124,7 @@ export enum CovidStatus {
   EXEMPT = "Exempt from Vaccine",
   DECL = "Declined to Provide Vaccine Info",
   UNCL = "Answered but Answer Unclear",
+  NORPT = "Not Reported",
 }
 
 export enum Nationality {
@@ -254,7 +255,9 @@ export const emptyStudent: Student = {
   academicRecords: [],
   age: "Unknown",
   correspondence: [],
-  covid: {},
+  covidVaccine: {
+    status: CovidStatus.NORPT,
+  },
   currentLevel: "PL1",
   epId: 0,
   gender: "M",

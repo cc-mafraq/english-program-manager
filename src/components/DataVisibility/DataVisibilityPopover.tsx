@@ -25,6 +25,10 @@ const labels: { childLabels: string[]; parentLabel: string }[] = [
     parentLabel: "Academic Records",
   },
   {
+    childLabels: ["Date", "Reason", "Status", "Suspected Fraud", "Suspected Fraud Reason"],
+    parentLabel: "COVID Vaccine",
+  },
+  {
     childLabels: [
       "Age",
       "English Teacher",
