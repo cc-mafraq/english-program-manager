@@ -70,7 +70,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students, selectedStud
             {addOrEdit} Student
           </Typography>
         </Box>
-        <FormName />
+        <FormName selectedStudent={selectedStudent} />
         <Divider />
         <FormProgramInformation students={students} />
         <Divider />

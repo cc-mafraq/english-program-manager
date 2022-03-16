@@ -1,11 +1,47 @@
-import { Grid } from "@mui/material";
+import HideImageIcon from "@mui/icons-material/HideImage";
+import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
+import { Grid, IconButton } from "@mui/material";
 import React from "react";
 import { GridContainer, GridItemTextField, LabeledCheckbox } from "..";
-import { SPACING } from "../../../services";
+import { AddImageButton, StudentImage } from "../..";
+import { Student } from "../../../interfaces";
+import { deleteStudentImage, SPACING } from "../../../services";
 
-export const FormName: React.FC = () => {
+interface FormNameProps {
+  selectedStudent?: Student;
+}
+
+export const FormName: React.FC<FormNameProps> = ({ selectedStudent }) => {
   return (
     <GridContainer marginBottom={SPACING}>
+      <Grid item xs={2}>
+        <StudentImage
+          imageStyleProps={{ margin: "auto", maxHeight: "100%", width: "auto" }}
+          innerContainerProps={{
+            sx: { transform: "translate(0%, -50%)" },
+            top: "50%",
+          }}
+          outerContainerProps={{ height: "100%", maxHeight: "100px" }}
+          scale={2}
+          student={selectedStudent}
+        />
+        {selectedStudent?.imageName && (
+          <>
+            <AddImageButton student={selectedStudent}>
+              <InsertPhotoIcon />
+            </AddImageButton>
+            <IconButton
+              color="primary"
+              onClick={() => {
+                deleteStudentImage(selectedStudent);
+                selectedStudent.imageName = "";
+              }}
+            >
+              <HideImageIcon />
+            </IconButton>
+          </>
+        )}
+      </Grid>
       <GridItemTextField label="Name - ENG" name="name.english" />
       <GridItemTextField label="Name - AR" name="name.arabic" />
       <Grid item>
@@ -19,4 +55,8 @@ export const FormName: React.FC = () => {
       </Grid>
     </GridContainer>
   );
+};
+
+FormName.defaultProps = {
+  selectedStudent: undefined,
 };

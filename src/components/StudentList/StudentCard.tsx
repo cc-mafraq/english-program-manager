@@ -1,9 +1,8 @@
-import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
-import { Box, Card, CardContent, CardMedia, IconButton, Tab, Tabs, useTheme } from "@mui/material";
-import React, { ChangeEvent, Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
-import { Correspondence, StudentCardHeader, StudentInfo } from "..";
+import { Box, Card, CardContent, Tab, Tabs, useTheme } from "@mui/material";
+import React, { Dispatch, SetStateAction, useContext, useEffect } from "react";
+import { Correspondence, StudentCardHeader, StudentImage, StudentInfo } from "..";
 import { AppContext, darkBlueBackground, Student } from "../../interfaces";
-import { getStudentImage, setStudentData, setStudentImage } from "../../services";
+import { setStudentData } from "../../services";
 import { AcademicRecords } from "./AcademicRecords";
 
 interface StudentCardProps {
@@ -17,30 +16,15 @@ export const StudentCard: React.FC<StudentCardProps> = ({
   setSelectedStudent,
   handleEditStudentClick,
 }) => {
-  const [img, setImg] = useState("");
+  const [tabValue, setTabValue] = React.useState(0);
+  const theme = useTheme();
   const {
     appState: { dataVisibility },
   } = useContext(AppContext);
-  const [tabValue, setTabValue] = React.useState(0);
-  const theme = useTheme();
-
-  const imageStyle = { height: "35vh", minHeight: "200px" };
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
-
-  useEffect(() => {
-    const setImage = async () => {
-      try {
-        const studentImage = await getStudentImage(student);
-        setImg(studentImage);
-      } catch {
-        setImg("");
-      }
-    };
-    setImage();
-  }, [student]);
 
   useEffect(() => {
     setStudentData(student, { merge: true });
@@ -55,42 +39,15 @@ export const StudentCard: React.FC<StudentCardProps> = ({
       }}
     >
       <Box display="flex">
-        <Box
-          sx={{
-            minWidth: "150px",
-          }}
-        >
-          {dataVisibility.demographics.photo && img ? (
-            <CardMedia component="img" image={img} sx={imageStyle} />
-          ) : (
-            <Box sx={{ ...imageStyle, position: "relative" }}>
-              <Box
-                sx={{
-                  left: "50%",
-                  margin: 0,
-                  position: "absolute",
-                  top: "50%",
-                  transform: "translate(-50%, -50%)",
-                }}
-              >
-                <label htmlFor="importImage">
-                  <input
-                    accept=".png,.jpg,.jpeg,.jfif"
-                    hidden
-                    id="importImage"
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                      setStudentImage(student, e.target.files && e.target.files[0]);
-                    }}
-                    type="file"
-                  />
-                  <IconButton color="primary" component="span" sx={{ transform: "scale(2)" }}>
-                    <InsertPhotoIcon />
-                  </IconButton>
-                </label>
-              </Box>
-            </Box>
-          )}
-        </Box>
+        {dataVisibility.demographics.photo && (
+          <StudentImage
+            imageStyleProps={{ height: "35vh", minHeight: "200px" }}
+            innerContainerProps={{ height: "35vh", minHeight: "200px" }}
+            outerContainerProps={{ minWidth: "150px" }}
+            scale={2}
+            student={student}
+          />
+        )}
         <Box width="100%">
           <CardContent>
             <StudentCardHeader
