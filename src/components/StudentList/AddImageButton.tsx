@@ -1,3 +1,4 @@
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { IconButton } from "@mui/material";
 import React, { ChangeEvent } from "react";
 import { Student } from "../../interfaces";
@@ -8,7 +9,7 @@ interface AddImageButtonProps {
   student?: Student;
 }
 
-export const AddImageButton: React.FC<AddImageButtonProps> = ({ children, scale, student }) => {
+export const AddImageButton: React.FC<AddImageButtonProps> = ({ scale, student }) => {
   const inputId = `importImage-${student?.epId}`;
 
   return (
@@ -17,13 +18,13 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({ children, scale,
         accept=".png,.jpg,.jpeg,.jfif"
         hidden
         id={inputId}
-        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+        onChange={async (e: ChangeEvent<HTMLInputElement>) => {
           student && setStudentImage(student, e.target.files && e.target.files[0]);
         }}
         type="file"
       />
       <IconButton color="primary" component="span" sx={{ transform: `scale(${scale})` }}>
-        {children}
+        <AddPhotoAlternateIcon />
       </IconButton>
     </label>
   );

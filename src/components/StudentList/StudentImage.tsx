@@ -1,4 +1,3 @@
-import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { Box, BoxProps, CardMedia, SxProps } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Student } from "../../interfaces";
@@ -37,7 +36,7 @@ export const StudentImage: React.FC<StudentImageProps> = ({
 
   return (
     <Box {...outerContainerProps}>
-      {img ? (
+      {student?.imageName ? (
         <CardMedia component="img" image={img} sx={imageStyleProps} />
       ) : (
         <Box sx={{ ...innerContainerProps, position: "relative" }}>
@@ -50,9 +49,7 @@ export const StudentImage: React.FC<StudentImageProps> = ({
               transform: "translate(-50%, -50%)",
             }}
           >
-            <AddImageButton scale={scale} student={student}>
-              <AddPhotoAlternateIcon />
-            </AddImageButton>
+            <AddImageButton scale={scale} student={student} />
           </Box>
         </Box>
       )}
