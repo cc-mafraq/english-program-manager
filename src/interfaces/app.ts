@@ -109,6 +109,7 @@ export interface DataVisibility {
   programInformation: {
     active: boolean;
     currentLevel: boolean;
+    familyCoordinatorEntry: boolean;
     idNumber: boolean;
     initialSession: boolean;
     inviteTag: boolean;
@@ -191,6 +192,7 @@ export const initialAppState: AppState = {
     programInformation: {
       active: true,
       currentLevel: true,
+      familyCoordinatorEntry: true,
       idNumber: true,
       initialSession: true,
       inviteTag: true,

@@ -7,6 +7,7 @@ export interface Student {
   covidVaccine: Covid;
   currentLevel: GenderedLevel;
   epId: number;
+  familyCoordinatorEntry?: string;
   gender: "M" | "F";
   imageName?: string;
   initialSession: string;

@@ -1,4 +1,5 @@
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
+import { grey } from "@mui/material/colors";
 import { camelCase, get, join, map, some, values } from "lodash";
 import React, { useContext } from "react";
 import { LabeledContainer, LabeledText } from "..";
@@ -14,6 +15,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
   const {
     appState: { dataVisibility },
   } = useContext(AppContext);
+  const theme = useTheme();
   const { defaultBackgroundColor, green, red, yellow } = useColors();
 
   const allCheckboxesFalse = (label: string): boolean => {
@@ -48,6 +50,12 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         <LabeledText condition={dataVisibility.programInformation.currentLevel} label="Current Level">
           {student.currentLevel}
         </LabeledText>
+        <LabeledText
+          condition={dataVisibility.programInformation.familyCoordinatorEntry}
+          label="Family Coordinator Entry"
+        >
+          {student.familyCoordinatorEntry}
+        </LabeledText>
         <LabeledText condition={dataVisibility.programInformation.status} label="Status">
           {Status[student.status.currentStatus]}
         </LabeledText>
@@ -72,6 +80,19 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
             },
           }}
           label="Status"
+          labelProps={{
+            color:
+              theme.palette.mode === "dark" && student.covidVaccine?.status === CovidStatus.PART
+                ? grey[800]
+                : theme.palette.text.secondary,
+            fontWeight: "bold",
+          }}
+          textProps={{
+            color:
+              theme.palette.mode === "dark" && student.covidVaccine?.status === CovidStatus.PART
+                ? grey[900]
+                : theme.palette.text.primary,
+          }}
         >
           {student.covidVaccine?.status}
         </LabeledText>

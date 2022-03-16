@@ -40,6 +40,7 @@ import {
   parseEnglishName,
   parseEnglishTeacher,
   parseEnglishTeacherLocation,
+  parseFamilyCoordinator,
   parseFgrDate,
   parseGender,
   parseID,
@@ -378,6 +379,12 @@ stringOrNumTests({
   parseFn: parseCovidSuspectedFraudReason,
   testName: "parses covidVaccine suspected fraud reason",
   testVal: "Full name on certificate does not match",
+});
+stringOrNumTests({
+  fieldPath: "familyCoordinatorEntry",
+  parseFn: parseFamilyCoordinator,
+  testName: "parses family coordinator",
+  testVal: "Ellis",
 });
 
 describe("test expand", () => {

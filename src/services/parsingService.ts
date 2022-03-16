@@ -467,3 +467,4 @@ export const parseCovidDate = parseDateField("covidVaccine.date");
 export const parseCovidReason = parseOptionalString("covidVaccine.reason");
 export const parseCovidSuspectedFraud = parseOptionalBoolean("covidVaccine.suspectedFraud");
 export const parseCovidSuspectedFraudReason = parseOptionalString("covidVaccine.suspectedFraudReason");
+export const parseFamilyCoordinator = parseOptionalString("familyCoordinatorEntry");
