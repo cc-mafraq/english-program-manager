@@ -7,7 +7,7 @@ export interface ValidFields {
   [key: string]: (key: string, value: string, student: Student) => void;
 }
 
-const fieldCleanRegex = /[\s)(\-#/+:,;&%]/g; // /\s|(|)|-|#|\/|+|:|,|;|&|%/g;
+const fieldCleanRegex = /[\s)(\-#/+:,;&%'◄]/g; // /\s|(|)|-|#|\/|+|:|,|;|&|%/g;
 
 const studentFieldsUnexpanded: ValidFields = {
   ADJ: ps.parseOrigPlacementAdjustment,
@@ -26,6 +26,8 @@ const studentFieldsUnexpanded: ValidFields = {
   IlliterateAR: ps.parseArabicLiteracy,
   IlliterateENG: ps.parseEnglishLiteracy,
   "JDN,SYR,IRQ,EGY,INDNES,YEM,CEAFRRE,CHI,KOR,UNKNWN": ps.parseNationality,
+  "JORDANIANUNVACCD,SYRIANUNVACCD,OTHERNATIONALITYUNVACCD,JORDANIANPARTIALLYVACCD,SYRIANPARTIALLYVACCD,OTHERNATIONALITYPARTIALLYVACCD,JORDANIANFULLYVACCD,SYRIANFULLYVACCD,OTHERNATIONALITYFULLYVACCD,EXEMPTFROMVACCINE,BOOSTERTHIRDDOSE,ANSWEREDBUTANSWERUNCLEAR,DECLINEDTOPROVIDEVACCINEINFO":
+    ps.parseCovidStatus,
   LEVELREEVALDATE: ps.parseLevelReevalDate,
   "LackofChildCare,LackofTransport,TimeConflict,IllnessorPregnancy,VisionProblems,GotaJob,Moved,GraduatedfromL5,FailedtoThriveinClsrmEnv,LackofLifeMgmSkills,LackofFamilialSupport,LackofCommitmentorMotivation,FamilyMemberorEmployerForbidFurtherStudy,COVID19PandemicRelated,Unknown":
     ps.parseDropoutReason,
@@ -42,8 +44,11 @@ const studentFieldsUnexpanded: ValidFields = {
   PLCMCONFDATE: ps.parsePlacementConfDate,
   PLCMLVL: ps.parseOrigPlacementLevel,
   REACTIVATEDDATE: ps.parseReactivatedDate,
+  REASONFOREXEMPTION: ps.parseCovidReason,
+  REASONFORSUSPECTEDVACCINEFRAUD: ps.parseCovidSuspectedFraudReason,
   SECSOFFERED: ps.parseSectionsOffered,
   SPKG: ps.parseOrigPlacementSpeaking,
+  SUSPECTEDVACCINEFRAUD: ps.parseCovidSuspectedFraud,
   TeacherorProfessor: ps.parseTeacher,
   TeachingSubjectAreas: ps.parseTeachingSubjectAreas,
   TutorClubDetails: ps.parseZoomTutor,
@@ -56,8 +61,10 @@ const studentFieldsUnexpanded: ValidFields = {
   Y: ps.parseInviteTag,
 };
 const maxAcademicRecordColumnNum = 200;
-studentFieldsUnexpanded[ps.generateKeys("Att", maxAcademicRecordColumnNum)] = ps.parseAcademicRecordAttendance;
 studentFieldsUnexpanded[ps.generateKeys("CORRESPONDENCE", 10)] = ps.parseCorrespondence;
+studentFieldsUnexpanded[ps.generateKeys("DATE", 100)] = ps.parseCovidDate;
+studentFieldsUnexpanded[ps.generateKeys("REASONGIVENUNVACCD", 100)] = ps.parseCovidReason;
+studentFieldsUnexpanded[ps.generateKeys("Att", maxAcademicRecordColumnNum)] = ps.parseAcademicRecordAttendance;
 studentFieldsUnexpanded[ps.generateKeys("ExitSpeakingExamPF", maxAcademicRecordColumnNum)] =
   ps.parseAcademicRecordExitSpeakingExam;
 studentFieldsUnexpanded[ps.generateKeys("ExitWritingExamPF", maxAcademicRecordColumnNum)] =

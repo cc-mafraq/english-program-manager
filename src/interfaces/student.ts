@@ -4,6 +4,7 @@ export interface Student {
   age: number | "Unknown";
   certificateRequests?: string;
   correspondence: Correspondence[];
+  covid: Covid;
   currentLevel: GenderedLevel;
   epId: number;
   gender: "M" | "F";
@@ -28,6 +29,14 @@ export interface AcademicRecord {
   level?: GenderedLevel;
   levelAudited?: GenderedLevel;
   session: string;
+}
+
+export interface Covid {
+  date?: string;
+  reason?: string;
+  status?: CovidStatus;
+  suspectedFraud?: boolean;
+  suspectedFraudReason?: string;
 }
 
 export interface Grade {
@@ -106,6 +115,16 @@ export type Level = "PL1" | "L1" | "L2" | "L3" | "L4" | "L5" | "L5 GRAD";
 export type GenderedLevel = Level | ("PL1-M" | "PL1-W" | "L1-M" | "L1-W" | "L2-M" | "L2-W");
 
 export type LevelPlus = Level | ("PL1+" | "L1-" | "L1+" | "L2-" | "L2+" | "L3-" | "L3+" | "L4-" | "L4+" | "L5-");
+
+export enum CovidStatus {
+  UNV = "Unvaccinated",
+  PART = "Partially Vaccinated",
+  FULL = "Fully Vaccinated",
+  BOOST = "Boosted (Three Doses)",
+  EXEMPT = "Exempt from Vaccine",
+  DECL = "Declined to Provide Vaccine Info",
+  UNCL = "Answered but Answer Unclear",
+}
 
 export enum Nationality {
   JDN = "JDN",
@@ -235,6 +254,7 @@ export const emptyStudent: Student = {
   academicRecords: [],
   age: "Unknown",
   correspondence: [],
+  covid: {},
   currentLevel: "PL1",
   epId: 0,
   gender: "M",
