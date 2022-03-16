@@ -1,11 +1,11 @@
 import { FirebaseError } from "firebase/app";
 import { collection, DocumentData, onSnapshot, QuerySnapshot } from "firebase/firestore";
 import { forEach, get, isString, isUndefined, join, values } from "lodash";
-import React, { ChangeEvent, useCallback, useEffect } from "react";
+import React, { ChangeEvent, useCallback, useContext, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import useState from "react-usestateref";
 import { FinalGradeReportDialog, StudentDatabaseToolbar, StudentFormDialog, StudentList } from "../components";
-import { Student } from "../interfaces";
+import { AppContext, Student } from "../interfaces";
 import { db, getStudentPage, logout, searchStudents, sortStudents } from "../services";
 import { spreadsheetToStudentList } from "../services/spreadsheetService";
 
@@ -17,8 +17,11 @@ interface SetStateOptions {
 }
 
 export const StudentDatabasePage = () => {
-  const [students, setStudents, studentsRef] = useState<Student[]>([]);
-  const [selectedStudent, setSelectedStudent] = useState<Student>();
+  const {
+    appState: { students },
+    appDispatch,
+  } = useContext(AppContext);
+  const studentsRef = useRef(students);
   const [filteredStudents, setFilteredStudents, filteredStudentsRef] = useState<Student[]>([]);
   const [studentsPage, setStudentsPage] = useState<Student[]>([]);
   const [page, setPage, pageRef] = useState(0);
@@ -27,6 +30,8 @@ export const StudentDatabasePage = () => {
   const [openStudentDialog, setOpenStudentDialog] = useState(false);
   const [searchString, setSearchString, searchStringRef] = useState<string>("");
   const navigate = useNavigate();
+
+  studentsRef.current = students;
 
   const setState = useCallback(
     ({ newRowsPerPage, newPage, newSearchString, newStudents }: SetStateOptions) => {
@@ -38,7 +43,7 @@ export const StudentDatabasePage = () => {
             )
           : filteredStudentsRef.current;
       setFilteredStudents(newFilteredStudents);
-      newStudents && setStudents(newStudents);
+      newStudents && appDispatch({ payload: { students: newStudents }, type: "setStudents" });
       !isUndefined(newPage) && setPage(newPage);
       newRowsPerPage && setRowsPerPage(newRowsPerPage);
       !isUndefined(newSearchString) && setSearchString(newSearchString);
@@ -51,6 +56,7 @@ export const StudentDatabasePage = () => {
       );
     },
     [
+      appDispatch,
       filteredStudentsRef,
       pageRef,
       rowsPerPageRef,
@@ -59,8 +65,6 @@ export const StudentDatabasePage = () => {
       setPage,
       setRowsPerPage,
       setSearchString,
-      setStudents,
-      studentsRef,
     ],
   );
 
@@ -138,7 +142,7 @@ export const StudentDatabasePage = () => {
 
   const handleStudentDialogClose = () => {
     setOpenStudentDialog(false);
-    setSelectedStudent(undefined);
+    appDispatch({ payload: { selectedStudent: undefined }, type: "setSelectedStudent" });
   };
 
   const handleGenerateFGRClick = () => {
@@ -163,25 +167,12 @@ export const StudentDatabasePage = () => {
         students={searchString ? filteredStudents : students}
       />
       {students.length > 0 ? (
-        <FinalGradeReportDialog
-          handleDialogClose={handleFGRDialogClose}
-          open={openFGRDialog}
-          students={students}
-        />
+        <FinalGradeReportDialog handleDialogClose={handleFGRDialogClose} open={openFGRDialog} />
       ) : (
         <></>
       )}
-      <StudentFormDialog
-        handleDialogClose={handleStudentDialogClose}
-        open={openStudentDialog}
-        selectedStudent={selectedStudent}
-        students={students}
-      />
-      <StudentList
-        handleEditStudentClick={handleStudentDialogOpen}
-        setSelectedStudent={setSelectedStudent}
-        studentsPage={studentsPage}
-      />
+      <StudentFormDialog handleDialogClose={handleStudentDialogClose} open={openStudentDialog} />
+      <StudentList handleEditStudentClick={handleStudentDialogOpen} studentsPage={studentsPage} />
     </>
   );
 };

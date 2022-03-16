@@ -1,5 +1,5 @@
 import { Box, Card, CardContent, Tab, Tabs, useTheme } from "@mui/material";
-import React, { Dispatch, SetStateAction, useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Correspondence, StudentCardHeader, StudentImage, StudentInfo } from "..";
 import { AppContext, darkBlueBackground, Student } from "../../interfaces";
 import { setStudentData } from "../../services";
@@ -7,15 +7,10 @@ import { AcademicRecords } from "./AcademicRecords";
 
 interface StudentCardProps {
   handleEditStudentClick: () => void;
-  setSelectedStudent: Dispatch<SetStateAction<Student | undefined>>;
   student: Student;
 }
 
-export const StudentCard: React.FC<StudentCardProps> = ({
-  student,
-  setSelectedStudent,
-  handleEditStudentClick,
-}) => {
+export const StudentCard: React.FC<StudentCardProps> = ({ student, handleEditStudentClick }) => {
   const [tabValue, setTabValue] = React.useState(0);
   const theme = useTheme();
   const {
@@ -50,11 +45,7 @@ export const StudentCard: React.FC<StudentCardProps> = ({
         )}
         <Box width="100%">
           <CardContent>
-            <StudentCardHeader
-              handleEditStudentClick={handleEditStudentClick}
-              setSelectedStudent={setSelectedStudent}
-              student={student}
-            />
+            <StudentCardHeader handleEditStudentClick={handleEditStudentClick} student={student} />
             <Tabs onChange={handleChange} sx={{ display: "inline" }} value={tabValue}>
               <Tab id="student-card-tabpanel-0" label="Student Information" />
               <Tab id="student-card-tabpanel-1" label="Correspondence" />

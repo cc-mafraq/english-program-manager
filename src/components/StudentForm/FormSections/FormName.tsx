@@ -1,16 +1,16 @@
 import HideImageIcon from "@mui/icons-material/HideImage";
 import { Box, Grid, IconButton } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
 import { GridContainer, GridItemTextField, LabeledCheckbox } from "..";
 import { AddImageButton, StudentImage } from "../..";
-import { Student } from "../../../interfaces";
+import { AppContext } from "../../../interfaces";
 import { deleteStudentImage, SPACING } from "../../../services";
 
-interface FormNameProps {
-  selectedStudent?: Student;
-}
+export const FormName: React.FC = () => {
+  const {
+    appState: { selectedStudent },
+  } = useContext(AppContext);
 
-export const FormName: React.FC<FormNameProps> = ({ selectedStudent }) => {
   return (
     <GridContainer marginBottom={SPACING}>
       <Grid item xs={1}>
@@ -52,8 +52,4 @@ export const FormName: React.FC<FormNameProps> = ({ selectedStudent }) => {
       </Grid>
     </GridContainer>
   );
-};
-
-FormName.defaultProps = {
-  selectedStudent: undefined,
 };

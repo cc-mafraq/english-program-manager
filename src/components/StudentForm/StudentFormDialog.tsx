@@ -1,22 +1,14 @@
 import { Box, Dialog } from "@mui/material";
 import React from "react";
 import { useColors } from "../../hooks";
-import { Student } from "../../interfaces";
 import { StudentForm } from "./StudentForm";
 
 interface StudentFormDialogProps {
   handleDialogClose: () => void;
   open: boolean;
-  selectedStudent?: Student;
-  students: Student[];
 }
 
-export const StudentFormDialog: React.FC<StudentFormDialogProps> = ({
-  handleDialogClose,
-  open,
-  selectedStudent,
-  students,
-}) => {
+export const StudentFormDialog: React.FC<StudentFormDialogProps> = ({ handleDialogClose, open }) => {
   const { popoverColor } = useColors();
 
   return (
@@ -38,12 +30,8 @@ export const StudentFormDialog: React.FC<StudentFormDialogProps> = ({
       }}
     >
       <Box sx={{ padding: "10px" }}>
-        <StudentForm handleDialogClose={handleDialogClose} selectedStudent={selectedStudent} students={students} />
+        <StudentForm handleDialogClose={handleDialogClose} />
       </Box>
     </Dialog>
   );
-};
-
-StudentFormDialog.defaultProps = {
-  selectedStudent: undefined,
 };

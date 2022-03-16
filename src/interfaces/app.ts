@@ -50,7 +50,7 @@ export const getDesignTokens = (mode: PaletteMode): ThemeOptions => {
 
 export interface AppAction {
   payload: Partial<AppState>;
-  type: "setDataVisibility"; // add | to add more actions in the future
+  type: "setDataVisibility" | "setStudents" | "setSelectedStudent";
 }
 
 export interface DataVisibility {
@@ -132,6 +132,7 @@ export interface DataVisibility {
 
 export interface AppState {
   dataVisibility: DataVisibility;
+  selectedStudent?: Student;
   students: Student[];
 }
 

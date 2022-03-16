@@ -1,16 +1,16 @@
 import CloseIcon from "@mui/icons-material/Close";
 import { Grid, IconButton } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
 import { FormGrade, GridContainer, GridItemAutocomplete, GridItemTextField, StudentFormLabel } from "../../..";
 import { useColors } from "../../../../hooks";
-import { genderedLevels, Student } from "../../../../interfaces";
+import { AppContext, genderedLevels } from "../../../../interfaces";
 import { FormItem, getAllSessions, SPACING } from "../../../../services";
 
-export const FormAcademicRecordsItem: React.FC<FormItem & { students: Student[] }> = ({
-  index,
-  removeItem,
-  students,
-}) => {
+export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem }) => {
+  const {
+    appState: { students },
+  } = useContext(AppContext);
+
   const recordName = `academicRecords[${index}]`;
   const { iconColor } = useColors();
 

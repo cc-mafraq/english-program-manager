@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { GridContainer, GridItemAutocomplete, GridItemTextField, StudentFormLabel } from "..";
-import { genderedLevels, statuses, Student } from "../../../interfaces";
+import { AppContext, genderedLevels, statuses } from "../../../interfaces";
 import { generateId, getAllSessions, SPACING } from "../../../services";
 
-interface FormProgramInformationProps {
-  students: Student[];
-}
+export const FormProgramInformation: React.FC = () => {
+  const {
+    appState: { students },
+  } = useContext(AppContext);
 
-export const FormProgramInformation: React.FC<FormProgramInformationProps> = ({ students }) => {
   return (
     <>
       <StudentFormLabel textProps={{ marginTop: SPACING }}>Program Information</StudentFormLabel>

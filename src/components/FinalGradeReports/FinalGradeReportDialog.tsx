@@ -2,10 +2,10 @@ import { Box, Dialog, SelectChangeEvent } from "@mui/material";
 import download from "downloadjs";
 import JSZip from "jszip";
 import { cloneDeep, isEqual, nth, pull, replace } from "lodash";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FGRDialogHeader, FinalGradeReportList } from ".";
 import { useColors } from "../../hooks";
-import { Student } from "../../interfaces";
+import { AppContext } from "../../interfaces";
 import {
   getAllSessions,
   getFGRStudents,
@@ -16,14 +16,13 @@ import {
 interface FinalGradeReportDialogProps {
   handleDialogClose: () => void;
   open: boolean;
-  students: Student[];
 }
 
-export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({
-  handleDialogClose,
-  open,
-  students,
-}) => {
+export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({ handleDialogClose, open }) => {
+  const {
+    appState: { students },
+  } = useContext(AppContext);
+
   const { popoverColor } = useColors();
   const scale = 0.5;
   const fgrWidth = 640 * scale;
