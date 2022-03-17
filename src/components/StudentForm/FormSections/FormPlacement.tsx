@@ -16,9 +16,11 @@ export const FormPlacement: React.FC = () => {
       </GridContainer>
       <GridContainer>
         <GridItemDatePicker label="Class List Sent Date" name="placement.classListSentDate" />
-        <GridItemDatePicker label="No Answer Class Schedule" name="placement.noAnswerClassScheduleDate" />
         <GridItemDatePicker label="Confirmed Date" name="placement.confDate" />
         <GridItemDatePicker label="Photo Contact" name="placement.photoContact" />
+        <Grid item xs={2}>
+          <LabeledCheckbox label="No Answer CS" name="placement.noAnswerClassSchedule" />
+        </Grid>
       </GridContainer>
     </>
   );

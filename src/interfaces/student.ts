@@ -51,7 +51,7 @@ export interface Grade {
 export interface Placement {
   classListSentDate?: string;
   confDate?: string;
-  noAnswerClassScheduleDate?: string;
+  noAnswerClassSchedule?: boolean;
   origPlacementData: {
     adjustment?: string;
     level: Level;

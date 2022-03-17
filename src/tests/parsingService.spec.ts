@@ -208,6 +208,11 @@ optionalBooleanTests({
   parseFn: parseCovidSuspectedFraud,
   testName: "parses covidVaccine suspected fraud",
 });
+optionalBooleanTests({
+  fieldPath: "placement.noAnswerClassSchedule",
+  parseFn: parseNoAnswerClassSchedule,
+  testName: "parses no answer class schedule",
+});
 
 dateTests({ fieldPath: "status.finalGradeSentDate", parseFn: parseFgrDate, testName: "parses FGR date" });
 dateTests({
@@ -225,11 +230,6 @@ dateTests({
   fieldPath: "placement.confDate",
   parseFn: parsePlacementConfDate,
   testName: "parses placement conf date",
-});
-dateTests({
-  fieldPath: "placement.noAnswerClassSchedule",
-  parseFn: parseNoAnswerClassSchedule,
-  testName: "parses no answer class schedule",
 });
 dateTests({
   fieldPath: "placement.classListSentDate",
