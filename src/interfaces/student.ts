@@ -45,7 +45,7 @@ export interface Covid {
 export interface Grade {
   notes?: string;
   percentage?: number;
-  result: FinalResult;
+  result?: FinalResult;
 }
 
 export interface Placement {

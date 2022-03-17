@@ -367,11 +367,18 @@ export const parseAcademicRecordFinalGrade = (key: string, value: string, studen
   const percentGrade = getPercent(value);
   const gradeNotes = getGradeNotes(value);
   const lastAcademicRecord = last(student.academicRecords);
-  if (lastAcademicRecord && lastAcademicRecord.finalResult) {
-    if (!Number.isNaN(Number(percentGrade))) {
+  const percentGradeIsNumber = !Number.isNaN(Number(percentGrade));
+  if (lastAcademicRecord) {
+    if (percentGradeIsNumber) {
+      if (!lastAcademicRecord.finalResult) {
+        lastAcademicRecord.finalResult = {};
+      }
       lastAcademicRecord.finalResult.percentage = Number(percentGrade);
     }
     if (!isEmpty(gradeNotes)) {
+      if (!lastAcademicRecord.finalResult) {
+        lastAcademicRecord.finalResult = {};
+      }
       lastAcademicRecord.finalResult.notes = gradeNotes;
     }
   }
@@ -384,17 +391,20 @@ const parseAcademicRecordExam = (fieldPath: string) => {
     const percentGrade = getPercent(value);
     const gradeNotes = getGradeNotes(replace(value, resultRegex, ""));
     const lastAcademicRecord = last(student.academicRecords);
-    if (lastAcademicRecord && examGrade) {
-      const examObject: Grade = {
-        result: FinalResult[examGrade[0] as keyof typeof FinalResult],
-      };
+    if (lastAcademicRecord) {
+      const examObject: Grade = {};
+      if (examGrade) {
+        examObject.result = FinalResult[examGrade[0] as keyof typeof FinalResult];
+      }
       if (!isEmpty(gradeNotes) && Number.isNaN(Number(replace(gradeNotes, /\s/g, "")))) {
         examObject.notes = gradeNotes;
       }
       if (!Number.isNaN(Number(percentGrade))) {
         examObject.percentage = Number(percentGrade);
       }
-      set(lastAcademicRecord, fieldPath, examObject);
+      if (!isEmpty(examObject)) {
+        set(lastAcademicRecord, fieldPath, examObject);
+      }
       if (value.match(/Spkg|S\s/) && fieldPath !== "exitSpeakingExam") {
         parseAcademicRecordExam("exitSpeakingExam")(key, value.slice(value.indexOf("S")), student);
       }
