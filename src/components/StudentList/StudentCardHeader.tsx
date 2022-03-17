@@ -1,21 +1,18 @@
 import EditIcon from "@mui/icons-material/Edit";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { useContext } from "react";
 import { useColors } from "../../hooks";
-import { Student } from "../../interfaces";
+import { AppContext, Student } from "../../interfaces";
 
 interface StudentCardHeaderProps {
   handleEditStudentClick: () => void;
-  setSelectedStudent: Dispatch<SetStateAction<Student | undefined>>;
   student: Student;
 }
 
-export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({
-  student,
-  handleEditStudentClick,
-  setSelectedStudent,
-}) => {
+export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ student, handleEditStudentClick }) => {
+  const { appDispatch } = useContext(AppContext);
+
   const theme = useTheme();
   const { iconColor } = useColors();
 
@@ -41,7 +38,7 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({
         )}
         <IconButton
           onClick={() => {
-            setSelectedStudent(student);
+            appDispatch({ payload: { selectedStudent: student }, type: "setSelectedStudent" });
             handleEditStudentClick();
           }}
         >

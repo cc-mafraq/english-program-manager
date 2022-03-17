@@ -1,15 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useFormContext } from "react-hook-form";
 import { FormAcademicRecordsItem, FormList, GridContainer } from "..";
 import { useFormList } from "../../../hooks";
-import { Student } from "../../../interfaces";
+import { AppContext, Student } from "../../../interfaces";
 
-interface FormAcademicRecordsProps {
-  selectedStudent?: Student;
-  students: Student[];
-}
+export const FormAcademicRecords: React.FC = () => {
+  const {
+    appState: { selectedStudent },
+  } = useContext(AppContext);
 
-export const FormAcademicRecords: React.FC<FormAcademicRecordsProps> = ({ selectedStudent, students }) => {
   const methods = useFormContext<Student>();
   const [academicRecords, addAcademicRecord, removeAcademicRecord] = useFormList(
     selectedStudent && selectedStudent.academicRecords ? selectedStudent.academicRecords : [],
@@ -25,12 +24,8 @@ export const FormAcademicRecords: React.FC<FormAcademicRecordsProps> = ({ select
         list={academicRecords}
         removeItem={removeAcademicRecord}
       >
-        <FormAcademicRecordsItem students={students} />
+        <FormAcademicRecordsItem />
       </FormList>
     </GridContainer>
   );
-};
-
-FormAcademicRecords.defaultProps = {
-  selectedStudent: undefined,
 };

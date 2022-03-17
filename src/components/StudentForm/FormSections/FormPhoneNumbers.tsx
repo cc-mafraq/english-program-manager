@@ -1,16 +1,16 @@
 import { Grid } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
 import { useFormContext } from "react-hook-form";
 import { FormList, FormPhoneItem, GridContainer, GridItemTextField, StudentFormLabel } from "..";
 import { useFormList } from "../../../hooks";
-import { Student } from "../../../interfaces";
+import { AppContext, Student } from "../../../interfaces";
 import { SPACING } from "../../../services";
 
-interface FormPhoneNumbersProps {
-  selectedStudent?: Student;
-}
+export const FormPhoneNumbers: React.FC = () => {
+  const {
+    appState: { selectedStudent },
+  } = useContext(AppContext);
 
-export const FormPhoneNumbers: React.FC<FormPhoneNumbersProps> = ({ selectedStudent }) => {
   const methods = useFormContext<Student>();
   const [phoneNumbers, addPhone, removePhone] = useFormList(
     selectedStudent ? selectedStudent.phone.phoneNumbers : [{ number: null }],
@@ -42,8 +42,4 @@ export const FormPhoneNumbers: React.FC<FormPhoneNumbersProps> = ({ selectedStud
       </GridContainer>
     </>
   );
-};
-
-FormPhoneNumbers.defaultProps = {
-  selectedStudent: undefined,
 };

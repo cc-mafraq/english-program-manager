@@ -3,7 +3,7 @@ import { Box, Button, Divider, Grid, Typography, useTheme } from "@mui/material"
 import { green, grey } from "@mui/material/colors";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { isEmpty } from "lodash";
-import React from "react";
+import React, { useContext } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
   FormAcademicRecords,
@@ -18,7 +18,7 @@ import {
   FormProgramInformation,
   FormStatus,
 } from "..";
-import { Status, Student } from "../../interfaces";
+import { AppContext, Status, Student } from "../../interfaces";
 import {
   db,
   removeNullFromObject,
@@ -30,11 +30,13 @@ import { FormCovidVaccine } from "./FormSections";
 
 interface StudentFormProps {
   handleDialogClose: () => void;
-  selectedStudent?: Student;
-  students: Student[];
 }
 
-export const StudentForm: React.FC<StudentFormProps> = ({ students, selectedStudent, handleDialogClose }) => {
+export const StudentForm: React.FC<StudentFormProps> = ({ handleDialogClose }) => {
+  const {
+    appState: { selectedStudent },
+  } = useContext(AppContext);
+
   const methods = useForm<Student>({
     criteriaMode: "all",
     defaultValues: setPrimaryNumberBooleanArray(selectedStudent),
@@ -72,15 +74,15 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students, selectedStud
         </Box>
         <FormName />
         <Divider />
-        <FormProgramInformation students={students} />
+        <FormProgramInformation />
         <Divider />
         <FormDemographics />
         <Divider />
-        <FormCorrespondence selectedStudent={selectedStudent} />
+        <FormCorrespondence />
         <Divider />
         <FormCovidVaccine />
         <Divider />
-        <FormPhoneNumbers selectedStudent={selectedStudent} />
+        <FormPhoneNumbers />
         <Divider />
         <FormOriginalPlacement />
         <Divider />
@@ -92,7 +94,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students, selectedStud
         <Divider />
         <FormCertRequests />
         <Divider />
-        <FormAcademicRecords selectedStudent={selectedStudent} students={students} />
+        <FormAcademicRecords />
         <Button
           className="update-button"
           onClick={methods.handleSubmit(onSubmit)}
@@ -118,8 +120,4 @@ export const StudentForm: React.FC<StudentFormProps> = ({ students, selectedStud
       </form>
     </FormProvider>
   );
-};
-
-StudentForm.defaultProps = {
-  selectedStudent: undefined,
 };

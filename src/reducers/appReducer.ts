@@ -21,6 +21,28 @@ export const reducer = (actionCallback: (item: AppState) => void) => {
           return state;
         }
       }
+      case "setStudents": {
+        if (action.payload.students) {
+          newState = {
+            ...state,
+            students: action.payload.students,
+          };
+          break;
+        } else {
+          return state;
+        }
+      }
+      case "setSelectedStudent": {
+        if (action.payload.selectedStudent) {
+          newState = {
+            ...state,
+            selectedStudent: action.payload.selectedStudent,
+          };
+          break;
+        } else {
+          return state;
+        }
+      }
       default:
         return state;
     }
