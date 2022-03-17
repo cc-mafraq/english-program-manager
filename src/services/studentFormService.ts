@@ -207,7 +207,7 @@ const phoneSchema = object()
 const placementSchema = object().shape({
   classListSentDate: dateSchema.nullable().optional(),
   confDate: dateSchema.nullable().optional(),
-  noAnswerClassSchedule: bool().optional(),
+  noAnswerClassScheduleWPM: bool().optional(),
   origPlacementData: object()
     .shape({
       adjustment: string().transform(emptyToNull).nullable().optional(),
@@ -225,7 +225,7 @@ const placementSchema = object().shape({
 });
 
 const statusSchema = object().shape({
-  audit: bool().optional(),
+  audit: string().transform(emptyToNull).nullable().optional(),
   currentStatus: mixed<Status>()
     .oneOf(Object.values(Status) as Status[])
     .transform(stringToStatus)

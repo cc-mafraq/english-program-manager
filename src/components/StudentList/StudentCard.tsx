@@ -1,8 +1,7 @@
 import { Box, Card, CardContent, Tab, Tabs, useTheme } from "@mui/material";
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { Correspondence, StudentCardHeader, StudentImage, StudentInfo } from "..";
 import { AppContext, darkBlueBackground, Student } from "../../interfaces";
-import { setStudentData } from "../../services";
 import { AcademicRecords } from "./AcademicRecords";
 
 interface StudentCardProps {
@@ -21,9 +20,9 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student, handleEditStu
     setTabValue(newValue);
   };
 
-  useEffect(() => {
-    setStudentData(student, { merge: true });
-  }, [student]);
+  // useEffect(() => {
+  //   setStudentData(student, { merge: true });
+  // }, [student]);
 
   return (
     <Card

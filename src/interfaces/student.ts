@@ -51,7 +51,7 @@ export interface Grade {
 export interface Placement {
   classListSentDate?: string;
   confDate?: string;
-  noAnswerClassSchedule?: boolean;
+  noAnswerClassScheduleWPM?: boolean;
   origPlacementData: {
     adjustment?: string;
     level: Level;
@@ -88,7 +88,7 @@ export interface WhatsappInfo {
 }
 
 export interface StudentStatus {
-  audit?: boolean;
+  audit?: string;
   currentStatus: Status;
   droppedOutReason?: DroppedOutReason;
   finalGradeSentDate?: string;

@@ -1,8 +1,8 @@
-import { Grid } from "@mui/material";
 import React from "react";
-import { GridContainer, GridItemAutocomplete, GridItemDatePicker, LabeledCheckbox, StudentFormLabel } from "..";
+import { GridContainer, GridItemAutocomplete, GridItemDatePicker, StudentFormLabel } from "..";
 import { withdrawReasons } from "../../../interfaces";
 import { SPACING } from "../../../services";
+import { GridItemTextField } from "../FormInputs";
 
 export const FormStatus: React.FC = () => {
   return (
@@ -16,9 +16,7 @@ export const FormStatus: React.FC = () => {
       <GridContainer>
         <GridItemDatePicker label="Final Grade Report Sent" name="status.finalGradeSentDate" />
         <GridItemDatePicker label="Level Reeval Date" name="status.levelReevalDate" />
-        <Grid item xs>
-          <LabeledCheckbox label="Audit" name="status.audit" />
-        </Grid>
+        <GridItemTextField label="Audit" name="status.audit" />
       </GridContainer>
     </>
   );

@@ -119,7 +119,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
       </LabeledContainer>
       <LabeledContainer condition={allCheckboxesFalse("Status")} label="Status">
         <LabeledText condition={dataVisibility.status.audit} label="Audit">
-          {student.status.audit ? "Yes" : undefined}
+          {student.status.audit}
         </LabeledText>
         <LabeledText condition={dataVisibility.status.finalGrSent} label="Final GR Sent">
           {student.status.finalGradeSentDate}
@@ -220,8 +220,8 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         <LabeledText condition={dataVisibility.placement.placementConfirmed} label="Placement Confirmed">
           {student.placement.confDate}
         </LabeledText>
-        <LabeledText condition={dataVisibility.placement.naClassSchedule} label="NA Class Schedule">
-          {student.placement.noAnswerClassSchedule ? "Yes" : undefined}
+        <LabeledText condition={dataVisibility.placement.naClassSchedule} label="NA Class Schedule WPM">
+          {student.placement.noAnswerClassScheduleWPM ? "Yes" : undefined}
         </LabeledText>
         <LabeledText condition={dataVisibility.placement.pending} label="Pending">
           {student.placement.pending ? "Yes" : undefined}
