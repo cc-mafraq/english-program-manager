@@ -181,7 +181,6 @@ const stringOrNumTests = ({
 requiredBooleanTests({ fieldPath: "status.inviteTag", parseFn: parseInviteTag, testName: "parses invite tag" });
 requiredBooleanTests({ fieldPath: "status.noContactList", parseFn: parseNCL, testName: "parses no contact list" });
 
-optionalBooleanTests({ fieldPath: "status.audit", parseFn: parseAudit, testName: "parses audit" });
 optionalBooleanTests({
   fieldPath: "placement.pending",
   parseFn: parsePendingPlacement,
@@ -208,6 +207,11 @@ optionalBooleanTests({
   parseFn: parseCovidSuspectedFraud,
   testName: "parses covidVaccine suspected fraud",
 });
+optionalBooleanTests({
+  fieldPath: "placement.noAnswerClassScheduleWPM",
+  parseFn: parseNoAnswerClassSchedule,
+  testName: "parses no answer class schedule",
+});
 
 dateTests({ fieldPath: "status.finalGradeSentDate", parseFn: parseFgrDate, testName: "parses FGR date" });
 dateTests({
@@ -225,11 +229,6 @@ dateTests({
   fieldPath: "placement.confDate",
   parseFn: parsePlacementConfDate,
   testName: "parses placement conf date",
-});
-dateTests({
-  fieldPath: "placement.noAnswerClassSchedule",
-  parseFn: parseNoAnswerClassSchedule,
-  testName: "parses no answer class schedule",
 });
 dateTests({
   fieldPath: "placement.classListSentDate",
@@ -385,6 +384,12 @@ stringOrNumTests({
   parseFn: parseFamilyCoordinator,
   testName: "parses family coordinator",
   testVal: "Ellis",
+});
+stringOrNumTests({
+  fieldPath: "status.audit",
+  parseFn: parseAudit,
+  testName: "parses audit",
+  testVal: "PL1-M Sp I 22",
 });
 
 describe("test expand", () => {

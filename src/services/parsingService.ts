@@ -137,7 +137,7 @@ export const parseCurrentLevel = (key: string, value: string, student: Student) 
   student.currentLevel = value as GenderedLevel;
 };
 
-export const parseAudit = parseOptionalBoolean("status.audit");
+export const parseAudit = parseOptionalString("status.audit");
 export const parsePendingPlacement = parseOptionalBoolean("placement.pending");
 
 export const parseFgrDate = parseDateField("status.finalGradeSentDate");
@@ -145,7 +145,7 @@ export const parseLevelReevalDate = parseDateField("status.levelReevalDate");
 export const parseReactivatedDate = parseDateField("status.reactivatedDate");
 export const parseWithdrawDate = parseDateField("status.withdrawDate");
 export const parsePlacementConfDate = parseDateField("placement.confDate");
-export const parseNoAnswerClassSchedule = parseDateField("placement.noAnswerClassSchedule");
+export const parseNoAnswerClassSchedule = parseOptionalBoolean("placement.noAnswerClassScheduleWPM");
 
 export const parseSectionsOffered = parseOptionalString("placement.sectionsOffered");
 export const parsePhotoContact = parseOptionalString("placement.photoContact");
