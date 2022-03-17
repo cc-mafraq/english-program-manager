@@ -32,7 +32,7 @@ const GradeInfo: React.FC<GradeInfoProps> = ({ grade, label, gradeVisibility }) 
   return (
     <LabeledContainer condition={gradeVisibility} label={label} labelProps={labelProps}>
       <LabeledText condition={gradeVisibility} containerProps={gradeContainerProps(grade?.result)} label="Result">
-        {grade ? FinalResult[grade.result] : undefined}
+        {grade?.result ? FinalResult[grade.result] : undefined}
       </LabeledText>
       <LabeledText condition={gradeVisibility} label="Percentage">
         {grade?.percentage !== undefined ? `${grade.percentage}%` : undefined}

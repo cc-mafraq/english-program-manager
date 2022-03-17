@@ -170,7 +170,9 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
       colText1: "Level: Pass or Repeat",
       colText2: "المستوى: ناجح او راسب, لازم تبقى بنفس السمتوى",
       colText3:
-        academicRecord?.finalResult && FinalResult[academicRecord.finalResult.result] === "P" ? "Pass" : "Repeat",
+        academicRecord?.finalResult?.result && FinalResult[academicRecord.finalResult.result] === "P"
+          ? "Pass"
+          : "Repeat",
       conditionToShow: academicRecord?.finalResult?.result !== undefined,
       labelBackgroundColor: backgroundColorSecondary,
     },
