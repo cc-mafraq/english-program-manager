@@ -1,7 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Divider, Grid, Typography, useTheme } from "@mui/material";
 import { green, grey } from "@mui/material/colors";
-import { collection, doc, setDoc } from "firebase/firestore";
 import { isEmpty } from "lodash";
 import React, { useContext } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -20,9 +19,10 @@ import {
 } from "..";
 import { AppContext, Status, Student } from "../../interfaces";
 import {
-  db,
+  deleteStudentData,
   removeNullFromObject,
   setPrimaryNumberBooleanArray,
+  setStudentData,
   SPACING,
   studentFormSchema,
 } from "../../services";
@@ -60,7 +60,8 @@ export const StudentForm: React.FC<StudentFormProps> = ({ handleDialogClose }) =
       ];
     }
     const dataNoNull = removeNullFromObject(data) as Student;
-    setDoc(doc(collection(db, "students"), dataNoNull.epId.toString()), dataNoNull);
+    setStudentData(dataNoNull);
+    dataNoNull.epId !== selectedStudent?.epId && selectedStudent && deleteStudentData(selectedStudent);
     handleDialogClose();
   };
 

@@ -1,4 +1,4 @@
-import { collection, doc, setDoc, SetOptions } from "firebase/firestore";
+import { collection, deleteDoc, doc, setDoc, SetOptions } from "firebase/firestore";
 import { deleteObject, getDownloadURL, getMetadata, ref, StorageReference, uploadBytes } from "firebase/storage";
 import { isEmpty, map, omit, toString } from "lodash";
 import { db, storage } from ".";
@@ -6,6 +6,10 @@ import { Student } from "../interfaces";
 
 export const setStudentData = async (student: Student, options?: SetOptions) => {
   await setDoc(doc(collection(db, "students"), toString(student.epId)), student, options ?? {});
+};
+
+export const deleteStudentData = async (student: Student) => {
+  await deleteDoc(doc(collection(db, "students"), toString(student.epId)));
 };
 
 const imageExtensions = [".jpeg", ".jpg", ".png", ".jfif", ".JPG"];

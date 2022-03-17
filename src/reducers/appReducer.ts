@@ -10,38 +10,14 @@ export const reducer = (actionCallback: (item: AppState) => void) => {
   return (state: AppState, action: AppAction): AppState => {
     let newState: AppState;
     switch (action.type) {
-      case "setDataVisibility": {
-        if (action.payload.dataVisibility) {
-          newState = {
-            ...state,
-            dataVisibility: action.payload.dataVisibility,
-          };
-          break;
-        } else {
-          return state;
-        }
-      }
-      case "setStudents": {
-        if (action.payload.students) {
-          newState = {
-            ...state,
-            students: action.payload.students,
-          };
-          break;
-        } else {
-          return state;
-        }
-      }
-      case "setSelectedStudent": {
-        if (action.payload.selectedStudent) {
-          newState = {
-            ...state,
-            selectedStudent: action.payload.selectedStudent,
-          };
-          break;
-        } else {
-          return state;
-        }
+      case "set": {
+        newState = {
+          dataVisibility: action.payload.dataVisibility || state.dataVisibility,
+          selectedStudent:
+            action.payload.selectedStudent === undefined ? state.selectedStudent : action.payload.selectedStudent,
+          students: action.payload.students || state.students,
+        };
+        break;
       }
       default:
         return state;

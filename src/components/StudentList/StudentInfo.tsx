@@ -175,6 +175,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
       <LabeledContainer
         condition={allCheckboxesFalse("Phone Numbers and WhatsApp")}
         label="Phone Numbers and WhatsApp"
+        showWhenEmpty
       >
         {map(student.phone.phoneNumbers, (pn, i) => {
           return (

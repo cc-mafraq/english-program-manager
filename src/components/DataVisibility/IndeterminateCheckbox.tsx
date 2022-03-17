@@ -32,7 +32,7 @@ export const IndeterminateCheckbox: React.FC<IndeterminateCheckboxProps> = ({ ch
     set(dataVisibility, camelCase(label), childrenValues);
     appDispatch({
       payload: { dataVisibility },
-      type: "setDataVisibility",
+      type: "set",
     });
   };
 
