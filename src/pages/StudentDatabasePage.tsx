@@ -43,7 +43,7 @@ export const StudentDatabasePage = () => {
             )
           : filteredStudentsRef.current;
       setFilteredStudents(newFilteredStudents);
-      newStudents && appDispatch({ payload: { students: newStudents }, type: "setStudents" });
+      newStudents && appDispatch({ payload: { students: newStudents }, type: "set" });
       !isUndefined(newPage) && setPage(newPage);
       newRowsPerPage && setRowsPerPage(newRowsPerPage);
       !isUndefined(newSearchString) && setSearchString(newSearchString);
@@ -142,7 +142,7 @@ export const StudentDatabasePage = () => {
 
   const handleStudentDialogClose = () => {
     setOpenStudentDialog(false);
-    appDispatch({ payload: { selectedStudent: undefined }, type: "setSelectedStudent" });
+    appDispatch({ payload: { selectedStudent: null }, type: "set" });
   };
 
   const handleGenerateFGRClick = () => {

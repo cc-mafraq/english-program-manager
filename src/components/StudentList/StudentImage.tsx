@@ -9,7 +9,7 @@ interface StudentImageProps {
   innerContainerProps?: BoxProps;
   outerContainerProps?: BoxProps;
   scale?: number;
-  student?: Student;
+  student: Student | null;
 }
 
 export const StudentImage: React.FC<StudentImageProps> = ({
@@ -62,5 +62,4 @@ StudentImage.defaultProps = {
   innerContainerProps: undefined,
   outerContainerProps: undefined,
   scale: 1,
-  student: undefined,
 };

@@ -308,7 +308,7 @@ export const removeNullFromObject = (obj: object): object => {
   return merge(subObjects, subValues, subArrays);
 };
 
-export const setPrimaryNumberBooleanArray = (student?: Student) => {
+export const setPrimaryNumberBooleanArray = (student: Student | null) => {
   if (student) {
     const studentCopy = cloneDeep(student);
     studentCopy.phone.primaryPhone = map(studentCopy.phone.phoneNumbers, (num) => {

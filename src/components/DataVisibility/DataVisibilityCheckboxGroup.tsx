@@ -22,7 +22,7 @@ export const DataVisibilityCheckboxGroup: React.FC<DataVisibilityCheckboxGroupPr
       set(dataVisibility, `${camelCase(parentLabel)}.${camelCase(label)}`, event.target.checked);
       appDispatch({
         payload: { dataVisibility },
-        type: "setDataVisibility",
+        type: "set",
       });
     };
   };

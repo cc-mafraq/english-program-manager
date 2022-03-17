@@ -38,7 +38,7 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ student, h
         )}
         <IconButton
           onClick={() => {
-            appDispatch({ payload: { selectedStudent: student }, type: "setSelectedStudent" });
+            appDispatch({ payload: { selectedStudent: student }, type: "set" });
             handleEditStudentClick();
           }}
         >

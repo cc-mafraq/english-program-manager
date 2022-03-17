@@ -34,7 +34,7 @@ export const FormName: React.FC = () => {
             onClick={() => {
               deleteStudentImage(selectedStudent);
               selectedStudent.imageName = "";
-              appDispatch({ payload: { selectedStudent }, type: "setSelectedStudent" });
+              appDispatch({ payload: { selectedStudent }, type: "set" });
             }}
           >
             <HideImageIcon />

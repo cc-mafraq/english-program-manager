@@ -6,7 +6,7 @@ import { setStudentImage } from "../../services";
 
 interface AddImageButtonProps {
   scale?: number;
-  student?: Student;
+  student: Student | null;
 }
 
 export const AddImageButton: React.FC<AddImageButtonProps> = ({ scale, student }) => {
@@ -23,7 +23,7 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({ scale, student }
         onChange={async (e: ChangeEvent<HTMLInputElement>) => {
           if (!student) return;
           student.imageName = await setStudentImage(student, e.target.files && e.target.files[0]);
-          appDispatch({ payload: { selectedStudent: student }, type: "setSelectedStudent" });
+          appDispatch({ payload: { selectedStudent: student }, type: "set" });
         }}
         type="file"
       />
@@ -36,5 +36,4 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({ scale, student }
 
 AddImageButton.defaultProps = {
   scale: 1,
-  student: undefined,
 };
