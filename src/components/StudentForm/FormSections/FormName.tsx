@@ -9,13 +9,14 @@ import { deleteStudentImage, SPACING } from "../../../services";
 export const FormName: React.FC = () => {
   const {
     appState: { selectedStudent },
+    appDispatch,
   } = useContext(AppContext);
 
   return (
     <GridContainer marginBottom={SPACING}>
       <Grid item xs={1}>
         <StudentImage
-          imageStyleProps={{ margin: "auto", maxHeight: "100%", width: "auto" }}
+          imageStyleProps={{ margin: "auto", maxHeight: "100%", maxWidth: "90px", width: "auto" }}
           innerContainerProps={{
             sx: { transform: "translate(0%, -50%)" },
             top: "50%",
@@ -26,13 +27,14 @@ export const FormName: React.FC = () => {
         />
       </Grid>
       {selectedStudent?.imageName && (
-        <Box display="flex" flexDirection="column" paddingTop="20px">
+        <Box display="flex" flexDirection="column" paddingLeft="5px" paddingTop="20px">
           <AddImageButton student={selectedStudent} />
           <IconButton
             color="primary"
             onClick={() => {
               deleteStudentImage(selectedStudent);
               selectedStudent.imageName = "";
+              appDispatch({ payload: { selectedStudent }, type: "setSelectedStudent" });
             }}
           >
             <HideImageIcon />

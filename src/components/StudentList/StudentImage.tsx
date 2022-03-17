@@ -32,7 +32,7 @@ export const StudentImage: React.FC<StudentImageProps> = ({
       }
     };
     setImage();
-  }, [student]);
+  }, [student, student?.imageName]);
 
   return (
     <Box {...outerContainerProps}>

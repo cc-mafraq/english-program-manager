@@ -1,7 +1,7 @@
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { IconButton } from "@mui/material";
-import React, { ChangeEvent } from "react";
-import { Student } from "../../interfaces";
+import React, { ChangeEvent, useContext } from "react";
+import { AppContext, Student } from "../../interfaces";
 import { setStudentImage } from "../../services";
 
 interface AddImageButtonProps {
@@ -10,6 +10,8 @@ interface AddImageButtonProps {
 }
 
 export const AddImageButton: React.FC<AddImageButtonProps> = ({ scale, student }) => {
+  const { appDispatch } = useContext(AppContext);
+
   const inputId = `importImage-${student?.epId}`;
 
   return (
@@ -19,7 +21,9 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({ scale, student }
         hidden
         id={inputId}
         onChange={async (e: ChangeEvent<HTMLInputElement>) => {
-          student && setStudentImage(student, e.target.files && e.target.files[0]);
+          if (!student) return;
+          student.imageName = await setStudentImage(student, e.target.files && e.target.files[0]);
+          appDispatch({ payload: { selectedStudent: student }, type: "setSelectedStudent" });
         }}
         type="file"
       />
