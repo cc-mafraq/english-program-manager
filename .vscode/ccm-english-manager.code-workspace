@@ -13,6 +13,7 @@
       "source.organizeImports": true,
       "source.fixAll": true
     },
+    "eslint.lintTask.enable": true,
     "eslint.workingDirectories": [
       {
         "mode": "auto"
