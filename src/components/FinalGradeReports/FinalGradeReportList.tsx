@@ -30,7 +30,7 @@ export const FinalGradeReportList: React.FC<FinalGradeReportListProps> = ({
   const {
     appState: { students },
   } = useContext(AppContext);
-  const [sessionOptions, setSessionOptions] = useState(getAllSessions(students));
+  const [sessionOptions, setSessionOptions] = useState();
   useEffect(() => {
     setSessionOptions(getAllSessions(students));
   }, [students]);
