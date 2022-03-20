@@ -5,10 +5,10 @@ import { Box, Card, Grid, IconButton } from "@mui/material";
 import download from "downloadjs";
 import { toPng } from "html-to-image";
 import JSZip from "jszip";
-import { map, nth, replace } from "lodash";
+import { includes, map, nth, replace } from "lodash";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FGRGridRow, FGRGridRowProps, FGRHeader } from ".";
-import { FinalResult, lightPrimaryColor, Student } from "../../interfaces";
+import { FinalResult, genderedLevels, lightPrimaryColor, Student } from "../../interfaces";
 import {
   getElectiveFullName,
   getLevelForNextSession,
@@ -23,6 +23,7 @@ interface FinalGradeReportProps {
   handleRemoveFGR: (studentAcademicRecord: StudentAcademicRecordIndex) => void;
   scale: number;
   session: Student["initialSession"];
+  sessionOptions: Student["initialSession"][];
   shouldDownload: boolean;
   studentAcademicRecord: StudentAcademicRecordIndex;
   width: number;
@@ -37,6 +38,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
   handleDownloadFinished,
   handleRemoveFGR,
   session,
+  sessionOptions,
   studentAcademicRecord,
   shouldDownload,
   scale,
@@ -119,14 +121,21 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
     {
       colText1: "Level:",
       colText2: "المستوى",
-      colText3: academicRecord ? getLevelForNextSession({ academicRecord, noIncrement: true, student }) : "",
+      colText3: academicRecord
+        ? getLevelForNextSession({ academicRecord, noIncrement: true, sessionOptions, student })
+        : "",
       labelBackgroundColor: backgroundColorMain,
     },
     {
       colText1: "Name of Class:",
       colText2: "إسم الصف",
-      colText3: academicRecord?.level ? getElectiveFullName(academicRecord.level) : "Not Applicable",
-      conditionToShow: academicRecord && isElective(academicRecord),
+      colText3: academicRecord?.level
+        ? getElectiveFullName(academicRecord.level)
+        : academicRecord?.levelAudited
+        ? getElectiveFullName(academicRecord.levelAudited)
+        : "Not Applicable",
+      conditionToShow:
+        academicRecord && (academicRecord.level || academicRecord.levelAudited) && isElective(academicRecord),
       labelBackgroundColor: backgroundColorSecondary,
     },
     {
@@ -173,13 +182,13 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
         academicRecord?.finalResult?.result && FinalResult[academicRecord.finalResult.result] === "P"
           ? "Pass"
           : "Repeat",
-      conditionToShow: academicRecord?.finalResult?.result !== undefined,
+      conditionToShow: includes(genderedLevels, academicRecord?.level) && !academicRecord?.levelAudited,
       labelBackgroundColor: backgroundColorSecondary,
     },
     {
       colText1: "Your Level for Next Session",
       colText2: "مستواك في الدورة الجاي",
-      colText3: academicRecord ? getLevelForNextSession({ academicRecord, student }) : "",
+      colText3: academicRecord ? getLevelForNextSession({ academicRecord, sessionOptions, student }) : "",
       colText3Props: { fontWeight: "bold" },
       labelBackgroundColor: backgroundColorMain,
     },

@@ -74,6 +74,8 @@ studentFieldsUnexpanded[ps.generateKeys("FinalGrades", maxAcademicRecordColumnNu
   ps.parseAcademicRecordFinalGrade;
 studentFieldsUnexpanded[ps.generateKeys("LevelAttended", maxAcademicRecordColumnNum)] =
   ps.parseAcademicRecordLevel;
+studentFieldsUnexpanded[ps.generateKeys("ElectiveClassAttended", maxAcademicRecordColumnNum)] =
+  ps.parseAcademicRecordLevel;
 studentFieldsUnexpanded[ps.generateKeys("LevelAudited", maxAcademicRecordColumnNum)] = ps.parseAcademicRecordAudit;
 studentFieldsUnexpanded[ps.generateKeys("P", maxAcademicRecordColumnNum)] = ps.parseAcademicRecordResult;
 studentFieldsUnexpanded[ps.generateKeys("F", maxAcademicRecordColumnNum, true)] = ps.parseAcademicRecordResult;

@@ -1,12 +1,12 @@
 import { FirebaseError } from "firebase/app";
-import { collection, DocumentData, onSnapshot, QuerySnapshot } from "firebase/firestore";
+import { DocumentData, QuerySnapshot } from "firebase/firestore";
 import { forEach, get, isString, isUndefined, join, values } from "lodash";
-import React, { ChangeEvent, useCallback, useContext, useEffect, useRef } from "react";
+import React, { ChangeEvent, useCallback, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import useState from "react-usestateref";
 import { FinalGradeReportDialog, StudentDatabaseToolbar, StudentFormDialog, StudentList } from "../components";
 import { AppContext, Student } from "../interfaces";
-import { db, getStudentPage, logout, searchStudents, sortStudents } from "../services";
+import { getStudentPage, logout, searchStudents, sortStudents } from "../services";
 import { spreadsheetToStudentList } from "../services/spreadsheetService";
 
 interface SetStateOptions {
@@ -102,12 +102,12 @@ export const StudentDatabasePage = () => {
     [navigate],
   );
 
-  useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "students"), nextSnapshot, errorSnapshot);
-    return () => {
-      unsubscribe();
-    };
-  }, [errorSnapshot, nextSnapshot]);
+  // useEffect(() => {
+  //   const unsubscribe = onSnapshot(collection(db, "students"), nextSnapshot, errorSnapshot);
+  //   return () => {
+  //     unsubscribe();
+  //   };
+  // }, [errorSnapshot, nextSnapshot]);
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setState({ newPage });

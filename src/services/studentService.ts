@@ -14,10 +14,10 @@ import {
   sortBy,
   uniq,
 } from "lodash";
-import { FinalResult, GenderedLevel, Status, Student } from "../interfaces";
+import { FinalResult, GenderedLevel, Level, Status, Student } from "../interfaces";
 
 export type StudentProgress = {
-  [key in GenderedLevel]?: SessionResult[];
+  [key in Level]?: SessionResult[];
 };
 
 export interface SessionResult {
