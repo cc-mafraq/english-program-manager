@@ -16,7 +16,7 @@ const studentFieldsUnexpanded: ValidFields = {
   CERTREQUESTSDATE: ps.parseCertRequests,
   CURRENTLEVEL: ps.parseCurrentLevel,
   CURRENTSTATUS: ps.parseCurrentStatus,
-  DATESENT: ps.parseClassListSentDate,
+  DATESENT: ps.parseClassScheduleSentDate,
   EnglishTeacher: ps.parseEnglishTeacher,
   "FAI17,FAII17,SPI18,SPII18,FAI18,FAII18,SPI19,SPII19,FAI19,FAII19,SPI20,SPII20,FAI20,FAII20,SPI21,FAI21,FAII21,SPI22,SPII22,FAI22,FAII22":
     ps.parseInitialSession,

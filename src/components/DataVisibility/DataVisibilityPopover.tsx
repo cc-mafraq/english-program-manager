@@ -53,7 +53,7 @@ const labels: { childLabels: string[]; parentLabel: string }[] = [
   },
   {
     childLabels: [
-      "Class List Sent Date",
+      "Class Schedule Sent Date",
       "NA Class Schedule WPM",
       "Original Placement Data",
       "Pending",

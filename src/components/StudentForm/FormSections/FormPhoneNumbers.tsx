@@ -27,11 +27,12 @@ export const FormPhoneNumbers: React.FC = () => {
           buttonGridProps={{ xs: 2 }}
           buttonLabel="Add Phone"
           list={phoneNumbers}
+          listName="phone.phoneNumbers"
           removeItem={removePhone}
         >
           <FormPhoneItem />
         </FormList>
-        <Grid item xs>
+        <Grid item xs={4}>
           <GridItemTextField
             gridProps={{ paddingBottom: SPACING, paddingLeft: 0 }}
             label="WhatsApp Broadcast SAR"

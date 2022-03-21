@@ -124,10 +124,10 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
           {student.status.audit}
         </LabeledText>
         <LabeledText condition={dataVisibility.status.finalGrSent} label="Final GR Sent">
-          {join(student.status.finalGradeSentDate, joinStr)}
+          {student.status.finalGradeSentDate}
         </LabeledText>
         <LabeledText condition={dataVisibility.status.levelReevalDate} label="Level Reeval Date">
-          {join(student.status.levelReevalDate, joinStr)}
+          {student.status.levelReevalDate}
         </LabeledText>
         <LabeledText condition={dataVisibility.status.reactivatedDate} label="Reactivated Date">
           {join(student.status.reactivatedDate, joinStr)}
@@ -204,24 +204,24 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
           condition={dataVisibility.phoneNumbersAndWhatsApp.waBroadcastOtherGroups}
           label="WA Broadcast Other Groups"
         >
-          {join(student.phone.otherWaBroadcastGroups, ", ")}
+          {join(student.phone.otherWaBroadcastGroups, joinStr)}
         </LabeledText>
       </LabeledContainer>
       <LabeledContainer condition={allCheckboxesFalse("Placement")} label="Placement">
         <LabeledText condition={dataVisibility.placement.photoContact} label="Photo Contact">
-          {join(student.placement.photoContact, joinStr)}
+          {student.placement.photoContact}
         </LabeledText>
         <LabeledText condition={dataVisibility.placement.placement} label="Placement">
           {student.placement.placement}
         </LabeledText>
-        <LabeledText condition={dataVisibility.placement.classListSentDate} label="Class List Sent Date">
-          {join(student.placement.classListSentDate, joinStr)}
+        <LabeledText condition={dataVisibility.placement.classScheduleSentDate} label="Class Schedule Sent Date">
+          {join(student.placement.classScheduleSentDate, joinStr)}
         </LabeledText>
         <LabeledText condition={dataVisibility.placement.sectionsOffered} label="Sections Offered">
-          {join(student.placement.sectionsOffered, joinStr)}
+          {student.placement.sectionsOffered}
         </LabeledText>
         <LabeledText condition={dataVisibility.placement.placementConfirmed} label="Placement Confirmed">
-          {join(student.placement.confDate, joinStr)}
+          {student.placement.confDate}
         </LabeledText>
         <LabeledText condition={dataVisibility.placement.naClassSchedule} label="NA Class Schedule WPM">
           {student.placement.noAnswerClassScheduleWPM ? "Yes" : undefined}

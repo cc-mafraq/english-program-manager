@@ -6,12 +6,11 @@ import { useColors } from "../../../../hooks";
 import { AppContext, genderedLevels } from "../../../../interfaces";
 import { FormItem, getAllSessions, SPACING } from "../../../../services";
 
-export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem }) => {
+export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem, name }) => {
   const {
     appState: { students },
   } = useContext(AppContext);
 
-  const recordName = `academicRecords[${index}]`;
   const { iconColor } = useColors();
 
   return (
@@ -29,25 +28,25 @@ export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem 
         <GridItemAutocomplete
           freeSolo
           label="Session"
-          name={`${recordName}.session`}
+          name={`${name}.session`}
           options={getAllSessions(students)}
         />
-        <GridItemAutocomplete freeSolo label="Level" name={`${recordName}.level`} options={genderedLevels} />
-        <GridItemTextField label="Attendance Percentage" name={`${recordName}.attendance`} />
+        <GridItemAutocomplete freeSolo label="Level" name={`${name}.level`} options={genderedLevels} />
+        <GridItemTextField label="Attendance Percentage" name={`${name}.attendance`} />
         <GridItemAutocomplete
           freeSolo
           label="Level Audited"
-          name={`${recordName}.levelAudited`}
+          name={`${name}.levelAudited`}
           options={genderedLevels}
         />
       </GridContainer>
-      <FormGrade gradePath={`${recordName}.finalResult`} label="Final Grade" />
-      <FormGrade gradePath={`${recordName}.exitWritingExam`} label="Exit Writing Exam" />
-      <FormGrade gradePath={`${recordName}.exitSpeakingExam`} label="Exit Speaking Exam" />
+      <FormGrade gradePath={`${name}.finalResult`} label="Final Grade" />
+      <FormGrade gradePath={`${name}.exitWritingExam`} label="Exit Writing Exam" />
+      <FormGrade gradePath={`${name}.exitSpeakingExam`} label="Exit Speaking Exam" />
       <GridContainer marginBottom={0} marginLeft={0}>
         <GridItemTextField
           label="Teacher Comments"
-          name={`${recordName}.comments`}
+          name={`${name}.comments`}
           textFieldProps={{ multiline: true, rows: 4 }}
         />
       </GridContainer>

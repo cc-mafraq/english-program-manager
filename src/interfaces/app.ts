@@ -97,7 +97,7 @@ export interface DataVisibility {
     waNotes: boolean;
   };
   placement: {
-    classListSentDate: boolean;
+    classScheduleSentDate: boolean;
     naClassSchedule: boolean;
     originalPlacementData: boolean;
     pending: boolean;
@@ -181,7 +181,7 @@ export const initialAppState: AppState = {
       waNotes: true,
     },
     placement: {
-      classListSentDate: true,
+      classScheduleSentDate: true,
       naClassSchedule: true,
       originalPlacementData: true,
       pending: true,

@@ -1,7 +1,7 @@
-import { cloneDeep, isUndefined, set } from "lodash";
-import { useState } from "react";
+import { cloneDeep, get, isUndefined, set } from "lodash";
+import { useContext, useState } from "react";
 import { ArrayPath, FieldArrayPathValue, Path, PathValue, UseFormReturn } from "react-hook-form";
-import { Student } from "../interfaces";
+import { AppContext, Student } from "../interfaces";
 
 export const useFormList = (
   initialState: FieldArrayPathValue<Student, ArrayPath<Student>> | string[],
@@ -28,4 +28,13 @@ export const useFormList = (
   };
 
   return [list, addListItem, removeListItem];
+};
+
+export const useDateInitialState = (datePath: Path<Student>) => {
+  const {
+    appState: { selectedStudent },
+  } = useContext(AppContext);
+  const dateArr = get(selectedStudent, datePath);
+
+  return selectedStudent && dateArr && dateArr?.length > 0 ? dateArr : [""];
 };

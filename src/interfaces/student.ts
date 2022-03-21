@@ -49,8 +49,8 @@ export interface Grade {
 }
 
 export interface Placement {
-  classListSentDate?: string[];
-  confDate?: string[];
+  classScheduleSentDate?: string[];
+  confDate?: string;
   noAnswerClassScheduleWPM?: boolean;
   origPlacementData: {
     adjustment?: string;
@@ -59,7 +59,7 @@ export interface Placement {
     writing: LevelPlus;
   };
   pending?: boolean;
-  photoContact?: string[];
+  photoContact?: string;
   placement?: string;
   sectionsOffered?: string;
 }
@@ -91,9 +91,9 @@ export interface StudentStatus {
   audit?: string;
   currentStatus: Status;
   droppedOutReason?: DroppedOutReason;
-  finalGradeSentDate?: string[];
+  finalGradeSentDate?: string;
   inviteTag: boolean;
-  levelReevalDate?: string[];
+  levelReevalDate?: string;
   noContactList: boolean;
   reactivatedDate?: string[];
   withdrawDate?: string[];

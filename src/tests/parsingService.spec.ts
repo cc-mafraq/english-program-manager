@@ -26,7 +26,7 @@ import {
   parseArabicName,
   parseAudit,
   parseCertRequests,
-  parseClassListSentDate,
+  parseClassScheduleSentDate,
   parseCorrespondence,
   parseCovidDate,
   parseCovidReason,
@@ -231,9 +231,9 @@ dateTests({
   testName: "parses placement conf date",
 });
 dateTests({
-  fieldPath: "placement.classListSentDate",
-  parseFn: parseClassListSentDate,
-  testName: "parses class list sent date",
+  fieldPath: "placement.classScheduleSentDate",
+  parseFn: parseClassScheduleSentDate,
+  testName: "parses class schedule sent date",
 });
 dateTests({
   fieldPath: "covidVaccine.date",
