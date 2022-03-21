@@ -1,6 +1,6 @@
 import { collection, deleteDoc, doc, setDoc, SetOptions } from "firebase/firestore";
-import { deleteObject, getDownloadURL, getMetadata, ref, StorageReference, uploadBytes } from "firebase/storage";
-import { isEmpty, map, omit, toString } from "lodash";
+import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { isEmpty, omit, toString } from "lodash";
 import { db, storage } from ".";
 import { Student } from "../interfaces";
 
@@ -12,35 +12,35 @@ export const deleteStudentData = async (student: Student) => {
   await deleteDoc(doc(collection(db, "students"), toString(student.epId)));
 };
 
-const imageExtensions = [".jpeg", ".jpg", ".png", ".jfif", ".JPG"];
+// const imageExtensions = [".jpeg", ".jpg", ".png", ".jfif", ".JPG"];
 const imageFolderName = "studentPics/";
 
 export const getStudentImage = async (student: Student): Promise<string> => {
-  const setImageName = async (imageRef: StorageReference) => {
-    student.imageName = (await getMetadata(imageRef)).fullPath;
-  };
+  // const setImageName = async (imageRef: StorageReference) => {
+  //   student.imageName = (await getMetadata(imageRef)).fullPath;
+  // };
 
   if (!isEmpty(student.imageName)) {
     return getDownloadURL(ref(storage, student.imageName));
   }
-  if (student.imageName === undefined) {
-    let downloadURL = "";
-    // https://stackoverflow.com/questions/37576685/using-async-await-with-a-foreach-loop
-    await Promise.all(
-      map(imageExtensions, async (ext) => {
-        try {
-          await setImageName(ref(storage, `${imageFolderName}${student.epId}${ext}`));
-          downloadURL = await getDownloadURL(ref(storage, `${imageFolderName}${student.epId}${ext}`));
-        } catch (e) {
-          // eslint-disable-next-line no-useless-return
-          return;
-        }
-      }),
-    );
-    student.imageName = student.imageName ? student.imageName : "";
-    setStudentData(student, { merge: true });
-    return downloadURL;
-  }
+  // if (student.imageName === undefined) {
+  //   let downloadURL = "";
+  //   // https://stackoverflow.com/questions/37576685/using-async-await-with-a-foreach-loop
+  //   await Promise.all(
+  //     map(imageExtensions, async (ext) => {
+  //       try {
+  //         await setImageName(ref(storage, `${imageFolderName}${student.epId}${ext}`));
+  //         downloadURL = await getDownloadURL(ref(storage, `${imageFolderName}${student.epId}${ext}`));
+  //       } catch (e) {
+  //         // eslint-disable-next-line no-useless-return
+  //         return;
+  //       }
+  //     }),
+  //   );
+  //   student.imageName = student.imageName ? student.imageName : "";
+  //   setStudentData(student, { merge: true });
+  //   return downloadURL;
+  // }
   return "";
 };
 

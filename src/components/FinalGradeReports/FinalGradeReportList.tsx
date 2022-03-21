@@ -1,10 +1,10 @@
 import { Box } from "@mui/material";
 import JSZip from "jszip";
 import { map } from "lodash";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FinalGradeReport } from ".";
-import { Student } from "../../interfaces";
-import { StudentAcademicRecordIndex } from "../../services";
+import { AppContext, Student } from "../../interfaces";
+import { getAllSessions, StudentAcademicRecordIndex } from "../../services";
 
 interface FinalGradeReportListProps {
   fgrStudents: StudentAcademicRecordIndex[];
@@ -27,6 +27,14 @@ export const FinalGradeReportList: React.FC<FinalGradeReportListProps> = ({
   width,
   zip,
 }) => {
+  const {
+    appState: { students },
+  } = useContext(AppContext);
+  const [sessionOptions, setSessionOptions] = useState<Student["initialSession"][]>([]);
+  useEffect(() => {
+    setSessionOptions(getAllSessions(students));
+  }, [students]);
+
   return (
     <Box sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
       {map(fgrStudents, (fgrStudent) => {
@@ -37,6 +45,7 @@ export const FinalGradeReportList: React.FC<FinalGradeReportListProps> = ({
               handleRemoveFGR={handleRemoveFGR}
               scale={scale}
               session={session}
+              sessionOptions={sessionOptions}
               shouldDownload={shouldDownload}
               studentAcademicRecord={fgrStudent}
               width={width}
