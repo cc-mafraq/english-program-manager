@@ -4,11 +4,11 @@ import { ArrayPath, FieldArrayPathValue, Path, PathValue, UseFormReturn } from "
 import { Student } from "../interfaces";
 
 export const useFormList = (
-  initialState: FieldArrayPathValue<Student, ArrayPath<Student>>,
+  initialState: FieldArrayPathValue<Student, ArrayPath<Student>> | string[],
   listPath: Path<Student>,
   methods: UseFormReturn<Student, object>,
-): [FieldArrayPathValue<Student, ArrayPath<Student>>, () => void, (index?: number) => () => void] => {
-  const [list, setList] = useState<FieldArrayPathValue<Student, ArrayPath<Student>>>(initialState);
+): [FieldArrayPathValue<Student, ArrayPath<Student>> | string[], () => void, (index?: number) => () => void] => {
+  const [list, setList] = useState<FieldArrayPathValue<Student, ArrayPath<Student>> | string[]>(initialState);
 
   const addListItem = () => {
     setList([...list, {}] as PathValue<Student, ArrayPath<Student>>);

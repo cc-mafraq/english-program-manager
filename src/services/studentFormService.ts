@@ -46,6 +46,7 @@ export const MOMENT_FORMAT = "l";
 
 export interface FormItem {
   index?: number;
+  name?: string;
   removeItem?: (index?: number) => () => void;
 }
 

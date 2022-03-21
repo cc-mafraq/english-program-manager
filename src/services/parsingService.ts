@@ -1,4 +1,5 @@
 import {
+  filter,
   first,
   forEach,
   includes,
@@ -47,7 +48,7 @@ const splitAndTrim = (value: string, separator?: string | RegExp): string[] => {
 
 const parseDateVal = (value?: string) => {
   if (!value || value.match(/[a-z]|[A-Z]/)) return undefined;
-  const date = moment(last(splitAndTrim(value)), ["L", "l", "M/D/YY", "MM/DD/YY", "M-D-YY"]);
+  const date = moment(value, ["L", "l", "M/D/YY", "MM/DD/YY", "M-D-YY"]);
   return date.isValid() ? date.format(MOMENT_FORMAT) : undefined;
 };
 
@@ -70,6 +71,20 @@ const parseDateField = (fieldPath: string) => {
     const date = parseDateVal(value);
     if (!date && !value) return;
     set(student, fieldPath, date || value);
+  };
+};
+
+const parseDateFields = (fieldPath: string) => {
+  return (key: string, value: string, student: Student) => {
+    const dates = filter(
+      map(splitAndTrim(value), (val) => {
+        return parseDateVal(val);
+      }),
+      (val) => {
+        return val !== undefined;
+      },
+    );
+    set(student, fieldPath, dates);
   };
 };
 
@@ -140,15 +155,15 @@ export const parseCurrentLevel = (key: string, value: string, student: Student) 
 export const parseAudit = parseOptionalString("status.audit");
 export const parsePendingPlacement = parseOptionalBoolean("placement.pending");
 
-export const parseFgrDate = parseDateField("status.finalGradeSentDate");
-export const parseLevelReevalDate = parseDateField("status.levelReevalDate");
-export const parseReactivatedDate = parseDateField("status.reactivatedDate");
-export const parseWithdrawDate = parseDateField("status.withdrawDate");
-export const parsePlacementConfDate = parseDateField("placement.confDate");
+export const parseFgrDate = parseDateFields("status.finalGradeSentDate");
+export const parseLevelReevalDate = parseDateFields("status.levelReevalDate");
+export const parseReactivatedDate = parseDateFields("status.reactivatedDate");
+export const parseWithdrawDate = parseDateFields("status.withdrawDate");
+export const parsePlacementConfDate = parseDateFields("placement.confDate");
 export const parseNoAnswerClassSchedule = parseOptionalBoolean("placement.noAnswerClassScheduleWPM");
 
 export const parseSectionsOffered = parseOptionalString("placement.sectionsOffered");
-export const parsePhotoContact = parseOptionalString("placement.photoContact");
+export const parsePhotoContact = parseDateFields("placement.photoContact");
 export const parsePlacement = parseOptionalString("placement.placement");
 
 export const parseCurrentStatus = (key: string, value: string, student: Student) => {
@@ -203,7 +218,7 @@ export const parseCorrespondence = (key: string, value: string, student: Student
   );
 };
 
-export const parseClassListSentDate = parseDateField("placement.classListSentDate");
+export const parseClassListSentDate = parseDateFields("placement.classListSentDate");
 
 export const parseGender = (key: string, value: string, student: Student) => {
   Number(value) === 1 ? (student.gender = "M") : (student.gender = "F");
