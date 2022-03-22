@@ -1,14 +1,24 @@
 import { Grid } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
 import { useFormContext } from "react-hook-form";
-import { GridContainer, GridItemDatePicker, GridItemTextField, LabeledCheckbox, StudentFormLabel } from "..";
+import {
+  FormDateItem,
+  FormPlacementItem,
+  GridContainer,
+  GridItemDatePicker,
+  GridItemTextField,
+  LabeledCheckbox,
+  StudentFormLabel,
+} from "..";
 import { useDateInitialState, useFormList } from "../../../hooks";
-import { Student } from "../../../interfaces";
+import { AppContext, Student } from "../../../interfaces";
 import { SPACING } from "../../../services";
 import { FormList } from "../FormList";
-import { FormDateItem } from "./ListItems";
 
 export const FormPlacement: React.FC = () => {
+  const {
+    appState: { selectedStudent },
+  } = useContext(AppContext);
   const methods = useFormContext<Student>();
 
   const [classScheduleSentDate, addClassScheduleSentDate, removeClassScheduleSentDate] = useFormList(
@@ -17,11 +27,19 @@ export const FormPlacement: React.FC = () => {
     methods,
   );
 
+  const [placements, addPlacement, removePlacement] = useFormList(
+    selectedStudent && selectedStudent.placement.placement?.length > 0
+      ? selectedStudent.placement.placement
+      : [{}],
+    "placement.placement",
+    methods,
+  );
+
   return (
     <>
       <StudentFormLabel textProps={{ marginTop: SPACING }}>Placement</StudentFormLabel>
       <GridContainer marginBottom={0}>
-        <GridItemTextField gridProps={{ xs: 5 }} label="Sections Offered" name="placement.sectionsOffered" />
+        <GridItemTextField gridProps={{ xs: 6 }} label="Sections Offered" name="placement.sectionsOffered" />
         <FormList
           addItem={addClassScheduleSentDate}
           buttonLabel="Add CS Sent Date"
@@ -38,17 +56,21 @@ export const FormPlacement: React.FC = () => {
         <Grid item xs={2}>
           <LabeledCheckbox label="Pending" name="placement.pending" />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           <LabeledCheckbox label="No Answer CS WPM" name="placement.noAnswerClassScheduleWPM" />
         </Grid>
         <GridItemTextField gridProps={{ xs: 5 }} label="Photo Contact" name="placement.photoContact" />
       </GridContainer>
       <GridContainer>
-        <GridItemTextField gridProps={{ xs: 5 }} label="Placement and Date" name="placement.placement" />
-        <GridItemTextField gridProps={{ xs: 5 }} label="Notes" />
-        <Grid item xs={2}>
-          <LabeledCheckbox label="Added to CL" />
-        </Grid>
+        <FormList
+          addItem={addPlacement}
+          buttonLabel="Add Placement"
+          list={placements}
+          listName="placement.placement"
+          removeItem={removePlacement}
+        >
+          <FormPlacementItem />
+        </FormList>
       </GridContainer>
     </>
   );

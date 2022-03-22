@@ -220,9 +220,6 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         <LabeledText condition={dataVisibility.placement.sectionsOffered} label="Sections Offered">
           {student.placement.sectionsOffered}
         </LabeledText>
-        <LabeledText condition={dataVisibility.placement.placementConfirmed} label="Placement Confirmed">
-          {student.placement.confDate}
-        </LabeledText>
         <LabeledText condition={dataVisibility.placement.naClassSchedule} label="NA Class Schedule WPM">
           {student.placement.noAnswerClassScheduleWPM ? "Yes" : undefined}
         </LabeledText>

@@ -61,7 +61,6 @@ import {
   parsePhone,
   parsePhotoContact,
   parsePlacement,
-  parsePlacementConfDate,
   parseReactivatedDate,
   parseSectionsOffered,
   parseTeacher,
@@ -225,11 +224,6 @@ dateTests({
   testName: "parses reactivated date",
 });
 dateTests({ fieldPath: "status.withdrawDate", parseFn: parseWithdrawDate, testName: "parses withdraw date" });
-dateTests({
-  fieldPath: "placement.confDate",
-  parseFn: parsePlacementConfDate,
-  testName: "parses placement conf date",
-});
 dateTests({
   fieldPath: "placement.classScheduleSentDate",
   parseFn: parseClassScheduleSentDate,

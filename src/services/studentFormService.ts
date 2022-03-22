@@ -207,7 +207,6 @@ const phoneSchema = object()
 
 const placementSchema = object().shape({
   classScheduleSentDate: dateSchema.nullable().optional(),
-  confDate: dateSchema.nullable().optional(),
   noAnswerClassScheduleWPM: bool().optional(),
   origPlacementData: object()
     .shape({

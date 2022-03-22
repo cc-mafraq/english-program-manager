@@ -54,13 +54,18 @@ export interface Grade {
   result?: FinalResult;
 }
 
+export interface SectionPlacement {
+  addedToCL?: boolean;
+  notes?: string;
+  sectionAndDate?: string;
+}
+
 export interface Placement {
   classScheduleSentDate?: string[];
-  confDate?: string;
   noAnswerClassScheduleWPM?: boolean;
   pending?: boolean;
   photoContact?: string;
-  placement?: string;
+  placement: SectionPlacement[];
   sectionsOffered?: string;
 }
 
@@ -281,7 +286,7 @@ export const emptyStudent: Student = {
     phoneNumbers: [],
     primaryPhone: -1,
   },
-  placement: {},
+  placement: { placement: [] },
   status: {
     currentStatus: Status.NEW,
     inviteTag: false,
