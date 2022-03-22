@@ -102,12 +102,12 @@ export const StudentDatabasePage = () => {
     [navigate],
   );
 
-  // useEffect(() => {
-  //   const unsubscribe = onSnapshot(collection(db, "students"), nextSnapshot, errorSnapshot);
-  //   return () => {
-  //     unsubscribe();
-  //   };
-  // }, [errorSnapshot, nextSnapshot]);
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "students"), nextSnapshot, errorSnapshot);
+    return () => {
+      unsubscribe();
+    };
+  }, [errorSnapshot, nextSnapshot]);
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setState({ newPage });
@@ -131,7 +131,7 @@ export const StudentDatabasePage = () => {
 
     reader.onloadend = async () => {
       const studentListString = String(reader.result);
-      const studentList = spreadsheetToStudentList(studentListString);
+      const studentList = await spreadsheetToStudentList(studentListString);
       setState({ newStudents: studentList });
     };
   };

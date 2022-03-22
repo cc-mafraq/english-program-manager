@@ -342,27 +342,27 @@ stringOrNumTests({
 });
 stringOrNumTests({
   defaultVal: "",
-  fieldPath: "placement.origPlacementData.writing",
+  fieldPath: "origPlacementData.writing",
   parseFn: parseOrigPlacementWriting,
   testName: "parses original placement writing",
   testVal: "L1-",
 });
 stringOrNumTests({
   defaultVal: "",
-  fieldPath: "placement.origPlacementData.speaking",
+  fieldPath: "origPlacementData.speaking",
   parseFn: parseOrigPlacementSpeaking,
   testName: "parses original placement speaking",
   testVal: "L3+",
 });
 stringOrNumTests({
   defaultVal: "",
-  fieldPath: "placement.origPlacementData.level",
+  fieldPath: "origPlacementData.level",
   parseFn: parseOrigPlacementLevel,
   testName: "parses original placement level",
   testVal: "L5",
 });
 stringOrNumTests({
-  fieldPath: "placement.origPlacementData.adjustment",
+  fieldPath: "origPlacementData.adjustment",
   parseFn: parseOrigPlacementAdjustment,
   testName: "parses original placement adjustment",
   testVal: "Move to L4",

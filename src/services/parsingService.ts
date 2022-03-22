@@ -69,7 +69,7 @@ export const expand = (obj: ValidFields) => {
 const parseDateField = (fieldPath: string) => {
   return (key: string, value: string, student: Student) => {
     const date = parseDateVal(last(splitAndTrim(value)));
-    if (!date && !value) return;
+    if (!date || !value) return;
     set(student, fieldPath, date);
   };
 };
@@ -163,7 +163,7 @@ export const parsePlacementConfDate = parseOptionalString("placement.confDate");
 export const parseNoAnswerClassSchedule = parseOptionalBoolean("placement.noAnswerClassScheduleWPM");
 
 export const parseSectionsOffered = parseOptionalString("placement.sectionsOffered");
-export const parsePhotoContact = parseDateField("placement.photoContact");
+export const parsePhotoContact = parseOptionalString("placement.photoContact");
 export const parsePlacement = parseOptionalString("placement.placement");
 
 export const parseCurrentStatus = (key: string, value: string, student: Student) => {
@@ -276,18 +276,18 @@ export const parseZoomTutor = parseOptionalString("zoom");
 export const parseCertRequests = parseOptionalString("certificateRequests");
 
 export const parseOrigPlacementWriting = (key: string, value: string, student: Student) => {
-  student.placement.origPlacementData.writing = value as LevelPlus;
+  student.origPlacementData.writing = value as LevelPlus;
 };
 
 export const parseOrigPlacementSpeaking = (key: string, value: string, student: Student) => {
-  student.placement.origPlacementData.speaking = value as LevelPlus;
+  student.origPlacementData.speaking = value as LevelPlus;
 };
 
 export const parseOrigPlacementLevel = (key: string, value: string, student: Student) => {
-  student.placement.origPlacementData.level = value as Level;
+  student.origPlacementData.level = value as Level;
 };
 
-export const parseOrigPlacementAdjustment = parseOptionalString("placement.origPlacementData.adjustment");
+export const parseOrigPlacementAdjustment = parseOptionalString("origPlacementData.adjustment");
 
 export const parseDropoutReason = (key: string, value: string, student: Student) => {
   if (Number(value) !== 1) return;

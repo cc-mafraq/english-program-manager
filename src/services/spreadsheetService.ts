@@ -1,27 +1,25 @@
-import { cloneDeep, join, replace, slice } from "lodash";
+import { cloneDeep, join, map, replace, slice, sortBy } from "lodash";
 import papa from "papaparse";
 import { emptyStudent, Student } from "../interfaces";
 import * as ps from "./parsingService";
+import { searchForImage, setStudentData } from "./studentDataService";
 
 export interface ValidFields {
   [key: string]: (key: string, value: string, student: Student) => void;
 }
 
-const fieldCleanRegex = /[\s)(\-#/+:,;&%'◄]/g; // /\s|(|)|-|#|\/|+|:|,|;|&|%/g;
+const fieldCleanRegex = /[\s)(\-#/+:,;&%'◄]/g;
 
 const studentFieldsUnexpanded: ValidFields = {
   ADJ: ps.parseOrigPlacementAdjustment,
   AGEATPROGENTRY: ps.parseAge,
-  AUD: ps.parseAudit,
   CERTREQUESTSDATE: ps.parseCertRequests,
   CURRENTLEVEL: ps.parseCurrentLevel,
   CURRENTSTATUS: ps.parseCurrentStatus,
-  DATESENT: ps.parseClassScheduleSentDate,
   EnglishTeacher: ps.parseEnglishTeacher,
   "FAI17,FAII17,SPI18,SPII18,FAI18,FAII18,SPI19,SPII19,FAI19,FAII19,SPI20,SPII20,FAI20,FAII20,SPI21,FAI21,FAII21,SPI22,SPII22,FAI22,FAII22":
     ps.parseInitialSession,
   FAMCOORNAMEOFENTRY: ps.parseFamilyCoordinator,
-  FGRDATE: ps.parseFgrDate,
   ID: ps.parseID,
   IfELTPubschlprivschlunivorrefgcamp: ps.parseEnglishTeacherLocation,
   IlliterateAR: ps.parseArabicLiteracy,
@@ -29,25 +27,19 @@ const studentFieldsUnexpanded: ValidFields = {
   "JDN,SYR,IRQ,EGY,INDNES,YEM,CEAFRRE,CHI,KOR,UNKNWN": ps.parseNationality,
   "JORDANIANUNVACCD,SYRIANUNVACCD,OTHERNATIONALITYUNVACCD,JORDANIANPARTIALLYVACCD,SYRIANPARTIALLYVACCD,OTHERNATIONALITYPARTIALLYVACCD,JORDANIANFULLYVACCD,SYRIANFULLYVACCD,OTHERNATIONALITYFULLYVACCD,EXEMPTFROMVACCINE,BOOSTERTHIRDDOSE,ANSWEREDBUTANSWERUNCLEAR,DECLINEDTOPROVIDEVACCINEINFO":
     ps.parseCovidStatus,
-  LEVELREEVALDATE: ps.parseLevelReevalDate,
   "LackofChildCare,LackofTransport,TimeConflict,IllnessorPregnancy,VisionProblems,GotaJob,Moved,GraduatedfromL5,FailedtoThriveinClsrmEnv,LackofLifeMgmSkills,LackofFamilialSupport,LackofCommitmentorMotivation,FamilyMemberorEmployerForbidFurtherStudy,COVID19PandemicRelated,Unknown":
     ps.parseDropoutReason,
   LookingforaJobDate: ps.parseLookingForJob,
   M: ps.parseGender,
-  NACSWPM: ps.parseNoAnswerClassSchedule,
   NAMEAR: ps.parseArabicName,
   NAMEENG: ps.parseEnglishName,
   NCL: ps.parseNCL,
   OCCUPATION: ps.parseOccupation,
-  PENDINGPLCM: ps.parsePendingPlacement,
   PHOTOCONTACT: ps.parsePhotoContact,
-  PLCM: ps.parsePlacement,
-  PLCMCONFDATE: ps.parsePlacementConfDate,
   PLCMLVL: ps.parseOrigPlacementLevel,
   REACTIVATEDDATE: ps.parseReactivatedDate,
   REASONFOREXEMPTION: ps.parseCovidReason,
   REASONFORSUSPECTEDVACCINEFRAUD: ps.parseCovidSuspectedFraudReason,
-  SECSOFFERED: ps.parseSectionsOffered,
   SPKG: ps.parseOrigPlacementSpeaking,
   SUSPECTEDVACCINEFRAUD: ps.parseCovidSuspectedFraud,
   TeacherorProfessor: ps.parseTeacher,
@@ -86,7 +78,7 @@ studentFieldsUnexpanded[ps.generateKeys("TeacherComments", maxAcademicRecordColu
   ps.parseAcademicRecordTeacherComments;
 const studentFields = ps.expand(studentFieldsUnexpanded);
 
-export const spreadsheetToStudentList = (csvString: string): Student[] => {
+export const spreadsheetToStudentList = async (csvString: string): Promise<Student[]> => {
   // Remove junk and title rows from Excel export to CSV
   const csvStringClean = join(slice(replace(replace(csvString, "ï»¿", ""), "\t", ",").split("\n"), 3), "\n");
   const objects: papa.ParseResult<never> = papa.parse(csvStringClean, {
@@ -99,20 +91,30 @@ export const spreadsheetToStudentList = (csvString: string): Student[] => {
   const { data, meta } = objects;
   const { fields } = meta;
   // Parse each row of the CSV as an object
-  data.forEach((object) => {
-    const student = cloneDeep(emptyStudent);
+  await Promise.all(
+    map(data, async (object) => {
+      const student = cloneDeep(emptyStudent);
 
-    // Iterate through the fields of the CSV, and parse their values for this object
-    if (fields) {
-      fields.forEach((field) => {
-        const value = String(object[field]);
-        const fieldClean = replace(field, fieldCleanRegex, "");
-        if (fieldClean in studentFields) {
-          studentFields[fieldClean as keyof ValidFields](field, value, student);
+      // Iterate through the fields of the CSV, and parse their values for this object
+      if (fields) {
+        fields.forEach((field) => {
+          const value = String(object[field]);
+          const fieldClean = replace(field, fieldCleanRegex, "");
+          if (fieldClean in studentFields) {
+            studentFields[fieldClean as keyof ValidFields](field, value, student);
+          }
+        });
+        if (student.epId !== 0) {
+          student.imageName = await searchForImage(student);
+          students.push(student);
         }
-      });
-      student.epId !== 0 && students.push(student);
-    }
-  });
-  return students;
+      }
+    }),
+  );
+  await Promise.all(
+    map(students, async (student) => {
+      await setStudentData(student, { merge: true });
+    }),
+  );
+  return sortBy(students, "name.english");
 };

@@ -231,10 +231,10 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         </LabeledText>
       </LabeledContainer>
       <LabeledContainer condition={dataVisibility.placement.originalPlacementData} label="Original Placement Data">
-        <LabeledText label="Writing">{student.placement.origPlacementData.writing}</LabeledText>
-        <LabeledText label="Speaking">{student.placement.origPlacementData.speaking}</LabeledText>
-        <LabeledText label="Placement Level">{student.placement.origPlacementData.level}</LabeledText>
-        <LabeledText label="Adjustment">{student.placement.origPlacementData.adjustment}</LabeledText>
+        <LabeledText label="Writing">{student.origPlacementData.writing}</LabeledText>
+        <LabeledText label="Speaking">{student.origPlacementData.speaking}</LabeledText>
+        <LabeledText label="Placement Level">{student.origPlacementData.level}</LabeledText>
+        <LabeledText label="Adjustment">{student.origPlacementData.adjustment}</LabeledText>
       </LabeledContainer>
       <LabeledContainer condition={allCheckboxesFalse("Literacy")} label="Literacy">
         <LabeledText condition={dataVisibility.literacy.arabicLiteracy} label="Illiterate Arabic">

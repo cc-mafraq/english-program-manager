@@ -21,7 +21,7 @@ export const FormPlacement: React.FC = () => {
     <>
       <StudentFormLabel textProps={{ marginTop: SPACING }}>Placement</StudentFormLabel>
       <GridContainer marginBottom={0}>
-        <GridItemTextField gridProps={{ xs: 6 }} label="Placement" name="placement.placement" />
+        <GridItemTextField gridProps={{ xs: 5 }} label="Sections Offered" name="placement.sectionsOffered" />
         <FormList
           addItem={addClassScheduleSentDate}
           buttonLabel="Add CS Sent Date"
@@ -35,17 +35,20 @@ export const FormPlacement: React.FC = () => {
         </FormList>
       </GridContainer>
       <GridContainer marginBottom={0}>
-        <GridItemTextField gridProps={{ xs: 6 }} label="Sections Offered" name="placement.sectionsOffered" />
-        <GridItemTextField label="Placement Confirmed Date" name="placement.confDate" />
-      </GridContainer>
-      <GridContainer>
         <Grid item xs={2}>
           <LabeledCheckbox label="Pending" name="placement.pending" />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={3}>
           <LabeledCheckbox label="No Answer CS WPM" name="placement.noAnswerClassScheduleWPM" />
         </Grid>
-        <GridItemDatePicker label="Photo Contact" name="placement.photoContact" />
+        <GridItemTextField gridProps={{ xs: 5 }} label="Photo Contact" name="placement.photoContact" />
+      </GridContainer>
+      <GridContainer>
+        <GridItemTextField gridProps={{ xs: 5 }} label="Placement and Date" name="placement.placement" />
+        <GridItemTextField gridProps={{ xs: 5 }} label="Notes" />
+        <Grid item xs={2}>
+          <LabeledCheckbox label="Added to CL" />
+        </Grid>
       </GridContainer>
     </>
   );

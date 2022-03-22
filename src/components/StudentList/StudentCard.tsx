@@ -20,10 +20,6 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student, handleEditStu
     setTabValue(newValue);
   };
 
-  // useEffect(() => {
-  //   setStudentData(student, { merge: true });
-  // }, [student]);
-
   return (
     <Card
       sx={{

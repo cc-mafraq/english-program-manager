@@ -16,6 +16,12 @@ export interface Student {
   literacy: Literacy;
   name: StudentName;
   nationality: Nationality;
+  origPlacementData: {
+    adjustment?: string;
+    level: Level;
+    speaking: LevelPlus;
+    writing: LevelPlus;
+  };
   phone: WhatsappInfo;
   placement: Placement;
   status: StudentStatus;
@@ -52,12 +58,6 @@ export interface Placement {
   classScheduleSentDate?: string[];
   confDate?: string;
   noAnswerClassScheduleWPM?: boolean;
-  origPlacementData: {
-    adjustment?: string;
-    level: Level;
-    speaking: LevelPlus;
-    writing: LevelPlus;
-  };
   pending?: boolean;
   photoContact?: string;
   placement?: string;
@@ -272,17 +272,16 @@ export const emptyStudent: Student = {
     english: "",
   },
   nationality: Nationality.UNKNWN,
+  origPlacementData: {
+    level: "PL1",
+    speaking: "PL1",
+    writing: "PL1",
+  },
   phone: {
     phoneNumbers: [],
     primaryPhone: -1,
   },
-  placement: {
-    origPlacementData: {
-      level: "PL1",
-      speaking: "PL1",
-      writing: "PL1",
-    },
-  },
+  placement: {},
   status: {
     currentStatus: Status.NEW,
     inviteTag: false,
