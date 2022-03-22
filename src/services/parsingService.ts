@@ -34,7 +34,7 @@ import {
 } from "../interfaces";
 import { ValidFields } from "./spreadsheetService";
 
-const separatorRegex = /[;,]/g;
+const separatorRegex = /[;,&]/g;
 const phoneRegex = /([\d]+)/;
 
 const splitAndTrim = (value: string, separator?: string | RegExp): string[] => {
@@ -47,8 +47,9 @@ const splitAndTrim = (value: string, separator?: string | RegExp): string[] => {
 };
 
 const parseDateVal = (value?: string) => {
-  if (!value || value.match(/[a-z]|[A-Z]/)) return undefined;
-  const date = moment(value, ["L", "l", "M/D/YY", "MM/DD/YY", "M-D-YY"]);
+  if (!value) return undefined;
+  const valueNoLetters = trim(replace(value, /[a-z]|[A-Z]/, ""));
+  const date = moment(valueNoLetters, ["L", "l", "M/D/YY", "MM/DD/YY", "M-D-YY"]);
   return date.isValid() ? date.format(MOMENT_FORMAT) : undefined;
 };
 
@@ -84,6 +85,7 @@ const parseDateFields = (fieldPath: string) => {
         return val !== undefined;
       },
     );
+    if (dates?.length === 0) return;
     set(student, fieldPath, dates);
   };
 };
