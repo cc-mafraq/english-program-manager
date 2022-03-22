@@ -5,13 +5,11 @@ import React, { useContext } from "react";
 import { LabeledContainer, LabeledText } from "..";
 import { useColors } from "../../hooks";
 import { AppContext, CovidStatus, Nationality, Status, Student } from "../../interfaces";
-import { getRepeatNum, isActive } from "../../services";
+import { getRepeatNum, isActive, JOIN_STR } from "../../services";
 
 interface StudentInfoProps {
   student: Student;
 }
-
-const joinStr = ", ";
 
 export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
   const {
@@ -130,10 +128,10 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
           {student.status.levelReevalDate}
         </LabeledText>
         <LabeledText condition={dataVisibility.status.reactivatedDate} label="Reactivated Date">
-          {join(student.status.reactivatedDate, joinStr)}
+          {join(student.status.reactivatedDate, JOIN_STR)}
         </LabeledText>
         <LabeledText condition={dataVisibility.status.withdrawDate} label="Withdraw Date">
-          {join(student.status.withdrawDate, joinStr)}
+          {join(student.status.withdrawDate, JOIN_STR)}
         </LabeledText>
         <LabeledText condition={dataVisibility.status.withdrawReason} label="Withdraw Reason">
           {student.status.droppedOutReason}
@@ -204,29 +202,10 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
           condition={dataVisibility.phoneNumbersAndWhatsApp.waBroadcastOtherGroups}
           label="WA Broadcast Other Groups"
         >
-          {join(student.phone.otherWaBroadcastGroups, joinStr)}
+          {join(student.phone.otherWaBroadcastGroups, JOIN_STR)}
         </LabeledText>
       </LabeledContainer>
-      <LabeledContainer condition={allCheckboxesFalse("Placement")} label="Placement">
-        <LabeledText condition={dataVisibility.placement.photoContact} label="Photo Contact">
-          {student.placement.photoContact}
-        </LabeledText>
-        <LabeledText condition={dataVisibility.placement.placement} label="Placement">
-          {student.placement.placement}
-        </LabeledText>
-        <LabeledText condition={dataVisibility.placement.classScheduleSentDate} label="Class Schedule Sent Date">
-          {join(student.placement.classScheduleSentDate, joinStr)}
-        </LabeledText>
-        <LabeledText condition={dataVisibility.placement.sectionsOffered} label="Sections Offered">
-          {student.placement.sectionsOffered}
-        </LabeledText>
-        <LabeledText condition={dataVisibility.placement.naClassSchedule} label="NA Class Schedule WPM">
-          {student.placement.noAnswerClassScheduleWPM ? "Yes" : undefined}
-        </LabeledText>
-        <LabeledText condition={dataVisibility.placement.pending} label="Pending">
-          {student.placement.pending ? "Yes" : undefined}
-        </LabeledText>
-      </LabeledContainer>
+
       <LabeledContainer condition={dataVisibility.placement.originalPlacementData} label="Original Placement Data">
         <LabeledText label="Writing">{student.origPlacementData.writing}</LabeledText>
         <LabeledText label="Speaking">{student.origPlacementData.speaking}</LabeledText>

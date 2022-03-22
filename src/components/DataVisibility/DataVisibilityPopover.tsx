@@ -59,7 +59,6 @@ const labels: { childLabels: string[]; parentLabel: string }[] = [
       "Pending",
       "Photo Contact",
       "Placement",
-      "Placement Confirmed",
     ],
     parentLabel: "Placement",
   },

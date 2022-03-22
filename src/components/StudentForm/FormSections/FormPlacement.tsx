@@ -28,9 +28,7 @@ export const FormPlacement: React.FC = () => {
   );
 
   const [placements, addPlacement, removePlacement] = useFormList(
-    selectedStudent && selectedStudent.placement.placement?.length > 0
-      ? selectedStudent.placement.placement
-      : [{}],
+    selectedStudent && selectedStudent.placement.placement?.length > 0 ? selectedStudent.placement.placement : [],
     "placement.placement",
     methods,
   );

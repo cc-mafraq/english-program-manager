@@ -16,6 +16,8 @@ import {
 } from "lodash";
 import { FinalResult, GenderedLevel, Level, Status, Student } from "../interfaces";
 
+export const JOIN_STR = ", ";
+
 export type StudentProgress = {
   [key in Level]?: SessionResult[];
 };

@@ -1,6 +1,6 @@
 import {
   cloneDeep,
-  forEach,
+  filter,
   forOwn,
   indexOf,
   isArray,
@@ -63,6 +63,10 @@ const stringToArray = (value: string, originalValue: string) => {
         })
       : [originalValue]
     : null;
+};
+
+const dateStringToArray = (value: string, originalValue: string) => {
+  return isArray(originalValue) && some(originalValue) ? originalValue : null;
 };
 
 const stringToInteger = (value: string, originalValue: string) => {
@@ -205,22 +209,22 @@ const phoneSchema = object()
   })
   .required();
 
+const sectionPlacementSchema = object().shape({
+  addedToCL: bool().optional(),
+  notes: string().transform(emptyToNull).nullable().optional(),
+  sectionAndDate: string().required(),
+});
+
 const placementSchema = object().shape({
-  classScheduleSentDate: dateSchema.nullable().optional(),
+  classScheduleSentDate: array()
+    .of(dateSchema.nullable().optional())
+    .transform(dateStringToArray)
+    .nullable()
+    .optional(),
   noAnswerClassScheduleWPM: bool().optional(),
-  origPlacementData: object()
-    .shape({
-      adjustment: string().transform(emptyToNull).nullable().optional(),
-      level: mixed<Level>().oneOf(levels).required("Original placement level is required"),
-      speaking: mixed<LevelPlus | "Exempt">()
-        .oneOf(levelsPlus)
-        .required("Original speaking placement is required"),
-      writing: mixed<LevelPlus | "Exempt">().oneOf(levelsPlus).required("Original writing placement is required"),
-    })
-    .required(),
   pending: bool().optional(),
-  photoContact: dateSchema.nullable().optional(),
-  placement: string().transform(emptyToNull).nullable().optional(),
+  photoContact: string().transform(emptyToNull).nullable().optional(),
+  placement: array().of(sectionPlacementSchema).default([]).required(),
   sectionsOffered: string().transform(emptyToNull).nullable().optional(),
 });
 
@@ -239,8 +243,8 @@ const statusSchema = object().shape({
   inviteTag: bool().required(),
   levelReevalDate: dateSchema.nullable().optional(),
   noContactList: bool().required(),
-  reactivatedDate: dateSchema.nullable().optional(),
-  withdrawDate: dateSchema.nullable().optional(),
+  reactivatedDate: array().of(dateSchema.nullable().optional()).transform(dateStringToArray).nullable().optional(),
+  withdrawDate: array().of(dateSchema.nullable().optional()).transform(dateStringToArray).nullable().optional(),
 });
 
 const workSchema = object().shape({
@@ -285,6 +289,16 @@ export const studentFormSchema = object().shape({
     .oneOf(Object.values(Nationality) as Nationality[])
     .transform(stringToNationality)
     .required("Nationality is required"),
+  origPlacementData: object()
+    .shape({
+      adjustment: string().transform(emptyToNull).nullable().optional(),
+      level: mixed<Level>().oneOf(levels).required("Original placement level is required"),
+      speaking: mixed<LevelPlus | "Exempt">()
+        .oneOf(levelsPlus)
+        .required("Original speaking placement is required"),
+      writing: mixed<LevelPlus | "Exempt">().oneOf(levelsPlus).required("Original writing placement is required"),
+    })
+    .required(),
   phone: phoneSchema,
   placement: placementSchema,
   status: statusSchema,
@@ -294,16 +308,22 @@ export const studentFormSchema = object().shape({
 
 // https://stackoverflow.com/questions/38275753/how-to-remove-empty-values-from-object-using-lodash
 export const removeNullFromObject = (obj: object): object => {
+  const removeNullFromArray = (arr: unknown[]): unknown[] => {
+    return filter(
+      map(arr, (v) => {
+        return isObject(v) ? removeNullFromObject(v) : v;
+      }),
+      (v) => {
+        return !isNull(v) && !isUndefined(v);
+      },
+    );
+  };
   const objNoNull = omitBy(omitBy(obj, isNull), isUndefined);
   const subObjects = mapValues(omitBy(pickBy(objNoNull, isObject), isArray), removeNullFromObject);
   const subValues = omitBy(objNoNull, isObject);
   const subArrays = pickBy(objNoNull, isArray);
   forOwn(subArrays, (v, k) => {
-    const arr: unknown[] = [];
-    forEach(v, (item) => {
-      arr.push(removeNullFromObject(item));
-    });
-    subArrays[k] = arr;
+    subArrays[k] = removeNullFromArray(v);
   });
   return merge(subObjects, subValues, subArrays);
 };

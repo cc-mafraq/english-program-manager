@@ -103,7 +103,6 @@ export interface DataVisibility {
     pending: boolean;
     photoContact: boolean;
     placement: boolean;
-    placementConfirmed: boolean;
     sectionsOffered: boolean;
   };
   programInformation: {
@@ -187,7 +186,6 @@ export const initialAppState: AppState = {
       pending: true,
       photoContact: true,
       placement: true,
-      placementConfirmed: true,
       sectionsOffered: true,
     },
     programInformation: {
