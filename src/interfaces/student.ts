@@ -62,7 +62,7 @@ export interface SectionPlacement {
 
 export interface Placement {
   classScheduleSentDate: string[];
-  noAnswerClassScheduleWPM?: boolean;
+  noAnswerClassScheduleWpm?: boolean;
   pending?: boolean;
   photoContact?: string;
   placement: SectionPlacement[];

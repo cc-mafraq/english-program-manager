@@ -161,7 +161,7 @@ export const parseFgrDate = parseDateField("status.finalGradeSentDate");
 export const parseLevelReevalDate = parseDateField("status.levelReevalDate");
 export const parseReactivatedDate = parseDateFields("status.reactivatedDate");
 export const parseWithdrawDate = parseDateFields("status.withdrawDate");
-export const parseNoAnswerClassSchedule = parseOptionalBoolean("placement.noAnswerClassScheduleWPM");
+export const parseNoAnswerClassSchedule = parseOptionalBoolean("placement.noAnswerClassScheduleWpm");
 
 export const parseSectionsOffered = parseOptionalString("placement.sectionsOffered");
 export const parsePhotoContact = parseOptionalString("placement.photoContact");

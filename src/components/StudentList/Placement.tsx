@@ -17,7 +17,7 @@ export const Placement: React.FC<PlacementProps> = ({ student }) => {
     <LabeledContainer
       condition={some([
         dataVisibility.placement.classScheduleSentDate && student.placement.classScheduleSentDate,
-        dataVisibility.placement.naClassSchedule && student.placement.noAnswerClassScheduleWPM,
+        dataVisibility.placement.naClassScheduleWpm && student.placement.noAnswerClassScheduleWpm,
         dataVisibility.placement.pending && student.placement.pending,
         dataVisibility.placement.photoContact && student.placement.photoContact,
         dataVisibility.placement.placement && student.placement.placement?.length,
@@ -45,8 +45,8 @@ export const Placement: React.FC<PlacementProps> = ({ student }) => {
       <LabeledText condition={dataVisibility.placement.sectionsOffered} label="Sections Offered">
         {student.placement.sectionsOffered}
       </LabeledText>
-      <LabeledText condition={dataVisibility.placement.naClassSchedule} label="NA Class Schedule WPM">
-        {student.placement.noAnswerClassScheduleWPM ? "Yes" : undefined}
+      <LabeledText condition={dataVisibility.placement.naClassScheduleWpm} label="NA Class Schedule WPM">
+        {student.placement.noAnswerClassScheduleWpm ? "Yes" : undefined}
       </LabeledText>
       <LabeledText condition={dataVisibility.placement.pending} label="Pending">
         {student.placement.pending ? "Yes" : undefined}

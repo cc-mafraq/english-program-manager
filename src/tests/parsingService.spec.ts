@@ -250,7 +250,7 @@ optionalBooleanTests({
   testName: "parses covidVaccine suspected fraud",
 });
 optionalBooleanTests({
-  fieldPath: "placement.noAnswerClassScheduleWPM",
+  fieldPath: "placement.noAnswerClassScheduleWpm",
   parseFn: parseNoAnswerClassSchedule,
   testName: "parses no answer class schedule",
 });

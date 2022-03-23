@@ -98,7 +98,7 @@ export interface DataVisibility {
   };
   placement: {
     classScheduleSentDate: boolean;
-    naClassSchedule: boolean;
+    naClassScheduleWpm: boolean;
     originalPlacementData: boolean;
     pending: boolean;
     photoContact: boolean;
@@ -182,7 +182,7 @@ export const initialAppState: AppState = {
     },
     placement: {
       classScheduleSentDate: true,
-      naClassSchedule: true,
+      naClassScheduleWpm: true,
       originalPlacementData: true,
       pending: true,
       photoContact: true,

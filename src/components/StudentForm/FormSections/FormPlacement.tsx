@@ -55,7 +55,7 @@ export const FormPlacement: React.FC = () => {
           <LabeledCheckbox label="Pending" name="placement.pending" />
         </Grid>
         <Grid item xs={4}>
-          <LabeledCheckbox label="No Answer CS WPM" name="placement.noAnswerClassScheduleWPM" />
+          <LabeledCheckbox label="No Answer CS WPM" name="placement.noAnswerClassScheduleWpm" />
         </Grid>
         <GridItemTextField gridProps={{ xs: 5 }} label="Photo Contact" name="placement.photoContact" />
       </GridContainer>
