@@ -59,6 +59,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({ handleDialogClose }) =
         },
       ];
     }
+    data.imageName = selectedStudent?.imageName;
     const dataNoNull = removeNullFromObject(data) as Student;
     setStudentData(dataNoNull);
     dataNoNull.epId !== selectedStudent?.epId && selectedStudent && deleteStudentData(selectedStudent);

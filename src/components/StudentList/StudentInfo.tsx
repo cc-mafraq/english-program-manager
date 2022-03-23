@@ -5,7 +5,7 @@ import React, { useContext } from "react";
 import { LabeledContainer, LabeledText } from "..";
 import { useColors } from "../../hooks";
 import { AppContext, CovidStatus, Nationality, Status, Student } from "../../interfaces";
-import { getRepeatNum, isActive } from "../../services";
+import { getRepeatNum, isActive, JOIN_STR } from "../../services";
 
 interface StudentInfoProps {
   student: Student;
@@ -128,10 +128,10 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
           {student.status.levelReevalDate}
         </LabeledText>
         <LabeledText condition={dataVisibility.status.reactivatedDate} label="Reactivated Date">
-          {student.status.reactivatedDate}
+          {join(student.status.reactivatedDate, JOIN_STR)}
         </LabeledText>
         <LabeledText condition={dataVisibility.status.withdrawDate} label="Withdraw Date">
-          {student.status.withdrawDate}
+          {join(student.status.withdrawDate, JOIN_STR)}
         </LabeledText>
         <LabeledText condition={dataVisibility.status.withdrawReason} label="Withdraw Reason">
           {student.status.droppedOutReason}
@@ -202,37 +202,15 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
           condition={dataVisibility.phoneNumbersAndWhatsApp.waBroadcastOtherGroups}
           label="WA Broadcast Other Groups"
         >
-          {join(student.phone.otherWaBroadcastGroups, ", ")}
+          {join(student.phone.otherWaBroadcastGroups, JOIN_STR)}
         </LabeledText>
       </LabeledContainer>
-      <LabeledContainer condition={allCheckboxesFalse("Placement")} label="Placement">
-        <LabeledText condition={dataVisibility.placement.photoContact} label="Photo Contact">
-          {student.placement.photoContact}
-        </LabeledText>
-        <LabeledText condition={dataVisibility.placement.placement} label="Placement">
-          {student.placement.placement}
-        </LabeledText>
-        <LabeledText condition={dataVisibility.placement.classListSentDate} label="Class List Sent Date">
-          {student.placement.classListSentDate}
-        </LabeledText>
-        <LabeledText condition={dataVisibility.placement.sectionsOffered} label="Sections Offered">
-          {student.placement.sectionsOffered}
-        </LabeledText>
-        <LabeledText condition={dataVisibility.placement.placementConfirmed} label="Placement Confirmed">
-          {student.placement.confDate}
-        </LabeledText>
-        <LabeledText condition={dataVisibility.placement.naClassSchedule} label="NA Class Schedule WPM">
-          {student.placement.noAnswerClassScheduleWPM ? "Yes" : undefined}
-        </LabeledText>
-        <LabeledText condition={dataVisibility.placement.pending} label="Pending">
-          {student.placement.pending ? "Yes" : undefined}
-        </LabeledText>
-      </LabeledContainer>
+
       <LabeledContainer condition={dataVisibility.placement.originalPlacementData} label="Original Placement Data">
-        <LabeledText label="Writing">{student.placement.origPlacementData.writing}</LabeledText>
-        <LabeledText label="Speaking">{student.placement.origPlacementData.speaking}</LabeledText>
-        <LabeledText label="Placement Level">{student.placement.origPlacementData.level}</LabeledText>
-        <LabeledText label="Adjustment">{student.placement.origPlacementData.adjustment}</LabeledText>
+        <LabeledText label="Writing">{student.origPlacementData.writing}</LabeledText>
+        <LabeledText label="Speaking">{student.origPlacementData.speaking}</LabeledText>
+        <LabeledText label="Placement Level">{student.origPlacementData.level}</LabeledText>
+        <LabeledText label="Adjustment">{student.origPlacementData.adjustment}</LabeledText>
       </LabeledContainer>
       <LabeledContainer condition={allCheckboxesFalse("Literacy")} label="Literacy">
         <LabeledText condition={dataVisibility.literacy.arabicLiteracy} label="Illiterate Arabic">

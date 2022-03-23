@@ -1,6 +1,6 @@
 import { Box, Card, CardContent, Tab, Tabs, useTheme } from "@mui/material";
 import React, { useContext } from "react";
-import { Correspondence, StudentCardHeader, StudentImage, StudentInfo } from "..";
+import { Correspondence, Placement, StudentCardHeader, StudentImage, StudentInfo } from "..";
 import { AppContext, darkBlueBackground, Student } from "../../interfaces";
 import { AcademicRecords } from "./AcademicRecords";
 
@@ -19,10 +19,6 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student, handleEditStu
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
-
-  // useEffect(() => {
-  //   setStudentData(student, { merge: true });
-  // }, [student]);
 
   return (
     <Card
@@ -49,6 +45,7 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student, handleEditStu
               <Tab id="student-card-tabpanel-0" label="Student Information" />
               <Tab id="student-card-tabpanel-1" label="Correspondence" />
               <Tab id="student-card-tabpanel-2" label="Academic Records" />
+              <Tab id="student-card-tabpanel-3" label="Placement" />
             </Tabs>
             <Box hidden={tabValue !== 0} id="student-card-tabpanel-0" role="tabpanel">
               <StudentInfo student={student} />
@@ -58,6 +55,9 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student, handleEditStu
             </Box>
             <Box hidden={tabValue !== 2} id="student-card-tabpanel-2" role="tabpanel">
               <AcademicRecords student={student} />
+            </Box>
+            <Box hidden={tabValue !== 3} id="student-card-tabpanel-3" role="tabpanel">
+              <Placement student={student} />
             </Box>
           </CardContent>
         </Box>

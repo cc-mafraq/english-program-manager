@@ -16,6 +16,12 @@ export interface Student {
   literacy: Literacy;
   name: StudentName;
   nationality: Nationality;
+  origPlacementData: {
+    adjustment?: string;
+    level: Level;
+    speaking: LevelPlus;
+    writing: LevelPlus;
+  };
   phone: WhatsappInfo;
   placement: Placement;
   status: StudentStatus;
@@ -48,19 +54,18 @@ export interface Grade {
   result?: FinalResult;
 }
 
+export interface SectionPlacement {
+  addedToCL?: boolean;
+  notes?: string;
+  sectionAndDate: string;
+}
+
 export interface Placement {
-  classListSentDate?: string;
-  confDate?: string;
-  noAnswerClassScheduleWPM?: boolean;
-  origPlacementData: {
-    adjustment?: string;
-    level: Level;
-    speaking: LevelPlus;
-    writing: LevelPlus;
-  };
+  classScheduleSentDate: string[];
+  noAnswerClassScheduleWpm?: boolean;
   pending?: boolean;
   photoContact?: string;
-  placement?: string;
+  placement: SectionPlacement[];
   sectionsOffered?: string;
 }
 
@@ -95,8 +100,8 @@ export interface StudentStatus {
   inviteTag: boolean;
   levelReevalDate?: string;
   noContactList: boolean;
-  reactivatedDate?: string;
-  withdrawDate?: string;
+  reactivatedDate: string[];
+  withdrawDate: string[];
 }
 
 export interface StudentName {
@@ -272,21 +277,22 @@ export const emptyStudent: Student = {
     english: "",
   },
   nationality: Nationality.UNKNWN,
+  origPlacementData: {
+    level: "PL1",
+    speaking: "PL1",
+    writing: "PL1",
+  },
   phone: {
     phoneNumbers: [],
     primaryPhone: -1,
   },
-  placement: {
-    origPlacementData: {
-      level: "PL1",
-      speaking: "PL1",
-      writing: "PL1",
-    },
-  },
+  placement: { classScheduleSentDate: [], placement: [] },
   status: {
     currentStatus: Status.NEW,
     inviteTag: false,
     noContactList: false,
+    reactivatedDate: [],
+    withdrawDate: [],
   },
   work: { occupation: "Unknown" },
 };

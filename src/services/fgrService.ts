@@ -37,7 +37,7 @@ export const getLevelAtSession = (
     },
   );
 
-  let { level } = student.placement.origPlacementData;
+  let { level } = student.origPlacementData;
   forEach(academicRecordLevelSessionResults, (sarlsr) => {
     const sarlsrLevel = replace(sarlsr.level ?? "", /(-W)|(-M)/, "");
     const isCoreClass = includes(levelsWithGrad, sarlsrLevel);

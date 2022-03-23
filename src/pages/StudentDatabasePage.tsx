@@ -1,10 +1,16 @@
 import { FirebaseError } from "firebase/app";
 import { collection, DocumentData, onSnapshot, QuerySnapshot } from "firebase/firestore";
-import { forEach, get, isString, isUndefined, join, values } from "lodash";
+import { forEach, isUndefined } from "lodash";
 import React, { ChangeEvent, useCallback, useContext, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import useState from "react-usestateref";
-import { FinalGradeReportDialog, StudentDatabaseToolbar, StudentFormDialog, StudentList } from "../components";
+import {
+  FinalGradeReportDialog,
+  Loading,
+  StudentDatabaseToolbar,
+  StudentFormDialog,
+  StudentList,
+} from "../components";
 import { AppContext, Student } from "../interfaces";
 import { db, getStudentPage, logout, searchStudents, sortStudents } from "../services";
 import { spreadsheetToStudentList } from "../services/spreadsheetService";
@@ -29,6 +35,7 @@ export const StudentDatabasePage = () => {
   const [openFGRDialog, setOpenFGRDialog] = useState(false);
   const [openStudentDialog, setOpenStudentDialog] = useState(false);
   const [searchString, setSearchString, searchStringRef] = useState<string>("");
+  const [spreadsheetIsLoading, setSpreadsheetIsLoading] = useState(false);
   const navigate = useNavigate();
 
   studentsRef.current = students;
@@ -70,26 +77,22 @@ export const StudentDatabasePage = () => {
 
   const nextSnapshot = useCallback(
     (snapshot: QuerySnapshot<DocumentData>) => {
-      const studentData: Student[] = [];
-      forEach(snapshot.docs, (d) => {
-        const data = d.data();
-        const firstOtherWAGroup = get(data, "phone.otherWaBroadcastGroups");
-        if (firstOtherWAGroup?.length) {
-          forEach(firstOtherWAGroup, (group, i) => {
-            if (isString(group)) return;
-            data.phone.otherWaBroadcastGroups[i] = join(values(group), "");
-          });
-        }
-        if (data.name?.english) {
-          studentData.push(data as Student);
-        }
-      });
-      const sortedStudentData = sortStudents(studentData);
-      setState({
-        newStudents: sortedStudentData,
-      });
+      if (!spreadsheetIsLoading) {
+        const studentData: Student[] = [];
+        forEach(snapshot.docs, (d) => {
+          const data = d.data();
+          if (data.name?.english) {
+            studentData.push(data as Student);
+          }
+        });
+        const sortedStudentData = sortStudents(studentData);
+        setState({
+          newStudents: sortedStudentData,
+        });
+        appDispatch({ payload: { loading: false }, type: "set" });
+      }
     },
-    [setState],
+    [setState, spreadsheetIsLoading, appDispatch],
   );
 
   const errorSnapshot = useCallback(
@@ -103,11 +106,12 @@ export const StudentDatabasePage = () => {
   );
 
   useEffect(() => {
+    appDispatch({ payload: { loading: true }, type: "set" });
     const unsubscribe = onSnapshot(collection(db, "students"), nextSnapshot, errorSnapshot);
     return () => {
       unsubscribe();
     };
-  }, [errorSnapshot, nextSnapshot]);
+  }, [errorSnapshot, nextSnapshot, appDispatch]);
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setState({ newPage });
@@ -124,6 +128,8 @@ export const StudentDatabasePage = () => {
   };
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    appDispatch({ payload: { loading: true }, type: "set" });
+    setSpreadsheetIsLoading(true);
     const file: File | null = e.target.files && e.target.files[0];
     const reader = new FileReader();
 
@@ -131,8 +137,10 @@ export const StudentDatabasePage = () => {
 
     reader.onloadend = async () => {
       const studentListString = String(reader.result);
-      const studentList = spreadsheetToStudentList(studentListString);
+      const studentList = await spreadsheetToStudentList(studentListString, students);
       setState({ newStudents: studentList });
+      appDispatch({ payload: { loading: false }, type: "set" });
+      setSpreadsheetIsLoading(false);
     };
   };
 
@@ -171,6 +179,7 @@ export const StudentDatabasePage = () => {
       ) : (
         <></>
       )}
+      <Loading />
       <StudentFormDialog handleDialogClose={handleStudentDialogClose} open={openStudentDialog} />
       <StudentList handleEditStudentClick={handleStudentDialogOpen} studentsPage={studentsPage} />
     </>

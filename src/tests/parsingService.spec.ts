@@ -26,7 +26,7 @@ import {
   parseArabicName,
   parseAudit,
   parseCertRequests,
-  parseClassListSentDate,
+  parseClassScheduleSentDate,
   parseCorrespondence,
   parseCovidDate,
   parseCovidReason,
@@ -60,8 +60,6 @@ import {
   parsePendingPlacement,
   parsePhone,
   parsePhotoContact,
-  parsePlacement,
-  parsePlacementConfDate,
   parseReactivatedDate,
   parseSectionsOffered,
   parseTeacher,
@@ -133,9 +131,9 @@ const dateTests = ({ fieldPath, parseFn, testName }: TestFnParams) => {
       parseFn("", "4/3/2021; 5/9/21", student);
       expect(get(student, fieldPath)).toEqual("5/9/2021");
     });
-    it("parses non-date", () => {
+    it("gets date from non-date", () => {
       parseFn("", "NA 1/24/21", student);
-      expect(get(student, fieldPath)).toEqual("NA 1/24/21");
+      expect(get(student, fieldPath)).toEqual("1/24/2021");
     });
     it("doesn't parse empty string", () => {
       parseFn("", "", student);
@@ -144,6 +142,50 @@ const dateTests = ({ fieldPath, parseFn, testName }: TestFnParams) => {
   });
 };
 
+const multipleDatesTests = ({ fieldPath, parseFn, testName }: TestFnParams) => {
+  describe(testName, () => {
+    it("parses l date", () => {
+      parseFn("", "4/3/2021", student);
+      expect(get(student, fieldPath)).toEqual(["4/3/2021"]);
+    });
+    it("parses L date", () => {
+      parseFn("", "04/03/2021", student);
+      expect(get(student, fieldPath)).toEqual(["4/3/2021"]);
+    });
+    it("parses MM/DD/YY date", () => {
+      parseFn("", "04/03/21", student);
+      expect(get(student, fieldPath)).toEqual(["4/3/2021"]);
+    });
+    it("parses M/D/YY date", () => {
+      parseFn("", "4/3/21", student);
+      expect(get(student, fieldPath)).toEqual(["4/3/2021"]);
+    });
+    it("parses two dates", () => {
+      parseFn("", "4/3/2021; 5/9/21", student);
+      expect(get(student, fieldPath)).toEqual(["4/3/2021", "5/9/2021"]);
+    });
+    it("parses three dates", () => {
+      parseFn("", "4/3/2021; 5/9/21; 06/10/2021", student);
+      expect(get(student, fieldPath)).toEqual(["4/3/2021", "5/9/2021", "6/10/2021"]);
+    });
+    it("parses separated by &", () => {
+      parseFn("", "4/3/2021 & 5/9/21", student);
+      expect(get(student, fieldPath)).toEqual(["4/3/2021", "5/9/2021"]);
+    });
+    it("parses separated by ,", () => {
+      parseFn("", "4/3/2021, 5/9/21", student);
+      expect(get(student, fieldPath)).toEqual(["4/3/2021", "5/9/2021"]);
+    });
+    it("gets date from non-date", () => {
+      parseFn("", "NA 1/24/21", student);
+      expect(get(student, fieldPath)).toEqual(["1/24/2021"]);
+    });
+    it("doesn't parse empty string", () => {
+      parseFn("", "", student);
+      expect(get(student, fieldPath)).toEqual([]);
+    });
+  });
+};
 const stringOrNumTests = ({
   fieldPath,
   parseFn,
@@ -208,7 +250,7 @@ optionalBooleanTests({
   testName: "parses covidVaccine suspected fraud",
 });
 optionalBooleanTests({
-  fieldPath: "placement.noAnswerClassScheduleWPM",
+  fieldPath: "placement.noAnswerClassScheduleWpm",
   parseFn: parseNoAnswerClassSchedule,
   testName: "parses no answer class schedule",
 });
@@ -219,21 +261,20 @@ dateTests({
   parseFn: parseLevelReevalDate,
   testName: "parses level reeval date",
 });
-dateTests({
+multipleDatesTests({
   fieldPath: "status.reactivatedDate",
   parseFn: parseReactivatedDate,
   testName: "parses reactivated date",
 });
-dateTests({ fieldPath: "status.withdrawDate", parseFn: parseWithdrawDate, testName: "parses withdraw date" });
-dateTests({
-  fieldPath: "placement.confDate",
-  parseFn: parsePlacementConfDate,
-  testName: "parses placement conf date",
+multipleDatesTests({
+  fieldPath: "status.withdrawDate",
+  parseFn: parseWithdrawDate,
+  testName: "parses withdraw date",
 });
-dateTests({
-  fieldPath: "placement.classListSentDate",
-  parseFn: parseClassListSentDate,
-  testName: "parses class list sent date",
+multipleDatesTests({
+  fieldPath: "placement.classScheduleSentDate",
+  parseFn: parseClassScheduleSentDate,
+  testName: "parses class schedule sent date",
 });
 dateTests({
   fieldPath: "covidVaccine.date",
@@ -291,12 +332,6 @@ stringOrNumTests({
   testVal: "Y 10/22/2021",
 });
 stringOrNumTests({
-  fieldPath: "placement.placement",
-  parseFn: parsePlacement,
-  testName: "parses placement",
-  testVal: "CSWL PL1-M 2/10/22; sent CS 2/17/22; pending",
-});
-stringOrNumTests({
   defaultVal: emptyStudent.work.occupation,
   fieldPath: "work.occupation",
   parseFn: parseOccupation,
@@ -342,27 +377,27 @@ stringOrNumTests({
 });
 stringOrNumTests({
   defaultVal: "",
-  fieldPath: "placement.origPlacementData.writing",
+  fieldPath: "origPlacementData.writing",
   parseFn: parseOrigPlacementWriting,
   testName: "parses original placement writing",
   testVal: "L1-",
 });
 stringOrNumTests({
   defaultVal: "",
-  fieldPath: "placement.origPlacementData.speaking",
+  fieldPath: "origPlacementData.speaking",
   parseFn: parseOrigPlacementSpeaking,
   testName: "parses original placement speaking",
   testVal: "L3+",
 });
 stringOrNumTests({
   defaultVal: "",
-  fieldPath: "placement.origPlacementData.level",
+  fieldPath: "origPlacementData.level",
   parseFn: parseOrigPlacementLevel,
   testName: "parses original placement level",
   testVal: "L5",
 });
 stringOrNumTests({
-  fieldPath: "placement.origPlacementData.adjustment",
+  fieldPath: "origPlacementData.adjustment",
   parseFn: parseOrigPlacementAdjustment,
   testName: "parses original placement adjustment",
   testVal: "Move to L4",

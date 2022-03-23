@@ -22,6 +22,7 @@ export const FormAcademicRecords: React.FC = () => {
         addItem={addAcademicRecord}
         buttonLabel="Add Academic Record"
         list={academicRecords}
+        listName="academicRecords"
         removeItem={removeAcademicRecord}
       >
         <FormAcademicRecordsItem />

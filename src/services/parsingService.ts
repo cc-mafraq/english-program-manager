@@ -1,4 +1,5 @@
 import {
+  filter,
   first,
   forEach,
   includes,
@@ -33,7 +34,7 @@ import {
 } from "../interfaces";
 import { ValidFields } from "./spreadsheetService";
 
-const separatorRegex = /[;,]/g;
+const separatorRegex = /[;,&]/g;
 const phoneRegex = /([\d]+)/;
 
 const splitAndTrim = (value: string, separator?: string | RegExp): string[] => {
@@ -46,8 +47,9 @@ const splitAndTrim = (value: string, separator?: string | RegExp): string[] => {
 };
 
 const parseDateVal = (value?: string) => {
-  if (!value || value.match(/[a-z]|[A-Z]/)) return undefined;
-  const date = moment(last(splitAndTrim(value)), ["L", "l", "M/D/YY", "MM/DD/YY", "M-D-YY"]);
+  if (!value) return undefined;
+  const valueNoLetters = trim(replace(value, /[a-z]|[A-Z]/, ""));
+  const date = moment(valueNoLetters, ["L", "l", "M/D/YY", "MM/DD/YY", "M-D-YY"]);
   return date.isValid() ? date.format(MOMENT_FORMAT) : undefined;
 };
 
@@ -67,9 +69,24 @@ export const expand = (obj: ValidFields) => {
 
 const parseDateField = (fieldPath: string) => {
   return (key: string, value: string, student: Student) => {
-    const date = parseDateVal(value);
-    if (!date && !value) return;
-    set(student, fieldPath, date || value);
+    const date = parseDateVal(last(splitAndTrim(value)));
+    if (!date || !value) return;
+    set(student, fieldPath, date);
+  };
+};
+
+const parseDateFields = (fieldPath: string) => {
+  return (key: string, value: string, student: Student) => {
+    const dates = filter(
+      map(splitAndTrim(value), (val) => {
+        return parseDateVal(val);
+      }),
+      (val) => {
+        return val !== undefined;
+      },
+    );
+    if (dates?.length === 0) return;
+    set(student, fieldPath, dates);
   };
 };
 
@@ -142,10 +159,9 @@ export const parsePendingPlacement = parseOptionalBoolean("placement.pending");
 
 export const parseFgrDate = parseDateField("status.finalGradeSentDate");
 export const parseLevelReevalDate = parseDateField("status.levelReevalDate");
-export const parseReactivatedDate = parseDateField("status.reactivatedDate");
-export const parseWithdrawDate = parseDateField("status.withdrawDate");
-export const parsePlacementConfDate = parseDateField("placement.confDate");
-export const parseNoAnswerClassSchedule = parseOptionalBoolean("placement.noAnswerClassScheduleWPM");
+export const parseReactivatedDate = parseDateFields("status.reactivatedDate");
+export const parseWithdrawDate = parseDateFields("status.withdrawDate");
+export const parseNoAnswerClassSchedule = parseOptionalBoolean("placement.noAnswerClassScheduleWpm");
 
 export const parseSectionsOffered = parseOptionalString("placement.sectionsOffered");
 export const parsePhotoContact = parseOptionalString("placement.photoContact");
@@ -203,7 +219,7 @@ export const parseCorrespondence = (key: string, value: string, student: Student
   );
 };
 
-export const parseClassListSentDate = parseDateField("placement.classListSentDate");
+export const parseClassScheduleSentDate = parseDateFields("placement.classScheduleSentDate");
 
 export const parseGender = (key: string, value: string, student: Student) => {
   Number(value) === 1 ? (student.gender = "M") : (student.gender = "F");
@@ -261,18 +277,18 @@ export const parseZoomTutor = parseOptionalString("zoom");
 export const parseCertRequests = parseOptionalString("certificateRequests");
 
 export const parseOrigPlacementWriting = (key: string, value: string, student: Student) => {
-  student.placement.origPlacementData.writing = value as LevelPlus;
+  student.origPlacementData.writing = value as LevelPlus;
 };
 
 export const parseOrigPlacementSpeaking = (key: string, value: string, student: Student) => {
-  student.placement.origPlacementData.speaking = value as LevelPlus;
+  student.origPlacementData.speaking = value as LevelPlus;
 };
 
 export const parseOrigPlacementLevel = (key: string, value: string, student: Student) => {
-  student.placement.origPlacementData.level = value as Level;
+  student.origPlacementData.level = value as Level;
 };
 
-export const parseOrigPlacementAdjustment = parseOptionalString("placement.origPlacementData.adjustment");
+export const parseOrigPlacementAdjustment = parseOptionalString("origPlacementData.adjustment");
 
 export const parseDropoutReason = (key: string, value: string, student: Student) => {
   if (Number(value) !== 1) return;

@@ -97,13 +97,12 @@ export interface DataVisibility {
     waNotes: boolean;
   };
   placement: {
-    classListSentDate: boolean;
-    naClassSchedule: boolean;
+    classScheduleSentDate: boolean;
+    naClassScheduleWpm: boolean;
     originalPlacementData: boolean;
     pending: boolean;
     photoContact: boolean;
     placement: boolean;
-    placementConfirmed: boolean;
     sectionsOffered: boolean;
   };
   programInformation: {
@@ -132,6 +131,7 @@ export interface DataVisibility {
 
 export interface AppState {
   dataVisibility: DataVisibility;
+  loading: boolean;
   selectedStudent: Student | null;
   students: Student[];
 }
@@ -181,13 +181,12 @@ export const initialAppState: AppState = {
       waNotes: true,
     },
     placement: {
-      classListSentDate: true,
-      naClassSchedule: true,
+      classScheduleSentDate: true,
+      naClassScheduleWpm: true,
       originalPlacementData: true,
       pending: true,
       photoContact: true,
       placement: true,
-      placementConfirmed: true,
       sectionsOffered: true,
     },
     programInformation: {
@@ -213,6 +212,7 @@ export const initialAppState: AppState = {
       tutorAndDetails: true,
     },
   },
+  loading: true,
   selectedStudent: null,
   students: [],
 };

@@ -25,6 +25,7 @@ export const FormCorrespondence: React.FC = () => {
           addItem={addCorrespondence}
           buttonLabel="Add Correspondence"
           list={correspondence}
+          listName="correspondence"
           removeItem={removeCorrespondence}
         >
           <FormCorrespondenceItem />

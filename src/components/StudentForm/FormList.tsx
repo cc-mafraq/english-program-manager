@@ -8,11 +8,13 @@ interface FormListProps {
   buttonGridProps?: GridProps;
   buttonLabel: string;
   list: unknown[];
+  listName: string;
   removeItem: (index?: number) => () => void;
 }
 
 export const FormList: React.FC<FormListProps> = ({
   list,
+  listName,
   addItem,
   removeItem,
   buttonLabel,
@@ -30,6 +32,7 @@ export const FormList: React.FC<FormListProps> = ({
             return React.cloneElement(child, {
               index: i,
               key: `${JSON.stringify(item)} ${i}`,
+              name: `${listName}[${i}]`,
               removeItem,
             });
           }
