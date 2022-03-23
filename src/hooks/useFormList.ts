@@ -22,7 +22,7 @@ export const useFormList = (
       setList(newList);
       const resetObject = {};
       set(resetObject, listPath, []);
-      methods.reset(resetObject);
+      methods.reset(resetObject, { keepValues: true });
       methods.setValue(listPath, newList);
     };
   };
