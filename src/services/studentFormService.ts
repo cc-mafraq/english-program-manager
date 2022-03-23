@@ -66,7 +66,7 @@ const stringToArray = (value: string, originalValue: string) => {
 };
 
 const dateStringToArray = (value: string, originalValue: string) => {
-  return isArray(originalValue) && some(originalValue) ? originalValue : null;
+  return isArray(originalValue) && some(originalValue) ? originalValue : [];
 };
 
 const stringToInteger = (value: string, originalValue: string) => {
