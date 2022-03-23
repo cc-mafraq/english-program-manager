@@ -5,7 +5,7 @@ import { Box, Card, Grid, IconButton } from "@mui/material";
 import download from "downloadjs";
 import { toPng } from "html-to-image";
 import JSZip from "jszip";
-import { includes, map, nth, replace } from "lodash";
+import { countBy, includes, map, nth, replace } from "lodash";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FGRGridRow, FGRGridRowProps, FGRHeader } from ".";
 import { FinalResult, genderedLevels, lightPrimaryColor, Student } from "../../interfaces";
@@ -47,7 +47,10 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
 }) => {
   const { student } = studentAcademicRecord;
   const academicRecord = nth(student.academicRecords, studentAcademicRecord.academicRecordIndex);
-  const fileName = `${student.epId}_${studentAcademicRecord.academicRecordIndex + 1}.png`;
+  const fileName =
+    academicRecord && countBy(student.academicRecords, "session")[academicRecord.session] > 1
+      ? `${student.epId}_${studentAcademicRecord.academicRecordIndex + 1}.png`
+      : `${student.epId}.png`;
 
   const imageWidth = width - 32 * scale;
   const fgrHeight = 870;

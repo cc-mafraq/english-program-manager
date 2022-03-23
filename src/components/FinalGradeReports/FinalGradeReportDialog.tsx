@@ -2,7 +2,7 @@ import { Box, Dialog, SelectChangeEvent } from "@mui/material";
 import download from "downloadjs";
 import JSZip from "jszip";
 import { cloneDeep, isEqual, nth, pull, replace } from "lodash";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FGRDialogHeader, FinalGradeReportList } from ".";
 import { useColors } from "../../hooks";
 import { AppContext } from "../../interfaces";
