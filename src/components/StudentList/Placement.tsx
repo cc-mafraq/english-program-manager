@@ -29,16 +29,14 @@ export const Placement: React.FC<PlacementProps> = ({ student }) => {
         {student.placement.photoContact}
       </LabeledText>
       {map(student.placement.placement, (pl, i) => {
-        return (
-          <LabeledContainer
-            key={`${student.epId}-placement-${i}`}
-            condition={dataVisibility.placement.placement}
-            label={`Placement ${i + 1}`}
-          >
+        return dataVisibility.placement.placement ? (
+          <div key={`${student.epId}-placement-${i}`}>
             <LabeledText label="Section and Date">{pl.sectionAndDate}</LabeledText>
             <LabeledText label="Notes">{pl.notes}</LabeledText>
             <LabeledText label="Added to CL">{pl.addedToCL ? "Yes" : "No"}</LabeledText>
-          </LabeledContainer>
+          </div>
+        ) : (
+          <></>
         );
       })}
       <LabeledText condition={dataVisibility.placement.classScheduleSentDate} label="Class Schedule Sent Date">
