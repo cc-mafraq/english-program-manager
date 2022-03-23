@@ -131,6 +131,7 @@ export interface DataVisibility {
 
 export interface AppState {
   dataVisibility: DataVisibility;
+  loading: boolean;
   selectedStudent: Student | null;
   students: Student[];
 }
@@ -211,6 +212,7 @@ export const initialAppState: AppState = {
       tutorAndDetails: true,
     },
   },
+  loading: true,
   selectedStudent: null,
   students: [],
 };

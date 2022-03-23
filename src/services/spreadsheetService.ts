@@ -2,7 +2,7 @@ import { cloneDeep, join, map, replace, slice, sortBy } from "lodash";
 import papa from "papaparse";
 import { emptyStudent, Student } from "../interfaces";
 import * as ps from "./parsingService";
-import { searchForImage, setStudentData } from "./studentDataService";
+import { setStudentData } from "./studentDataService";
 
 export interface ValidFields {
   [key: string]: (key: string, value: string, student: Student) => void;
@@ -105,15 +105,11 @@ export const spreadsheetToStudentList = async (csvString: string): Promise<Stude
           }
         });
         if (student.epId !== 0) {
-          student.imageName = await searchForImage(student);
+          // student.imageName = await searchForImage(student);
+          await setStudentData(student, { merge: true });
           students.push(student);
         }
       }
-    }),
-  );
-  await Promise.all(
-    map(students, async (student) => {
-      await setStudentData(student, { merge: true });
     }),
   );
   return sortBy(students, "name.english");

@@ -13,6 +13,7 @@ export const reducer = (actionCallback: (item: AppState) => void) => {
       case "set": {
         newState = {
           dataVisibility: action.payload.dataVisibility || state.dataVisibility,
+          loading: action.payload.loading === undefined ? state.loading : action.payload.loading,
           selectedStudent:
             action.payload.selectedStudent === undefined ? state.selectedStudent : action.payload.selectedStudent,
           students: action.payload.students || state.students,
