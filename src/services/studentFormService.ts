@@ -216,11 +216,7 @@ const sectionPlacementSchema = object().shape({
 });
 
 const placementSchema = object().shape({
-  classScheduleSentDate: array()
-    .of(dateSchema.nullable().optional())
-    .transform(dateStringToArray)
-    .nullable()
-    .optional(),
+  classScheduleSentDate: array().of(dateSchema.nullable().optional()).transform(dateStringToArray).required(),
   noAnswerClassScheduleWPM: bool().optional(),
   pending: bool().optional(),
   photoContact: string().transform(emptyToNull).nullable().optional(),
@@ -243,8 +239,8 @@ const statusSchema = object().shape({
   inviteTag: bool().required(),
   levelReevalDate: dateSchema.nullable().optional(),
   noContactList: bool().required(),
-  reactivatedDate: array().of(dateSchema.nullable().optional()).transform(dateStringToArray).nullable().optional(),
-  withdrawDate: array().of(dateSchema.nullable().optional()).transform(dateStringToArray).nullable().optional(),
+  reactivatedDate: array().of(dateSchema.nullable().optional()).transform(dateStringToArray).required(),
+  withdrawDate: array().of(dateSchema.nullable().optional()).transform(dateStringToArray).required(),
 });
 
 const workSchema = object().shape({

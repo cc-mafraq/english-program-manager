@@ -10,8 +10,8 @@ export const Loading: React.FC = () => {
   } = useContext(AppContext);
 
   return loading ? (
-    <Box margin="auto" width="5%">
-      <ReactLoading color={theme.palette.primary.main} type="balls" />
+    <Box margin="auto" marginTop="1%" width="5%">
+      <ReactLoading color={theme.palette.primary.main} type="spin" />
     </Box>
   ) : (
     <></>

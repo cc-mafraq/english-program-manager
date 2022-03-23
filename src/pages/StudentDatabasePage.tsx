@@ -35,13 +35,13 @@ export const StudentDatabasePage = () => {
   const [openFGRDialog, setOpenFGRDialog] = useState(false);
   const [openStudentDialog, setOpenStudentDialog] = useState(false);
   const [searchString, setSearchString, searchStringRef] = useState<string>("");
+  const [spreadsheetIsLoading, setSpreadsheetIsLoading] = useState(false);
   const navigate = useNavigate();
 
   studentsRef.current = students;
 
   const setState = useCallback(
     ({ newRowsPerPage, newPage, newSearchString, newStudents }: SetStateOptions) => {
-      appDispatch({ payload: { loading: true }, type: "set" });
       const newFilteredStudents =
         !isUndefined(newSearchString) || newStudents
           ? searchStudents(
@@ -61,7 +61,6 @@ export const StudentDatabasePage = () => {
           newRowsPerPage || rowsPerPageRef.current,
         ),
       );
-      appDispatch({ payload: { loading: false }, type: "set" });
     },
     [
       appDispatch,
@@ -78,19 +77,22 @@ export const StudentDatabasePage = () => {
 
   const nextSnapshot = useCallback(
     (snapshot: QuerySnapshot<DocumentData>) => {
-      const studentData: Student[] = [];
-      forEach(snapshot.docs, (d) => {
-        const data = d.data();
-        if (data.name?.english) {
-          studentData.push(data as Student);
-        }
-      });
-      const sortedStudentData = sortStudents(studentData);
-      setState({
-        newStudents: sortedStudentData,
-      });
+      if (!spreadsheetIsLoading) {
+        const studentData: Student[] = [];
+        forEach(snapshot.docs, (d) => {
+          const data = d.data();
+          if (data.name?.english) {
+            studentData.push(data as Student);
+          }
+        });
+        const sortedStudentData = sortStudents(studentData);
+        setState({
+          newStudents: sortedStudentData,
+        });
+        appDispatch({ payload: { loading: false }, type: "set" });
+      }
     },
-    [setState],
+    [setState, spreadsheetIsLoading, appDispatch],
   );
 
   const errorSnapshot = useCallback(
@@ -104,11 +106,12 @@ export const StudentDatabasePage = () => {
   );
 
   useEffect(() => {
+    appDispatch({ payload: { loading: true }, type: "set" });
     const unsubscribe = onSnapshot(collection(db, "students"), nextSnapshot, errorSnapshot);
     return () => {
       unsubscribe();
     };
-  }, [errorSnapshot, nextSnapshot]);
+  }, [errorSnapshot, nextSnapshot, appDispatch]);
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setState({ newPage });
@@ -126,6 +129,7 @@ export const StudentDatabasePage = () => {
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     appDispatch({ payload: { loading: true }, type: "set" });
+    setSpreadsheetIsLoading(true);
     const file: File | null = e.target.files && e.target.files[0];
     const reader = new FileReader();
 
@@ -133,9 +137,10 @@ export const StudentDatabasePage = () => {
 
     reader.onloadend = async () => {
       const studentListString = String(reader.result);
-      const studentList = await spreadsheetToStudentList(studentListString);
+      const studentList = await spreadsheetToStudentList(studentListString, students);
       setState({ newStudents: studentList });
       appDispatch({ payload: { loading: false }, type: "set" });
+      setSpreadsheetIsLoading(false);
     };
   };
 

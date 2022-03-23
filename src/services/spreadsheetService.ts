@@ -1,8 +1,8 @@
-import { cloneDeep, join, map, replace, slice, sortBy } from "lodash";
+import { cloneDeep, find, isEqual, join, map, omit, replace, slice, sortBy } from "lodash";
 import papa from "papaparse";
 import { emptyStudent, Student } from "../interfaces";
 import * as ps from "./parsingService";
-import { setStudentData } from "./studentDataService";
+import { searchForImage, setStudentData } from "./studentDataService";
 
 export interface ValidFields {
   [key: string]: (key: string, value: string, student: Student) => void;
@@ -78,7 +78,10 @@ studentFieldsUnexpanded[ps.generateKeys("TeacherComments", maxAcademicRecordColu
   ps.parseAcademicRecordTeacherComments;
 const studentFields = ps.expand(studentFieldsUnexpanded);
 
-export const spreadsheetToStudentList = async (csvString: string): Promise<Student[]> => {
+export const spreadsheetToStudentList = async (
+  csvString: string,
+  currentStudents: Student[],
+): Promise<Student[]> => {
   // Remove junk and title rows from Excel export to CSV
   const csvStringClean = join(slice(replace(replace(csvString, "ï»¿", ""), "\t", ",").split("\n"), 3), "\n");
   const objects: papa.ParseResult<never> = papa.parse(csvStringClean, {
@@ -105,8 +108,13 @@ export const spreadsheetToStudentList = async (csvString: string): Promise<Stude
           }
         });
         if (student.epId !== 0) {
-          // student.imageName = await searchForImage(student);
-          await setStudentData(student, { merge: true });
+          const currentStudent = find(currentStudents, { epId: student.epId });
+          if (!isEqual(omit(currentStudent, "imageName"), student)) {
+            if (currentStudent?.imageName === undefined) {
+              student.imageName = await searchForImage(student);
+            }
+            setStudentData(student, { merge: true });
+          }
           students.push(student);
         }
       }

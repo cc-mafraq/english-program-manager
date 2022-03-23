@@ -61,7 +61,7 @@ export interface SectionPlacement {
 }
 
 export interface Placement {
-  classScheduleSentDate?: string[];
+  classScheduleSentDate: string[];
   noAnswerClassScheduleWPM?: boolean;
   pending?: boolean;
   photoContact?: string;
@@ -100,8 +100,8 @@ export interface StudentStatus {
   inviteTag: boolean;
   levelReevalDate?: string;
   noContactList: boolean;
-  reactivatedDate?: string[];
-  withdrawDate?: string[];
+  reactivatedDate: string[];
+  withdrawDate: string[];
 }
 
 export interface StudentName {
@@ -286,11 +286,13 @@ export const emptyStudent: Student = {
     phoneNumbers: [],
     primaryPhone: -1,
   },
-  placement: { placement: [] },
+  placement: { classScheduleSentDate: [], placement: [] },
   status: {
     currentStatus: Status.NEW,
     inviteTag: false,
     noContactList: false,
+    reactivatedDate: [],
+    withdrawDate: [],
   },
   work: { occupation: "Unknown" },
 };
