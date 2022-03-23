@@ -182,7 +182,7 @@ const multipleDatesTests = ({ fieldPath, parseFn, testName }: TestFnParams) => {
     });
     it("doesn't parse empty string", () => {
       parseFn("", "", student);
-      expect(get(student, fieldPath)).toBeUndefined();
+      expect(get(student, fieldPath)).toEqual([]);
     });
   });
 };
