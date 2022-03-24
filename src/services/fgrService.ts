@@ -16,23 +16,32 @@ export const getFullLevelName = (level: string): string => {
   );
 };
 
+export const getSessionIndex = (session: string, sessionOptions: string[]) => {
+  return indexOf(
+    map(sessionOptions, (so) => {
+      return replace(so, /\s/g, "");
+    }),
+    replace(session, /\s/g, ""),
+  );
+};
+
 export const getLevelAtSession = (
   session: AcademicRecord["session"],
   student: Student,
   sessionOptions: Student["initialSession"][],
   noIncrement?: boolean,
 ): Level => {
-  const sessionIndex = indexOf(sessionOptions, session);
+  const sessionIndex = getSessionIndex(session, sessionOptions);
   const academicRecordLevelSessionResults = filter(
     map(student.academicRecords, (ar) => {
       return {
-        level: ar.level,
+        level: ar.levelAudited || ar.level,
         result: ar.finalResult?.result,
         session: ar.session,
       };
     }),
     (lrs) => {
-      const lrsSessionIndex = indexOf(sessionOptions, lrs.session);
+      const lrsSessionIndex = getSessionIndex(lrs.session, sessionOptions);
       return lrsSessionIndex > sessionIndex || (!noIncrement && lrsSessionIndex === sessionIndex);
     },
   );
@@ -46,7 +55,7 @@ export const getLevelAtSession = (
       level = sarlsr.result === "P" ? levelsWithGrad[levelIndex + 1] : levelsWithGrad[levelIndex];
     }
   });
-  return level;
+  return level || replace(student.currentLevel, /(-W)|(-M)/, "");
 };
 
 export const getLevelForNextSession = ({
@@ -60,12 +69,13 @@ export const getLevelForNextSession = ({
   sessionOptions: Student["initialSession"][];
   student: Student;
 }): string => {
-  if (academicRecord.level || academicRecord.levelAudited) {
-    const recordLevel = academicRecord.level
-      ? replace(academicRecord.level, /(-W)|(-M)/, "")
-      : academicRecord.levelAudited
+  if (academicRecord.levelAudited || academicRecord.level) {
+    const recordLevel = academicRecord.levelAudited
       ? replace(academicRecord.levelAudited, /(-W)|(-M)/, "")
+      : academicRecord.level
+      ? replace(academicRecord.level, /(-W)|(-M)/, "")
       : "";
+
     const isCoreClass = includes(levelsWithGrad, recordLevel);
     const levelIndex = isCoreClass
       ? indexOf(levelsWithGrad, recordLevel)
@@ -90,7 +100,8 @@ export const getFGRStudents = (
       if (
         lowerCase(ar.session) === lowerCase(session) &&
         ar.finalResult?.result !== FinalResult.WD &&
-        !(ar.finalResult?.result === undefined && ar.attendance === undefined)
+        !(ar.finalResult?.result === undefined && ar.attendance === undefined) &&
+        (ar.level || ar.levelAudited)
       ) {
         fgrStudents.push({ academicRecordIndex: i, student });
       }

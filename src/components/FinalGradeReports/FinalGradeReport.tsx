@@ -5,7 +5,7 @@ import { Box, Card, Grid, IconButton } from "@mui/material";
 import download from "downloadjs";
 import { toPng } from "html-to-image";
 import JSZip from "jszip";
-import { countBy, includes, map, nth, replace } from "lodash";
+import { countBy, includes, isUndefined, map, nth, replace } from "lodash";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FGRGridRow, FGRGridRowProps, FGRHeader } from ".";
 import { FinalResult, genderedLevels, lightPrimaryColor, Student } from "../../interfaces";
@@ -125,18 +125,19 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
       colText1: "Level:",
       colText2: "المستوى",
       colText3: academicRecord
-        ? getLevelForNextSession({ academicRecord, noIncrement: true, sessionOptions, student })
+        ? `${getLevelForNextSession({ academicRecord, noIncrement: true, sessionOptions, student })}${
+            isUndefined(academicRecord.level) && !isUndefined(academicRecord.levelAudited) ? " Audit" : ""
+          }`
         : "",
       labelBackgroundColor: backgroundColorMain,
     },
     {
       colText1: "Name of Class:",
       colText2: "إسم الصف",
-      colText3: academicRecord?.level
-        ? getElectiveFullName(academicRecord.level)
-        : academicRecord?.levelAudited
-        ? getElectiveFullName(academicRecord.levelAudited)
-        : "Not Applicable",
+      colText3:
+        academicRecord?.levelAudited || academicRecord?.level
+          ? getElectiveFullName(academicRecord?.levelAudited || academicRecord?.level || "")
+          : "Not Applicable",
       conditionToShow:
         academicRecord && (academicRecord.level || academicRecord.levelAudited) && isElective(academicRecord),
       labelBackgroundColor: backgroundColorSecondary,
