@@ -1,9 +1,11 @@
 import {
   countBy,
   filter,
+  first,
   forEach,
   includes,
   isEmpty,
+  isUndefined,
   last,
   lowerCase,
   map,
@@ -14,7 +16,8 @@ import {
   sortBy,
   uniq,
 } from "lodash";
-import { FinalResult, GenderedLevel, Level, Status, Student } from "../interfaces";
+import { FinalResult, GenderedLevel, Level, levels, Status, Student } from "../interfaces";
+import { getLevelAtSession } from "./fgrService";
 
 export const JOIN_STR = ", ";
 
@@ -23,6 +26,8 @@ export type StudentProgress = {
 };
 
 export interface SessionResult {
+  isAudit?: boolean;
+  level?: string;
   result?: FinalResult;
   session?: string;
 }
@@ -39,12 +44,12 @@ export const isActive = (student: Student): boolean => {
   return student.status.currentStatus === Status.NEW || student.status.currentStatus === Status.RET;
 };
 
-export const getProgress = (student: Student): StudentProgress => {
+export const getProgress = (student: Student, sessionOptions: string[]): StudentProgress => {
   // eslint-disable-next-line sort-keys-fix/sort-keys-fix
   const progress: StudentProgress = { PL1: [], L1: [], L2: [], L3: [], L4: [], L5: [] };
   forEach(student.academicRecords, (ar) => {
     let level: GenderedLevel;
-    if (!ar.level) return;
+    if (!ar.level && !ar.levelAudited) return;
     switch (ar.level) {
       case "PL1-M":
       case "PL1-W":
@@ -59,9 +64,32 @@ export const getProgress = (student: Student): StudentProgress => {
         level = "L2";
         break;
       default:
-        level = ar.level;
+        level = (ar.levelAudited as Level) || ar.level;
     }
-    progress[level]?.push({ result: ar.finalResult?.result, session: ar.session });
+    if (!level) return;
+    const isCoreClass = includes(levels, level);
+    const electiveOrAuditLevel = first(
+      filter(levels, (l) => {
+        return (
+          (level.includes(l) && !level.includes(`${l}-`)) || (ar.level?.includes(l) && !ar.level.includes(`${l}-`))
+        );
+      }) as Level[],
+    );
+    progress[
+      isCoreClass || electiveOrAuditLevel
+        ? electiveOrAuditLevel || level
+        : getLevelAtSession(ar.session, student, sessionOptions, true)
+    ]?.push({
+      isAudit: !isUndefined(ar.levelAudited) && isUndefined(ar.level),
+      level: isCoreClass ? undefined : level,
+      result:
+        isCoreClass ||
+        (!isCoreClass &&
+          (ar.finalResult?.result === "F" || ar.finalResult?.result === "WD" || !ar.finalResult?.percentage))
+          ? ar.finalResult?.result
+          : FinalResult.P,
+      session: ar.session,
+    });
   });
   return progress;
 };

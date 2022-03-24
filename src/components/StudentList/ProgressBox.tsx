@@ -1,10 +1,10 @@
 import { useTheme } from "@mui/material";
 import { grey } from "@mui/material/colors";
-import { join, last, map } from "lodash";
+import { filter, join, last, map } from "lodash";
 import React from "react";
 import { LabeledText } from "..";
 import { useColors } from "../../hooks";
-import { FinalResult, GenderedLevel } from "../../interfaces";
+import { GenderedLevel } from "../../interfaces";
 import { SessionResult } from "../../services";
 
 export const ProgressBox = ({
@@ -15,7 +15,12 @@ export const ProgressBox = ({
   sessionResults?: SessionResult[];
 }) => {
   const theme = useTheme();
-  const lastSessionResult = last(sessionResults)?.result;
+  const lastSessionResult =
+    last(
+      filter(sessionResults, (sr) => {
+        return !sr.level && !sr.isAudit;
+      }),
+    )?.result || last(sessionResults)?.result;
   const isDarkAndYellow =
     theme.palette.mode === "dark" && lastSessionResult === undefined && sessionResults?.length;
   const { defaultBackgroundColor, green, yellow, red } = useColors();
@@ -50,7 +55,9 @@ export const ProgressBox = ({
     >
       {join(
         map(sessionResults, (sr) => {
-          return sr.result === FinalResult.WD ? `${sr.session} WD` : sr.session;
+          return `${sr.session}${sr.level ? ` ${sr.level}` : ""}${sr.isAudit ? " audit" : ""}${
+            sr.result === "WD" ? " WD" : ""
+          }`;
         }),
         ", ",
       )}

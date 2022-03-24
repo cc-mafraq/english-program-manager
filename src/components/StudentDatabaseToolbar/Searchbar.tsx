@@ -94,6 +94,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange }
           position: "absolute",
           right: 0,
           top: 0,
+          width: "8%",
         }}
       >
         <CloseIcon sx={{ color: iconColor }} />

@@ -1,10 +1,10 @@
 import { TypographyProps, useTheme } from "@mui/material";
 import { forOwn, map, omit, some, values } from "lodash";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { LabeledContainer, LabeledText, ProgressBox } from ".";
 import { useColors } from "../../hooks";
 import { AppContext, FinalResult, GenderedLevel, Grade, Student } from "../../interfaces";
-import { getProgress } from "../../services";
+import { getAllSessions, getProgress, StudentProgress } from "../../services";
 
 interface AcademicRecordsProps {
   student: Student;
@@ -50,10 +50,14 @@ GradeInfo.defaultProps = {
 
 export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => {
   const {
-    appState: { dataVisibility },
+    appState: { dataVisibility, students },
   } = useContext(AppContext);
-  const progress = getProgress(student);
+  const [progress, setProgress] = useState<StudentProgress>({});
   const theme = useTheme();
+
+  useEffect(() => {
+    setProgress(getProgress(student, getAllSessions(students)));
+  }, [student, students]);
 
   return (
     <>
