@@ -105,7 +105,7 @@ export const MenuDrawer = () => {
                 key={item.name}
                 sx={{
                   "&:hover": {
-                    backgroundColor: "primary.dark",
+                    backgroundColor: theme.palette.mode === "light" ? "primary.dark" : undefined,
                     opacity: [0.9, 0.8, 0.7],
                   },
                   marginTop: DRAWER_ITEM_MARGIN,
