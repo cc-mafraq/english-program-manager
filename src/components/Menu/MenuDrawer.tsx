@@ -18,6 +18,7 @@ import {
   ListItemIcon,
   ListItemText,
   SvgIconTypeMap,
+  useTheme,
 } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import React, { KeyboardEvent, MouseEvent, useState } from "react";
@@ -74,6 +75,7 @@ const drawerList: DrawerListItem[] = [
 
 export const MenuDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const theme = useTheme();
 
   const toggleDrawer = (event: KeyboardEvent | MouseEvent) => {
     if (
@@ -90,7 +92,7 @@ export const MenuDrawer = () => {
       <Box
         role="presentation"
         sx={{
-          bgcolor: "primary.main",
+          bgcolor: theme.palette.mode === "light" ? "primary.main" : "default",
           color: "white",
           width: DRAWER_WIDTH,
         }}
