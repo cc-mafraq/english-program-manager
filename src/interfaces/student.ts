@@ -173,7 +173,7 @@ export enum DroppedOutTiming {
 export enum DroppedOutReason {
   COVID = "COVID-19 Pandemic Related",
   FMEF = "Family Member or Employer Forbid Further Study",
-  FTCLE = "Failed to Thrive in Classroom Environment",
+  FTCLE = "Failed to Thrive in Clsrm Env",
   GRAD = "Graduated from L5",
   IP = "Illness or Pregnancy",
   JOB = "Got a Job",
