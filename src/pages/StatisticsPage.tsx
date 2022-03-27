@@ -18,20 +18,26 @@ export const StatisticsPage = () => {
     marginTop: 1,
   };
 
-  return (
-    <Box marginLeft="10%">
+  return statistics.totalRegistered ? (
+    <Box marginLeft="10%" paddingBottom={5}>
       <Typography {...textProps}>
         Active Students: {statistics.totalActive} (
         {round(statistics.totalActive / statistics.totalRegistered, 3) * 100 || 0}
         %)
       </Typography>
+      <Typography {...textProps} fontWeight="bold">
+        Active Nationalities
+      </Typography>
       {map(keys(sortObjectByValues(statistics.activeNationalityCounts)).reverse(), (key) => {
         return (
           <Typography {...textProps} key={`active-nationality-${key}`} marginLeft={INDENT}>
-            Active {key}: {get(statistics.activeNationalityCounts, key)}
+            {key}: {get(statistics.activeNationalityCounts, key)}
           </Typography>
         );
       })}
+      <Typography {...textProps} fontWeight="bold">
+        Active Levels
+      </Typography>
       {map([...levels, "L5 GRAD"], (key) => {
         return (
           <Typography {...textProps} key={`active-level-${key}`} marginLeft={INDENT}>
@@ -43,11 +49,17 @@ export const StatisticsPage = () => {
       <Typography {...textProps}>Total Eligible for Next Session: {statistics.totalEligible}</Typography>
       <Typography {...textProps}>Total on No Contact List: {statistics.totalNCL}</Typography>
       <Typography {...textProps}>Total Registered: {statistics.totalRegistered}</Typography>
+      <Typography {...textProps} fontWeight="bold">
+        Gender
+      </Typography>
       <Typography {...textProps} marginLeft={INDENT}>
         Total Male: {get(statistics.genderCounts, "M")}
       </Typography>
       <Typography {...textProps} marginLeft={INDENT}>
         Total Female: {get(statistics.genderCounts, "F")}
+      </Typography>
+      <Typography {...textProps} fontWeight="bold">
+        Total Nationalities
       </Typography>
       {map(keys(sortObjectByValues(statistics.nationalityCounts)).reverse(), (key) => {
         return (
@@ -56,6 +68,9 @@ export const StatisticsPage = () => {
           </Typography>
         );
       })}
+      <Typography {...textProps} fontWeight="bold">
+        Total Levels
+      </Typography>
       {map([...levels, "L5 GRAD"], (key) => {
         return (
           <Typography {...textProps} key={`level-${key}`} marginLeft={INDENT}>
@@ -63,11 +78,6 @@ export const StatisticsPage = () => {
           </Typography>
         );
       })}
-      <Typography {...textProps}>Average Age at Program Entry: {round(statistics.averageAge, 2)}</Typography>
-      <Typography {...textProps}>Total Teachers: {statistics.totalTeachers}</Typography>
-      <Typography {...textProps}>Total English Teachers: {statistics.totalEnglishTeachers}</Typography>
-      <Typography {...textProps}>Total Illiterate Arabic: {statistics.totalIlliterateArabic}</Typography>
-      <Typography {...textProps}>Total Illiterate English: {statistics.totalIlliterateEnglish}</Typography>
       <Typography {...textProps} fontWeight="bold">
         Statuses
       </Typography>
@@ -115,6 +125,13 @@ export const StatisticsPage = () => {
           </Typography>
         );
       })}
+      <Typography {...textProps}>Average Age at Program Entry: {round(statistics.averageAge, 2)}</Typography>
+      <Typography {...textProps}>Total Teachers: {statistics.totalTeachers}</Typography>
+      <Typography {...textProps}>Total English Teachers: {statistics.totalEnglishTeachers}</Typography>
+      <Typography {...textProps}>Total Illiterate Arabic: {statistics.totalIlliterateArabic}</Typography>
+      <Typography {...textProps}>Total Illiterate English: {statistics.totalIlliterateEnglish}</Typography>
     </Box>
+  ) : (
+    <></>
   );
 };

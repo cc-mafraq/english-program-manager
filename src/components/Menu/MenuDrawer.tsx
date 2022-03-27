@@ -41,6 +41,7 @@ const drawerList: DrawerListItem[] = [
   {
     component: HomeIcon,
     name: "Home",
+    route: "/epd",
   },
   {
     component: LibraryBooksIcon,
