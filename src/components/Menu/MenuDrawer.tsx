@@ -22,6 +22,7 @@ import {
 } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import React, { KeyboardEvent, MouseEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const DRAWER_WIDTH = 250;
 const DRAWER_ITEM_MARGIN = "0.87vh";
@@ -31,6 +32,7 @@ interface DrawerListItem {
     muiName: string;
   };
   name: string;
+  route?: string;
 }
 
 const iconProps = { style: { color: "white" } };
@@ -46,6 +48,7 @@ const drawerList: DrawerListItem[] = [
   {
     component: PersonIcon,
     name: "Student Database",
+    route: "/epd",
   },
   {
     component: FormatListBulletedIcon,
@@ -70,12 +73,14 @@ const drawerList: DrawerListItem[] = [
   {
     component: AutoGraphIcon,
     name: "Statistics",
+    route: "/stats",
   },
 ];
 
 export const MenuDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const toggleDrawer = (event: KeyboardEvent | MouseEvent) => {
     if (
@@ -111,7 +116,13 @@ export const MenuDrawer = () => {
                   marginTop: DRAWER_ITEM_MARGIN,
                 }}
               >
-                <ListItem button>
+                <ListItem
+                  button
+                  onClick={() => {
+                    item.route && navigate(item.route);
+                    setIsOpen(false);
+                  }}
+                >
                   <ListItemIcon>
                     <item.component {...iconProps} />
                   </ListItemIcon>

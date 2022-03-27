@@ -152,7 +152,6 @@ export enum Status {
   NEW = "NEW",
   RET = "RET",
   WD = "WD",
-  NCL = "NCL",
 }
 
 export enum FinalResult {
@@ -174,7 +173,7 @@ export enum DroppedOutTiming {
 export enum DroppedOutReason {
   COVID = "COVID-19 Pandemic Related",
   FMEF = "Family Member or Employer Forbid Further Study",
-  FTCLE = "Failed to Thrive in Clsrm Env",
+  FTCLE = "Failed to Thrive in Classroom Environment",
   GRAD = "Graduated from L5",
   IP = "Illness or Pregnancy",
   JOB = "Got a Job",
@@ -236,29 +235,13 @@ export const levelsPlus: (LevelPlus | "Exempt")[] = [
   "Exempt",
 ];
 
-export const statuses = [Status.NEW, Status.RET, Status.WD, Status.NCL];
+export const statuses = values(Status);
 export const covidStatuses = values(CovidStatus);
 
-export const results = [FinalResult.P, FinalResult.F, FinalResult.WD];
+export const results = values(FinalResult);
 export const PF = [FinalResult.P, FinalResult.F];
 
-export const withdrawReasons = [
-  DroppedOutReason.COVID,
-  DroppedOutReason.FMEF,
-  DroppedOutReason.FTCLE,
-  DroppedOutReason.GRAD,
-  DroppedOutReason.IP,
-  DroppedOutReason.JOB,
-  DroppedOutReason.LCC,
-  DroppedOutReason.LCM,
-  DroppedOutReason.LFS,
-  DroppedOutReason.LLMS,
-  DroppedOutReason.LT,
-  DroppedOutReason.MOVE,
-  DroppedOutReason.TC,
-  DroppedOutReason.VP,
-  DroppedOutReason.UNK,
-];
+export const withdrawReasons = values(DroppedOutReason);
 
 export const emptyStudent: Student = {
   academicRecords: [],
