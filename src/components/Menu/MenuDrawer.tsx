@@ -23,6 +23,7 @@ import {
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import React, { KeyboardEvent, MouseEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { lightPrimaryColor } from "../../interfaces";
 
 const DRAWER_WIDTH = 250;
 const DRAWER_ITEM_MARGIN = "0.87vh";
@@ -97,7 +98,7 @@ export const MenuDrawer = () => {
       <Box
         role="presentation"
         sx={{
-          bgcolor: theme.palette.mode === "light" ? "primary.main" : "default",
+          bgcolor: lightPrimaryColor,
           color: "white",
           width: DRAWER_WIDTH,
         }}

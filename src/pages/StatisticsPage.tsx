@@ -1,11 +1,16 @@
 import { Box, Typography, TypographyProps, useTheme } from "@mui/material";
 import { get, keys, map, round } from "lodash";
-import React from "react";
+import React, { useContext } from "react";
 import { useStatistics } from "../hooks";
+import { AppContext, levels } from "../interfaces";
+import { getAllSessions, sortObjectByValues } from "../services";
 
 const INDENT = 3;
 
 export const StatisticsPage = () => {
+  const {
+    appState: { students },
+  } = useContext(AppContext);
   const theme = useTheme();
   const statistics = useStatistics();
   const textProps: TypographyProps = {
@@ -20,14 +25,14 @@ export const StatisticsPage = () => {
         {round(statistics.totalActive / statistics.totalRegistered, 3) * 100 || 0}
         %)
       </Typography>
-      {map(keys(statistics.activeNationalityCounts), (key) => {
+      {map(keys(sortObjectByValues(statistics.activeNationalityCounts)).reverse(), (key) => {
         return (
           <Typography {...textProps} key={`active-nationality-${key}`} marginLeft={INDENT}>
             Active {key}: {get(statistics.activeNationalityCounts, key)}
           </Typography>
         );
       })}
-      {map(keys(statistics.activeLevelCounts), (key) => {
+      {map([...levels, "L5 GRAD"], (key) => {
         return (
           <Typography {...textProps} key={`active-level-${key}`} marginLeft={INDENT}>
             Active {key}: {get(statistics.activeLevelCounts, key)}
@@ -44,14 +49,14 @@ export const StatisticsPage = () => {
       <Typography {...textProps} marginLeft={INDENT}>
         Total Female: {get(statistics.genderCounts, "F")}
       </Typography>
-      {map(keys(statistics.nationalityCounts), (key) => {
+      {map(keys(sortObjectByValues(statistics.nationalityCounts)).reverse(), (key) => {
         return (
           <Typography {...textProps} key={`nationality-${key}`} marginLeft={INDENT}>
             Total {key}: {get(statistics.nationalityCounts, key)}
           </Typography>
         );
       })}
-      {map(keys(statistics.levelCounts), (key) => {
+      {map([...levels, "L5 GRAD"], (key) => {
         return (
           <Typography {...textProps} key={`level-${key}`} marginLeft={INDENT}>
             Total {key}: {get(statistics.levelCounts, key)}
@@ -66,7 +71,7 @@ export const StatisticsPage = () => {
       <Typography {...textProps} fontWeight="bold">
         Statuses
       </Typography>
-      {map(keys(statistics.statusCounts), (key) => {
+      {map(keys(sortObjectByValues(statistics.statusCounts)).reverse(), (key) => {
         return (
           <Typography {...textProps} key={`status-${key}`} marginLeft={INDENT}>
             {key}: {get(statistics.statusCounts, key)}
@@ -76,7 +81,7 @@ export const StatisticsPage = () => {
       <Typography {...textProps} fontWeight="bold">
         Initial Sessions
       </Typography>
-      {map(keys(statistics.sessionCounts), (key) => {
+      {map(getAllSessions(students), (key) => {
         return (
           <Typography {...textProps} key={`session-${key}`} marginLeft={INDENT}>
             {key}: {get(statistics.sessionCounts, key)}
@@ -86,14 +91,14 @@ export const StatisticsPage = () => {
       <Typography {...textProps} fontWeight="bold">
         COVID Statistics
       </Typography>
-      {map(keys(statistics.covidStatusCounts), (key) => {
+      {map(keys(sortObjectByValues(statistics.covidStatusCounts)).reverse(), (key) => {
         return (
           <Typography {...textProps} key={`covid-status-${key}`} marginLeft={INDENT}>
             {key}: {get(statistics.covidStatusCounts, key)}
           </Typography>
         );
       })}
-      {map(keys(statistics.fullVaccineNationalityCounts), (key) => {
+      {map(keys(sortObjectByValues(statistics.fullVaccineNationalityCounts)).reverse(), (key) => {
         return (
           <Typography {...textProps} key={`full-vaccine-nationality-${key}`} marginLeft={INDENT}>
             {key} Fully Vaccinated: {get(statistics.fullVaccineNationalityCounts, key)}
@@ -103,7 +108,7 @@ export const StatisticsPage = () => {
       <Typography {...textProps} fontWeight="bold">
         Withdraw Reasons
       </Typography>
-      {map(keys(statistics.droppedOutReasonCounts), (key) => {
+      {map(keys(sortObjectByValues(statistics.droppedOutReasonCounts)).reverse(), (key) => {
         return (
           <Typography {...textProps} key={`withdraw-reason-${key}`} marginLeft={INDENT}>
             {key}: {get(statistics.droppedOutReasonCounts, key)}
