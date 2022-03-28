@@ -151,7 +151,7 @@ export const parseNCL = (key: string, value: string, student: Student) => {
 };
 
 export const parseCurrentLevel = (key: string, value: string, student: Student) => {
-  student.currentLevel = value as GenderedLevel;
+  student.currentLevel = trim(value) as GenderedLevel;
 };
 
 export const parseAudit = parseOptionalString("status.audit");
@@ -169,6 +169,10 @@ export const parsePlacement = parseOptionalString("placement.placement");
 
 export const parseCurrentStatus = (key: string, value: string, student: Student) => {
   student.status.currentStatus = Status[value as keyof typeof Status];
+  if (trim(value) === "NCL") {
+    student.status.currentStatus = Status.WD;
+    student.status.noContactList = true;
+  }
 };
 
 export const parseCorrespondence = (key: string, value: string, student: Student) => {
@@ -473,6 +477,7 @@ export const parseCovidStatus = (key: string, value: string, student: Student) =
       student.covidVaccine.status = CovidStatus.FULL;
       break;
     case "EXEMPT FROM VACCINE":
+    case "V EXEMPT":
       student.covidVaccine.status = CovidStatus.EXEMPT;
       break;
     case "BOOSTER (THIRD DOSE)":

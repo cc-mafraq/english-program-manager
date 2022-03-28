@@ -9,6 +9,7 @@ export const voidFn = () => {};
 export const defaultBorderColor = "#808080";
 export const darkBlueBackground = "#12161F";
 export const lightPrimaryColor = "#002060";
+export const lightPrimaryDarkColor = "#000B44";
 
 export const getDesignTokens = (mode: PaletteMode): ThemeOptions => {
   const lightSecondaryColor = "#196da7";

@@ -2,7 +2,7 @@ import { Avatar, Box, Button, Card, Container, useTheme } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-import { lightPrimaryColor } from "../interfaces";
+import { lightPrimaryColor, lightPrimaryDarkColor } from "../interfaces";
 import { loginWithGoogle } from "../services";
 
 export const LoginPage = () => {
@@ -49,7 +49,7 @@ export const LoginPage = () => {
             onClick={handleLogin}
             sx={{
               "&:hover": {
-                backgroundColor: "#000B44",
+                backgroundColor: lightPrimaryDarkColor,
               },
               backgroundColor: lightPrimaryColor,
               color: whiteOrGrey,
