@@ -1,41 +1,61 @@
-import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { createTheme, PaletteMode, ThemeProvider, useMediaQuery } from "@mui/material";
+import React, { useEffect, useReducer } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { MenuBar } from "./components";
+import { useLocal } from "./hooks";
+import { AppContext, getDesignTokens, initialAppState, voidFn } from "./interfaces";
+import { LoginPage, StudentDatabasePage } from "./pages";
+import { reducer } from "./reducers";
 
-interface AppProps {}
+export const ColorModeContext = React.createContext({
+  toggleColorMode: voidFn,
+});
 
-function App({}: AppProps) {
-  // Create the count state.
-  const [count, setCount] = useState(0);
-  // Create the counter (+1 every second).
+export const App = () => {
+  const { save } = useLocal("appState");
+  const [appState, appDispatch] = useReducer(reducer(save), initialAppState);
+  const isDarkPreference = useMediaQuery("(prefers-color-scheme: dark)");
+  const [mode, setMode] = React.useState<PaletteMode>(isDarkPreference ? "dark" : "light");
+  const colorMode = React.useMemo(() => {
+    return {
+      toggleColorMode: () => {
+        setMode((prevMode: PaletteMode) => {
+          return prevMode === "light" ? "dark" : "light";
+        });
+      },
+    };
+  }, []);
+
   useEffect(() => {
-    const timer = setTimeout(() => setCount(count + 1), 1000);
-    return () => clearTimeout(timer);
-  }, [count, setCount]);
-  // Return the App component.
+    setMode(isDarkPreference ? "dark" : "light");
+  }, [isDarkPreference]);
+
+  const theme = React.useMemo(() => {
+    return createTheme(getDesignTokens(mode));
+  }, [mode]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <p>
-          Page has been open for <code>{count}</code> seconds.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </p>
-      </header>
+    <div style={{ background: theme.palette.background.default }}>
+      <ColorModeContext.Provider value={colorMode}>
+        <ThemeProvider theme={theme}>
+          <AppContext.Provider value={{ appDispatch, appState }}>
+            <BrowserRouter>
+              <Routes>
+                <Route
+                  element={
+                    <>
+                      <MenuBar />
+                      <StudentDatabasePage />
+                    </>
+                  }
+                  path="/epd"
+                />
+                <Route element={<LoginPage />} path="/" />
+              </Routes>
+            </BrowserRouter>
+          </AppContext.Provider>
+        </ThemeProvider>
+      </ColorModeContext.Provider>
     </div>
   );
-}
-
-export default App;
+};

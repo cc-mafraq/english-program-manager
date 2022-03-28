@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "ccm-english"
-  }
+    "default": "ccm-english-dev",
+    "dev": "ccm-english-dev",
+    "prod": "ccm-english"
+  },
+  "targets": {}
 }
