@@ -1,15 +1,14 @@
-import HideImageIcon from "@mui/icons-material/HideImage";
-import { Box, Grid, IconButton } from "@mui/material";
+import { Grid } from "@mui/material";
 import React, { useContext } from "react";
 import { GridContainer, GridItemTextField, LabeledCheckbox } from "..";
-import { AddImageButton, Image } from "../..";
+import { Image } from "../..";
 import { AppContext } from "../../../interfaces";
-import { deleteImage, SPACING, studentImageFolder } from "../../../services";
+import { SPACING, studentImageFolder } from "../../../services";
+import { FormImageActions } from "./FormImageActions";
 
 export const FormName: React.FC = () => {
   const {
     appState: { selectedStudent },
-    appDispatch,
   } = useContext(AppContext);
 
   return (
@@ -28,21 +27,7 @@ export const FormName: React.FC = () => {
           student={selectedStudent}
         />
       </Grid>
-      {selectedStudent?.imageName && (
-        <Box display="flex" flexDirection="column" paddingLeft="5px" paddingTop="20px">
-          <AddImageButton folderName={studentImageFolder} imagePath="imageName" student={selectedStudent} />
-          <IconButton
-            color="primary"
-            onClick={() => {
-              deleteImage(selectedStudent, "imageName");
-              selectedStudent.imageName = "";
-              appDispatch({ payload: { selectedStudent }, type: "set" });
-            }}
-          >
-            <HideImageIcon />
-          </IconButton>
-        </Box>
-      )}
+      <FormImageActions folderName={studentImageFolder} imagePath="imageName" />
       <GridItemTextField label="Name - ENG" name="name.english" />
       <GridItemTextField label="Name - AR" name="name.arabic" />
       <Grid item>

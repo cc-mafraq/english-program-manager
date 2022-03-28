@@ -10,6 +10,7 @@ interface StudentImageProps {
   imagePath: string;
   imageStyleProps?: SxProps;
   innerContainerProps?: BoxProps;
+  noButton?: boolean;
   outerContainerProps?: BoxProps;
   scale?: number;
   student: Student | null;
@@ -23,6 +24,7 @@ export const Image: React.FC<StudentImageProps> = ({
   student,
   imagePath,
   folderName,
+  noButton,
 }) => {
   const [img, setImg] = useState("");
   const imageName = get(student, imagePath);
@@ -45,19 +47,21 @@ export const Image: React.FC<StudentImageProps> = ({
       {get(student, imagePath) ? (
         <CardMedia component="img" image={img} sx={imageStyleProps} />
       ) : (
-        <Box sx={{ ...innerContainerProps, position: "relative" }}>
-          <Box
-            sx={{
-              left: "50%",
-              margin: 0,
-              position: "absolute",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-            }}
-          >
-            <AddImageButton folderName={folderName} imagePath={imagePath} scale={scale} student={student} />
+        !noButton && (
+          <Box sx={{ ...innerContainerProps, position: "relative" }}>
+            <Box
+              sx={{
+                left: "50%",
+                margin: 0,
+                position: "absolute",
+                top: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              <AddImageButton folderName={folderName} imagePath={imagePath} scale={scale} student={student} />
+            </Box>
           </Box>
-        </Box>
+        )
       )}
     </Box>
   );
@@ -66,6 +70,7 @@ export const Image: React.FC<StudentImageProps> = ({
 Image.defaultProps = {
   imageStyleProps: undefined,
   innerContainerProps: undefined,
+  noButton: false,
   outerContainerProps: undefined,
   scale: 1,
 };

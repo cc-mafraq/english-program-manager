@@ -2,10 +2,10 @@ import { Box, useTheme } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { camelCase, get, join, map, some, values } from "lodash";
 import React, { useContext } from "react";
-import { LabeledContainer, LabeledText } from "..";
+import { Image, LabeledContainer, LabeledText } from "..";
 import { useColors } from "../../hooks";
 import { AppContext, CovidStatus, Nationality, Status, Student } from "../../interfaces";
-import { getRepeatNum, isActive, JOIN_STR } from "../../services";
+import { covidVaccineImageFolder, getRepeatNum, isActive, JOIN_STR } from "../../services";
 
 interface StudentInfoProps {
   student: Student;
@@ -117,6 +117,16 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
           {student.covidVaccine?.suspectedFraudReason}
         </LabeledText>
       </LabeledContainer>
+      {dataVisibility.covidVaccine.certificatePhoto && (
+        <Image
+          folderName={covidVaccineImageFolder}
+          imagePath="covidVaccine.imageName"
+          imageStyleProps={{ maxHeight: "100px" }}
+          innerContainerProps={{ maxHeight: "100px" }}
+          noButton
+          student={student}
+        />
+      )}
       <LabeledContainer condition={allCheckboxesFalse("Status")} label="Status">
         <LabeledText condition={dataVisibility.status.audit} label="Audit">
           {student.status.audit}
