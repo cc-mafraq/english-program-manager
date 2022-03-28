@@ -1,7 +1,8 @@
 import { Box, Card, CardContent, Tab, Tabs, useTheme } from "@mui/material";
 import React, { useContext } from "react";
-import { Correspondence, Placement, StudentCardHeader, StudentImage, StudentInfo } from "..";
+import { Correspondence, Image, Placement, StudentCardHeader, StudentInfo } from "..";
 import { AppContext, darkBlueBackground, Student } from "../../interfaces";
+import { studentImageFolder } from "../../services";
 import { AcademicRecords } from "./AcademicRecords";
 
 interface StudentCardProps {
@@ -30,7 +31,9 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student, handleEditStu
     >
       <Box display="flex">
         {dataVisibility.demographics.photo && (
-          <StudentImage
+          <Image
+            folderName={studentImageFolder}
+            imagePath="imageName"
             imageStyleProps={{ height: "35vh", minHeight: "200px" }}
             innerContainerProps={{ height: "35vh", minHeight: "200px" }}
             outerContainerProps={{ minWidth: "150px" }}

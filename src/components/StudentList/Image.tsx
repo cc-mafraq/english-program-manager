@@ -1,10 +1,13 @@
 import { Box, BoxProps, CardMedia, SxProps } from "@mui/material";
+import { get } from "lodash";
 import React, { useEffect, useState } from "react";
 import { Student } from "../../interfaces";
-import { getStudentImage } from "../../services";
+import { getImage } from "../../services";
 import { AddImageButton } from "./AddImageButton";
 
 interface StudentImageProps {
+  folderName: string;
+  imagePath: string;
   imageStyleProps?: SxProps;
   innerContainerProps?: BoxProps;
   outerContainerProps?: BoxProps;
@@ -12,31 +15,34 @@ interface StudentImageProps {
   student: Student | null;
 }
 
-export const StudentImage: React.FC<StudentImageProps> = ({
+export const Image: React.FC<StudentImageProps> = ({
   imageStyleProps,
   innerContainerProps,
   outerContainerProps,
   scale,
   student,
+  imagePath,
+  folderName,
 }) => {
   const [img, setImg] = useState("");
+  const imageName = get(student, imagePath);
 
   useEffect(() => {
     const setImage = async () => {
       try {
         if (!student) return;
-        const studentImage = await getStudentImage(student);
+        const studentImage = await getImage(student, imagePath);
         setImg(studentImage);
       } catch (e) {
         setImg("");
       }
     };
     setImage();
-  }, [student, student?.imageName]);
+  }, [student, imagePath, imageName]);
 
   return (
     <Box {...outerContainerProps}>
-      {student?.imageName ? (
+      {get(student, imagePath) ? (
         <CardMedia component="img" image={img} sx={imageStyleProps} />
       ) : (
         <Box sx={{ ...innerContainerProps, position: "relative" }}>
@@ -49,7 +55,7 @@ export const StudentImage: React.FC<StudentImageProps> = ({
               transform: "translate(-50%, -50%)",
             }}
           >
-            <AddImageButton scale={scale} student={student} />
+            <AddImageButton folderName={folderName} imagePath={imagePath} scale={scale} student={student} />
           </Box>
         </Box>
       )}
@@ -57,7 +63,7 @@ export const StudentImage: React.FC<StudentImageProps> = ({
   );
 };
 
-StudentImage.defaultProps = {
+Image.defaultProps = {
   imageStyleProps: undefined,
   innerContainerProps: undefined,
   outerContainerProps: undefined,

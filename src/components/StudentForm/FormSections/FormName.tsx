@@ -2,9 +2,9 @@ import HideImageIcon from "@mui/icons-material/HideImage";
 import { Box, Grid, IconButton } from "@mui/material";
 import React, { useContext } from "react";
 import { GridContainer, GridItemTextField, LabeledCheckbox } from "..";
-import { AddImageButton, StudentImage } from "../..";
+import { AddImageButton, Image } from "../..";
 import { AppContext } from "../../../interfaces";
-import { deleteStudentImage, SPACING } from "../../../services";
+import { deleteImage, SPACING, studentImageFolder } from "../../../services";
 
 export const FormName: React.FC = () => {
   const {
@@ -15,7 +15,9 @@ export const FormName: React.FC = () => {
   return (
     <GridContainer marginBottom={SPACING}>
       <Grid item xs={1}>
-        <StudentImage
+        <Image
+          folderName={studentImageFolder}
+          imagePath="imageName"
           imageStyleProps={{ margin: "auto", maxHeight: "100%", maxWidth: "90px", width: "auto" }}
           innerContainerProps={{
             sx: { transform: "translate(0%, -50%)" },
@@ -28,11 +30,11 @@ export const FormName: React.FC = () => {
       </Grid>
       {selectedStudent?.imageName && (
         <Box display="flex" flexDirection="column" paddingLeft="5px" paddingTop="20px">
-          <AddImageButton student={selectedStudent} />
+          <AddImageButton folderName={studentImageFolder} imagePath="imageName" student={selectedStudent} />
           <IconButton
             color="primary"
             onClick={() => {
-              deleteStudentImage(selectedStudent);
+              deleteImage(selectedStudent, "imageName");
               selectedStudent.imageName = "";
               appDispatch({ payload: { selectedStudent }, type: "set" });
             }}

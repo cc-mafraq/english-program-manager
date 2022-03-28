@@ -1,16 +1,27 @@
 import { Grid } from "@mui/material";
 import moment from "moment";
-import React from "react";
-import { GridContainer, GridItemAutocomplete, StudentFormLabel } from "../..";
-import { CovidStatus, covidStatuses } from "../../../interfaces";
-import { MOMENT_FORMAT, SPACING } from "../../../services";
+import React, { useContext } from "react";
+import { GridContainer, GridItemAutocomplete, Image, StudentFormLabel } from "../..";
+import { AppContext, CovidStatus, covidStatuses } from "../../../interfaces";
+import { covidVaccineImageFolder, MOMENT_FORMAT, SPACING } from "../../../services";
 import { GridItemDatePicker, GridItemTextField, LabeledCheckbox } from "../FormInputs";
 
 export const FormCovidVaccine: React.FC = () => {
+  const {
+    appState: { selectedStudent },
+  } = useContext(AppContext);
+
   return (
     <>
       <StudentFormLabel textProps={{ marginTop: SPACING }}>COVID Vaccine</StudentFormLabel>
       <GridContainer>
+        <Grid item xs={2}>
+          <Image
+            folderName={covidVaccineImageFolder}
+            imagePath="covidVaccine.imageName"
+            student={selectedStudent}
+          />
+        </Grid>
         <GridItemAutocomplete
           defaultValue={CovidStatus.FULL}
           label="Vaccine Status"

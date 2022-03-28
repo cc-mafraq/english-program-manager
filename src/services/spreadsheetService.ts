@@ -1,8 +1,9 @@
-import { cloneDeep, find, isEqual, join, map, omit, replace, slice, sortBy } from "lodash";
+import { cloneDeep, find, forEach, isEqual, join, replace, slice, sortBy } from "lodash";
 import papa from "papaparse";
 import { emptyStudent, Student } from "../interfaces";
+import { covidVaccineImageFolder, studentImageFolder } from "./firebaseService";
 import * as ps from "./parsingService";
-import { searchForImage, setStudentData } from "./studentDataService";
+import { setImages, setStudentData } from "./studentDataService";
 
 export interface ValidFields {
   [key: string]: (key: string, value: string, student: Student) => void;
@@ -94,31 +95,32 @@ export const spreadsheetToStudentList = async (
   const { data, meta } = objects;
   const { fields } = meta;
   // Parse each row of the CSV as an object
-  await Promise.all(
-    map(data, async (object) => {
-      const student = cloneDeep(emptyStudent);
+  forEach(data, (object) => {
+    const student = cloneDeep(emptyStudent);
 
-      // Iterate through the fields of the CSV, and parse their values for this object
-      if (fields) {
-        fields.forEach((field) => {
-          const value = String(object[field]);
-          const fieldClean = replace(field, fieldCleanRegex, "");
-          if (fieldClean in studentFields) {
-            studentFields[fieldClean as keyof ValidFields](field, value, student);
-          }
-        });
-        if (student.epId !== 0) {
-          const currentStudent = find(currentStudents, { epId: student.epId });
-          if (!isEqual(omit(currentStudent, "imageName"), student)) {
-            if (currentStudent?.imageName === undefined) {
-              student.imageName = await searchForImage(student);
-            }
-            setStudentData(student, { merge: true });
-          }
-          students.push(student);
+    // Iterate through the fields of the CSV, and parse their values for this object
+    if (fields) {
+      fields.forEach((field) => {
+        const value = String(object[field]);
+        const fieldClean = replace(field, fieldCleanRegex, "");
+        if (fieldClean in studentFields) {
+          studentFields[fieldClean as keyof ValidFields](field, value, student);
         }
-      }
-    }),
+      });
+      student.epId !== 0 && students.push(student);
+    }
+  });
+  const studentsWithImage = await setImages(students, "imageName", studentImageFolder);
+  const studentsWithVaccineImage = await setImages(
+    studentsWithImage,
+    "covidVaccine.imageName",
+    covidVaccineImageFolder,
   );
-  return sortBy(students, "name.english");
+  forEach(studentsWithVaccineImage, (student) => {
+    const currentStudent = find(currentStudents, { epId: student.epId });
+    if (!isEqual(currentStudent, student)) {
+      setStudentData(student, { merge: true });
+    }
+  });
+  return sortBy(studentsWithVaccineImage, "name.english");
 };

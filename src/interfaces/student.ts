@@ -42,6 +42,7 @@ export interface AcademicRecord {
 
 export interface Covid {
   date?: string;
+  imageName?: string;
   reason?: string;
   status: CovidStatus;
   suspectedFraud?: boolean;
