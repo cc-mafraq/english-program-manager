@@ -9,6 +9,7 @@ export const voidFn = () => {};
 export const defaultBorderColor = "#808080";
 export const darkBlueBackground = "#12161F";
 export const lightPrimaryColor = "#002060";
+export const lightPrimaryDarkColor = "#000B44";
 
 export const getDesignTokens = (mode: PaletteMode): ThemeOptions => {
   const lightSecondaryColor = "#196da7";
@@ -67,6 +68,7 @@ export interface DataVisibility {
     teacherComments: boolean;
   };
   covidVaccine: {
+    certificatePhoto: boolean;
     date: boolean;
     reason: boolean;
     status: boolean;
@@ -151,6 +153,7 @@ export const initialAppState: AppState = {
       teacherComments: true,
     },
     covidVaccine: {
+      certificatePhoto: true,
       date: true,
       reason: true,
       status: true,

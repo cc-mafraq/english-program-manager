@@ -4,6 +4,7 @@ export * from "./FormCorrespondence";
 export * from "./FormCovidVaccine";
 export * from "./FormDemographics";
 export * from "./FormGrade";
+export * from "./FormImageActions";
 export * from "./FormLiteracyAndZoom";
 export * from "./FormName";
 export * from "./FormOriginalPlacement";

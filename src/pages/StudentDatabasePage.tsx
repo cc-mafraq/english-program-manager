@@ -129,6 +129,7 @@ export const StudentDatabasePage = () => {
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     appDispatch({ payload: { loading: true }, type: "set" });
+    handleChangePage(null, 0);
     setSpreadsheetIsLoading(true);
     const file: File | null = e.target.files && e.target.files[0];
     const reader = new FileReader();
@@ -137,8 +138,7 @@ export const StudentDatabasePage = () => {
 
     reader.onloadend = async () => {
       const studentListString = String(reader.result);
-      const studentList = await spreadsheetToStudentList(studentListString, students);
-      setState({ newStudents: studentList });
+      await spreadsheetToStudentList(studentListString, students);
       appDispatch({ payload: { loading: false }, type: "set" });
       setSpreadsheetIsLoading(false);
     };

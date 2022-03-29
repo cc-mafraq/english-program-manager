@@ -1,21 +1,22 @@
-import HideImageIcon from "@mui/icons-material/HideImage";
-import { Box, Grid, IconButton } from "@mui/material";
+import { Grid } from "@mui/material";
 import React, { useContext } from "react";
 import { GridContainer, GridItemTextField, LabeledCheckbox } from "..";
-import { AddImageButton, StudentImage } from "../..";
+import { Image } from "../..";
 import { AppContext } from "../../../interfaces";
-import { deleteStudentImage, SPACING } from "../../../services";
+import { SPACING, studentImageFolder } from "../../../services";
+import { FormImageActions } from "./FormImageActions";
 
 export const FormName: React.FC = () => {
   const {
     appState: { selectedStudent },
-    appDispatch,
   } = useContext(AppContext);
 
   return (
     <GridContainer marginBottom={SPACING}>
       <Grid item xs={1}>
-        <StudentImage
+        <Image
+          folderName={studentImageFolder}
+          imagePath="imageName"
           imageStyleProps={{ margin: "auto", maxHeight: "100%", maxWidth: "90px", width: "auto" }}
           innerContainerProps={{
             sx: { transform: "translate(0%, -50%)" },
@@ -26,21 +27,7 @@ export const FormName: React.FC = () => {
           student={selectedStudent}
         />
       </Grid>
-      {selectedStudent?.imageName && (
-        <Box display="flex" flexDirection="column" paddingLeft="5px" paddingTop="20px">
-          <AddImageButton student={selectedStudent} />
-          <IconButton
-            color="primary"
-            onClick={() => {
-              deleteStudentImage(selectedStudent);
-              selectedStudent.imageName = "";
-              appDispatch({ payload: { selectedStudent }, type: "set" });
-            }}
-          >
-            <HideImageIcon />
-          </IconButton>
-        </Box>
-      )}
+      <FormImageActions folderName={studentImageFolder} imagePath="imageName" />
       <GridItemTextField label="Name - ENG" name="name.english" />
       <GridItemTextField label="Name - AR" name="name.arabic" />
       <Grid item>

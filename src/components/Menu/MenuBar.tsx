@@ -9,9 +9,11 @@ import { ColorModeContext } from "../../App";
 import { useColors } from "../../hooks";
 import { logout } from "../../services";
 
-const pageName = "Student Database";
+interface MenuBarProps {
+  pageName: string;
+}
 
-export const MenuBar = () => {
+export const MenuBar: React.FC<MenuBarProps> = ({ pageName }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { iconColor } = useColors();
@@ -37,6 +39,7 @@ export const MenuBar = () => {
           color={iconColor || "white"}
           display="inline"
           fontWeight="bold"
+          marginLeft="5%"
           textAlign="center"
           variant="h6"
         >

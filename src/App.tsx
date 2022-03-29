@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { MenuBar } from "./components";
 import { useLocal } from "./hooks";
 import { AppContext, getDesignTokens, initialAppState, voidFn } from "./interfaces";
-import { LoginPage, StudentDatabasePage } from "./pages";
+import { LoginPage, StatisticsPage, StudentDatabasePage } from "./pages";
 import { reducer } from "./reducers";
 
 export const ColorModeContext = React.createContext({
@@ -44,11 +44,20 @@ export const App = () => {
                 <Route
                   element={
                     <>
-                      <MenuBar />
+                      <MenuBar pageName="Student Database" />
                       <StudentDatabasePage />
                     </>
                   }
                   path="/epd"
+                />
+                <Route
+                  element={
+                    <>
+                      <MenuBar pageName="Statistics" />
+                      <StatisticsPage />
+                    </>
+                  }
+                  path="/stats"
                 />
                 <Route element={<LoginPage />} path="/" />
               </Routes>
