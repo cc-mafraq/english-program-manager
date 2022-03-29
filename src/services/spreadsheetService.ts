@@ -1,4 +1,4 @@
-import { cloneDeep, find, forEach, isEqual, join, replace, slice, sortBy } from "lodash";
+import { cloneDeep, find, forEach, isEqual, join, omit, replace, slice, sortBy } from "lodash";
 import papa from "papaparse";
 import { emptyStudent, Student } from "../interfaces";
 import { covidVaccineImageFolder, studentImageFolder } from "./firebaseService";
@@ -8,6 +8,8 @@ import { setImages, setStudentData } from "./studentDataService";
 export interface ValidFields {
   [key: string]: (key: string, value: string, student: Student) => void;
 }
+
+const searchForImages = false;
 
 const fieldCleanRegex = /[\s)(\-#/+:,;&%'◄]/g;
 
@@ -110,17 +112,24 @@ export const spreadsheetToStudentList = async (
       student.epId !== 0 && students.push(student);
     }
   });
-  const studentsWithImage = await setImages(students, "imageName", studentImageFolder);
-  const studentsWithVaccineImage = await setImages(
-    studentsWithImage,
-    "covidVaccine.imageName",
-    covidVaccineImageFolder,
-  );
+
+  const studentsWithImage = searchForImages
+    ? await setImages(students, "imageName", studentImageFolder)
+    : students;
+  const studentsWithVaccineImage = searchForImages
+    ? await setImages(studentsWithImage, "covidVaccine.imageName", covidVaccineImageFolder)
+    : students;
+
   forEach(studentsWithVaccineImage, (student) => {
     const currentStudent = find(currentStudents, { epId: student.epId });
-    if (!isEqual(currentStudent, student)) {
+    if (
+      !isEqual(
+        searchForImages ? currentStudent : omit(currentStudent, ["imageName", "covidVaccine.imageName"]),
+        student,
+      )
+    ) {
       setStudentData(student, { merge: true });
     }
   });
-  return sortBy(studentsWithVaccineImage, "name.english");
+  return sortBy(students, "name.english");
 };

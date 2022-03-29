@@ -66,67 +66,74 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
           {student.initialSession}
         </LabeledText>
       </LabeledContainer>
-      <LabeledContainer condition={allCheckboxesFalse("COVID Vaccine")} label="COVID Vaccine">
-        <LabeledText
-          condition={dataVisibility.covidVaccine.status}
-          containerProps={{
-            sx: {
-              backgroundColor:
-                student.covidVaccine?.status === CovidStatus.FULL ||
-                student.covidVaccine?.status === CovidStatus.EXEMPT
-                  ? green
-                  : student.covidVaccine?.status === CovidStatus.PART
-                  ? yellow
-                  : red,
-            },
-          }}
-          label="Status"
-          labelProps={{
-            color:
-              theme.palette.mode === "dark" && student.covidVaccine?.status === CovidStatus.PART
-                ? grey[800]
-                : theme.palette.text.secondary,
-          }}
-          textProps={{
-            color:
-              theme.palette.mode === "dark" && student.covidVaccine?.status === CovidStatus.PART
-                ? grey[900]
-                : theme.palette.text.primary,
-          }}
+      <Box>
+        <LabeledContainer
+          condition={allCheckboxesFalse("COVID Vaccine")}
+          label="COVID Vaccine"
+          parentContainerProps={{ marginRight: 0 }}
         >
-          {student.covidVaccine?.status}
-        </LabeledText>
-        <LabeledText condition={dataVisibility.covidVaccine.date} label="Date">
-          {student.covidVaccine?.date}
-        </LabeledText>
-        <LabeledText condition={dataVisibility.covidVaccine.reason} label="Reason">
-          {student.covidVaccine?.reason}
-        </LabeledText>
-        <LabeledText
-          condition={dataVisibility.covidVaccine.suspectedFraud}
-          containerProps={{
-            sx: {
-              backgroundColor: student.covidVaccine?.suspectedFraud ? red : undefined,
-            },
-          }}
-          label="Suspected Fraud"
-        >
-          {student.covidVaccine?.suspectedFraud ? "Yes" : undefined}
-        </LabeledText>
-        <LabeledText condition={dataVisibility.covidVaccine.suspectedFraudReason} label="Suspected Fraud Reason">
-          {student.covidVaccine?.suspectedFraudReason}
-        </LabeledText>
-      </LabeledContainer>
-      {dataVisibility.covidVaccine.certificatePhoto && (
-        <Image
-          folderName={covidVaccineImageFolder}
-          imagePath="covidVaccine.imageName"
-          imageStyleProps={{ maxHeight: "100px" }}
-          innerContainerProps={{ maxHeight: "100px" }}
-          noButton
-          student={student}
-        />
-      )}
+          <LabeledText
+            condition={dataVisibility.covidVaccine.status}
+            containerProps={{
+              sx: {
+                backgroundColor:
+                  student.covidVaccine?.status === CovidStatus.FULL ||
+                  student.covidVaccine?.status === CovidStatus.EXEMPT
+                    ? green
+                    : student.covidVaccine?.status === CovidStatus.PART
+                    ? yellow
+                    : red,
+              },
+            }}
+            label="Status"
+            labelProps={{
+              color:
+                theme.palette.mode === "dark" && student.covidVaccine?.status === CovidStatus.PART
+                  ? grey[800]
+                  : theme.palette.text.secondary,
+            }}
+            textProps={{
+              color:
+                theme.palette.mode === "dark" && student.covidVaccine?.status === CovidStatus.PART
+                  ? grey[900]
+                  : theme.palette.text.primary,
+            }}
+          >
+            {student.covidVaccine?.status}
+          </LabeledText>
+          <LabeledText condition={dataVisibility.covidVaccine.date} label="Date">
+            {student.covidVaccine?.date}
+          </LabeledText>
+          <LabeledText condition={dataVisibility.covidVaccine.reason} label="Reason">
+            {student.covidVaccine?.reason}
+          </LabeledText>
+          <LabeledText
+            condition={dataVisibility.covidVaccine.suspectedFraud}
+            containerProps={{
+              sx: {
+                backgroundColor: student.covidVaccine?.suspectedFraud ? red : undefined,
+              },
+            }}
+            label="Suspected Fraud"
+          >
+            {student.covidVaccine?.suspectedFraud ? "Yes" : undefined}
+          </LabeledText>
+          <LabeledText condition={dataVisibility.covidVaccine.suspectedFraudReason} label="Suspected Fraud Reason">
+            {student.covidVaccine?.suspectedFraudReason}
+          </LabeledText>
+        </LabeledContainer>
+        {dataVisibility.covidVaccine.certificatePhoto && (
+          <Image
+            folderName={covidVaccineImageFolder}
+            imagePath="covidVaccine.imageName"
+            imageStyleProps={{ maxHeight: "100px" }}
+            innerContainerProps={{ maxHeight: "100px" }}
+            noButton
+            outerContainerProps={{ display: "inline-block", marginRight: "2vh" }}
+            student={student}
+          />
+        )}
+      </Box>
       <LabeledContainer condition={allCheckboxesFalse("Status")} label="Status">
         <LabeledText condition={dataVisibility.status.audit} label="Audit">
           {student.status.audit}
