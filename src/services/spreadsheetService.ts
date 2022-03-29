@@ -9,7 +9,7 @@ export interface ValidFields {
   [key: string]: (key: string, value: string, student: Student) => void;
 }
 
-const searchForImages = false;
+const searchForImages = true;
 
 const fieldCleanRegex = /[\s)(\-#/+:,;&%'◄]/g;
 
