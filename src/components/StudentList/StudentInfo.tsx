@@ -70,7 +70,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         <LabeledContainer
           condition={allCheckboxesFalse("COVID Vaccine")}
           label="COVID Vaccine"
-          parentContainerProps={{ marginRight: 0 }}
+          parentContainerProps={{ marginRight: dataVisibility.covidVaccine.certificatePhoto ? 0 : "2vh" }}
         >
           <LabeledText
             condition={dataVisibility.covidVaccine.status}
