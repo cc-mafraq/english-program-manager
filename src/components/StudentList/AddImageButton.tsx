@@ -1,18 +1,21 @@
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { IconButton } from "@mui/material";
+import { set } from "lodash";
 import React, { ChangeEvent, useContext } from "react";
 import { AppContext, Student } from "../../interfaces";
-import { setStudentImage } from "../../services";
+import { setImage } from "../../services";
 
 interface AddImageButtonProps {
+  folderName: string;
+  imagePath: string;
   scale?: number;
   student: Student | null;
 }
 
-export const AddImageButton: React.FC<AddImageButtonProps> = ({ scale, student }) => {
+export const AddImageButton: React.FC<AddImageButtonProps> = ({ scale, student, imagePath, folderName }) => {
   const { appDispatch } = useContext(AppContext);
 
-  const inputId = `importImage-${student?.epId}`;
+  const inputId = `importImage-${imagePath}-${student?.epId}`;
 
   return (
     <label htmlFor={inputId}>
@@ -22,7 +25,11 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({ scale, student }
         id={inputId}
         onChange={async (e: ChangeEvent<HTMLInputElement>) => {
           if (!student) return;
-          student.imageName = await setStudentImage(student, e.target.files && e.target.files[0]);
+          set(
+            student,
+            imagePath,
+            await setImage(student, e.target.files && e.target.files[0], imagePath, folderName),
+          );
           appDispatch({ payload: { selectedStudent: student }, type: "set" });
         }}
         type="file"

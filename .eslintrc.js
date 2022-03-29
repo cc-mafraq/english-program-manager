@@ -97,6 +97,7 @@ module.exports = {
 
     // Make debugger a warning instead of an error
     "no-debugger": "warn",
+    "no-console": ["warn", { allow: ["warn", "error"] }],
 
     // Don't require radix parameter
     radix: "off",

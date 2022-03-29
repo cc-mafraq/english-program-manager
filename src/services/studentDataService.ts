@@ -1,6 +1,6 @@
 import { collection, deleteDoc, doc, setDoc, SetOptions } from "firebase/firestore";
-import { deleteObject, getDownloadURL, getMetadata, ref, StorageReference, uploadBytes } from "firebase/storage";
-import { isEmpty, map, omit, toString } from "lodash";
+import { deleteObject, getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
+import { find, forEach, get, map, omit, set, toString } from "lodash";
 import { db, storage } from ".";
 import { Student } from "../interfaces";
 
@@ -12,53 +12,55 @@ export const deleteStudentData = async (student: Student) => {
   await deleteDoc(doc(collection(db, "students"), toString(student.epId)));
 };
 
-const imageExtensions = [".jpeg", ".jpg", ".png", ".jfif", ".JPG"];
-const imageFolderName = "studentPics/";
-
-export const searchForImage = async (student: Student) => {
-  const setImageName = async (imageRef: StorageReference) => {
-    student.imageName = (await getMetadata(imageRef)).fullPath;
-  };
-
-  let downloadURL = "";
-  // https://stackoverflow.com/questions/37576685/using-async-await-with-a-foreach-loop
-  await Promise.all(
-    map(imageExtensions, async (ext) => {
-      try {
-        await setImageName(ref(storage, `${imageFolderName}${student.epId}${ext}`));
-        downloadURL = await getDownloadURL(ref(storage, `${imageFolderName}${student.epId}${ext}`));
-      } catch (e) {
-        // eslint-disable-next-line no-useless-return
-        return;
-      }
-    }),
-  );
-  student.imageName = student.imageName ? student.imageName : "";
-  return downloadURL;
-};
-
-export const getStudentImage = async (student: Student): Promise<string> => {
-  if (!isEmpty(student.imageName)) {
-    return getDownloadURL(ref(storage, student.imageName));
+export const setImages = async (
+  students: Student[],
+  imagePath: string,
+  folderName: string,
+): Promise<Student[]> => {
+  try {
+    const storageFiles = await listAll(ref(storage, folderName));
+    const fileNames = await Promise.all(
+      map(storageFiles.items, async (file) => {
+        return getDownloadURL(file);
+      }),
+    );
+    forEach(students, (student) => {
+      const imageURL = find(fileNames, (name) => {
+        if (name.includes(`${folderName.slice(0, -1)}%2F${student.epId}`)) return true;
+        return false;
+      });
+      set(student, imagePath, imageURL || "");
+    });
+  } catch (e) {
+    console.error(e);
   }
-
-  return "";
+  return students;
 };
 
-export const deleteStudentImage = async (student: Student, shouldNotSetStudent?: boolean) => {
-  const storageRef = ref(storage, student.imageName);
+export const getImage = async (student: Student, imagePath: string): Promise<string> => {
+  const imageName = get(student, imagePath);
+  return imageName ? getDownloadURL(ref(storage, imageName)) : "";
+};
+
+export const deleteImage = async (student: Student, imagePath: string, shouldNotSetStudent?: boolean) => {
+  const storageRef = ref(storage, get(student, imagePath));
   await deleteObject(storageRef);
   if (shouldNotSetStudent) return;
-  await setStudentData(omit(student, "imageName"));
+  await setStudentData(omit(student, imagePath) as Student);
 };
 
-export const setStudentImage = async (student: Student, file: File | null): Promise<string> => {
+export const setImage = async (
+  student: Student,
+  file: File | null,
+  imagePath: string,
+  folderName: string,
+): Promise<string> => {
   if (file === null) return "";
-  const imagePath = `${imageFolderName}${student.epId}${file.name.slice(file.name.indexOf("."))}`;
-  const storageRef = ref(storage, imagePath);
-  student.imageName && (await deleteStudentImage(student, true));
+  const fullImagePath = `${folderName}${student.epId}${file.name.slice(file.name.indexOf("."))}`;
+  const storageRef = ref(storage, fullImagePath);
+  get(student, imagePath) && (await deleteImage(student, imagePath, true));
   await uploadBytes(storageRef, file);
-  student.imageName = imagePath;
+  set(student, imagePath, fullImagePath);
   await setStudentData(student, { merge: true });
-  return imagePath;
+  return fullImagePath;
 };

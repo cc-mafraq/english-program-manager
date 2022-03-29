@@ -68,6 +68,7 @@ export interface DataVisibility {
     teacherComments: boolean;
   };
   covidVaccine: {
+    certificatePhoto: boolean;
     date: boolean;
     reason: boolean;
     status: boolean;
@@ -152,6 +153,7 @@ export const initialAppState: AppState = {
       teacherComments: true,
     },
     covidVaccine: {
+      certificatePhoto: true,
       date: true,
       reason: true,
       status: true,

@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Divider, Grid, Typography, useTheme } from "@mui/material";
 import { green, grey } from "@mui/material/colors";
-import { isEmpty } from "lodash";
+import { isEmpty, omit } from "lodash";
 import React, { useContext } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
@@ -59,8 +59,10 @@ export const StudentForm: React.FC<StudentFormProps> = ({ handleDialogClose }) =
         },
       ];
     }
-    data.imageName = selectedStudent?.imageName;
-    const dataNoNull = removeNullFromObject(data) as Student;
+    const dataNoSuspect = data.covidVaccine.suspectedFraud
+      ? data
+      : omit(data, "covidVaccine.suspectedFraudReason");
+    const dataNoNull = removeNullFromObject(dataNoSuspect) as Student;
     setStudentData(dataNoNull);
     dataNoNull.epId !== selectedStudent?.epId && selectedStudent && deleteStudentData(selectedStudent);
     handleDialogClose();
