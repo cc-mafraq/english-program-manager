@@ -1,7 +1,9 @@
 import { FirebaseError } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import { collection, DocumentData, onSnapshot, QuerySnapshot } from "firebase/firestore";
 import { forEach, isUndefined } from "lodash";
 import React, { ChangeEvent, useCallback, useContext, useEffect, useRef } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import useState from "react-usestateref";
 import {
@@ -12,7 +14,7 @@ import {
   StudentList,
 } from "../components";
 import { AppContext, Student } from "../interfaces";
-import { db, getStudentPage, logout, searchStudents, sortStudents } from "../services";
+import { app, db, getStudentPage, logout, searchStudents, sortStudents } from "../services";
 import { spreadsheetToStudentList } from "../services/spreadsheetService";
 
 interface SetStateOptions {
@@ -37,6 +39,12 @@ export const StudentDatabasePage = () => {
   const [searchString, setSearchString, searchStringRef] = useState<string>("");
   const [spreadsheetIsLoading, setSpreadsheetIsLoading] = useState(false);
   const navigate = useNavigate();
+  const auth = getAuth(app);
+  const [user, loading] = useAuthState(auth);
+  useEffect(() => {
+    if (loading) return;
+    if (!user) navigate("/", { replace: true });
+  }, [user, loading, navigate]);
 
   studentsRef.current = students;
 
