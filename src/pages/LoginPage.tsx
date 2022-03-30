@@ -15,7 +15,7 @@ export const LoginPage = () => {
   const [user, loading] = useAuthState(auth);
   useEffect(() => {
     if (loading) return;
-    if (user) navigate("/epd");
+    if (user) navigate("/epd", { replace: true });
   }, [user, loading, navigate]);
 
   const handleLogin = async () => {

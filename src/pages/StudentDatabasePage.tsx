@@ -43,7 +43,7 @@ export const StudentDatabasePage = () => {
   const [user, loading] = useAuthState(auth);
   useEffect(() => {
     if (loading) return;
-    if (!user) navigate("/");
+    if (!user) navigate("/", { replace: true });
   }, [user, loading, navigate]);
 
   studentsRef.current = students;

@@ -26,8 +26,8 @@ export const StatisticsPage = () => {
   };
   useEffect(() => {
     if (loading) return;
-    if (!user) navigate("/");
-    if (!statistics.totalRegistered) navigate("/epd");
+    if (!user) navigate("/", { replace: true });
+    if (!statistics.totalRegistered) navigate("/epd", { replace: true });
   }, [user, loading, navigate, statistics]);
 
   return statistics.totalRegistered ? (
