@@ -36,7 +36,7 @@ export const FGRForm: React.FC<FGRFormProps> = ({
   return (
     <FormProvider {...methods}>
       <form>
-        <GridContainer paddingLeft={2}>
+        <GridContainer marginBottom={0} paddingLeft={2}>
           <Grid item>
             <FormControlLabel
               control={
