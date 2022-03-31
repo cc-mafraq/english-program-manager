@@ -1,15 +1,14 @@
-import CloseIcon from "@mui/icons-material/Close";
-import DownloadIcon from "@mui/icons-material/Download";
-import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
+import { Close, Download, DownloadDone, Edit, EditOff } from "@mui/icons-material";
 import { Box, Card, Grid, IconButton } from "@mui/material";
 import download from "downloadjs";
 import { toPng } from "html-to-image";
 import JSZip from "jszip";
-import { countBy, includes, isUndefined, map, nth, replace } from "lodash";
+import { countBy, isUndefined, map, nth, replace } from "lodash";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FGRGridRow, FGRGridRowProps, FGRHeader } from ".";
-import { FinalResult, genderedLevels, lightPrimaryColor, Student } from "../../interfaces";
+import { FinalResult, lightPrimaryColor, Student } from "../../interfaces";
 import {
+  FinalGradeReportFormValues,
   getElectiveFullName,
   getLevelForNextSession,
   getSessionFullName,
@@ -17,6 +16,7 @@ import {
   isElective,
   StudentAcademicRecordIndex,
 } from "../../services";
+import { FGRForm } from "./FGRForm";
 
 interface FinalGradeReportProps {
   handleDownloadFinished: (studentAcademicRecord: StudentAcademicRecordIndex) => void;
@@ -63,6 +63,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
   const backgroundColorSecondary = "rgba(117,219,255,1)";
 
   const [isDownloaded, setIsDownloaded] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const componentRef = useRef(null);
 
   const downloadFGR = useCallback(
@@ -102,97 +103,111 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
     downloadAllCalled();
   }, [downloadFGR, fileName, handleDownloadFinished, shouldDownload, studentAcademicRecord, zip]);
 
+  const [fgrValues, setFgrValues] = useState<FinalGradeReportFormValues>({
+    attendance: academicRecord?.attendance !== undefined ? `${academicRecord.attendance}%` : "Not Applicable",
+    classGrade:
+      academicRecord?.finalResult?.percentage !== undefined
+        ? `${academicRecord.finalResult.percentage}%`
+        : "Not Applicable",
+    className:
+      academicRecord?.levelAudited || academicRecord?.level
+        ? getElectiveFullName(academicRecord?.levelAudited || academicRecord?.level || "")
+        : "Not Applicable",
+    exitSpeakingExam:
+      academicRecord?.exitSpeakingExam?.result !== undefined
+        ? FinalResult[academicRecord.exitSpeakingExam.result] === "P"
+          ? "Pass"
+          : "Fail"
+        : "Not Applicable",
+    exitWritingExam:
+      academicRecord?.exitWritingExam?.result !== undefined
+        ? FinalResult[academicRecord.exitWritingExam.result] === "P"
+          ? "Pass"
+          : "Fail"
+        : "Not Applicable",
+    level: academicRecord
+      ? `${getLevelForNextSession({ academicRecord, noIncrement: true, sessionOptions, student })}${
+          isUndefined(academicRecord.level) && !isUndefined(academicRecord.levelAudited) ? " Audit" : ""
+        }`
+      : "",
+    name: getStudentShortName(student),
+    nextSessionLevel: academicRecord ? getLevelForNextSession({ academicRecord, sessionOptions, student }) : "",
+    passOrRepeat:
+      academicRecord?.finalResult?.result && FinalResult[academicRecord.finalResult.result] === "P"
+        ? "Pass"
+        : "Repeat",
+    session: getSessionFullName(session),
+    studentId: student.epId.toString(),
+  });
+  const [elective, setElective] = useState(academicRecord !== undefined && isElective(academicRecord));
+
   const fgrGridRowData: FGRGridRowMapProps[] = [
     {
       colText1: "Name:",
       colText2: "الإسم",
-      colText3: getStudentShortName(student),
+      colText3: fgrValues.name,
       labelBackgroundColor: backgroundColorMain,
     },
     {
       colText1: "Student ID #:",
       colText2: "رقم البطاقة",
-      colText3: student.epId.toString(),
+      colText3: fgrValues.studentId,
       labelBackgroundColor: backgroundColorMain,
     },
     {
       colText1: "Session:",
       colText2: "الفصل",
-      colText3: getSessionFullName(session),
+      colText3: fgrValues.session,
       labelBackgroundColor: backgroundColorMain,
     },
     {
       colText1: "Level:",
       colText2: "المستوى",
-      colText3: academicRecord
-        ? `${getLevelForNextSession({ academicRecord, noIncrement: true, sessionOptions, student })}${
-            isUndefined(academicRecord.level) && !isUndefined(academicRecord.levelAudited) ? " Audit" : ""
-          }`
-        : "",
+      colText3: fgrValues.level,
       labelBackgroundColor: backgroundColorMain,
     },
     {
       colText1: "Name of Class:",
       colText2: "إسم الصف",
-      colText3:
-        academicRecord?.levelAudited || academicRecord?.level
-          ? getElectiveFullName(academicRecord?.levelAudited || academicRecord?.level || "")
-          : "Not Applicable",
-      conditionToShow:
-        academicRecord && (academicRecord.level || academicRecord.levelAudited) && isElective(academicRecord),
+      colText3: fgrValues.className || "Not Applicable",
+      conditionToShow: elective,
       labelBackgroundColor: backgroundColorSecondary,
     },
     {
       colText1: "Class Grade:",
       colText2: "العلامة في الصف",
-      colText3:
-        academicRecord?.finalResult?.percentage !== undefined
-          ? `${academicRecord.finalResult.percentage}%`
-          : "Not Applicable",
+      colText3: fgrValues.classGrade,
       labelBackgroundColor: backgroundColorSecondary,
     },
     {
       colText1: "Class Attendance:",
       colText2: "الحضور",
-      colText3: academicRecord?.attendance !== undefined ? `${academicRecord.attendance}%` : "Not Applicable",
+      colText3: fgrValues.attendance,
       labelBackgroundColor: backgroundColorSecondary,
     },
     {
       colText1: "Exit Writing Exam: Pass or Fail",
       colText2: "امتحان المستوى بالكتابة: ناجح او راسب",
-      colText3:
-        academicRecord?.exitWritingExam?.result !== undefined
-          ? FinalResult[academicRecord.exitWritingExam.result] === "P"
-            ? "Pass"
-            : "Fail"
-          : "Not Applicable",
+      colText3: fgrValues.exitWritingExam,
       labelBackgroundColor: backgroundColorSecondary,
     },
     {
       colText1: "Exit Speaking Exam: Pass or Fail",
       colText2: "امتحان المستوى بالمحادثة: ناجح او راسب",
-      colText3:
-        academicRecord?.exitSpeakingExam?.result !== undefined
-          ? FinalResult[academicRecord.exitSpeakingExam.result] === "P"
-            ? "Pass"
-            : "Fail"
-          : "Not Applicable",
+      colText3: fgrValues.exitSpeakingExam,
       labelBackgroundColor: backgroundColorSecondary,
     },
     {
       colText1: "Level: Pass or Repeat",
       colText2: "المستوى: ناجح او راسب, لازم تبقى بنفس السمتوى",
-      colText3:
-        academicRecord?.finalResult?.result && FinalResult[academicRecord.finalResult.result] === "P"
-          ? "Pass"
-          : "Repeat",
-      conditionToShow: includes(genderedLevels, academicRecord?.level) && !academicRecord?.levelAudited,
+      colText3: fgrValues.passOrRepeat || "Not Applicable",
+      conditionToShow: !elective,
       labelBackgroundColor: backgroundColorSecondary,
     },
     {
       colText1: "Your Level for Next Session",
       colText2: "مستواك في الدورة الجاي",
-      colText3: academicRecord ? getLevelForNextSession({ academicRecord, sessionOptions, student }) : "",
+      colText3: fgrValues.nextSessionLevel,
       colText3Props: { fontWeight: "bold" },
       labelBackgroundColor: backgroundColorMain,
     },
@@ -207,58 +222,78 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
             handleRemoveFGR(studentAcademicRecord);
           }}
         >
-          <CloseIcon color="error" />
+          <Close color="error" />
         </IconButton>
 
         <IconButton color="primary" onClick={downloadFGR(true)}>
-          {isDownloaded ? <DownloadDoneIcon /> : <DownloadIcon />}
+          {isDownloaded ? <DownloadDone /> : <Download />}
+        </IconButton>
+        <IconButton
+          color="primary"
+          onClick={() => {
+            setIsEditing(!isEditing);
+          }}
+        >
+          {isEditing ? <EditOff /> : <Edit />}
         </IconButton>
       </Box>
-      <div ref={componentRef} style={{ width }}>
-        <Box
-          sx={{
-            backgroundColor: "white",
-            border: borderSize,
-            borderBottom: smallBorderSize,
-            borderColor: lightPrimaryColor,
-          }}
-        >
-          <img alt="FGR Border" src="./assets/fgr-border.jpg" width={imageWidth} />
-        </Box>
-        <Grid container sx={{ backgroundColor: "white" }} width={width}>
-          <FGRHeader
-            borderSize={borderSize}
-            scale={scale}
-            smallBorderSize={smallBorderSize}
-            spacing={headerSpacing}
+      {isEditing ? (
+        <Box width={width}>
+          <FGRForm
+            defaultValues={fgrValues}
+            elective={elective}
+            setElective={setElective}
+            setFgrValues={setFgrValues}
+            setIsEditing={setIsEditing}
           />
-          <Grid border={borderSize} borderBottom={0} borderColor={lightPrimaryColor} borderTop={0} container>
-            {map(fgrGridRowData, (fgrData, i) => {
-              return fgrData.conditionToShow === undefined || fgrData.conditionToShow ? (
-                <FGRGridRow
-                  key={`fgr-row-${i}-${JSON.stringify(studentAcademicRecord)}`}
-                  scale={scale}
-                  smallBorderSize={i === fgrGridRowData.length - 1 ? 0 : smallBorderSize}
-                  {...fgrData}
-                />
-              ) : (
-                <></>
-              );
-            })}
-          </Grid>
-        </Grid>
-        <Box
-          sx={{
-            backgroundColor: "white",
-            border: borderSize,
-            borderBottom: smallBorderSize,
-            borderColor: lightPrimaryColor,
-            transform: "scaleY(-1)",
-          }}
-        >
-          <img alt="FGR Border" src="./assets/fgr-border.jpg" width={imageWidth} />
         </Box>
-      </div>
+      ) : (
+        <div ref={componentRef} style={{ width }}>
+          <Box
+            sx={{
+              backgroundColor: "white",
+              border: borderSize,
+              borderBottom: smallBorderSize,
+              borderColor: lightPrimaryColor,
+            }}
+          >
+            <img alt="FGR Border" src="./assets/fgr-border.jpg" width={imageWidth} />
+          </Box>
+          <Grid container sx={{ backgroundColor: "white" }} width={width}>
+            <FGRHeader
+              borderSize={borderSize}
+              scale={scale}
+              smallBorderSize={smallBorderSize}
+              spacing={headerSpacing}
+            />
+            <Grid border={borderSize} borderBottom={0} borderColor={lightPrimaryColor} borderTop={0} container>
+              {map(fgrGridRowData, (fgrData, i) => {
+                return fgrData.conditionToShow === undefined || fgrData.conditionToShow ? (
+                  <FGRGridRow
+                    key={`fgr-row-${i}-${JSON.stringify(studentAcademicRecord)}`}
+                    scale={scale}
+                    smallBorderSize={i === fgrGridRowData.length - 1 ? 0 : smallBorderSize}
+                    {...fgrData}
+                  />
+                ) : (
+                  <></>
+                );
+              })}
+            </Grid>
+          </Grid>
+          <Box
+            sx={{
+              backgroundColor: "white",
+              border: borderSize,
+              borderBottom: smallBorderSize,
+              borderColor: lightPrimaryColor,
+              transform: "scaleY(-1)",
+            }}
+          >
+            <img alt="FGR Border" src="./assets/fgr-border.jpg" width={imageWidth} />
+          </Box>
+        </div>
+      )}
     </Card>
   ) : (
     <></>
