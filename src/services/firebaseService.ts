@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { enableIndexedDbPersistence, getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -35,6 +35,7 @@ export const isProd =
 export const app = initializeApp(isProd ? firebaseProdConfig : firebaseDevConfig);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+enableIndexedDbPersistence(db);
 
 export const studentImageFolder = "studentPics/";
 export const covidVaccineImageFolder = "vaccineCertificates/";
