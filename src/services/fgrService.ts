@@ -6,6 +6,20 @@ export interface StudentAcademicRecordIndex {
   student: Student;
 }
 
+export interface FinalGradeReportFormValues {
+  attendance: string;
+  classGrade: string;
+  className?: string;
+  exitSpeakingExam: string;
+  exitWritingExam: string;
+  level: string;
+  name: string;
+  nextSessionLevel: string;
+  passOrRepeat?: "Pass" | "Repeat";
+  session: string;
+  studentId: string;
+}
+
 const levelsWithGrad: Level[] = union(levels, ["L5 GRAD"]);
 
 export const getFullLevelName = (level: string): string => {

@@ -1,14 +1,25 @@
 import { Avatar, Box, Button, Card, Container, useTheme } from "@mui/material";
 import { grey } from "@mui/material/colors";
+import { getAuth } from "firebase/auth";
 import * as React from "react";
+import { useEffect } from "react";
+import { useAuthState, useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { lightPrimaryColor, lightPrimaryDarkColor } from "../interfaces";
-import { loginWithGoogle } from "../services";
+import { app } from "../services";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
+  const auth = getAuth(app);
+  const [signInWithGoogle] = useSignInWithGoogle(auth);
+  const [user, loading] = useAuthState(auth);
+  useEffect(() => {
+    if (loading) return;
+    if (user) navigate("/epd", { replace: true });
+  }, [user, loading, navigate]);
+
   const handleLogin = async () => {
-    await loginWithGoogle();
+    await signInWithGoogle();
     navigate("/epd");
   };
   const theme = useTheme();

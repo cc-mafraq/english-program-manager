@@ -1,7 +1,9 @@
-import { FirebaseError } from "firebase/app";
-import { collection, DocumentData, onSnapshot, QuerySnapshot } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { collection } from "firebase/firestore";
 import { forEach, isUndefined } from "lodash";
 import React, { ChangeEvent, useCallback, useContext, useEffect, useRef } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useCollection } from "react-firebase-hooks/firestore";
 import { useNavigate } from "react-router-dom";
 import useState from "react-usestateref";
 import {
@@ -12,7 +14,7 @@ import {
   StudentList,
 } from "../components";
 import { AppContext, Student } from "../interfaces";
-import { db, getStudentPage, logout, searchStudents, sortStudents } from "../services";
+import { app, db, getStudentPage, logout, searchStudents, sortStudents } from "../services";
 import { spreadsheetToStudentList } from "../services/spreadsheetService";
 
 interface SetStateOptions {
@@ -37,6 +39,9 @@ export const StudentDatabasePage = () => {
   const [searchString, setSearchString, searchStringRef] = useState<string>("");
   const [spreadsheetIsLoading, setSpreadsheetIsLoading] = useState(false);
   const navigate = useNavigate();
+  const auth = getAuth(app);
+  const [user, authLoading] = useAuthState(auth);
+  const [studentDocs, docsLoading, docsError] = useCollection(collection(db, "students"));
 
   studentsRef.current = students;
 
@@ -75,43 +80,37 @@ export const StudentDatabasePage = () => {
     ],
   );
 
-  const nextSnapshot = useCallback(
-    (snapshot: QuerySnapshot<DocumentData>) => {
-      if (!spreadsheetIsLoading) {
-        const studentData: Student[] = [];
-        forEach(snapshot.docs, (d) => {
-          const data = d.data();
-          if (data.name?.english) {
-            studentData.push(data as Student);
-          }
-        });
-        const sortedStudentData = sortStudents(studentData);
-        setState({
-          newStudents: sortedStudentData,
-        });
-        appDispatch({ payload: { loading: false }, type: "set" });
-      }
-    },
-    [setState, spreadsheetIsLoading, appDispatch],
-  );
-
-  const errorSnapshot = useCallback(
-    (e: FirebaseError) => {
-      if (e.code === "permission-denied") {
-        logout();
-        navigate("/");
-      }
-    },
-    [navigate],
-  );
+  useEffect(() => {
+    if (authLoading) return;
+    if (!user) navigate("/", { replace: true });
+  }, [user, authLoading, navigate]);
 
   useEffect(() => {
-    appDispatch({ payload: { loading: true }, type: "set" });
-    const unsubscribe = onSnapshot(collection(db, "students"), nextSnapshot, errorSnapshot);
-    return () => {
-      unsubscribe();
-    };
-  }, [errorSnapshot, nextSnapshot, appDispatch]);
+    if (!spreadsheetIsLoading) {
+      const studentData: Student[] = [];
+      forEach(studentDocs?.docs, (d) => {
+        const data = d.data();
+        if (data.name?.english) {
+          studentData.push(data as Student);
+        }
+      });
+      const sortedStudentData = sortStudents(studentData);
+      setState({
+        newStudents: sortedStudentData,
+      });
+    }
+  }, [setState, spreadsheetIsLoading, appDispatch, studentDocs]);
+
+  useEffect(() => {
+    appDispatch({ payload: { loading: docsLoading }, type: "set" });
+  }, [appDispatch, docsLoading]);
+
+  useEffect(() => {
+    if (docsError?.code === "permission-denied") {
+      logout();
+      navigate("/");
+    }
+  }, [navigate, docsError]);
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setState({ newPage });

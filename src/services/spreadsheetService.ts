@@ -10,7 +10,6 @@ export interface ValidFields {
 }
 
 const searchForImages = false;
-
 const fieldCleanRegex = /[\s)(\-#/+:,;&%'◄]/g;
 
 const studentFieldsUnexpanded: ValidFields = {

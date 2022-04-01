@@ -1,9 +1,12 @@
 import { Box, Typography, TypographyProps, useTheme } from "@mui/material";
+import { getAuth } from "firebase/auth";
 import { get, keys, map, round } from "lodash";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigate } from "react-router-dom";
 import { useStatistics } from "../hooks";
 import { AppContext, levels } from "../interfaces";
-import { getAllSessions, sortObjectByValues } from "../services";
+import { app, getAllSessions, sortObjectByValues } from "../services";
 
 const INDENT = 3;
 
@@ -11,12 +14,21 @@ export const StatisticsPage = () => {
   const {
     appState: { students },
   } = useContext(AppContext);
+  const auth = getAuth(app);
+  const [user, loading] = useAuthState(auth);
+  const navigate = useNavigate();
+
   const theme = useTheme();
   const statistics = useStatistics();
   const textProps: TypographyProps = {
     color: theme.palette.text.primary,
     marginTop: 1,
   };
+  useEffect(() => {
+    if (loading) return;
+    if (!user) navigate("/", { replace: true });
+    if (!statistics.totalRegistered) navigate("/epd", { replace: true });
+  }, [user, loading, navigate, statistics]);
 
   return statistics.totalRegistered ? (
     <Box marginLeft="10%" paddingBottom={5}>
