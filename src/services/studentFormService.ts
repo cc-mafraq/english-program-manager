@@ -65,6 +65,15 @@ const stringToArray = (value: string, originalValue: string) => {
     : null;
 };
 
+const stringToPhoneNumber = (value: string, originalValue: string) => {
+  const numberNoSpacesOrSpecialChars = originalValue.replace(/[-()+\s]/g, "");
+  const numberNoCountryCode = numberNoSpacesOrSpecialChars.startsWith("962")
+    ? numberNoSpacesOrSpecialChars.slice(3)
+    : numberNoSpacesOrSpecialChars;
+  const parsedInt = parseInt(numberNoCountryCode);
+  return isNaN(parsedInt) ? undefined : parsedInt;
+};
+
 const dateStringToArray = (value: string, originalValue: string) => {
   return isArray(originalValue) && some(originalValue) ? originalValue : [];
 };
@@ -171,8 +180,7 @@ const phoneNumberSchema = object()
   .shape({
     notes: string().transform(emptyToNull).nullable().optional(),
     number: number()
-      .transform(emptyToNull)
-      .transform(stringToInteger)
+      .transform(stringToPhoneNumber)
       .test("valid-phone-number", "The phone number is not valid", (value) => {
         return (
           value !== undefined && ((value > 700000000 && value < 800000000) || startsWith(toString(value), "2012"))
@@ -185,7 +193,7 @@ const phoneNumberSchema = object()
 const phoneSchema = object()
   .shape({
     otherWaBroadcastGroups: array().of(string()).transform(stringToArray).nullable().optional(),
-    phoneNumbers: array().of(phoneNumberSchema).min(1),
+    phoneNumbers: array().of(phoneNumberSchema).min(1, "There must be at least 1 phone number"),
     primaryPhone: number()
       .test("one-primary-phone", "Exactly one primary number must be selected", (value) => {
         return value !== undefined && value >= 0;
@@ -212,7 +220,9 @@ const phoneSchema = object()
 const sectionPlacementSchema = object().shape({
   addedToCL: bool().optional(),
   notes: string().transform(emptyToNull).nullable().optional(),
-  sectionAndDate: string().required(),
+  sectionAndDate: string().required(
+    "Placement is required if added. You can remove the placement by clicking the ❌ button",
+  ),
 });
 
 const placementSchema = object().shape({
