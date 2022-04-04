@@ -1,4 +1,4 @@
-import { cloneDeep, find, forEach, isEqual, join, omit, replace, slice, sortBy } from "lodash";
+import { cloneDeep, find, forEach, isEqual, join, map, omit, replace, slice, sortBy } from "lodash";
 import papa from "papaparse";
 import { emptyStudent, Student } from "../interfaces";
 import { covidVaccineImageFolder, studentImageFolder } from "./firebaseService";
@@ -119,16 +119,18 @@ export const spreadsheetToStudentList = async (
     ? await setImages(studentsWithImage, "covidVaccine.imageName", covidVaccineImageFolder)
     : students;
 
-  forEach(studentsWithVaccineImage, (student) => {
-    const currentStudent = find(currentStudents, { epId: student.epId });
-    if (
-      !isEqual(
-        searchForImages ? currentStudent : omit(currentStudent, ["imageName", "covidVaccine.imageName"]),
-        student,
-      )
-    ) {
-      setStudentData(student, { merge: true });
-    }
-  });
+  await Promise.all(
+    map(studentsWithVaccineImage, async (student) => {
+      const currentStudent = find(currentStudents, { epId: student.epId });
+      if (
+        !isEqual(
+          searchForImages ? currentStudent : omit(currentStudent, ["imageName", "covidVaccine.imageName"]),
+          student,
+        )
+      ) {
+        await setStudentData(student, { merge: true });
+      }
+    }),
+  );
   return sortBy(students, "name.english");
 };

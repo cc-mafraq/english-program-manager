@@ -127,12 +127,12 @@ export const StudentDatabasePage = () => {
   };
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    appDispatch({ payload: { loading: true }, type: "set" });
     handleChangePage(null, 0);
     setSpreadsheetIsLoading(true);
     const file: File | null = e.target.files && e.target.files[0];
     const reader = new FileReader();
 
+    file && appDispatch({ payload: { loading: true }, type: "set" });
     file && reader.readAsText(file);
 
     reader.onloadend = async () => {
