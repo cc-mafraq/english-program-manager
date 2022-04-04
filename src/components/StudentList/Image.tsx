@@ -2,7 +2,6 @@ import { Box, BoxProps, CardMedia, SxProps } from "@mui/material";
 import { get } from "lodash";
 import React, { useEffect, useState } from "react";
 import { Student } from "../../interfaces";
-import { getImage } from "../../services";
 import { AddImageButton } from "./AddImageButton";
 
 interface StudentImageProps {
@@ -10,6 +9,7 @@ interface StudentImageProps {
   imagePath: string;
   imageStyleProps?: SxProps;
   innerContainerProps?: BoxProps;
+  lightColor?: "primary" | "default" | "secondary";
   noButton?: boolean;
   outerContainerProps?: BoxProps;
   scale?: number;
@@ -25,6 +25,7 @@ export const Image: React.FC<StudentImageProps> = ({
   imagePath,
   folderName,
   noButton,
+  lightColor,
 }) => {
   const [img, setImg] = useState("");
   const imageName = get(student, imagePath);
@@ -33,8 +34,7 @@ export const Image: React.FC<StudentImageProps> = ({
     const setImage = async () => {
       try {
         if (!student) return;
-        const studentImage = await getImage(student, imagePath);
-        setImg(studentImage);
+        setImg(imageName);
       } catch (e) {
         setImg("");
       }
@@ -58,7 +58,13 @@ export const Image: React.FC<StudentImageProps> = ({
                 transform: "translate(-50%, -50%)",
               }}
             >
-              <AddImageButton folderName={folderName} imagePath={imagePath} scale={scale} student={student} />
+              <AddImageButton
+                folderName={folderName}
+                imagePath={imagePath}
+                lightColor={lightColor}
+                scale={scale}
+                student={student}
+              />
             </Box>
           </Box>
         )
@@ -70,6 +76,7 @@ export const Image: React.FC<StudentImageProps> = ({
 Image.defaultProps = {
   imageStyleProps: undefined,
   innerContainerProps: undefined,
+  lightColor: "default",
   noButton: false,
   outerContainerProps: undefined,
   scale: 1,

@@ -37,30 +37,20 @@ export const setImages = async (
   return students;
 };
 
-export const getImage = async (student: Student, imagePath: string): Promise<string> => {
-  const imageName = get(student, imagePath);
-  return imageName ? getDownloadURL(ref(storage, imageName)) : "";
-};
-
 export const deleteImage = async (student: Student, imagePath: string, shouldNotSetStudent?: boolean) => {
   const storageRef = ref(storage, get(student, imagePath));
   await deleteObject(storageRef);
+  set(student, imagePath, "");
   if (shouldNotSetStudent) return;
   await setStudentData(omit(student, imagePath) as Student);
 };
 
-export const setImage = async (
-  student: Student,
-  file: File | null,
-  imagePath: string,
-  folderName: string,
-): Promise<string> => {
-  if (file === null) return "";
+export const setImage = async (student: Student, file: File | null, imagePath: string, folderName: string) => {
+  if (file === null) return;
   const fullImagePath = `${folderName}${student.epId}${file.name.slice(file.name.indexOf("."))}`;
   const storageRef = ref(storage, fullImagePath);
   get(student, imagePath) && (await deleteImage(student, imagePath, true));
   await uploadBytes(storageRef, file);
-  set(student, imagePath, fullImagePath);
+  set(student, imagePath, await getDownloadURL(storageRef));
   await setStudentData(student, { merge: true });
-  return fullImagePath;
 };

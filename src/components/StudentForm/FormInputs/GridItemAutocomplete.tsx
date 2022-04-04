@@ -1,4 +1,11 @@
-import { Autocomplete, AutocompleteProps, Grid, GridProps, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  AutocompleteProps,
+  Grid,
+  GridProps,
+  StandardTextFieldProps,
+  TextField,
+} from "@mui/material";
 import { omit } from "lodash";
 import React from "react";
 import { Controller, FieldError, useFormContext } from "react-hook-form";
@@ -9,13 +16,14 @@ interface GridItemAutocomplete {
   gridProps?: GridProps;
   label: string;
   name?: string;
+  textFieldProps?: StandardTextFieldProps;
 }
 
 /* A text field to be used on forms */
 export const GridItemAutocomplete = (
   props: GridItemAutocomplete & Omit<AutocompleteProps<unknown, boolean, boolean, boolean>, "renderInput">,
 ) => {
-  const { label, name, gridProps, defaultValue } = props;
+  const { label, name, gridProps, defaultValue, textFieldProps } = props;
   const {
     control,
     formState: { errors },
@@ -41,6 +49,7 @@ export const GridItemAutocomplete = (
                     error={!!errorMessage}
                     helperText={errorMessage}
                     variant="outlined"
+                    {...textFieldProps}
                   />
                 );
               }}
@@ -61,4 +70,5 @@ GridItemAutocomplete.defaultProps = {
   defaultValue: undefined,
   gridProps: undefined,
   name: undefined,
+  textFieldProps: undefined,
 };

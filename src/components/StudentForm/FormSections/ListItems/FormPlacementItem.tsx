@@ -15,7 +15,11 @@ export const FormPlacementItem: React.FC<FormItem> = ({ index, removeItem, name 
           <CloseIcon />
         </IconButton>
       </Grid>
-      <GridItemTextField label="Placement and Date" name={`${name}.sectionAndDate`} />
+      <GridItemTextField
+        label="Placement and Date"
+        name={`${name}.sectionAndDate`}
+        textFieldProps={{ required: true }}
+      />
       <GridItemTextField gridProps={{ xs: 4 }} label="Notes" name={`${name}.notes`} />
       <Grid item xs={2}>
         <LabeledCheckbox label="Added to CL" name={`${name}.addedToCL`} />

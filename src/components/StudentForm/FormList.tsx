@@ -1,7 +1,9 @@
-import { Button, Grid, GridProps, useTheme } from "@mui/material";
+import { Button, Grid, GridProps, Typography, useTheme } from "@mui/material";
 import { grey } from "@mui/material/colors";
-import { map } from "lodash";
+import { get, map } from "lodash";
 import React from "react";
+import { useFormContext } from "react-hook-form";
+import { SPACING } from "../../services";
 
 interface FormListProps {
   addItem: () => void;
@@ -22,6 +24,10 @@ export const FormList: React.FC<FormListProps> = ({
   children,
 }) => {
   const theme = useTheme();
+  const {
+    formState: { errors },
+  } = useFormContext();
+  const errorMessage = get(errors, listName)?.message;
 
   return (
     <>
@@ -59,6 +65,16 @@ export const FormList: React.FC<FormListProps> = ({
         >
           {buttonLabel}
         </Button>
+        {errorMessage && (
+          <Typography
+            color={theme.palette.error.main}
+            fontSize={12}
+            marginLeft={SPACING / 2}
+            marginTop={SPACING / 2}
+          >
+            {errorMessage}
+          </Typography>
+        )}
       </Grid>
     </>
   );

@@ -101,13 +101,36 @@ const emptyToNull = (value: string, originalValue: string) => {
   return isEmpty(originalValue) ? null : originalValue;
 };
 
-const percentageSchema = number().min(0).max(100).integer().transform(stringToInteger).nullable().optional();
+const stringToPhoneNumber = (value: string, originalValue: string) => {
+  const numberNoSpacesOrSpecialChars = toString(originalValue).replace(/[-()+\s]/g, "");
+  const numberNoCountryCode = numberNoSpacesOrSpecialChars.startsWith("962")
+    ? numberNoSpacesOrSpecialChars.slice(3)
+    : numberNoSpacesOrSpecialChars;
+  const parsedInt = parseInt(numberNoCountryCode);
+  return isNaN(parsedInt) ? undefined : parsedInt;
+};
+
+const percentageToInteger = (value: string, originalValue: string) => {
+  const percentageNoSymbol = toString(originalValue).replace("%", "");
+  if (!percentageNoSymbol) return null;
+  const percentageInt = parseInt(percentageNoSymbol);
+  return isNaN(percentageInt) ? originalValue : percentageInt;
+};
+
+const percentageSchema = number()
+  .min(0)
+  .max(100)
+  .integer()
+  .transform(percentageToInteger)
+  .typeError("Percentage must be an integer between 0 and 100")
+  .nullable()
+  .optional();
 
 // https://www.regular-expressions.info/dates.html
 const dateSchema = string()
   .matches(
     /^([1-9]|1[012])[- /.]([1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d$/,
-    "Invalid date format. The format must be MM-DD-YYYY",
+    "Invalid date format. The format must be MM/DD/YYYY",
   )
   .transform(dateToString);
 
@@ -131,7 +154,7 @@ const academicRecordsSchema = object().shape({
   finalResult: gradeSchema,
   level: mixed<GenderedLevel>().transform(emptyToNull).nullable().optional(),
   levelAudited: mixed<GenderedLevel>().transform(emptyToNull).nullable().optional(),
-  session: string().required("Session is required"),
+  session: string().typeError("Session is required").required("Session is required"),
 });
 
 const correspondenceSchema = object().shape({
@@ -161,7 +184,7 @@ const literacySchema = object().shape({
 const nameSchema = object()
   .shape({
     arabic: string()
-      .matches(/^[\u0621-\u064A\s]+|(N\/A)/, "Arabic name must be in arabic or N/A")
+      .matches(/^[\u0621-\u064A\s]+|(N\/A)/, "Arabic name must be arabic characters or N/A")
       .required("Arabic name is required. You may write N/A"),
     english: string().required("English name is required"),
   })
@@ -171,8 +194,7 @@ const phoneNumberSchema = object()
   .shape({
     notes: string().transform(emptyToNull).nullable().optional(),
     number: number()
-      .transform(emptyToNull)
-      .transform(stringToInteger)
+      .transform(stringToPhoneNumber)
       .test("valid-phone-number", "The phone number is not valid", (value) => {
         return (
           value !== undefined && ((value > 700000000 && value < 800000000) || startsWith(toString(value), "2012"))
@@ -185,7 +207,7 @@ const phoneNumberSchema = object()
 const phoneSchema = object()
   .shape({
     otherWaBroadcastGroups: array().of(string()).transform(stringToArray).nullable().optional(),
-    phoneNumbers: array().of(phoneNumberSchema).min(1),
+    phoneNumbers: array().of(phoneNumberSchema).min(1, "There must be at least 1 phone number"),
     primaryPhone: number()
       .test("one-primary-phone", "Exactly one primary number must be selected", (value) => {
         return value !== undefined && value >= 0;
@@ -212,7 +234,9 @@ const phoneSchema = object()
 const sectionPlacementSchema = object().shape({
   addedToCL: bool().optional(),
   notes: string().transform(emptyToNull).nullable().optional(),
-  sectionAndDate: string().required(),
+  sectionAndDate: string().required(
+    "Placement is required if added. You can remove the placement by clicking the ❌ button",
+  ),
 });
 
 const placementSchema = object().shape({
