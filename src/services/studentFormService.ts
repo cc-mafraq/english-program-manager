@@ -110,7 +110,21 @@ const stringToPhoneNumber = (value: string, originalValue: string) => {
   return isNaN(parsedInt) ? undefined : parsedInt;
 };
 
-const percentageSchema = number().min(0).max(100).integer().transform(stringToInteger).nullable().optional();
+const percentageToInteger = (value: string, originalValue: string) => {
+  const percentageNoSymbol = toString(originalValue).replace("%", "");
+  if (!percentageNoSymbol) return null;
+  const percentageInt = parseInt(percentageNoSymbol);
+  return isNaN(percentageInt) ? originalValue : percentageInt;
+};
+
+const percentageSchema = number()
+  .min(0)
+  .max(100)
+  .integer()
+  .transform(percentageToInteger)
+  .typeError("Percentage must be an integer between 0 and 100")
+  .nullable()
+  .optional();
 
 // https://www.regular-expressions.info/dates.html
 const dateSchema = string()

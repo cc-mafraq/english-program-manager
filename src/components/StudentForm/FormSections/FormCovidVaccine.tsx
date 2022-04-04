@@ -27,10 +27,10 @@ export const FormCovidVaccine: React.FC = () => {
               sx: { transform: "translate(0%, -50%)" },
               top: "50%",
             }}
+            lightColor="primary"
             outerContainerProps={{ height: "100%" }}
             scale={2}
             student={selectedStudent}
-            lightColor="primary"
           />
         </Grid>
         <FormImageActions folderName={covidVaccineImageFolder} imagePath="covidVaccine.imageName" />
