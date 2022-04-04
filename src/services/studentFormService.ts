@@ -102,7 +102,7 @@ const emptyToNull = (value: string, originalValue: string) => {
 };
 
 const stringToPhoneNumber = (value: string, originalValue: string) => {
-  const numberNoSpacesOrSpecialChars = originalValue.replace(/[-()+\s]/g, "");
+  const numberNoSpacesOrSpecialChars = toString(originalValue).replace(/[-()+\s]/g, "");
   const numberNoCountryCode = numberNoSpacesOrSpecialChars.startsWith("962")
     ? numberNoSpacesOrSpecialChars.slice(3)
     : numberNoSpacesOrSpecialChars;
@@ -116,7 +116,7 @@ const percentageSchema = number().min(0).max(100).integer().transform(stringToIn
 const dateSchema = string()
   .matches(
     /^([1-9]|1[012])[- /.]([1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d$/,
-    "Invalid date format. The format must be MM-DD-YYYY",
+    "Invalid date format. The format must be MM/DD/YYYY",
   )
   .transform(dateToString);
 
@@ -140,7 +140,7 @@ const academicRecordsSchema = object().shape({
   finalResult: gradeSchema,
   level: mixed<GenderedLevel>().transform(emptyToNull).nullable().optional(),
   levelAudited: mixed<GenderedLevel>().transform(emptyToNull).nullable().optional(),
-  session: string().required("Session is required"),
+  session: string().typeError("Session is required").required("Session is required"),
 });
 
 const correspondenceSchema = object().shape({
@@ -170,7 +170,7 @@ const literacySchema = object().shape({
 const nameSchema = object()
   .shape({
     arabic: string()
-      .matches(/^[\u0621-\u064A\s]+|(N\/A)/, "Arabic name must be in arabic or N/A")
+      .matches(/^[\u0621-\u064A\s]+|(N\/A)/, "Arabic name must be arabic characters or N/A")
       .required("Arabic name is required. You may write N/A"),
     english: string().required("English name is required"),
   })

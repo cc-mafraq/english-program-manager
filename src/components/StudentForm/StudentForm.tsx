@@ -1,5 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Button, Divider, Grid, Typography, useTheme } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import { Box, Button, Divider, Grid, IconButton, Typography, useTheme } from "@mui/material";
 import { green, grey } from "@mui/material/colors";
 import { isEmpty, omit } from "lodash";
 import React, { useContext } from "react";
@@ -72,9 +73,18 @@ export const StudentForm: React.FC<StudentFormProps> = ({ handleDialogClose }) =
     <FormProvider {...methods}>
       <form>
         <Box>
-          <Typography fontWeight={600} variant="h4">
+          <Typography display="inline" fontWeight={600} variant="h4">
             {addOrEdit} Student
           </Typography>
+          <IconButton
+            onClick={handleDialogClose}
+            sx={{
+              float: "right",
+              transform: `scale(1.25)`,
+            }}
+          >
+            <CloseIcon sx={{ color: "default" }} />
+          </IconButton>
         </Box>
         <FormName />
         <Divider />

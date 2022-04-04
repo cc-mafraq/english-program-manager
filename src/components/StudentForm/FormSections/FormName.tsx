@@ -22,14 +22,15 @@ export const FormName: React.FC = () => {
             sx: { transform: "translate(0%, -50%)" },
             top: "50%",
           }}
+          lightColor="primary"
           outerContainerProps={{ height: "100%", maxHeight: "100px" }}
           scale={2}
           student={selectedStudent}
         />
       </Grid>
       <FormImageActions folderName={studentImageFolder} imagePath="imageName" />
-      <GridItemTextField label="Name - ENG" name="name.english" />
-      <GridItemTextField label="Name - AR" name="name.arabic" />
+      <GridItemTextField label="Name - ENG" name="name.english" textFieldProps={{ required: true }} />
+      <GridItemTextField label="Name - AR" name="name.arabic" textFieldProps={{ required: true }} />
       <Grid item>
         <LabeledCheckbox
           checkboxProps={{ defaultChecked: true }}

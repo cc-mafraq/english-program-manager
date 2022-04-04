@@ -16,10 +16,10 @@ export const FormDemographics: React.FC = () => {
     <>
       <StudentFormLabel textProps={{ marginTop: SPACING }}>Demographics</StudentFormLabel>
       <GridContainer marginBottom={0}>
-        <GridItemRadioGroup gridProps={{ xs: 2 }} label="Gender" options={["M", "F"]} />
-        <GridItemAutocomplete label="Nationality" options={nationalities} />
-        <GridItemTextField label="Age" />
-        <GridItemTextField label="Occupation" name="work.occupation" />
+        <GridItemRadioGroup gridProps={{ xs: 2 }} label="Gender *" options={["M", "F"]} />
+        <GridItemAutocomplete label="Nationality" options={nationalities} textFieldProps={{ required: true }} />
+        <GridItemTextField label="Age" textFieldProps={{ required: true }} />
+        <GridItemTextField label="Occupation" name="work.occupation" textFieldProps={{ required: true }} />
       </GridContainer>
       <GridContainer>
         <Grid item xs={2}>

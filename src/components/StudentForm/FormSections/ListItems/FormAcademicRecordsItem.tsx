@@ -30,6 +30,7 @@ export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem,
           label="Session"
           name={`${name}.session`}
           options={getAllSessions(students)}
+          textFieldProps={{ required: true }}
         />
         <GridItemAutocomplete freeSolo label="Level" name={`${name}.level`} options={genderedLevels} />
         <GridItemTextField label="Attendance Percentage" name={`${name}.attendance`} />

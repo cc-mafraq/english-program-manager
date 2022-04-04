@@ -66,7 +66,12 @@ export const FormList: React.FC<FormListProps> = ({
           {buttonLabel}
         </Button>
         {errorMessage && (
-          <Typography color={theme.palette.error.main} fontSize={12} marginLeft={SPACING} marginTop={SPACING / 2}>
+          <Typography
+            color={theme.palette.error.main}
+            fontSize={12}
+            marginLeft={SPACING / 2}
+            marginTop={SPACING / 2}
+          >
             {errorMessage}
           </Typography>
         )}

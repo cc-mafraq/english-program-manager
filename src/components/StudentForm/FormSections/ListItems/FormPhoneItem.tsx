@@ -12,7 +12,11 @@ export const FormPhoneItem: React.FC<FormItem> = ({ index, removeItem, name }) =
     <>
       <Grid item padding={SPACING} xs>
         <Grid container>
-          <GridItemTextField label={`Phone Number ${Number(index) + 1}`} name={`${name}.number`} />
+          <GridItemTextField
+            label={`Phone Number ${Number(index) + 1}`}
+            name={`${name}.number`}
+            textFieldProps={{ required: true }}
+          />
         </Grid>
         <GridItemTextField
           gridProps={{ marginTop: SPACING / 2 }}

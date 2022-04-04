@@ -30,6 +30,7 @@ export const FormCovidVaccine: React.FC = () => {
             outerContainerProps={{ height: "100%" }}
             scale={2}
             student={selectedStudent}
+            lightColor="primary"
           />
         </Grid>
         <FormImageActions folderName={covidVaccineImageFolder} imagePath="covidVaccine.imageName" />
@@ -38,6 +39,7 @@ export const FormCovidVaccine: React.FC = () => {
           label="Vaccine Status"
           name="covidVaccine.status"
           options={covidStatuses}
+          textFieldProps={{ required: true }}
         />
         <GridItemDatePicker label="Date" name="covidVaccine.date" value={moment().format(MOMENT_FORMAT)} />
         {(covidStatus === CovidStatus.UNV || covidStatus === CovidStatus.EXEMPT) && (

@@ -12,15 +12,30 @@ export const FormProgramInformation: React.FC = () => {
     <>
       <StudentFormLabel textProps={{ marginTop: SPACING }}>Program Information</StudentFormLabel>
       <GridContainer>
-        <GridItemTextField label="ID" name="epId" value={generateId(students).toString()} />
-        <GridItemAutocomplete label="Current Level" options={[...genderedLevels, "L5 GRAD"]} />
+        <GridItemTextField
+          label="ID"
+          name="epId"
+          textFieldProps={{ required: true }}
+          value={generateId(students).toString()}
+        />
+        <GridItemAutocomplete
+          label="Current Level"
+          options={[...genderedLevels, "L5 GRAD"]}
+          textFieldProps={{ required: true }}
+        />
         <GridItemAutocomplete
           defaultValue="NEW"
           label="Current Status"
           name="status.currentStatus"
           options={statuses}
+          textFieldProps={{ required: true }}
         />
-        <GridItemAutocomplete freeSolo label="Initial Session" options={getAllSessions(students)} />
+        <GridItemAutocomplete
+          freeSolo
+          label="Initial Session"
+          options={getAllSessions(students)}
+          textFieldProps={{ required: true }}
+        />
         <GridItemTextField label="Family Coordinator Entry" name="familyCoordinatorEntry" />
       </GridContainer>
     </>
