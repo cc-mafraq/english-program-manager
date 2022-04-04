@@ -17,7 +17,9 @@ export const useFormList = (
   const removeListItem = (index?: number) => {
     return () => {
       if (isUndefined(index)) return;
-      const newList = cloneDeep(list);
+      const newList = cloneDeep(
+        methods.getValues(listPath) as FieldArrayPathValue<Student, ArrayPath<Student>> | string[],
+      );
       newList.splice(index, 1);
       setList(newList);
       const resetObject = {};

@@ -2,7 +2,7 @@ import { Box, Dialog, SelectChangeEvent } from "@mui/material";
 import download from "downloadjs";
 import JSZip from "jszip";
 import { cloneDeep, isEqual, nth, pull, replace } from "lodash";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FGRDialogHeader, FinalGradeReportList } from ".";
 import { useColors } from "../../hooks";
 import { AppContext } from "../../interfaces";
@@ -37,6 +37,10 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({ 
     getFGRStudents(students, fgrSession),
   );
   const [shouldDownload, setShouldDownload] = useState(false);
+
+  useEffect(() => {
+    setFGRStudents(getFGRStudents(students, fgrSession));
+  }, [fgrSession, students]);
 
   const handleDownloadAllFinished = async (studentAcademicRecord: StudentAcademicRecordIndex) => {
     zippedStudentAcademicRecords.push(studentAcademicRecord);

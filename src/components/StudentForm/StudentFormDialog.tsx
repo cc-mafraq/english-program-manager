@@ -23,10 +23,7 @@ export const StudentFormDialog: React.FC<StudentFormDialogProps> = ({ handleDial
         },
       }}
       sx={{
-        marginLeft: "50%",
-        marginTop: "1%",
-        transform: "translate(-50%)",
-        width: "95%",
+        width: "100%",
       }}
     >
       <Box sx={{ padding: "10px" }}>

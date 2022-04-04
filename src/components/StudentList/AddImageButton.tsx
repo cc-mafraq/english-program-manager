@@ -1,6 +1,5 @@
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import { IconButton } from "@mui/material";
-import { set } from "lodash";
+import { IconButton, useTheme } from "@mui/material";
 import React, { ChangeEvent, useContext } from "react";
 import { AppContext, Student } from "../../interfaces";
 import { setImage } from "../../services";
@@ -8,12 +7,20 @@ import { setImage } from "../../services";
 interface AddImageButtonProps {
   folderName: string;
   imagePath: string;
+  lightColor?: "primary" | "default" | "secondary";
   scale?: number;
   student: Student | null;
 }
 
-export const AddImageButton: React.FC<AddImageButtonProps> = ({ scale, student, imagePath, folderName }) => {
+export const AddImageButton: React.FC<AddImageButtonProps> = ({
+  scale,
+  student,
+  imagePath,
+  folderName,
+  lightColor,
+}) => {
   const { appDispatch } = useContext(AppContext);
+  const theme = useTheme();
 
   const inputId = `importImage-${imagePath}-${student?.epId}`;
 
@@ -25,16 +32,16 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({ scale, student, 
         id={inputId}
         onChange={async (e: ChangeEvent<HTMLInputElement>) => {
           if (!student) return;
-          set(
-            student,
-            imagePath,
-            await setImage(student, e.target.files && e.target.files[0], imagePath, folderName),
-          );
+          await setImage(student, e.target.files && e.target.files[0], imagePath, folderName);
           appDispatch({ payload: { selectedStudent: student }, type: "set" });
         }}
         type="file"
       />
-      <IconButton color="primary" component="span" sx={{ transform: `scale(${scale})` }}>
+      <IconButton
+        color={theme.palette.mode === "dark" ? "primary" : lightColor || "default"}
+        component="span"
+        sx={{ transform: `scale(${scale})` }}
+      >
         <AddPhotoAlternateIcon />
       </IconButton>
     </label>
@@ -42,5 +49,6 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({ scale, student, 
 };
 
 AddImageButton.defaultProps = {
+  lightColor: "default",
   scale: 1,
 };
