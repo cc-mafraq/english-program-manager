@@ -268,15 +268,16 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
             />
             <Grid border={borderSize} borderBottom={0} borderColor={lightPrimaryColor} borderTop={0} container>
               {map(fgrGridRowData, (fgrData, i) => {
+                const key = `fgr-row-${i}-${student.epId}}-${studentAcademicRecord.academicRecordIndex}`;
                 return fgrData.conditionToShow === undefined || fgrData.conditionToShow ? (
                   <FGRGridRow
-                    key={`fgr-row-${i}-${student.epId}}-${studentAcademicRecord.academicRecordIndex}`}
+                    key={key}
                     scale={scale}
                     smallBorderSize={i === fgrGridRowData.length - 1 ? 0 : smallBorderSize}
                     {...fgrData}
                   />
                 ) : (
-                  <></>
+                  <React.Fragment key={key} />
                 );
               })}
             </Grid>

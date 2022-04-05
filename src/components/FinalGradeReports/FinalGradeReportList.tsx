@@ -30,16 +30,16 @@ export const FinalGradeReportList: React.FC<FinalGradeReportListProps> = ({
   const {
     appState: { students },
   } = useContext(AppContext);
-  const [sessionOptions, setSessionOptions] = useState<Student["initialSession"][]>([]);
+  const [sessionOptions, setSessionOptions] = useState<Student["initialSession"][]>(getAllSessions(students));
   useEffect(() => {
     setSessionOptions(getAllSessions(students));
   }, [students]);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
-      {map(fgrStudents, (fgrStudent) => {
+      {map(fgrStudents, (fgrStudent, i) => {
         return (
-          <span key={`${fgrStudent.student.epId}-${fgrStudent.academicRecordIndex}`}>
+          <span key={`fgr-${fgrStudent.student.epId}-${fgrStudent.academicRecordIndex}-${i}`}>
             <FinalGradeReport
               handleDownloadFinished={handleDownloadFinished}
               handleRemoveFGR={handleRemoveFGR}
