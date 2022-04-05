@@ -1,9 +1,13 @@
 import { Grid } from "@mui/material";
 import React from "react";
+import { useFormContext } from "react-hook-form";
 import { GridContainer, GridItemTextField, LabeledCheckbox, StudentFormLabel } from "..";
+import { Student } from "../../../interfaces";
 import { SPACING } from "../../../services";
 
 export const FormLiteracyAndZoom: React.FC = () => {
+  const { watch } = useFormContext<Student>();
+
   return (
     <>
       <Grid container>
@@ -26,11 +30,13 @@ export const FormLiteracyAndZoom: React.FC = () => {
             label="Illiterate - ENG"
             name="literacy.illiterateEng"
           />
-          <GridItemTextField
-            gridProps={{ paddingRight: SPACING, paddingTop: SPACING / 2 }}
-            label="Tutor and Date"
-            name="literacy.tutorAndDate"
-          />
+          {watch("literacy.illiterateEng") && (
+            <GridItemTextField
+              gridProps={{ paddingRight: SPACING, paddingTop: SPACING / 2 }}
+              label="Tutor and Date"
+              name="literacy.tutorAndDate"
+            />
+          )}
         </Grid>
         <Grid item xs>
           <GridItemTextField

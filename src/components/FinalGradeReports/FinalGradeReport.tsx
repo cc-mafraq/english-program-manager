@@ -270,7 +270,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
               {map(fgrGridRowData, (fgrData, i) => {
                 return fgrData.conditionToShow === undefined || fgrData.conditionToShow ? (
                   <FGRGridRow
-                    key={`fgr-row-${i}-${JSON.stringify(studentAcademicRecord)}`}
+                    key={`fgr-row-${i}-${student.epId}}-${studentAcademicRecord.academicRecordIndex}`}
                     scale={scale}
                     smallBorderSize={i === fgrGridRowData.length - 1 ? 0 : smallBorderSize}
                     {...fgrData}
