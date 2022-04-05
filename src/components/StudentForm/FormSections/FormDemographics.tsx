@@ -1,5 +1,6 @@
 import { Grid } from "@mui/material";
 import React from "react";
+import { useFormContext } from "react-hook-form";
 import {
   GridContainer,
   GridItemAutocomplete,
@@ -8,10 +9,13 @@ import {
   LabeledCheckbox,
   StudentFormLabel,
 } from "..";
-import { nationalities } from "../../../interfaces";
+import { nationalities, Student } from "../../../interfaces";
 import { SPACING } from "../../../services";
 
 export const FormDemographics: React.FC = () => {
+  const { watch } = useFormContext<Student>();
+  const teacherChecked = watch("work.isTeacher");
+
   return (
     <>
       <StudentFormLabel textProps={{ marginTop: SPACING }}>Demographics</StudentFormLabel>
@@ -24,15 +28,23 @@ export const FormDemographics: React.FC = () => {
       <GridContainer>
         <Grid item xs={2}>
           <LabeledCheckbox containerProps={{ marginTop: -1 }} label="Teacher" name="work.isTeacher" />
-          <LabeledCheckbox
-            containerProps={{ marginTop: -1 }}
-            label="English Teacher"
-            name="work.isEnglishTeacher"
-          />
+          {teacherChecked && (
+            <LabeledCheckbox
+              containerProps={{ marginTop: -1 }}
+              label="English Teacher"
+              name="work.isEnglishTeacher"
+            />
+          )}
         </Grid>
-        <GridItemTextField label="Teaching Subject(s)" name="work.teachingSubjectAreas" />
-        <GridItemTextField label="English Teacher Location" name="work.englishTeacherLocation" />
-        <GridItemTextField label="Looking for Job" name="work.lookingForJob" />
+        {teacherChecked && <GridItemTextField label="Teaching Subject(s)" name="work.teachingSubjectAreas" />}
+        {watch("work.isEnglishTeacher") && (
+          <GridItemTextField label="English Teacher Location" name="work.englishTeacherLocation" />
+        )}
+        <GridItemTextField
+          gridProps={{ xs: teacherChecked ? true : 6 }}
+          label="Looking for Job"
+          name="work.lookingForJob"
+        />
       </GridContainer>
     </>
   );
