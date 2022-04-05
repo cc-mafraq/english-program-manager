@@ -30,7 +30,7 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student, handleEditStu
       }}
     >
       <Box display="flex">
-        {dataVisibility.demographics.photo && (
+        {dataVisibility.studentImages.studentPhoto && (
           <Image
             folderName={studentImageFolder}
             imagePath="imageName"
