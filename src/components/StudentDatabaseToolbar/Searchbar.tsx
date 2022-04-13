@@ -76,9 +76,9 @@ export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange }
             width: "100%",
             [theme.breakpoints.up("sm")]: {
               "&:focus": {
-                width: "65ch",
+                width: "40vw",
               },
-              width: "50ch",
+              width: "35vw",
             },
           },
           color: "inherit",

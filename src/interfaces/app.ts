@@ -83,7 +83,6 @@ export interface DataVisibility {
     lookingForJob: boolean;
     nationality: boolean;
     occupation: boolean;
-    photo: boolean;
     teacher: boolean;
     teachingSubjectArea: boolean;
   };
@@ -125,6 +124,9 @@ export interface DataVisibility {
     repeatNumber: boolean;
     withdrawDate: boolean;
     withdrawReason: boolean;
+  };
+  studentImages: {
+    studentPhoto: boolean;
   };
   zoom: {
     tutorAndDetails: boolean;
@@ -168,7 +170,6 @@ export const initialAppState: AppState = {
       lookingForJob: true,
       nationality: true,
       occupation: true,
-      photo: true,
       teacher: true,
       teachingSubjectArea: true,
     },
@@ -211,6 +212,7 @@ export const initialAppState: AppState = {
       withdrawDate: true,
       withdrawReason: true,
     },
+    studentImages: { studentPhoto: true },
     zoom: {
       tutorAndDetails: true,
     },

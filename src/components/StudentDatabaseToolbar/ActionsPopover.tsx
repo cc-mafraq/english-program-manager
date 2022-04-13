@@ -9,7 +9,7 @@ import { useColors } from "../../hooks";
 interface ActionsPopoverProps {
   anchorEl: HTMLButtonElement | null;
   handleAddStudentClick: (e: React.MouseEvent<HTMLElement>) => void;
-  handleClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  handleClose: () => void;
   handleGenerateFGRClick: (e: React.MouseEvent<HTMLElement>) => void;
   handleImportClick: (e: ChangeEvent<HTMLInputElement>) => void;
 }
@@ -45,16 +45,37 @@ export const ActionsPopover: React.FC<ActionsPopoverProps> = ({
           maxWidth: "15vw",
         }}
       >
-        <LabeledIconButton label="ADD STUDENT" onClick={handleAddStudentClick}>
+        <LabeledIconButton
+          label="ADD STUDENT"
+          onClick={(e) => {
+            handleAddStudentClick(e);
+            handleClose();
+          }}
+        >
           <AddIcon color="primary" />
         </LabeledIconButton>
         <label htmlFor="importSpreadsheet">
-          <input accept=".txt" hidden id="importSpreadsheet" onChange={handleImportClick} type="file" />
+          <input
+            accept=".txt"
+            hidden
+            id="importSpreadsheet"
+            onChange={(e) => {
+              handleImportClick(e);
+              handleClose();
+            }}
+            type="file"
+          />
           <LabeledIconButton buttonProps={{ component: "span" }} label="IMPORT SPREADSHEET">
             <UploadIcon color="primary" />
           </LabeledIconButton>
         </label>
-        <LabeledIconButton label="GENERATE FGRs" onClick={handleGenerateFGRClick}>
+        <LabeledIconButton
+          label="GENERATE FGRs"
+          onClick={(e) => {
+            handleGenerateFGRClick(e);
+            handleClose();
+          }}
+        >
           <CachedIcon color="primary" />
         </LabeledIconButton>
       </Box>
