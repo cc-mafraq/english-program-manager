@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useFormContext } from "react-hook-form";
 import {
   FormDateItem,
@@ -10,11 +10,21 @@ import {
   StudentFormLabel,
 } from "..";
 import { useDateInitialState, useFormList } from "../../../hooks";
-import { Student, withdrawReasons } from "../../../interfaces";
+import { AppContext, Student, withdrawReasons } from "../../../interfaces";
 import { SPACING } from "../../../services";
+import { FormCheatingSessionItem } from "./ListItems";
 
 export const FormStatus: React.FC = () => {
+  const {
+    appState: { selectedStudent },
+  } = useContext(AppContext);
   const methods = useFormContext<Student>();
+
+  const [cheatingSessions, addCheatingSession, removeCheatingSession] = useFormList(
+    selectedStudent && selectedStudent.status.cheatingSessions ? selectedStudent.status.cheatingSessions : [],
+    "status.cheatingSessions",
+    methods,
+  );
 
   const [withdrawDate, addWithdrawDate, removeWithdrawDate] = useFormList(
     useDateInitialState("status.withdrawDate"),
@@ -58,12 +68,26 @@ export const FormStatus: React.FC = () => {
         </FormList>
       </GridContainer>
       <GridContainer marginBottom={0}>
-        <GridItemAutocomplete label="Withdraw Reason" name="status.droppedOutReason" options={withdrawReasons} />
-        <GridItemDatePicker label="Level Reeval Date" name="status.levelReevalDate" />
+        <GridItemAutocomplete
+          gridProps={{ xs: 6 }}
+          label="Withdraw Reason"
+          name="status.droppedOutReason"
+          options={withdrawReasons}
+        />
+        <FormList
+          addItem={addCheatingSession}
+          buttonLabel="Add Cheating Session"
+          list={cheatingSessions}
+          listName="status.cheatingSessions"
+          removeItem={removeCheatingSession}
+        >
+          <FormCheatingSessionItem />
+        </FormList>
       </GridContainer>
       <GridContainer>
         <GridItemDatePicker label="Final Grade Report Sent" name="status.finalGradeSentDate" />
         <GridItemTextField label="Audit" name="status.audit" />
+        <GridItemDatePicker label="Level Reeval Date" name="status.levelReevalDate" />
       </GridContainer>
     </>
   );

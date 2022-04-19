@@ -118,6 +118,7 @@ export interface DataVisibility {
   };
   status: {
     audit: boolean;
+    cheatingSessions: boolean;
     finalGrSent: boolean;
     levelReevalDate: boolean;
     reactivatedDate: boolean;
@@ -205,6 +206,7 @@ export const initialAppState: AppState = {
     },
     status: {
       audit: true,
+      cheatingSessions: true,
       finalGrSent: true,
       levelReevalDate: true,
       reactivatedDate: true,

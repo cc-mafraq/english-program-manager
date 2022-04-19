@@ -95,6 +95,7 @@ export interface WhatsappInfo {
 
 export interface StudentStatus {
   audit?: string;
+  cheatingSessions?: string[];
   currentStatus: Status;
   droppedOutReason?: DroppedOutReason;
   finalGradeSentDate?: string;

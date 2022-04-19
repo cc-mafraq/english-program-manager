@@ -499,3 +499,8 @@ export const parseCovidReason = parseOptionalString("covidVaccine.reason");
 export const parseCovidSuspectedFraud = parseOptionalBoolean("covidVaccine.suspectedFraud");
 export const parseCovidSuspectedFraudReason = parseOptionalString("covidVaccine.suspectedFraudReason");
 export const parseFamilyCoordinator = parseOptionalString("familyCoordinatorEntry");
+
+export const parseCheatingSessions = (key: string, value: string, student: Student) => {
+  if (!value) return;
+  student.status.cheatingSessions = splitAndTrim(value);
+};
