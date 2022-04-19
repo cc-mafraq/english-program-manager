@@ -16,6 +16,7 @@ const studentFieldsUnexpanded: ValidFields = {
   ADJ: ps.parseOrigPlacementAdjustment,
   AGEATPROGENTRY: ps.parseAge,
   CERTREQUESTSDATE: ps.parseCertRequests,
+  CHEATEDONASSM3xout: ps.parseCheatingSessions,
   CURRENTLEVEL: ps.parseCurrentLevel,
   CURRENTSTATUS: ps.parseCurrentStatus,
   EnglishTeacher: ps.parseEnglishTeacher,

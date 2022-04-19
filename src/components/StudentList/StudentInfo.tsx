@@ -138,6 +138,17 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         <LabeledText condition={dataVisibility.status.audit} label="Audit">
           {student.status.audit}
         </LabeledText>
+        <LabeledText
+          condition={dataVisibility.status.cheatingSessions}
+          containerProps={{
+            sx: {
+              backgroundColor: student.status.cheatingSessions?.length ? red : defaultBackgroundColor,
+            },
+          }}
+          label="Cheating Sessions"
+        >
+          {join(student.status.cheatingSessions, JOIN_STR)}
+        </LabeledText>
         <LabeledText condition={dataVisibility.status.finalGrSent} label="Final GR Sent">
           {student.status.finalGradeSentDate}
         </LabeledText>

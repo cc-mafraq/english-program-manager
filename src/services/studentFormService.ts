@@ -41,8 +41,8 @@ import {
 } from "../interfaces";
 
 export const SPACING = 2;
-
 export const MOMENT_FORMAT = "l";
+const sessionRegex = /(Fa|Sp) (I|II) \d{2}/;
 
 export interface FormItem {
   index?: number;
@@ -250,6 +250,15 @@ const placementSchema = object().shape({
 
 const statusSchema = object().shape({
   audit: string().transform(emptyToNull).nullable().optional(),
+  cheatingSessions: array()
+    .of(
+      string()
+        .matches(sessionRegex, "must be Fa/Sp I/II year (e.g. Sp I 22)")
+        .transform(emptyToNull)
+        .nullable()
+        .optional(),
+    )
+    .optional(),
   currentStatus: mixed<Status>()
     .oneOf(Object.values(Status) as Status[])
     .transform(stringToStatus)
@@ -300,7 +309,7 @@ export const studentFormSchema = object().shape({
   familyCoordinatorEntry: string().transform(emptyToNull).nullable().optional(),
   gender: mixed<"M" | "F">().oneOf(["M", "F"]).required("Gender is required"),
   initialSession: string()
-    .matches(/(Fa|Sp) (I|II) \d{2}/, "Initial session must be Fa/Sp I/II year (e.g. Sp I 22)")
+    .matches(sessionRegex, "Initial session must be Fa/Sp I/II year (e.g. Sp I 22)")
     .typeError("Initial session is required")
     .required("Initial session is required"),
   literacy: literacySchema,
