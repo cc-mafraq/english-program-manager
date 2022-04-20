@@ -21,7 +21,6 @@ const handlePopoverClose = (setFn: React.Dispatch<React.SetStateAction<HTMLButto
 };
 
 interface StudentDatabaseToolbarProps {
-  handleAddStudentClick: (e: React.MouseEvent<HTMLElement>) => void;
   handleChangePage: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
   handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   handleGenerateFGRClick: (e: React.MouseEvent<HTMLElement>) => void;
@@ -36,7 +35,6 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
   students,
   page,
   rowsPerPage,
-  handleAddStudentClick,
   handleChangePage,
   handleChangeRowsPerPage,
   handleImportClick,
@@ -60,7 +58,6 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
         </IconButton>
         <ActionsPopover
           anchorEl={actionsAnchorEl}
-          handleAddStudentClick={handleAddStudentClick}
           handleClose={handlePopoverClose(setActionsAnchorEl)}
           handleGenerateFGRClick={handleGenerateFGRClick}
           handleImportClick={handleImportClick}

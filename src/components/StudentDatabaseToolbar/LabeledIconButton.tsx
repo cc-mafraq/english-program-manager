@@ -1,14 +1,15 @@
-import { IconButton, IconButtonProps, Typography } from "@mui/material";
+import { IconButton, IconButtonProps, SxProps, Typography } from "@mui/material";
 import React from "react";
 
 interface LabeledIconButtonProps {
   buttonProps?: IconButtonProps & { component?: string };
+  buttonStyle?: SxProps;
   color?: string;
   label: string;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
-const buttonStyle = {
+const defaultButtonStyle = {
   alignItems: "center",
   display: "flex",
   flexDirection: "column",
@@ -20,13 +21,19 @@ const buttonStyle = {
 
 export const LabeledIconButton: React.FC<LabeledIconButtonProps> = ({
   buttonProps,
+  buttonStyle,
   children,
   color,
   label,
   onClick,
 }) => {
   return (
-    <IconButton color="secondary" onClick={onClick} sx={buttonStyle} {...buttonProps}>
+    <IconButton
+      color="secondary"
+      onClick={onClick}
+      sx={{ ...defaultButtonStyle, ...buttonStyle } as SxProps}
+      {...buttonProps}
+    >
       {children}
       <Typography color={color} display="block" fontSize="6pt" fontWeight="bold">
         {label}
@@ -37,6 +44,7 @@ export const LabeledIconButton: React.FC<LabeledIconButtonProps> = ({
 
 LabeledIconButton.defaultProps = {
   buttonProps: undefined,
+  buttonStyle: undefined,
   color: "primary",
   onClick: undefined,
 };

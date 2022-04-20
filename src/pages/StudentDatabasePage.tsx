@@ -1,3 +1,5 @@
+import { Add } from "@mui/icons-material";
+import { Box, Fab } from "@mui/material";
 import { getAuth } from "firebase/auth";
 import { collection } from "firebase/firestore";
 import { forEach, isUndefined } from "lodash";
@@ -162,17 +164,26 @@ export const StudentDatabasePage = () => {
 
   return (
     <>
-      <StudentDatabaseToolbar
-        handleAddStudentClick={handleStudentDialogOpen}
-        handleChangePage={handleChangePage}
-        handleChangeRowsPerPage={handleChangeRowsPerPage}
-        handleGenerateFGRClick={handleGenerateFGRClick}
-        handleImportClick={onInputChange}
-        handleSearchStringChange={handleSearchStringChange}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        students={searchString ? filteredStudents : students}
-      />
+      <Box position="sticky" top={0} zIndex={5}>
+        <StudentDatabaseToolbar
+          handleChangePage={handleChangePage}
+          handleChangeRowsPerPage={handleChangeRowsPerPage}
+          handleGenerateFGRClick={handleGenerateFGRClick}
+          handleImportClick={onInputChange}
+          handleSearchStringChange={handleSearchStringChange}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          students={searchString ? filteredStudents : students}
+        />
+        <Fab
+          color="primary"
+          onClick={handleStudentDialogOpen}
+          size="medium"
+          sx={{ marginLeft: 1, marginTop: 1, position: "absolute" }}
+        >
+          <Add />
+        </Fab>
+      </Box>
       {students.length > 0 ? (
         <FinalGradeReportDialog handleDialogClose={handleFGRDialogClose} open={openFGRDialog} />
       ) : (

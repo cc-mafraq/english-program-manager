@@ -1,4 +1,3 @@
-import AddIcon from "@mui/icons-material/Add";
 import CachedIcon from "@mui/icons-material/Cached";
 import UploadIcon from "@mui/icons-material/Upload";
 import { Box, Popover, useTheme } from "@mui/material";
@@ -8,7 +7,6 @@ import { useColors } from "../../hooks";
 
 interface ActionsPopoverProps {
   anchorEl: HTMLButtonElement | null;
-  handleAddStudentClick: (e: React.MouseEvent<HTMLElement>) => void;
   handleClose: () => void;
   handleGenerateFGRClick: (e: React.MouseEvent<HTMLElement>) => void;
   handleImportClick: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -16,7 +14,6 @@ interface ActionsPopoverProps {
 
 export const ActionsPopover: React.FC<ActionsPopoverProps> = ({
   anchorEl,
-  handleAddStudentClick,
   handleClose,
   handleGenerateFGRClick,
   handleImportClick,
@@ -45,15 +42,6 @@ export const ActionsPopover: React.FC<ActionsPopoverProps> = ({
           maxWidth: "15vw",
         }}
       >
-        <LabeledIconButton
-          label="ADD STUDENT"
-          onClick={(e) => {
-            handleAddStudentClick(e);
-            handleClose();
-          }}
-        >
-          <AddIcon color="primary" />
-        </LabeledIconButton>
         <label htmlFor="importSpreadsheet">
           <input
             accept=".txt"
