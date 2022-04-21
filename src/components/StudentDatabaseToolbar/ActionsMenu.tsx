@@ -1,7 +1,8 @@
 import { Add, Cached, Edit, Upload } from "@mui/icons-material";
 import { Box, Grow, Input, InputLabel } from "@mui/material";
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { ActionFAB } from "./ActionFAB";
+import { SelectStudentDialog } from "./SelectStudentDialog";
 
 interface ActionsMenuProps {
   handleGenerateFGRClick: () => void;
@@ -16,13 +17,23 @@ export const ActionsMenu: React.FC<ActionsMenuProps> = ({
   onInputChange,
   showActions,
 }) => {
+  const [openSelectStudentDialog, setOpenSelectStudentDialog] = useState(false);
+
+  const handleSelectStudentDialogOpen = () => {
+    setOpenSelectStudentDialog(true);
+  };
+
+  const handleSelectStudentDialogClose = () => {
+    setOpenSelectStudentDialog(false);
+  };
+
   return (
     <Grow in={showActions} style={{ transformOrigin: "0 0 0" }}>
       <Box display="flex" flexDirection="column" position="absolute">
         <ActionFAB fabStyle={{ marginTop: 0.5 }} onClick={handleStudentDialogOpen} tooltipTitle="Add Student">
           <Add />
         </ActionFAB>
-        <ActionFAB onClick={handleStudentDialogOpen} tooltipTitle="Edit Student">
+        <ActionFAB onClick={handleSelectStudentDialogOpen} tooltipTitle="Edit Student">
           <Edit />
         </ActionFAB>
         <InputLabel htmlFor="import-spreadsheet">
@@ -33,13 +44,18 @@ export const ActionsMenu: React.FC<ActionsMenuProps> = ({
             sx={{ display: "none" }}
             type="file"
           />
-          <ActionFAB tooltipTitle="Import Spreadsheet">
+          <ActionFAB fabProps={{ component: "span" }} tooltipTitle="Import Spreadsheet">
             <Upload />
           </ActionFAB>
         </InputLabel>
         <ActionFAB onClick={handleGenerateFGRClick} tooltipTitle="Generate Final Grade Reports">
           <Cached />
         </ActionFAB>
+        <SelectStudentDialog
+          handleDialogClose={handleSelectStudentDialogClose}
+          handleStudentDialogOpen={handleStudentDialogOpen}
+          open={openSelectStudentDialog}
+        />
       </Box>
     </Grow>
   );

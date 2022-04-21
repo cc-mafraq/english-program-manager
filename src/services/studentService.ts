@@ -1,6 +1,7 @@
 import {
   countBy,
   filter,
+  find,
   first,
   forEach,
   includes,
@@ -142,4 +143,14 @@ export const sortStudents = (students: Student[]) => {
   return sortBy(students, (student) => {
     return student.name.english;
   });
+};
+
+export const getStudentOptions = (students: Student[]): string[] => {
+  return map(students, (student) => {
+    return `${student.epId} - ${student.name.english}`;
+  });
+};
+
+export const getStudentById = (id: Student["epId"], students: Student[]): Student | undefined => {
+  return find(students, { epId: id });
 };
