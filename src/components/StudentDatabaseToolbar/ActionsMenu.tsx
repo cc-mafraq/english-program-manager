@@ -18,12 +18,14 @@ export const ActionsMenu: React.FC<ActionsMenuProps> = ({
   showActions,
 }) => {
   const [openSelectStudentDialog, setOpenSelectStudentDialog] = useState(false);
+  const [selectStudentValue, setSelectStudentValue] = useState<string | null>(null);
 
   const handleSelectStudentDialogOpen = () => {
     setOpenSelectStudentDialog(true);
   };
 
   const handleSelectStudentDialogClose = () => {
+    setSelectStudentValue(null);
     setOpenSelectStudentDialog(false);
   };
 
@@ -55,6 +57,8 @@ export const ActionsMenu: React.FC<ActionsMenuProps> = ({
           handleDialogClose={handleSelectStudentDialogClose}
           handleStudentDialogOpen={handleStudentDialogOpen}
           open={openSelectStudentDialog}
+          setValue={setSelectStudentValue}
+          value={selectStudentValue}
         />
       </Box>
     </Grow>

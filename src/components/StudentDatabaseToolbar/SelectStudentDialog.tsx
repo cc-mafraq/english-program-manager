@@ -1,6 +1,6 @@
 import { Autocomplete, Button, Dialog, Paper, TextField, Typography, useTheme } from "@mui/material";
 import { green, grey } from "@mui/material/colors";
-import React, { useContext, useState } from "react";
+import React, { Dispatch, SetStateAction, useContext } from "react";
 import { useColors } from "../../hooks";
 import { AppContext } from "../../interfaces";
 import { getStudentById, getStudentOptions } from "../../services";
@@ -9,12 +9,16 @@ interface SelectStudentDialogProps {
   handleDialogClose: () => void;
   handleStudentDialogOpen: () => void;
   open: boolean;
+  setValue: Dispatch<SetStateAction<string | null>>;
+  value: string | null;
 }
 
 export const SelectStudentDialog: React.FC<SelectStudentDialogProps> = ({
   handleDialogClose,
   handleStudentDialogOpen,
   open,
+  value,
+  setValue,
 }) => {
   const { popoverColor } = useColors();
   const theme = useTheme();
@@ -22,7 +26,6 @@ export const SelectStudentDialog: React.FC<SelectStudentDialogProps> = ({
     appState: { students },
     appDispatch,
   } = useContext(AppContext);
-  const [value, setValue] = useState<string | null>(null);
 
   const onSubmit = () => {
     if (!value) return;
@@ -43,7 +46,6 @@ export const SelectStudentDialog: React.FC<SelectStudentDialogProps> = ({
       <Paper sx={{ padding: 3 }}>
         <Typography variant="h6">Select a Student to Edit</Typography>
         <Autocomplete
-          autoSelect
           onChange={(event, newValue: string | null) => {
             setValue(newValue);
           }}
@@ -66,7 +68,7 @@ export const SelectStudentDialog: React.FC<SelectStudentDialogProps> = ({
           }}
           variant="contained"
         >
-          Open Student
+          Open
         </Button>
       </Paper>
     </Dialog>
