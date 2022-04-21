@@ -1,4 +1,4 @@
-import CloseIcon from "@mui/icons-material/Close";
+import { Close } from "@mui/icons-material";
 import { Grid, IconButton } from "@mui/material";
 import React from "react";
 import { GridContainer, GridItemTextField, LabeledCheckbox } from "../..";
@@ -12,7 +12,7 @@ export const FormPlacementItem: React.FC<FormItem> = ({ index, removeItem, name 
     <GridContainer marginBottom={0}>
       <Grid item marginLeft={SPACING}>
         <IconButton onClick={removeItem && removeItem(index)} sx={{ color: iconColor }}>
-          <CloseIcon />
+          <Close />
         </IconButton>
       </Grid>
       <GridItemTextField

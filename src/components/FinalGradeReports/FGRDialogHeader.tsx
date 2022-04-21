@@ -1,5 +1,4 @@
-import CloseIcon from "@mui/icons-material/Close";
-import DownloadIcon from "@mui/icons-material/Download";
+import { Close, Download } from "@mui/icons-material";
 import {
   Box,
   Card,
@@ -72,10 +71,10 @@ export const FGRDialogHeader: React.FC<FGRDialogHeaderProps> = ({
             label="DOWNLOAD ALL"
             onClick={handleDownloadAllClick}
           >
-            <DownloadIcon />
+            <Download />
           </LabeledIconButton>
           <LabeledIconButton color="red" label="CLOSE WINDOW" onClick={handleDialogClose}>
-            <CloseIcon color="error" />
+            <Close color="error" />
           </LabeledIconButton>
         </Box>
       </Card>

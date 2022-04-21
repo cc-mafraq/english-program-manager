@@ -1,4 +1,4 @@
-import HideImageIcon from "@mui/icons-material/HideImage";
+import { HideImage } from "@mui/icons-material";
 import { Box, IconButton } from "@mui/material";
 import { get } from "lodash";
 import React, { useContext } from "react";
@@ -33,7 +33,7 @@ export const FormImageActions: React.FC<FormImageActionsProps> = ({ folderName, 
           appDispatch({ payload: { selectedStudent }, type: "set" });
         }}
       >
-        <HideImageIcon />
+        <HideImage />
       </IconButton>
     </Box>
   ) : (

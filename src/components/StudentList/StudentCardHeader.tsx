@@ -1,5 +1,4 @@
-import EditIcon from "@mui/icons-material/Edit";
-import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import { Edit, WhatsApp } from "@mui/icons-material";
 import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
 import React, { useContext } from "react";
 import { useColors } from "../../hooks";
@@ -28,7 +27,7 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ student, h
               {student.phone.primaryPhone}
             </Typography>
             <IconButton href={`https://wa.me/962${student.phone.primaryPhone}`} target="_blank">
-              <WhatsAppIcon sx={{ color: iconColor }} />
+              <WhatsApp sx={{ color: iconColor }} />
             </IconButton>
           </>
         ) : (
@@ -42,7 +41,7 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ student, h
             handleEditStudentClick();
           }}
         >
-          <EditIcon sx={{ color: iconColor }} />
+          <Edit sx={{ color: iconColor }} />
         </IconButton>
       </Box>
       <Box paddingBottom={1}>

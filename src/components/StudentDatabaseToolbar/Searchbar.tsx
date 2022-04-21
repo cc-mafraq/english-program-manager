@@ -1,5 +1,4 @@
-import CloseIcon from "@mui/icons-material/Close";
-import SearchIcon from "@mui/icons-material/Search";
+import { Close, Search } from "@mui/icons-material";
 import { alpha, Box, IconButton, InputBase, useTheme } from "@mui/material";
 import { isEmpty } from "lodash";
 import React, { useState } from "react";
@@ -35,13 +34,19 @@ export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange }
     <Box
       sx={{
         "&:hover": {
-          backgroundColor: alpha(theme.palette.common.black, 0.1),
+          backgroundColor:
+            theme.palette.mode === "light"
+              ? alpha(theme.palette.common.black, 0.1)
+              : alpha(theme.palette.common.white, 0.01),
         },
-        backgroundColor: alpha(theme.palette.common.black, 0.05),
+        backgroundColor:
+          theme.palette.mode === "light"
+            ? alpha(theme.palette.common.black, 0.05)
+            : alpha(theme.palette.common.black, 0.1),
         borderRadius: theme.shape.borderRadius,
         display: "inline",
         marginLeft: 0,
-        padding: theme.spacing(1, 0),
+        padding: theme.spacing(1.5, 0, 1.5, 0),
         position: "relative",
         width: "100%",
         [theme.breakpoints.up("sm")]: {
@@ -54,14 +59,15 @@ export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange }
         sx={{
           alignItems: "center",
           display: "flex",
-          height: "100%",
           justifyContent: "center",
-          padding: theme.spacing(0, 2),
+          padding: theme.spacing(0, 3),
           pointerEvents: "none",
           position: "absolute",
+          top: "50%",
+          transform: "translateY(-50%) scale(1.25) ",
         }}
       >
-        <SearchIcon color="primary" />
+        <Search color="primary" />
       </Box>
       <InputBase
         inputProps={{ "aria-label": "search" }}
@@ -69,11 +75,11 @@ export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange }
         placeholder="Search students"
         sx={{
           "& .MuiInputBase-input": {
+            fontSize: "14pt",
             padding: theme.spacing(1, 1, 1, 0),
             // vertical padding + font size from searchIcon
-            paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+            paddingLeft: `calc(1em + ${theme.spacing(5)})`,
             transition: theme.transitions.create("width"),
-            width: "100%",
             [theme.breakpoints.up("sm")]: {
               "&:focus": {
                 width: "40vw",
@@ -97,7 +103,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange }
           width: "8%",
         }}
       >
-        <CloseIcon sx={{ color: iconColor }} />
+        <Close sx={{ color: iconColor }} />
       </IconButton>
     </Box>
   );

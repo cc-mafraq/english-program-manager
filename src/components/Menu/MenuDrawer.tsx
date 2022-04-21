@@ -1,13 +1,15 @@
-import AttachFileIcon from "@mui/icons-material/AttachFile";
-import AutoGraphIcon from "@mui/icons-material/AutoGraph";
-import CreateIcon from "@mui/icons-material/Create";
-import EqualizerIcon from "@mui/icons-material/Equalizer";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import HomeIcon from "@mui/icons-material/Home";
-import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
-import MenuIcon from "@mui/icons-material/Menu";
-import PersonIcon from "@mui/icons-material/Person";
-import ScheduleIcon from "@mui/icons-material/Schedule";
+import {
+  AttachFile,
+  AutoGraph,
+  Create,
+  Equalizer,
+  FormatListBulleted,
+  Home,
+  LibraryBooks,
+  Menu,
+  Person,
+  Schedule,
+} from "@mui/icons-material";
 import {
   Box,
   Divider,
@@ -39,41 +41,41 @@ interface DrawerListItem {
 const iconProps = { style: { color: "white" } };
 const drawerList: DrawerListItem[] = [
   {
-    component: HomeIcon,
+    component: Home,
     name: "Home",
     route: "/epd",
   },
   {
-    component: LibraryBooksIcon,
+    component: LibraryBooks,
     name: "Virtual Library",
   },
   {
-    component: PersonIcon,
+    component: Person,
     name: "Student Database",
     route: "/epd",
   },
   {
-    component: FormatListBulletedIcon,
+    component: FormatListBulleted,
     name: "Class Lists",
   },
   {
-    component: CreateIcon,
+    component: Create,
     name: "Attendance",
   },
   {
-    component: EqualizerIcon,
+    component: Equalizer,
     name: "Gradebook",
   },
   {
-    component: ScheduleIcon,
+    component: Schedule,
     name: "Schedules",
   },
   {
-    component: AttachFileIcon,
+    component: AttachFile,
     name: "Admin Documents",
   },
   {
-    component: AutoGraphIcon,
+    component: AutoGraph,
     name: "Statistics",
     route: "/stats",
   },
@@ -142,7 +144,7 @@ export const MenuDrawer = () => {
   return (
     <Box>
       <IconButton color="inherit" edge="start" onClick={toggleDrawer} size="large">
-        <MenuIcon />
+        <Menu />
       </IconButton>
       <Drawer anchor="left" onClose={toggleDrawer} open={isOpen}>
         {drawerItemList()}

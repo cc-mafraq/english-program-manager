@@ -1,4 +1,4 @@
-import CloseIcon from "@mui/icons-material/Close";
+import { Close } from "@mui/icons-material";
 import { Grid, IconButton } from "@mui/material";
 import React, { useContext } from "react";
 import { FormGrade, GridContainer, GridItemAutocomplete, GridItemTextField, StudentFormLabel } from "../../..";
@@ -21,7 +21,7 @@ export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem,
           onClick={removeItem && removeItem(index)}
           sx={{ color: iconColor, marginLeft: SPACING / 2, top: "15%" }}
         >
-          <CloseIcon />
+          <Close />
         </IconButton>
       </Grid>
       <GridContainer marginBottom={SPACING / 2} marginLeft={0}>

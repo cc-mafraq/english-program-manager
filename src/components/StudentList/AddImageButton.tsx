@@ -1,5 +1,5 @@
-import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import { IconButton, useTheme } from "@mui/material";
+import { AddPhotoAlternate } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
 import React, { ChangeEvent, useContext } from "react";
 import { AppContext, Student } from "../../interfaces";
 import { setImage } from "../../services";
@@ -20,7 +20,6 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({
   lightColor,
 }) => {
   const { appDispatch } = useContext(AppContext);
-  const theme = useTheme();
 
   const inputId = `importImage-${imagePath}-${student?.epId}`;
 
@@ -37,12 +36,8 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({
         }}
         type="file"
       />
-      <IconButton
-        color={theme.palette.mode === "dark" ? "primary" : lightColor || "default"}
-        component="span"
-        sx={{ transform: `scale(${scale})` }}
-      >
-        <AddPhotoAlternateIcon />
+      <IconButton color={lightColor || "default"} component="span" sx={{ transform: `scale(${scale})` }}>
+        <AddPhotoAlternate />
       </IconButton>
     </label>
   );

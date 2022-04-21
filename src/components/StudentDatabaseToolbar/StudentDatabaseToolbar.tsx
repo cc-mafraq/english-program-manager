@@ -1,9 +1,7 @@
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { FilterAlt, MoreHoriz, VisibilityOff } from "@mui/icons-material";
 import { AppBar, Box, Divider, IconButton, TablePagination, Toolbar } from "@mui/material";
-import React, { ChangeEvent } from "react";
-import { ActionsPopover, Searchbar } from ".";
+import React from "react";
+import { Searchbar } from ".";
 import { DataVisibilityPopover } from "..";
 import { useColors } from "../../hooks";
 import { Student } from "../../interfaces";
@@ -23,8 +21,6 @@ const handlePopoverClose = (setFn: React.Dispatch<React.SetStateAction<HTMLButto
 interface StudentDatabaseToolbarProps {
   handleChangePage: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
   handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  handleGenerateFGRClick: (e: React.MouseEvent<HTMLElement>) => void;
-  handleImportClick: (e: ChangeEvent<HTMLInputElement>) => void;
   handleSearchStringChange: (value: string) => void;
   page: number;
   rowsPerPage: number;
@@ -37,11 +33,8 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
   rowsPerPage,
   handleChangePage,
   handleChangeRowsPerPage,
-  handleImportClick,
-  handleGenerateFGRClick,
   handleSearchStringChange,
 }) => {
-  const [actionsAnchorEl, setActionsAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const [dataFilterAnchorEl, setDataFilterAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const { iconColor } = useColors();
 
@@ -53,22 +46,16 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
           paddingTop: "1vh",
         }}
       >
-        <IconButton onClick={handlePopoverClick(setActionsAnchorEl)}>
-          <MoreHorizIcon color="primary" />
+        <IconButton>
+          <MoreHoriz color="primary" />
         </IconButton>
-        <ActionsPopover
-          anchorEl={actionsAnchorEl}
-          handleClose={handlePopoverClose(setActionsAnchorEl)}
-          handleGenerateFGRClick={handleGenerateFGRClick}
-          handleImportClick={handleImportClick}
-        />
         <Box>
           <Searchbar handleSearchStringChange={handleSearchStringChange} />
           <IconButton>
-            <FilterAltIcon sx={{ color: iconColor }} />
+            <FilterAlt sx={{ color: iconColor }} />
           </IconButton>
           <IconButton onClick={handlePopoverClick(setDataFilterAnchorEl)}>
-            <VisibilityOffIcon sx={{ color: iconColor }} />
+            <VisibilityOff sx={{ color: iconColor }} />
           </IconButton>
           <DataVisibilityPopover
             anchorEl={dataFilterAnchorEl}
