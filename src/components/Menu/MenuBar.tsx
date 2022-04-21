@@ -1,5 +1,5 @@
 import { Brightness4, Brightness7, Logout } from "@mui/icons-material";
-import { AppBar, Box, IconButton, Toolbar, Typography, useTheme } from "@mui/material";
+import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography, useTheme } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { MenuDrawer } from "..";
@@ -45,12 +45,16 @@ export const MenuBar: React.FC<MenuBarProps> = ({ pageName }) => {
         </Typography>
         <Box>
           {/* https://mui.com/customization/dark-mode/ */}
-          <IconButton color="inherit" onClick={colorMode.toggleColorMode} sx={{ marginRight: 3 }}>
-            {theme.palette.mode === "dark" ? <Brightness7 /> : <Brightness4 />}
-          </IconButton>
-          <IconButton onClick={handleLogout}>
-            <Logout sx={{ color: iconColor || "white" }} />
-          </IconButton>
+          <Tooltip arrow title="Change Theme">
+            <IconButton color="inherit" onClick={colorMode.toggleColorMode} sx={{ marginRight: 3 }}>
+              {theme.palette.mode === "dark" ? <Brightness7 /> : <Brightness4 />}
+            </IconButton>
+          </Tooltip>
+          <Tooltip arrow title="Logout">
+            <IconButton onClick={handleLogout}>
+              <Logout sx={{ color: iconColor || "white" }} />
+            </IconButton>
+          </Tooltip>
         </Box>
       </Toolbar>
     </AppBar>

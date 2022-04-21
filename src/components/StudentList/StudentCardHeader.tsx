@@ -1,5 +1,5 @@
 import { Edit, WhatsApp } from "@mui/icons-material";
-import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, Divider, IconButton, Tooltip, Typography, useTheme } from "@mui/material";
 import React, { useContext } from "react";
 import { useColors } from "../../hooks";
 import { AppContext, Student } from "../../interfaces";
@@ -26,23 +26,27 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ student, h
             <Typography display="inline" marginRight="5px" variant="h5">
               {student.phone.primaryPhone}
             </Typography>
-            <IconButton href={`https://wa.me/962${student.phone.primaryPhone}`} target="_blank">
-              <WhatsApp sx={{ color: iconColor }} />
-            </IconButton>
+            <Tooltip arrow title="Contact on WhatsApp">
+              <IconButton href={`https://wa.me/962${student.phone.primaryPhone}`} target="_blank">
+                <WhatsApp sx={{ color: iconColor }} />
+              </IconButton>
+            </Tooltip>
           </>
         ) : (
           <Typography display="inline" marginRight="5px" variant="h5">
             WA Number Invalid
           </Typography>
         )}
-        <IconButton
-          onClick={() => {
-            appDispatch({ payload: { selectedStudent: student }, type: "set" });
-            handleEditStudentClick();
-          }}
-        >
-          <Edit sx={{ color: iconColor }} />
-        </IconButton>
+        <Tooltip arrow title="Edit Student">
+          <IconButton
+            onClick={() => {
+              appDispatch({ payload: { selectedStudent: student }, type: "set" });
+              handleEditStudentClick();
+            }}
+          >
+            <Edit sx={{ color: iconColor }} />
+          </IconButton>
+        </Tooltip>
       </Box>
       <Box paddingBottom={1}>
         <Typography

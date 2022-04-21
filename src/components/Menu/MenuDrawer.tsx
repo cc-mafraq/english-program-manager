@@ -20,6 +20,7 @@ import {
   ListItemIcon,
   ListItemText,
   SvgIconTypeMap,
+  Tooltip,
   useTheme,
 } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
@@ -143,9 +144,11 @@ export const MenuDrawer = () => {
 
   return (
     <Box>
-      <IconButton color="inherit" edge="start" onClick={toggleDrawer} size="large">
-        <Menu />
-      </IconButton>
+      <Tooltip arrow title="Menu">
+        <IconButton color="inherit" edge="start" onClick={toggleDrawer} size="large">
+          <Menu />
+        </IconButton>
+      </Tooltip>
       <Drawer anchor="left" onClose={toggleDrawer} open={isOpen}>
         {drawerItemList()}
       </Drawer>

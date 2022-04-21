@@ -1,5 +1,5 @@
 import { Close, Search } from "@mui/icons-material";
-import { alpha, Box, IconButton, InputBase, useTheme } from "@mui/material";
+import { alpha, Box, IconButton, InputBase, Tooltip, useTheme } from "@mui/material";
 import { isEmpty } from "lodash";
 import React, { useState } from "react";
 import { useColors } from "../../hooks";
@@ -91,20 +91,22 @@ export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange }
         }}
         value={value}
       />
-      <IconButton
-        onClick={handleClearSearch}
-        sx={{
-          display: "flex",
-          height: "100%",
-          padding: theme.spacing(0, 2),
-          position: "absolute",
-          right: 0,
-          top: 0,
-          width: "8%",
-        }}
-      >
-        <Close sx={{ color: iconColor }} />
-      </IconButton>
+      <Tooltip arrow title="Clear Search">
+        <IconButton
+          onClick={handleClearSearch}
+          sx={{
+            display: "flex",
+            height: "100%",
+            padding: theme.spacing(0, 2),
+            position: "absolute",
+            right: 0,
+            top: 0,
+            width: "8%",
+          }}
+        >
+          <Close sx={{ color: iconColor }} />
+        </IconButton>
+      </Tooltip>
     </Box>
   );
 };

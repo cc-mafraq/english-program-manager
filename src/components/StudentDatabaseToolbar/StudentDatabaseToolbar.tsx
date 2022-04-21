@@ -61,12 +61,16 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
         </Tooltip>
         <Box>
           <Searchbar handleSearchStringChange={handleSearchStringChange} />
-          <IconButton>
-            <FilterAlt sx={{ color: iconColor }} />
-          </IconButton>
-          <IconButton onClick={handlePopoverClick(setDataFilterAnchorEl)}>
-            <VisibilityOff sx={{ color: iconColor }} />
-          </IconButton>
+          <Tooltip arrow title="Filter Students">
+            <IconButton>
+              <FilterAlt sx={{ color: iconColor }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip arrow title="Hide Student Data">
+            <IconButton onClick={handlePopoverClick(setDataFilterAnchorEl)}>
+              <VisibilityOff sx={{ color: iconColor }} />
+            </IconButton>
+          </Tooltip>
           <DataVisibilityPopover
             anchorEl={dataFilterAnchorEl}
             handleClose={handlePopoverClose(setDataFilterAnchorEl)}
