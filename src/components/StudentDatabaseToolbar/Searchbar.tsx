@@ -75,7 +75,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange }
         placeholder="Search students"
         sx={{
           "& .MuiInputBase-input": {
-            fontSize: "14pt",
+            fontSize: "13pt",
             padding: theme.spacing(1, 1, 1, 0),
             // vertical padding + font size from searchIcon
             paddingLeft: `calc(1em + ${theme.spacing(5)})`,
