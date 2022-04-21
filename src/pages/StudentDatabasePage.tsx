@@ -1,5 +1,5 @@
 import { Add, Cached, Edit, Upload } from "@mui/icons-material";
-import { Box, Fab, Input, InputLabel, Tooltip } from "@mui/material";
+import { Box, Fab, Grow, Input, InputLabel, Tooltip } from "@mui/material";
 import { getAuth } from "firebase/auth";
 import { collection } from "firebase/firestore";
 import { forEach, isUndefined } from "lodash";
@@ -40,6 +40,7 @@ export const StudentDatabasePage = () => {
   const [openStudentDialog, setOpenStudentDialog] = useState(false);
   const [searchString, setSearchString, searchStringRef] = useState<string>("");
   const [spreadsheetIsLoading, setSpreadsheetIsLoading] = useState(false);
+  const [showActions, setShowActions] = useState(true);
   const navigate = useNavigate();
   const auth = getAuth(app);
   const [user, authLoading] = useAuthState(auth);
@@ -171,54 +172,58 @@ export const StudentDatabasePage = () => {
           handleSearchStringChange={handleSearchStringChange}
           page={page}
           rowsPerPage={rowsPerPage}
+          setShowActions={setShowActions}
+          showActions={showActions}
           students={searchString ? filteredStudents : students}
         />
-        <Box display="flex" flexDirection="column" position="absolute">
-          <Tooltip arrow placement="right" title="Add Student">
-            <Fab
-              color="primary"
-              onClick={handleStudentDialogOpen}
-              size="medium"
-              sx={{ marginLeft: 2, marginTop: 1 }}
-            >
-              <Add />
-            </Fab>
-          </Tooltip>
-          <Tooltip arrow placement="right" title="Edit Student">
-            <Fab
-              color="primary"
-              onClick={handleStudentDialogOpen}
-              size="medium"
-              sx={{ marginLeft: 2, marginTop: 1.5 }}
-            >
-              <Edit />
-            </Fab>
-          </Tooltip>
-          <InputLabel htmlFor="import-spreadsheet">
-            <Input
-              id="import-spreadsheet"
-              inputProps={{ accept: ".txt" }}
-              onChange={onInputChange}
-              sx={{ display: "none" }}
-              type="file"
-            />
-            <Tooltip arrow placement="right" title="Import Spreadsheet">
-              <Fab color="primary" component="span" size="medium" sx={{ marginLeft: 2, marginTop: 1.5 }}>
-                <Upload />
+        <Grow in={showActions} style={{ transformOrigin: "0 0 0" }}>
+          <Box display="flex" flexDirection="column" position="absolute">
+            <Tooltip arrow placement="right" title="Add Student">
+              <Fab
+                color="primary"
+                onClick={handleStudentDialogOpen}
+                size="medium"
+                sx={{ marginLeft: 2, marginTop: 1 }}
+              >
+                <Add />
               </Fab>
             </Tooltip>
-          </InputLabel>
-          <Tooltip arrow placement="right" title="Generate Final Grade Reports">
-            <Fab
-              color="primary"
-              onClick={handleGenerateFGRClick}
-              size="medium"
-              sx={{ marginLeft: 2, marginTop: 1.5 }}
-            >
-              <Cached />
-            </Fab>
-          </Tooltip>
-        </Box>
+            <Tooltip arrow placement="right" title="Edit Student">
+              <Fab
+                color="primary"
+                onClick={handleStudentDialogOpen}
+                size="medium"
+                sx={{ marginLeft: 2, marginTop: 1.5 }}
+              >
+                <Edit />
+              </Fab>
+            </Tooltip>
+            <InputLabel htmlFor="import-spreadsheet">
+              <Input
+                id="import-spreadsheet"
+                inputProps={{ accept: ".txt" }}
+                onChange={onInputChange}
+                sx={{ display: "none" }}
+                type="file"
+              />
+              <Tooltip arrow placement="right" title="Import Spreadsheet">
+                <Fab color="primary" component="span" size="medium" sx={{ marginLeft: 2, marginTop: 1.5 }}>
+                  <Upload />
+                </Fab>
+              </Tooltip>
+            </InputLabel>
+            <Tooltip arrow placement="right" title="Generate Final Grade Reports">
+              <Fab
+                color="primary"
+                onClick={handleGenerateFGRClick}
+                size="medium"
+                sx={{ marginLeft: 2, marginTop: 1.5 }}
+              >
+                <Cached />
+              </Fab>
+            </Tooltip>
+          </Box>
+        </Grow>
       </Box>
       {students.length > 0 ? (
         <FinalGradeReportDialog handleDialogClose={handleFGRDialogClose} open={openFGRDialog} />

@@ -1,6 +1,6 @@
 import { FilterAlt, MoreHoriz, VisibilityOff } from "@mui/icons-material";
-import { AppBar, Box, Divider, IconButton, TablePagination, Toolbar } from "@mui/material";
-import React from "react";
+import { AppBar, Box, Divider, IconButton, TablePagination, Toolbar, Tooltip } from "@mui/material";
+import React, { Dispatch, SetStateAction } from "react";
 import { Searchbar } from ".";
 import { DataVisibilityPopover } from "..";
 import { useColors } from "../../hooks";
@@ -24,6 +24,8 @@ interface StudentDatabaseToolbarProps {
   handleSearchStringChange: (value: string) => void;
   page: number;
   rowsPerPage: number;
+  setShowActions: Dispatch<SetStateAction<boolean>>;
+  showActions: boolean;
   students: Student[];
 }
 
@@ -34,6 +36,8 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
   handleChangePage,
   handleChangeRowsPerPage,
   handleSearchStringChange,
+  showActions,
+  setShowActions,
 }) => {
   const [dataFilterAnchorEl, setDataFilterAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const { iconColor } = useColors();
@@ -46,9 +50,15 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
           paddingTop: "1vh",
         }}
       >
-        <IconButton>
-          <MoreHoriz color="primary" />
-        </IconButton>
+        <Tooltip arrow placement="right" title={`${showActions ? "Hide" : "Show"} Actions`}>
+          <IconButton
+            onClick={() => {
+              setShowActions(!showActions);
+            }}
+          >
+            <MoreHoriz color="primary" />
+          </IconButton>
+        </Tooltip>
         <Box>
           <Searchbar handleSearchStringChange={handleSearchStringChange} />
           <IconButton>
