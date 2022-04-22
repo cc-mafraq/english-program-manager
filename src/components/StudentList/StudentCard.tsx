@@ -1,6 +1,6 @@
 import { Box, Card, CardContent, Tab, Tabs, useTheme } from "@mui/material";
 import React, { useContext } from "react";
-import { Correspondence, Image, Placement, StudentCardHeader, StudentInfo } from "..";
+import { CorrespondenceList, Image, Placement, StudentCardHeader, StudentInfo } from "..";
 import { AppContext, darkBlueBackground, Student } from "../../interfaces";
 import { studentImageFolder } from "../../services";
 import { AcademicRecords } from "./AcademicRecords";
@@ -54,7 +54,7 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student, handleEditStu
               <StudentInfo student={student} />
             </Box>
             <Box hidden={tabValue !== 1} id="student-card-tabpanel-1" role="tabpanel">
-              <Correspondence student={student} />
+              <CorrespondenceList student={student} />
             </Box>
             <Box hidden={tabValue !== 2} id="student-card-tabpanel-2" role="tabpanel">
               <AcademicRecords student={student} />

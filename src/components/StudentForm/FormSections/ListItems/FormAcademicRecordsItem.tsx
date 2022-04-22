@@ -21,7 +21,10 @@ export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem,
         </StudentFormLabel>
         {removeItem && (
           <Tooltip arrow title="Remove Session">
-            <IconButton onClick={removeItem(index)} sx={{ color: iconColor, marginLeft: SPACING / 2, top: "15%" }}>
+            <IconButton
+              onClick={removeItem(index)}
+              sx={{ color: iconColor, marginTop: "1.5vh", position: "absolute", right: "1.5vh" }}
+            >
               <Close />
             </IconButton>
           </Tooltip>

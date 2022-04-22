@@ -1,6 +1,6 @@
 export * from "./AcademicRecords";
 export * from "./AddImageButton";
-export * from "./Correspondence";
+export * from "./CorrespondenceList";
 export * from "./Image";
 export * from "./LabeledContainer";
 export * from "./LabeledText";

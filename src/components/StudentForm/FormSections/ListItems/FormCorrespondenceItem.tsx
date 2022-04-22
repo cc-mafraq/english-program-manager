@@ -15,21 +15,23 @@ export const FormCorrespondenceItem: React.FC<FormItem> = ({ index, removeItem, 
         <GridItemDatePicker
           gridProps={{ margin: SPACING, xs: 2 }}
           label="Date"
-          name={`${name}.date`}
+          name={name ? `${name}.date` : "date"}
           textFieldProps={{ required: true }}
           value={moment().format(MOMENT_FORMAT)}
         />
         <GridItemTextField
           gridProps={{ marginTop: SPACING }}
           label="Correspondence"
-          name={`${name}.notes`}
+          name={name ? `${name}.notes` : "notes"}
           textFieldProps={{ multiline: true, required: true, rows: 4 }}
         />
-        <Tooltip arrow title="Remove Correspondence">
-          <IconButton onClick={removeItem && removeItem(index)} sx={{ color: iconColor, height: "30%" }}>
-            <Close />
-          </IconButton>
-        </Tooltip>
+        {removeItem && (
+          <Tooltip arrow title="Remove Correspondence">
+            <IconButton onClick={removeItem(index)} sx={{ color: iconColor, height: "30%" }}>
+              <Close />
+            </IconButton>
+          </Tooltip>
+        )}
       </Grid>
     </>
   );
