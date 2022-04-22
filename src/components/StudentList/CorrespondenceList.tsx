@@ -5,11 +5,10 @@ import { findIndex, map, reverse } from "lodash";
 import moment from "moment";
 import React, { useState } from "react";
 import { LabeledContainer } from ".";
+import { FormCorrespondenceItem, FormDialog, StudentFormLabel } from "..";
 import { useColors } from "../../hooks";
 import { Correspondence, defaultBorderColor, Student } from "../../interfaces";
 import { correspondenceSchema, MOMENT_FORMAT, setStudentData } from "../../services";
-import { FormCorrespondenceItem, StudentFormLabel } from "../StudentForm";
-import { FormDialog } from "../StudentForm/FormDialog";
 
 interface CorrespondenceProps {
   student: Student;

@@ -5,7 +5,7 @@ export * from "./Image";
 export * from "./LabeledContainer";
 export * from "./LabeledText";
 export * from "./Loading";
-export * from "./Placement";
+export * from "./PlacementList";
 export * from "./ProgressBox";
 export * from "./StudentCard";
 export * from "./StudentCardHeader";

@@ -11,12 +11,12 @@ import useState from "react-usestateref";
 import {
   ActionsMenu,
   FinalGradeReportDialog,
+  FormDialog,
   Loading,
   StudentDatabaseToolbar,
   StudentForm,
   StudentList,
 } from "../components";
-import { FormDialog } from "../components/StudentForm/FormDialog";
 import { AppContext, Status, Student } from "../interfaces";
 import {
   app,
@@ -29,9 +29,9 @@ import {
   setPrimaryNumberBooleanArray,
   setStudentData,
   sortStudents,
+  spreadsheetToStudentList,
   studentFormSchema,
 } from "../services";
-import { spreadsheetToStudentList } from "../services/spreadsheetService";
 
 interface SetStateOptions {
   newPage?: number;

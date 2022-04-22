@@ -10,22 +10,25 @@ export const FormPlacementItem: React.FC<FormItem> = ({ index, removeItem, name 
 
   return (
     <GridContainer marginBottom={0}>
-      <Grid item marginLeft={SPACING}>
-        <Tooltip arrow title="Remove Placement">
-          <IconButton onClick={removeItem && removeItem(index)} sx={{ color: iconColor }}>
-            <Close />
-          </IconButton>
-        </Tooltip>
-      </Grid>
       <GridItemTextField
+        gridProps={{ marginLeft: SPACING, xs: 5 }}
         label="Placement and Date"
-        name={`${name}.sectionAndDate`}
+        name={name ? `${name}.sectionAndDate` : "sectionAndDate"}
         textFieldProps={{ required: true }}
       />
-      <GridItemTextField gridProps={{ xs: 4 }} label="Notes" name={`${name}.notes`} />
+      <GridItemTextField gridProps={{ xs: 4 }} label="Notes" name={name ? `${name}.notes` : "notes"} />
       <Grid item xs={2}>
-        <LabeledCheckbox label="Added to CL" name={`${name}.addedToCL`} />
+        <LabeledCheckbox label="Added to CL" name={name ? `${name}.addedToCL` : "addedToCL"} />
       </Grid>
+      {removeItem && (
+        <Grid item>
+          <Tooltip arrow title="Remove Placement">
+            <IconButton onClick={removeItem && removeItem(index)} sx={{ color: iconColor }}>
+              <Close />
+            </IconButton>
+          </Tooltip>
+        </Grid>
+      )}
     </GridContainer>
   );
 };

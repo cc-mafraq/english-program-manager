@@ -4,6 +4,7 @@ import { Box, Button, IconButton, Tooltip, TypographyProps, useTheme } from "@mu
 import { findIndex, forOwn, map, omit, reverse, some, values } from "lodash";
 import React, { useContext, useEffect, useState } from "react";
 import { LabeledContainer, LabeledText, ProgressBox } from ".";
+import { FormAcademicRecordsItem, FormDialog } from "..";
 import { useColors } from "../../hooks";
 import {
   AcademicRecord,
@@ -23,8 +24,6 @@ import {
   SPACING,
   StudentProgress,
 } from "../../services";
-import { FormAcademicRecordsItem } from "../StudentForm";
-import { FormDialog } from "../StudentForm/FormDialog";
 
 interface AcademicRecordsProps {
   student: Student;
@@ -78,6 +77,10 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
   const [open, setOpen] = useState(false);
   const [selectedAcademicRecord, setSelectedAcademicRecord] = useState<AcademicRecord | null>(null);
 
+  useEffect(() => {
+    setProgress(getProgress(student, getAllSessions(students)));
+  }, [student, students]);
+
   const handleDialogOpen = () => {
     setOpen(true);
   };
@@ -93,10 +96,6 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
       handleDialogOpen();
     };
   };
-
-  useEffect(() => {
-    setProgress(getProgress(student, getAllSessions(students)));
-  }, [student, students]);
 
   const onSubmit = (data: AcademicRecord) => {
     const dataNoNull = removeNullFromObject(data) as AcademicRecord;
