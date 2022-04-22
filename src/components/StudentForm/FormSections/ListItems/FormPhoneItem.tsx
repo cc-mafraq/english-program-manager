@@ -1,4 +1,4 @@
-import CloseIcon from "@mui/icons-material/Close";
+import { Close } from "@mui/icons-material";
 import { Grid, IconButton } from "@mui/material";
 import React from "react";
 import { GridItemTextField, LabeledCheckbox } from "../..";
@@ -29,7 +29,7 @@ export const FormPhoneItem: React.FC<FormItem> = ({ index, removeItem, name }) =
         onClick={removeItem && removeItem(index)}
         sx={{ color: iconColor, height: "15%", marginLeft: -1, marginTop: SPACING }}
       >
-        <CloseIcon />
+        <Close />
       </IconButton>
     </>
   );

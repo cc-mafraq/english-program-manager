@@ -1,9 +1,7 @@
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { AppBar, Box, Divider, IconButton, TablePagination, Toolbar } from "@mui/material";
-import React, { ChangeEvent } from "react";
-import { ActionsPopover, Searchbar } from ".";
+import { FilterAlt, MoreHoriz, VisibilityOff } from "@mui/icons-material";
+import { AppBar, Box, Divider, IconButton, TablePagination, Toolbar, Tooltip } from "@mui/material";
+import React, { Dispatch, SetStateAction } from "react";
+import { Searchbar } from ".";
 import { DataVisibilityPopover } from "..";
 import { useColors } from "../../hooks";
 import { Student } from "../../interfaces";
@@ -21,14 +19,13 @@ const handlePopoverClose = (setFn: React.Dispatch<React.SetStateAction<HTMLButto
 };
 
 interface StudentDatabaseToolbarProps {
-  handleAddStudentClick: (e: React.MouseEvent<HTMLElement>) => void;
   handleChangePage: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
   handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  handleGenerateFGRClick: (e: React.MouseEvent<HTMLElement>) => void;
-  handleImportClick: (e: ChangeEvent<HTMLInputElement>) => void;
   handleSearchStringChange: (value: string) => void;
   page: number;
   rowsPerPage: number;
+  setShowActions: Dispatch<SetStateAction<boolean>>;
+  showActions: boolean;
   students: Student[];
 }
 
@@ -36,14 +33,12 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
   students,
   page,
   rowsPerPage,
-  handleAddStudentClick,
   handleChangePage,
   handleChangeRowsPerPage,
-  handleImportClick,
-  handleGenerateFGRClick,
   handleSearchStringChange,
+  showActions,
+  setShowActions,
 }) => {
-  const [actionsAnchorEl, setActionsAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const [dataFilterAnchorEl, setDataFilterAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const { iconColor } = useColors();
 
@@ -55,24 +50,27 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
           paddingTop: "1vh",
         }}
       >
-        <IconButton onClick={handlePopoverClick(setActionsAnchorEl)}>
-          <MoreHorizIcon color="primary" />
-        </IconButton>
-        <ActionsPopover
-          anchorEl={actionsAnchorEl}
-          handleAddStudentClick={handleAddStudentClick}
-          handleClose={handlePopoverClose(setActionsAnchorEl)}
-          handleGenerateFGRClick={handleGenerateFGRClick}
-          handleImportClick={handleImportClick}
-        />
+        <Tooltip arrow placement="right" title={`${showActions ? "Hide" : "Show"} Actions`}>
+          <IconButton
+            onClick={() => {
+              setShowActions(!showActions);
+            }}
+          >
+            <MoreHoriz color="primary" />
+          </IconButton>
+        </Tooltip>
         <Box>
           <Searchbar handleSearchStringChange={handleSearchStringChange} />
-          <IconButton>
-            <FilterAltIcon sx={{ color: iconColor }} />
-          </IconButton>
-          <IconButton onClick={handlePopoverClick(setDataFilterAnchorEl)}>
-            <VisibilityOffIcon sx={{ color: iconColor }} />
-          </IconButton>
+          <Tooltip arrow title="Filter Students">
+            <IconButton>
+              <FilterAlt sx={{ color: iconColor }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip arrow title="Hide Student Data">
+            <IconButton onClick={handlePopoverClick(setDataFilterAnchorEl)}>
+              <VisibilityOff sx={{ color: iconColor }} />
+            </IconButton>
+          </Tooltip>
           <DataVisibilityPopover
             anchorEl={dataFilterAnchorEl}
             handleClose={handlePopoverClose(setDataFilterAnchorEl)}

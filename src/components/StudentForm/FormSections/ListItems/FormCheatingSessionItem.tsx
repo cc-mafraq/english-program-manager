@@ -1,4 +1,4 @@
-import CloseIcon from "@mui/icons-material/Close";
+import { Close } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import React, { useContext } from "react";
 import { GridItemAutocomplete } from "../..";
@@ -16,7 +16,7 @@ export const FormCheatingSessionItem: React.FC<FormItem> = ({ index, removeItem,
     <>
       <GridItemAutocomplete label="Cheating Session" name={name} options={getAllSessions(students)} />
       <IconButton onClick={removeItem && removeItem(index)} sx={{ color: iconColor, height: "100%" }}>
-        <CloseIcon />
+        <Close />
       </IconButton>
     </>
   );

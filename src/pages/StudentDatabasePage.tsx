@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 import { getAuth } from "firebase/auth";
 import { collection } from "firebase/firestore";
 import { forEach, isUndefined } from "lodash";
@@ -7,6 +8,7 @@ import { useCollection } from "react-firebase-hooks/firestore";
 import { useNavigate } from "react-router-dom";
 import useState from "react-usestateref";
 import {
+  ActionsMenu,
   FinalGradeReportDialog,
   Loading,
   StudentDatabaseToolbar,
@@ -38,6 +40,7 @@ export const StudentDatabasePage = () => {
   const [openStudentDialog, setOpenStudentDialog] = useState(false);
   const [searchString, setSearchString, searchStringRef] = useState<string>("");
   const [spreadsheetIsLoading, setSpreadsheetIsLoading] = useState(false);
+  const [showActions, setShowActions] = useState(true);
   const navigate = useNavigate();
   const auth = getAuth(app);
   const [user, authLoading] = useAuthState(auth);
@@ -162,17 +165,24 @@ export const StudentDatabasePage = () => {
 
   return (
     <>
-      <StudentDatabaseToolbar
-        handleAddStudentClick={handleStudentDialogOpen}
-        handleChangePage={handleChangePage}
-        handleChangeRowsPerPage={handleChangeRowsPerPage}
-        handleGenerateFGRClick={handleGenerateFGRClick}
-        handleImportClick={onInputChange}
-        handleSearchStringChange={handleSearchStringChange}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        students={searchString ? filteredStudents : students}
-      />
+      <Box position="sticky" top={0} zIndex={5}>
+        <StudentDatabaseToolbar
+          handleChangePage={handleChangePage}
+          handleChangeRowsPerPage={handleChangeRowsPerPage}
+          handleSearchStringChange={handleSearchStringChange}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          setShowActions={setShowActions}
+          showActions={showActions}
+          students={searchString ? filteredStudents : students}
+        />
+        <ActionsMenu
+          handleGenerateFGRClick={handleGenerateFGRClick}
+          handleStudentDialogOpen={handleStudentDialogOpen}
+          onInputChange={onInputChange}
+          showActions={showActions}
+        />
+      </Box>
       {students.length > 0 ? (
         <FinalGradeReportDialog handleDialogClose={handleFGRDialogClose} open={openFGRDialog} />
       ) : (

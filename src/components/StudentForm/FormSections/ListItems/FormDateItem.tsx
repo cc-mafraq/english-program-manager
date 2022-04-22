@@ -1,4 +1,4 @@
-import CloseIcon from "@mui/icons-material/Close";
+import { Close } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import React from "react";
 import { useColors } from "../../../../hooks";
@@ -18,7 +18,7 @@ export const FormDateItem: React.FC<FormItem> = ({ index, removeItem, children, 
         return child;
       })}
       <IconButton onClick={removeItem && removeItem(index)} sx={{ color: iconColor, height: "100%" }}>
-        <CloseIcon />
+        <Close />
       </IconButton>
     </>
   );

@@ -1,6 +1,8 @@
-import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import { IconButton, useTheme } from "@mui/material";
+import { AddPhotoAlternate } from "@mui/icons-material";
+import { IconButton, Tooltip, useTheme } from "@mui/material";
+import { get } from "lodash";
 import React, { ChangeEvent, useContext } from "react";
+import { useColors } from "../../hooks";
 import { AppContext, Student } from "../../interfaces";
 import { setImage } from "../../services";
 
@@ -21,6 +23,7 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({
 }) => {
   const { appDispatch } = useContext(AppContext);
   const theme = useTheme();
+  const { iconColor } = useColors();
 
   const inputId = `importImage-${imagePath}-${student?.epId}`;
 
@@ -37,13 +40,20 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({
         }}
         type="file"
       />
-      <IconButton
-        color={theme.palette.mode === "dark" ? "primary" : lightColor || "default"}
-        component="span"
-        sx={{ transform: `scale(${scale})` }}
-      >
-        <AddPhotoAlternateIcon />
-      </IconButton>
+      <Tooltip arrow title={`${get(student, imagePath) ? "Replace" : "Add"} Image`}>
+        <IconButton
+          color={lightColor}
+          component="span"
+          sx={{
+            color:
+              (lightColor && get(theme.palette, `${lightColor}.main`)) ||
+              (theme.palette.mode === "dark" ? iconColor : undefined),
+            transform: `scale(${scale})`,
+          }}
+        >
+          <AddPhotoAlternate />
+        </IconButton>
+      </Tooltip>
     </label>
   );
 };
