@@ -1,4 +1,5 @@
-import { Box, Button, Dialog, DialogProps, useTheme } from "@mui/material";
+import { Close } from "@mui/icons-material";
+import { Box, Button, Dialog, DialogProps, Grid, IconButton, Tooltip, Typography, useTheme } from "@mui/material";
 import { green, grey } from "@mui/material/colors";
 import React, { CSSProperties, PropsWithChildren, useEffect } from "react";
 import { FormProvider, SubmitHandler, useForm, UseFormProps } from "react-hook-form";
@@ -33,6 +34,7 @@ export const FormDialog = <T,>({
 
   return (
     <Dialog
+      fullWidth
       onClose={handleDialogClose}
       open={open}
       PaperProps={{
@@ -44,7 +46,12 @@ export const FormDialog = <T,>({
       }}
       {...dialogProps}
     >
-      <Box sx={{ padding: "10px" }}>
+      <Box sx={{ padding: "10px", position: "relative" }}>
+        <Tooltip arrow title="Close Dialog">
+          <IconButton onClick={handleDialogClose} sx={{ position: "absolute", right: "1.5vh", top: "1.5vh" }}>
+            <Close />
+          </IconButton>
+        </Tooltip>
         <FormProvider {...methods}>
           <form>
             {children}
@@ -64,6 +71,12 @@ export const FormDialog = <T,>({
             >
               Submit
             </Button>
+            <Grid item>
+              <Typography variant="caption">
+                Tip: use <b>tab</b> and <b>shift + tab</b> to navigate, <b>space bar</b> to select checkboxes,{" "}
+                <b>arrow keys</b> to select radio buttons, and <b>return</b> to submit and click buttons.
+              </Typography>
+            </Grid>
           </form>
         </FormProvider>
       </Box>

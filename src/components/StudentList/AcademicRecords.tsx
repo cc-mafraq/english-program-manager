@@ -129,7 +129,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
       >
         <Box marginBottom={1} marginTop={1}>
           <Button color="secondary" onClick={handleDialogOpen} variant="contained">
-            Add Academic Record
+            Add Session
           </Button>
         </Box>
         {reverse(
@@ -230,7 +230,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
         </LabeledText>
       </LabeledContainer>
       <FormDialog
-        dialogProps={{ fullWidth: true, maxWidth: "md" }}
+        dialogProps={{ maxWidth: "lg" }}
         handleDialogClose={handleDialogClose}
         onSubmit={onSubmit}
         open={open}

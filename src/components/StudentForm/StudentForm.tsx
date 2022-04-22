@@ -1,5 +1,4 @@
-import { Close } from "@mui/icons-material";
-import { Box, Divider, Grid, IconButton, Typography } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 import React, { useContext } from "react";
 import {
   FormAcademicRecords,
@@ -13,15 +12,13 @@ import {
   FormPlacement,
   FormProgramInformation,
   FormStatus,
+  StudentFormLabel,
 } from "..";
 import { AppContext } from "../../interfaces";
+import { SPACING } from "../../services";
 import { FormCovidVaccine } from "./FormSections";
 
-interface StudentFormProps {
-  handleDialogClose: () => void;
-}
-
-export const StudentForm: React.FC<StudentFormProps> = ({ handleDialogClose }) => {
+export const StudentForm: React.FC = () => {
   const {
     appState: { selectedStudent },
   } = useContext(AppContext);
@@ -34,15 +31,6 @@ export const StudentForm: React.FC<StudentFormProps> = ({ handleDialogClose }) =
         <Typography display="inline" fontWeight={600} variant="h4">
           {addOrEdit} Student
         </Typography>
-        <IconButton
-          onClick={handleDialogClose}
-          sx={{
-            float: "right",
-            transform: `scale(1.25)`,
-          }}
-        >
-          <Close sx={{ color: "default" }} />
-        </IconButton>
       </Box>
       <FormName />
       <Divider />
@@ -66,14 +54,8 @@ export const StudentForm: React.FC<StudentFormProps> = ({ handleDialogClose }) =
       <Divider />
       <FormCertRequests />
       <Divider />
+      <StudentFormLabel textProps={{ marginTop: SPACING }}>Academic Records</StudentFormLabel>
       <FormAcademicRecords />
-
-      <Grid item>
-        <Typography variant="caption">
-          Tip: use <b>tab</b> and <b>shift + tab</b> to navigate, <b>space bar</b> to select checkboxes,{" "}
-          <b>arrow keys</b> to select radio buttons, and <b>return</b> to submit and click buttons.
-        </Typography>
-      </Grid>
     </>
   );
 };

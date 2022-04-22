@@ -1,5 +1,5 @@
 import { Close } from "@mui/icons-material";
-import { Grid, IconButton } from "@mui/material";
+import { Grid, IconButton, Tooltip } from "@mui/material";
 import React, { useContext } from "react";
 import { FormGrade, GridContainer, GridItemAutocomplete, GridItemTextField, StudentFormLabel } from "../../..";
 import { useColors } from "../../../../hooks";
@@ -17,12 +17,14 @@ export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem,
     <>
       <Grid container marginLeft={SPACING}>
         <StudentFormLabel textProps={{ marginTop: SPACING }}>
-          Academic Record {index ? Number(index) + 1 : ""}
+          Session {index === undefined ? "" : Number(index) + 1}
         </StudentFormLabel>
         {removeItem && (
-          <IconButton onClick={removeItem(index)} sx={{ color: iconColor, marginLeft: SPACING / 2, top: "15%" }}>
-            <Close />
-          </IconButton>
+          <Tooltip arrow title="Remove Session">
+            <IconButton onClick={removeItem(index)} sx={{ color: iconColor, marginLeft: SPACING / 2, top: "15%" }}>
+              <Close />
+            </IconButton>
+          </Tooltip>
         )}
       </Grid>
       <GridContainer marginBottom={SPACING / 2} marginLeft={0}>

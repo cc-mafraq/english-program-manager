@@ -1,5 +1,5 @@
 import { Close } from "@mui/icons-material";
-import { Grid, IconButton } from "@mui/material";
+import { Grid, IconButton, Tooltip } from "@mui/material";
 import React from "react";
 import { GridContainer, GridItemTextField, LabeledCheckbox } from "../..";
 import { useColors } from "../../../../hooks";
@@ -11,9 +11,11 @@ export const FormPlacementItem: React.FC<FormItem> = ({ index, removeItem, name 
   return (
     <GridContainer marginBottom={0}>
       <Grid item marginLeft={SPACING}>
-        <IconButton onClick={removeItem && removeItem(index)} sx={{ color: iconColor }}>
-          <Close />
-        </IconButton>
+        <Tooltip arrow title="Remove Placement">
+          <IconButton onClick={removeItem && removeItem(index)} sx={{ color: iconColor }}>
+            <Close />
+          </IconButton>
+        </Tooltip>
       </Grid>
       <GridItemTextField
         label="Placement and Date"

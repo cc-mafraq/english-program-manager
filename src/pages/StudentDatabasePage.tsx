@@ -240,7 +240,7 @@ export const StudentDatabasePage = () => {
           resolver: yupResolver(studentFormSchema),
         }}
       >
-        <StudentForm handleDialogClose={handleStudentDialogClose} />
+        <StudentForm />
       </FormDialog>
       <StudentList handleEditStudentClick={handleStudentDialogOpen} studentsPage={studentsPage} />
     </>

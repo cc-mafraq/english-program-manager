@@ -1,5 +1,5 @@
 import { Close } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 import React, { useContext } from "react";
 import { GridItemAutocomplete } from "../..";
 import { useColors } from "../../../../hooks";
@@ -15,9 +15,11 @@ export const FormCheatingSessionItem: React.FC<FormItem> = ({ index, removeItem,
   return (
     <>
       <GridItemAutocomplete label="Cheating Session" name={name} options={getAllSessions(students)} />
-      <IconButton onClick={removeItem && removeItem(index)} sx={{ color: iconColor, height: "100%" }}>
-        <Close />
-      </IconButton>
+      <Tooltip arrow title="Remove Cheating Session">
+        <IconButton onClick={removeItem && removeItem(index)} sx={{ color: iconColor, height: "100%" }}>
+          <Close />
+        </IconButton>
+      </Tooltip>
     </>
   );
 };
