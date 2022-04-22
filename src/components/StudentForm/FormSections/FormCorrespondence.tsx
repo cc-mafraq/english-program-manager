@@ -27,6 +27,7 @@ export const FormCorrespondence: React.FC = () => {
           list={correspondence}
           listName="correspondence"
           removeItem={removeCorrespondence}
+          reverseList
         >
           <FormCorrespondenceItem />
         </FormList>

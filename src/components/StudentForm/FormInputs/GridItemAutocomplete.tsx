@@ -52,7 +52,7 @@ export const GridItemAutocomplete = (
                   />
                 );
               }}
-              {...omit(props, ["gridProps"])}
+              {...omit(props, ["gridProps", "textFieldProps"])}
               {...omit(field, ["onChange"])}
               onChange={(e, data) => {
                 return field.onChange(data);

@@ -11,25 +11,30 @@ import {
   StudentFormLabel,
 } from "..";
 import { useDateInitialState, useFormList } from "../../../hooks";
-import { AppContext, Student } from "../../../interfaces";
+import { AppContext } from "../../../interfaces";
 import { SPACING } from "../../../services";
 import { FormList } from "../FormList";
 
-export const FormPlacement: React.FC = () => {
+interface FormPlacementProps {
+  standAlone?: boolean;
+}
+
+export const FormPlacement = <T,>({ standAlone }: FormPlacementProps) => {
   const {
     appState: { selectedStudent },
   } = useContext(AppContext);
-  const methods = useFormContext<Student>();
+  const methods = useFormContext<T>();
+  const namePrefix = standAlone ? "" : "placement.";
 
-  const [classScheduleSentDate, addClassScheduleSentDate, removeClassScheduleSentDate] = useFormList(
-    useDateInitialState("placement.classScheduleSentDate"),
-    "placement.classScheduleSentDate",
+  const [classScheduleSentDate, addClassScheduleSentDate, removeClassScheduleSentDate] = useFormList<T>(
+    useDateInitialState(`${namePrefix}classScheduleSentDate`),
+    `${namePrefix}classScheduleSentDate`,
     methods,
   );
 
-  const [placements, addPlacement, removePlacement] = useFormList(
+  const [placements, addPlacement, removePlacement] = useFormList<T>(
     selectedStudent && selectedStudent.placement.placement?.length > 0 ? selectedStudent.placement.placement : [],
-    "placement.placement",
+    `${namePrefix}placement`,
     methods,
   );
 
@@ -37,12 +42,12 @@ export const FormPlacement: React.FC = () => {
     <>
       <StudentFormLabel textProps={{ marginTop: SPACING }}>Placement</StudentFormLabel>
       <GridContainer marginBottom={0}>
-        <GridItemTextField gridProps={{ xs: 6 }} label="Sections Offered" name="placement.sectionsOffered" />
+        <GridItemTextField gridProps={{ xs: 6 }} label="Sections Offered" name={`${namePrefix}sectionsOffered`} />
         <FormList
           addItem={addClassScheduleSentDate}
           buttonLabel="Add CS Sent Date"
           list={classScheduleSentDate}
-          listName="placement.classScheduleSentDate"
+          listName={`${namePrefix}classScheduleSentDate`}
           removeItem={removeClassScheduleSentDate}
         >
           <FormDateItem>
@@ -52,19 +57,19 @@ export const FormPlacement: React.FC = () => {
       </GridContainer>
       <GridContainer marginBottom={0}>
         <Grid item xs={2}>
-          <LabeledCheckbox label="Pending" name="placement.pending" />
+          <LabeledCheckbox label="Pending" name={`${namePrefix}pending`} />
         </Grid>
         <Grid item xs={4}>
-          <LabeledCheckbox label="No Answer CS WPM" name="placement.noAnswerClassScheduleWpm" />
+          <LabeledCheckbox label="No Answer CS WPM" name={`${namePrefix}noAnswerClassScheduleWpm`} />
         </Grid>
-        <GridItemTextField gridProps={{ xs: 5 }} label="Photo Contact" name="placement.photoContact" />
+        <GridItemTextField gridProps={{ xs: 5 }} label="Photo Contact" name={`${namePrefix}photoContact`} />
       </GridContainer>
-      <GridContainer>
+      <GridContainer marginBottom={standAlone ? 0 : SPACING * 2}>
         <FormList
           addItem={addPlacement}
           buttonLabel="Add Placement"
           list={placements}
-          listName="placement.placement"
+          listName={`${namePrefix}placement`}
           removeItem={removePlacement}
         >
           <FormPlacementItem />
@@ -72,4 +77,8 @@ export const FormPlacement: React.FC = () => {
       </GridContainer>
     </>
   );
+};
+
+FormPlacement.defaultProps = {
+  standAlone: false,
 };

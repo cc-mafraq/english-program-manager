@@ -281,3 +281,7 @@ export const emptyStudent: Student = {
   },
   work: { occupation: "Unknown" },
 };
+
+export const emptyAcademicRecord: AcademicRecord = {
+  session: "",
+};

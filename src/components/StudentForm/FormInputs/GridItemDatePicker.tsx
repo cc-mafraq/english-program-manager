@@ -68,7 +68,7 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
                   dateMoment.isValid()
                     ? dateMoment.format()
                     : defaultValueMoment.isValid()
-                    ? defaultValueMoment
+                    ? defaultValueMoment.format()
                     : null
                 }
               />

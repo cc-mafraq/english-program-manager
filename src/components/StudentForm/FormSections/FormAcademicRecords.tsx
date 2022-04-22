@@ -24,6 +24,7 @@ export const FormAcademicRecords: React.FC = () => {
         list={academicRecords}
         listName="academicRecords"
         removeItem={removeAcademicRecord}
+        reverseList
       >
         <FormAcademicRecordsItem />
       </FormList>
