@@ -64,7 +64,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange }
           pointerEvents: "none",
           position: "absolute",
           top: "50%",
-          transform: "translateY(-50%) scale(1.25) ",
+          transform: "translateY(-50%)",
         }}
       >
         <Search color="primary" />
