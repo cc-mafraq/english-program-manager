@@ -24,6 +24,7 @@ export const Placement: React.FC<PlacementProps> = ({ student }) => {
         dataVisibility.placement.sectionsOffered && student.placement.sectionsOffered,
       ])}
       label="Placement"
+      parentContainerProps={{ paddingBottom: 2 }}
     >
       <LabeledText condition={dataVisibility.placement.photoContact} label="Photo Contact">
         {student.placement.photoContact}

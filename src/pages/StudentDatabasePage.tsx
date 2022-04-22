@@ -1,7 +1,8 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Box } from "@mui/material";
 import { getAuth } from "firebase/auth";
 import { collection } from "firebase/firestore";
-import { forEach, isUndefined } from "lodash";
+import { forEach, isEmpty, isUndefined, omit } from "lodash";
 import React, { ChangeEvent, useCallback, useContext, useEffect, useRef } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollection } from "react-firebase-hooks/firestore";
@@ -12,11 +13,24 @@ import {
   FinalGradeReportDialog,
   Loading,
   StudentDatabaseToolbar,
-  StudentFormDialog,
+  StudentForm,
   StudentList,
 } from "../components";
-import { AppContext, Student } from "../interfaces";
-import { app, db, getStudentPage, logout, searchStudents, sortStudents } from "../services";
+import { FormDialog } from "../components/StudentForm/FormDialog";
+import { AppContext, Status, Student } from "../interfaces";
+import {
+  app,
+  db,
+  deleteStudentData,
+  getStudentPage,
+  logout,
+  removeNullFromObject,
+  searchStudents,
+  setPrimaryNumberBooleanArray,
+  setStudentData,
+  sortStudents,
+  studentFormSchema,
+} from "../services";
 import { spreadsheetToStudentList } from "../services/spreadsheetService";
 
 interface SetStateOptions {
@@ -28,7 +42,7 @@ interface SetStateOptions {
 
 export const StudentDatabasePage = () => {
   const {
-    appState: { students },
+    appState: { students, selectedStudent },
     appDispatch,
   } = useContext(AppContext);
   const studentsRef = useRef(students);
@@ -163,6 +177,28 @@ export const StudentDatabasePage = () => {
     setOpenFGRDialog(false);
   };
 
+  const studentFormOnSubmit = (data: Student) => {
+    const primaryPhone = data.phone.phoneNumbers[data.phone.primaryPhone as number].number;
+    if (primaryPhone) {
+      data.phone.primaryPhone = primaryPhone;
+    }
+    if (isEmpty(data.academicRecords) && data.status.currentStatus === Status.NEW) {
+      data.academicRecords = [
+        {
+          level: data.currentLevel,
+          session: data.initialSession,
+        },
+      ];
+    }
+    const dataNoSuspect = data.covidVaccine.suspectedFraud
+      ? data
+      : omit(data, "covidVaccine.suspectedFraudReason");
+    const dataNoNull = removeNullFromObject(dataNoSuspect) as Student;
+    setStudentData(dataNoNull);
+    dataNoNull.epId !== selectedStudent?.epId && selectedStudent && deleteStudentData(selectedStudent);
+    handleStudentDialogClose();
+  };
+
   return (
     <>
       <Box position="sticky" top={0} zIndex={5}>
@@ -189,7 +225,23 @@ export const StudentDatabasePage = () => {
         <></>
       )}
       <Loading />
-      <StudentFormDialog handleDialogClose={handleStudentDialogClose} open={openStudentDialog} />
+      <FormDialog
+        dialogProps={{
+          fullScreen: true,
+          sx: {
+            width: "100%",
+          },
+        }}
+        handleDialogClose={handleStudentDialogClose}
+        onSubmit={studentFormOnSubmit}
+        open={openStudentDialog}
+        useFormProps={{
+          defaultValues: setPrimaryNumberBooleanArray(selectedStudent),
+          resolver: yupResolver(studentFormSchema),
+        }}
+      >
+        <StudentForm handleDialogClose={handleStudentDialogClose} />
+      </FormDialog>
       <StudentList handleEditStudentClick={handleStudentDialogOpen} studentsPage={studentsPage} />
     </>
   );

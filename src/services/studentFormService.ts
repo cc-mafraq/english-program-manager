@@ -146,7 +146,7 @@ const gradeSchema = object()
   })
   .optional();
 
-const academicRecordsSchema = object().shape({
+export const academicRecordsSchema = object().shape({
   attendance: percentageSchema,
   comments: string().transform(emptyToNull).nullable().optional(),
   exitSpeakingExam: gradeSchema,
@@ -157,7 +157,7 @@ const academicRecordsSchema = object().shape({
   session: string().typeError("Session is required").required("Session is required"),
 });
 
-const correspondenceSchema = object().shape({
+export const correspondenceSchema = object().shape({
   date: dateSchema.required("Date is required"),
   notes: string().required(
     "Correspondence notes are required if added. You can remove the correspondence by clicking the ❌ button",
@@ -239,7 +239,7 @@ const sectionPlacementSchema = object().shape({
   ),
 });
 
-const placementSchema = object().shape({
+export const placementSchema = object().shape({
   classScheduleSentDate: array().of(dateSchema.nullable().optional()).transform(dateStringToArray).required(),
   noAnswerClassScheduleWPM: bool().optional(),
   pending: bool().optional(),
