@@ -2,7 +2,14 @@ import { Close } from "@mui/icons-material";
 import { Box, Button, Dialog, DialogProps, Grid, IconButton, Tooltip, Typography, useTheme } from "@mui/material";
 import { green, grey } from "@mui/material/colors";
 import React, { CSSProperties, PropsWithChildren, useEffect } from "react";
-import { FormProvider, SubmitHandler, useForm, UseFormProps } from "react-hook-form";
+import {
+  DeepPartial,
+  FormProvider,
+  SubmitHandler,
+  UnpackNestedValue,
+  useForm,
+  UseFormProps,
+} from "react-hook-form";
 import { useColors } from "../../hooks";
 import { SPACING } from "../../services";
 
@@ -29,7 +36,9 @@ export const FormDialog = <T,>({
   const methods = useForm<T>({ criteriaMode: "all", ...useFormProps });
 
   useEffect(() => {
-    methods.reset(useFormProps.defaultValues);
+    useFormProps.defaultValues
+      ? methods.reset(useFormProps.defaultValues)
+      : methods.reset({} as UnpackNestedValue<DeepPartial<T>>);
   }, [methods, useFormProps]);
 
   return (
