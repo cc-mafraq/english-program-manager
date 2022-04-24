@@ -1,4 +1,4 @@
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { ExpandMore } from "@mui/icons-material";
 import {
   Accordion,
   AccordionDetails,
@@ -41,7 +41,7 @@ export const IndeterminateCheckbox: React.FC<IndeterminateCheckboxProps> = ({ ch
       <AccordionSummary
         expandIcon={
           <IconButton>
-            <ExpandMoreIcon />
+            <ExpandMore />
           </IconButton>
         }
       >

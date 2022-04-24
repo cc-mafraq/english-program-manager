@@ -1,5 +1,5 @@
-import CloseIcon from "@mui/icons-material/Close";
-import { IconButton } from "@mui/material";
+import { Close } from "@mui/icons-material";
+import { IconButton, Tooltip } from "@mui/material";
 import React from "react";
 import { useColors } from "../../../../hooks";
 import { FormItem } from "../../../../services";
@@ -17,9 +17,11 @@ export const FormDateItem: React.FC<FormItem> = ({ index, removeItem, children, 
         }
         return child;
       })}
-      <IconButton onClick={removeItem && removeItem(index)} sx={{ color: iconColor, height: "100%" }}>
-        <CloseIcon />
-      </IconButton>
+      <Tooltip arrow title="Remove Date">
+        <IconButton onClick={removeItem && removeItem(index)} sx={{ color: iconColor, height: "100%" }}>
+          <Close />
+        </IconButton>
+      </Tooltip>
     </>
   );
 };

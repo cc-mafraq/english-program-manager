@@ -41,8 +41,8 @@ import {
 } from "../interfaces";
 
 export const SPACING = 2;
-
 export const MOMENT_FORMAT = "l";
+const sessionRegex = /(Fa|Sp) (I|II) \d{2}/;
 
 export interface FormItem {
   index?: number;
@@ -117,12 +117,13 @@ const percentageToInteger = (value: string, originalValue: string) => {
   return isNaN(percentageInt) ? originalValue : percentageInt;
 };
 
+const percentError = "Percentage must be an integer between 0 and 100";
 const percentageSchema = number()
-  .min(0)
-  .max(100)
+  .min(0, percentError)
+  .max(100, percentError)
   .integer()
   .transform(percentageToInteger)
-  .typeError("Percentage must be an integer between 0 and 100")
+  .typeError(percentError)
   .nullable()
   .optional();
 
@@ -146,7 +147,7 @@ const gradeSchema = object()
   })
   .optional();
 
-const academicRecordsSchema = object().shape({
+export const academicRecordsSchema = object().shape({
   attendance: percentageSchema,
   comments: string().transform(emptyToNull).nullable().optional(),
   exitSpeakingExam: gradeSchema,
@@ -157,7 +158,7 @@ const academicRecordsSchema = object().shape({
   session: string().typeError("Session is required").required("Session is required"),
 });
 
-const correspondenceSchema = object().shape({
+export const correspondenceSchema = object().shape({
   date: dateSchema.required("Date is required"),
   notes: string().required(
     "Correspondence notes are required if added. You can remove the correspondence by clicking the ❌ button",
@@ -239,7 +240,7 @@ const sectionPlacementSchema = object().shape({
   ),
 });
 
-const placementSchema = object().shape({
+export const placementSchema = object().shape({
   classScheduleSentDate: array().of(dateSchema.nullable().optional()).transform(dateStringToArray).required(),
   noAnswerClassScheduleWPM: bool().optional(),
   pending: bool().optional(),
@@ -250,6 +251,15 @@ const placementSchema = object().shape({
 
 const statusSchema = object().shape({
   audit: string().transform(emptyToNull).nullable().optional(),
+  cheatingSessions: array()
+    .of(
+      string()
+        .matches(sessionRegex, "must be Fa/Sp I/II year (e.g. Sp I 22)")
+        .transform(emptyToNull)
+        .nullable()
+        .optional(),
+    )
+    .optional(),
   currentStatus: mixed<Status>()
     .oneOf(Object.values(Status) as Status[])
     .transform(stringToStatus)
@@ -296,11 +306,15 @@ export const studentFormSchema = object().shape({
   currentLevel: mixed<GenderedLevel>()
     .oneOf([...genderedLevels, "L5 GRAD"])
     .required("Current level is required"),
-  epId: number().min(10000).max(99999).integer().required("ID is required"),
+  epId: number()
+    .min(10000, "ID must be between 10000 and 99999")
+    .max(99999, "ID must be between 10000 and 99999")
+    .integer()
+    .required("ID is required"),
   familyCoordinatorEntry: string().transform(emptyToNull).nullable().optional(),
   gender: mixed<"M" | "F">().oneOf(["M", "F"]).required("Gender is required"),
   initialSession: string()
-    .matches(/(Fa|Sp) (I|II) \d{2}/, "Initial session must be Fa/Sp I/II year (e.g. Sp I 22)")
+    .matches(sessionRegex, "Initial session must be Fa/Sp I/II year (e.g. Sp I 22)")
     .typeError("Initial session is required")
     .required("Initial session is required"),
   literacy: literacySchema,

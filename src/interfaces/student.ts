@@ -95,6 +95,7 @@ export interface WhatsappInfo {
 
 export interface StudentStatus {
   audit?: string;
+  cheatingSessions?: string[];
   currentStatus: Status;
   droppedOutReason?: DroppedOutReason;
   finalGradeSentDate?: string;
@@ -279,4 +280,8 @@ export const emptyStudent: Student = {
     withdrawDate: [],
   },
   work: { occupation: "Unknown" },
+};
+
+export const emptyAcademicRecord: AcademicRecord = {
+  session: "",
 };

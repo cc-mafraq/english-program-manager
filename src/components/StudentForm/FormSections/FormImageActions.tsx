@@ -1,5 +1,5 @@
-import HideImageIcon from "@mui/icons-material/HideImage";
-import { Box, IconButton } from "@mui/material";
+import { HideImage } from "@mui/icons-material";
+import { Box, IconButton, Tooltip } from "@mui/material";
 import { get } from "lodash";
 import React, { useContext } from "react";
 import { AppContext } from "../../../interfaces";
@@ -25,16 +25,18 @@ export const FormImageActions: React.FC<FormImageActionsProps> = ({ folderName, 
         lightColor="primary"
         student={selectedStudent}
       />
-      <IconButton
-        color="primary"
-        onClick={async () => {
-          if (!selectedStudent) return;
-          await deleteImage(selectedStudent, imagePath);
-          appDispatch({ payload: { selectedStudent }, type: "set" });
-        }}
-      >
-        <HideImageIcon />
-      </IconButton>
+      <Tooltip arrow title="Delete Image">
+        <IconButton
+          color="primary"
+          onClick={async () => {
+            if (!selectedStudent) return;
+            await deleteImage(selectedStudent, imagePath);
+            appDispatch({ payload: { selectedStudent }, type: "set" });
+          }}
+        >
+          <HideImage />
+        </IconButton>
+      </Tooltip>
     </Box>
   ) : (
     <></>

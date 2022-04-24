@@ -1,21 +1,37 @@
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Box } from "@mui/material";
 import { getAuth } from "firebase/auth";
 import { collection } from "firebase/firestore";
-import { forEach, isUndefined } from "lodash";
+import { forEach, isEmpty, isUndefined, omit } from "lodash";
 import React, { ChangeEvent, useCallback, useContext, useEffect, useRef } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useNavigate } from "react-router-dom";
 import useState from "react-usestateref";
 import {
+  ActionsMenu,
   FinalGradeReportDialog,
+  FormDialog,
   Loading,
   StudentDatabaseToolbar,
-  StudentFormDialog,
+  StudentForm,
   StudentList,
 } from "../components";
-import { AppContext, Student } from "../interfaces";
-import { app, db, getStudentPage, logout, searchStudents, sortStudents } from "../services";
-import { spreadsheetToStudentList } from "../services/spreadsheetService";
+import { AppContext, Status, Student } from "../interfaces";
+import {
+  app,
+  db,
+  deleteStudentData,
+  getStudentPage,
+  logout,
+  removeNullFromObject,
+  searchStudents,
+  setPrimaryNumberBooleanArray,
+  setStudentData,
+  sortStudents,
+  spreadsheetToStudentList,
+  studentFormSchema,
+} from "../services";
 
 interface SetStateOptions {
   newPage?: number;
@@ -26,7 +42,7 @@ interface SetStateOptions {
 
 export const StudentDatabasePage = () => {
   const {
-    appState: { students },
+    appState: { students, selectedStudent },
     appDispatch,
   } = useContext(AppContext);
   const studentsRef = useRef(students);
@@ -38,6 +54,7 @@ export const StudentDatabasePage = () => {
   const [openStudentDialog, setOpenStudentDialog] = useState(false);
   const [searchString, setSearchString, searchStringRef] = useState<string>("");
   const [spreadsheetIsLoading, setSpreadsheetIsLoading] = useState(false);
+  const [showActions, setShowActions] = useState(true);
   const navigate = useNavigate();
   const auth = getAuth(app);
   const [user, authLoading] = useAuthState(auth);
@@ -160,26 +177,71 @@ export const StudentDatabasePage = () => {
     setOpenFGRDialog(false);
   };
 
+  const studentFormOnSubmit = (data: Student) => {
+    const primaryPhone = data.phone.phoneNumbers[data.phone.primaryPhone as number].number;
+    if (primaryPhone) {
+      data.phone.primaryPhone = primaryPhone;
+    }
+    if (isEmpty(data.academicRecords) && data.status.currentStatus === Status.NEW) {
+      data.academicRecords = [
+        {
+          level: data.currentLevel,
+          session: data.initialSession,
+        },
+      ];
+    }
+    const dataNoSuspect = data.covidVaccine.suspectedFraud
+      ? data
+      : omit(data, "covidVaccine.suspectedFraudReason");
+    const dataNoNull = removeNullFromObject(dataNoSuspect) as Student;
+    setStudentData(dataNoNull);
+    dataNoNull.epId !== selectedStudent?.epId && selectedStudent && deleteStudentData(selectedStudent);
+    handleStudentDialogClose();
+  };
+
   return (
     <>
-      <StudentDatabaseToolbar
-        handleAddStudentClick={handleStudentDialogOpen}
-        handleChangePage={handleChangePage}
-        handleChangeRowsPerPage={handleChangeRowsPerPage}
-        handleGenerateFGRClick={handleGenerateFGRClick}
-        handleImportClick={onInputChange}
-        handleSearchStringChange={handleSearchStringChange}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        students={searchString ? filteredStudents : students}
-      />
+      <Box position="sticky" top={0} zIndex={5}>
+        <StudentDatabaseToolbar
+          handleChangePage={handleChangePage}
+          handleChangeRowsPerPage={handleChangeRowsPerPage}
+          handleSearchStringChange={handleSearchStringChange}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          setShowActions={setShowActions}
+          showActions={showActions}
+          students={searchString ? filteredStudents : students}
+        />
+        <ActionsMenu
+          handleGenerateFGRClick={handleGenerateFGRClick}
+          handleStudentDialogOpen={handleStudentDialogOpen}
+          onInputChange={onInputChange}
+          showActions={showActions}
+        />
+      </Box>
       {students.length > 0 ? (
         <FinalGradeReportDialog handleDialogClose={handleFGRDialogClose} open={openFGRDialog} />
       ) : (
         <></>
       )}
       <Loading />
-      <StudentFormDialog handleDialogClose={handleStudentDialogClose} open={openStudentDialog} />
+      <FormDialog
+        dialogProps={{
+          fullScreen: true,
+          sx: {
+            width: "100%",
+          },
+        }}
+        handleDialogClose={handleStudentDialogClose}
+        onSubmit={studentFormOnSubmit}
+        open={openStudentDialog}
+        useFormProps={{
+          defaultValues: setPrimaryNumberBooleanArray(selectedStudent),
+          resolver: yupResolver(studentFormSchema),
+        }}
+      >
+        <StudentForm />
+      </FormDialog>
       <StudentList handleEditStudentClick={handleStudentDialogOpen} studentsPage={studentsPage} />
     </>
   );

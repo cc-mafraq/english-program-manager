@@ -1,6 +1,6 @@
 import { Button, Grid, GridProps, Typography, useTheme } from "@mui/material";
 import { grey } from "@mui/material/colors";
-import { get, map } from "lodash";
+import { get, map, reverse } from "lodash";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { SPACING } from "../../services";
@@ -12,6 +12,7 @@ interface FormListProps {
   list: unknown[];
   listName: string;
   removeItem: (index?: number) => () => void;
+  reverseList?: boolean;
 }
 
 export const FormList: React.FC<FormListProps> = ({
@@ -22,6 +23,7 @@ export const FormList: React.FC<FormListProps> = ({
   buttonLabel,
   buttonGridProps,
   children,
+  reverseList,
 }) => {
   const theme = useTheme();
   const {
@@ -29,22 +31,25 @@ export const FormList: React.FC<FormListProps> = ({
   } = useFormContext();
   const errorMessage = get(errors, listName)?.message;
 
-  return (
-    <>
-      {map(list, (item, i) => {
-        // https://stackoverflow.com/questions/32370994/how-to-pass-props-to-this-props-children/39401252
-        return React.Children.map(children, (child) => {
-          if (React.isValidElement(child)) {
-            return React.cloneElement(child, {
-              index: i,
-              key: `${JSON.stringify(item)} ${i}`,
-              name: `${listName}[${i}]`,
-              removeItem,
-            });
-          }
-          return child;
-        });
-      })}
+  const componentList = () => {
+    return map(list, (item, i) => {
+      // https://stackoverflow.com/questions/32370994/how-to-pass-props-to-this-props-children/39401252
+      return React.Children.map(children, (child) => {
+        if (React.isValidElement(child)) {
+          return React.cloneElement(child, {
+            index: i,
+            key: `${JSON.stringify(item)} ${i}`,
+            name: `${listName}[${i}]`,
+            removeItem,
+          });
+        }
+        return child;
+      });
+    });
+  };
+
+  const button = () => {
+    return (
       <Grid item xs {...buttonGridProps}>
         <Button
           color={theme.palette.mode === "light" ? "secondary" : "primary"}
@@ -76,10 +81,19 @@ export const FormList: React.FC<FormListProps> = ({
           </Typography>
         )}
       </Grid>
+    );
+  };
+
+  return (
+    <>
+      {reverseList && button()}
+      {reverseList ? reverse(componentList()) : componentList()}
+      {!reverseList && button()}
     </>
   );
 };
 
 FormList.defaultProps = {
   buttonGridProps: undefined,
+  reverseList: false,
 };
