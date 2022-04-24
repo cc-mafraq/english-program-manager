@@ -117,12 +117,13 @@ const percentageToInteger = (value: string, originalValue: string) => {
   return isNaN(percentageInt) ? originalValue : percentageInt;
 };
 
+const percentError = "Percentage must be an integer between 0 and 100";
 const percentageSchema = number()
-  .min(0)
-  .max(100)
+  .min(0, percentError)
+  .max(100, percentError)
   .integer()
   .transform(percentageToInteger)
-  .typeError("Percentage must be an integer between 0 and 100")
+  .typeError(percentError)
   .nullable()
   .optional();
 
@@ -305,7 +306,11 @@ export const studentFormSchema = object().shape({
   currentLevel: mixed<GenderedLevel>()
     .oneOf([...genderedLevels, "L5 GRAD"])
     .required("Current level is required"),
-  epId: number().min(10000).max(99999).integer().required("ID is required"),
+  epId: number()
+    .min(10000, "ID must be between 10000 and 99999")
+    .max(99999, "ID must be between 10000 and 99999")
+    .integer()
+    .required("ID is required"),
   familyCoordinatorEntry: string().transform(emptyToNull).nullable().optional(),
   gender: mixed<"M" | "F">().oneOf(["M", "F"]).required("Gender is required"),
   initialSession: string()
