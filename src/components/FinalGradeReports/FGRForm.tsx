@@ -63,8 +63,16 @@ export const FGRForm: React.FC<FGRFormProps> = ({
             <GridItemTextField label="Attendance" />
           </GridContainer>
           <GridContainer marginBottom={0}>
-            <GridItemAutocomplete freeSolo label="Exit Writing Exam" options={["Pass", "Fail"]} />
-            <GridItemAutocomplete label="Exit Speaking Exam" options={["Pass", "Fail"]} />
+            <GridItemAutocomplete
+              freeSolo
+              label="Exit Writing Exam"
+              options={["Pass", "Fail", "Not Applicable"]}
+            />
+            <GridItemAutocomplete
+              freeSolo
+              label="Exit Speaking Exam"
+              options={["Pass", "Fail", "Not Applicable"]}
+            />
           </GridContainer>
           <GridContainer marginBottom={0}>
             {elective ? (

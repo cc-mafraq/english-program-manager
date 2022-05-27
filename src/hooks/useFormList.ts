@@ -24,6 +24,11 @@ export const useFormList = <T>(
       set(resetObject, listPath, []);
       methods.reset(resetObject as UnpackNestedValue<DeepPartial<T>>, { keepValues: true });
       methods.setValue(listPath as Path<T>, newList as UnpackNestedValue<PathValue<T, Path<T>>>);
+      if (listPath === "phone.phoneNumbers") {
+        const currentPrimaryPhoneList = get(methods.getValues(), "phone.primaryPhone");
+        currentPrimaryPhoneList.splice(index, 1);
+        methods.setValue("phone.primaryPhone" as Path<T>, currentPrimaryPhoneList);
+      }
     };
   };
 

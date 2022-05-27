@@ -178,9 +178,13 @@ export const StudentDatabasePage = () => {
   };
 
   const studentFormOnSubmit = (data: Student) => {
-    const primaryPhone = data.phone.phoneNumbers[data.phone.primaryPhone as number].number;
+    const primaryPhone = data.phone.phoneNumbers[data.phone.primaryPhone as number]?.number;
     if (primaryPhone) {
       data.phone.primaryPhone = primaryPhone;
+    } else {
+      // eslint-disable-next-line no-alert
+      alert("You must choose a primary phone number.");
+      return;
     }
     if (isEmpty(data.academicRecords) && data.status.currentStatus === Status.NEW) {
       data.academicRecords = [
