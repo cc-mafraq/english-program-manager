@@ -149,7 +149,16 @@ export const MenuDrawer = () => {
           <Menu />
         </IconButton>
       </Tooltip>
-      <Drawer anchor="left" onClose={toggleDrawer} open={isOpen} sx={{ color: lightPrimaryColor }}>
+      <Drawer
+        anchor="left"
+        onClose={toggleDrawer}
+        open={isOpen}
+        PaperProps={{
+          sx: {
+            backgroundColor: lightPrimaryColor,
+          },
+        }}
+      >
         {drawerItemList()}
       </Drawer>
     </Box>
