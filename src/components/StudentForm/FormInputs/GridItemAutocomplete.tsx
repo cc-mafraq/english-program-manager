@@ -39,6 +39,7 @@ export const GridItemAutocomplete = (
         render={({ field }) => {
           return (
             <Autocomplete
+              autoHighlight
               autoSelect
               openOnFocus
               renderInput={(params) => {
