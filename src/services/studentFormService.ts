@@ -1,6 +1,7 @@
 import {
   cloneDeep,
   filter,
+  first,
   forOwn,
   indexOf,
   isArray,
@@ -159,7 +160,7 @@ export const academicRecordsSchema = object().shape({
 });
 
 export const correspondenceSchema = object().shape({
-  date: dateSchema.required("Date is required"),
+  date: dateSchema.required("Correspondence date is required").typeError("Correspondence date is required"),
   notes: string().required(
     "Correspondence notes are required if added. You can remove the correspondence by clicking the ❌ button",
   ),
@@ -371,4 +372,18 @@ export const setPrimaryNumberBooleanArray = (student: Student | null) => {
     return studentCopy;
   }
   return undefined;
+};
+
+export const getListOfErrors = (formErrors: object): string[] => {
+  let errorMessages: string[] = [];
+  forOwn(formErrors, (value, key) => {
+    if (isObject(value) && key !== "ref") {
+      const error = first(getListOfErrors(value));
+      error && errorMessages.push(error);
+    }
+    if (key === "message") {
+      errorMessages = [value];
+    }
+  });
+  return errorMessages;
 };
