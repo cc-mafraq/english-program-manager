@@ -24,6 +24,7 @@ export const FormErrorDialog: React.FC<FormErrorDialogProps> = ({
 
   return (
     <Dialog
+      fullWidth
       onClose={handleDialogClose}
       open={open}
       PaperProps={{
