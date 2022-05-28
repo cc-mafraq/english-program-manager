@@ -1,10 +1,9 @@
 import { Grid } from "@mui/material";
-import moment from "moment";
 import React, { useContext } from "react";
 import { useFormContext } from "react-hook-form";
 import { FormImageActions, GridContainer, GridItemAutocomplete, Image, StudentFormLabel } from "../..";
 import { AppContext, CovidStatus, covidStatuses, Student } from "../../../interfaces";
-import { covidVaccineImageFolder, MOMENT_FORMAT, SPACING } from "../../../services";
+import { covidVaccineImageFolder, SPACING } from "../../../services";
 import { GridItemDatePicker, GridItemTextField, LabeledCheckbox } from "../FormInputs";
 
 export const FormCovidVaccine: React.FC = () => {
@@ -41,7 +40,7 @@ export const FormCovidVaccine: React.FC = () => {
           options={covidStatuses}
           textFieldProps={{ required: true }}
         />
-        <GridItemDatePicker label="Date" name="covidVaccine.date" value={moment().format(MOMENT_FORMAT)} />
+        <GridItemDatePicker label="Date" name="covidVaccine.date" />
         {(covidStatus === CovidStatus.UNV || covidStatus === CovidStatus.EXEMPT) && (
           <GridItemTextField label="Reason" name="covidVaccine.reason" />
         )}

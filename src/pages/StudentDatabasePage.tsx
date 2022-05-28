@@ -200,6 +200,7 @@ export const StudentDatabasePage = () => {
     const dataNoNull = removeNullFromObject(dataNoSuspect) as Student;
     setStudentData(dataNoNull);
     dataNoNull.epId !== selectedStudent?.epId && selectedStudent && deleteStudentData(selectedStudent);
+    !selectedStudent && handleSearchStringChange(dataNoNull.epId.toString());
     handleStudentDialogClose();
   };
 
@@ -212,6 +213,8 @@ export const StudentDatabasePage = () => {
           handleSearchStringChange={handleSearchStringChange}
           page={page}
           rowsPerPage={rowsPerPage}
+          searchString={searchString}
+          setSearchString={setSearchString}
           setShowActions={setShowActions}
           showActions={showActions}
           students={searchString ? filteredStudents : students}

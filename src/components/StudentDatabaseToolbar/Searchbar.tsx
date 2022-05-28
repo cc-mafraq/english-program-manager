@@ -1,23 +1,28 @@
 import { Close, Search } from "@mui/icons-material";
 import { alpha, Box, IconButton, InputBase, Tooltip, useTheme } from "@mui/material";
 import { isEmpty } from "lodash";
-import React, { useState } from "react";
+import React from "react";
 import { useColors } from "../../hooks";
 
 interface SearchbarProps {
   handleSearchStringChange: (value: string) => void;
+  searchString: string;
+  setSearchString: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const minSearchLength = 3;
 const searchDelay = 500;
 
-export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange }) => {
+export const Searchbar: React.FC<SearchbarProps> = ({
+  handleSearchStringChange,
+  searchString,
+  setSearchString,
+}) => {
   const theme = useTheme();
   const { iconColor } = useColors();
-  const [value, setValue] = useState("");
 
   const handleLocalSearchStringChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    setValue(e.target.value);
+    setSearchString(e.target.value);
     if (e.target.value.length >= minSearchLength || isEmpty(e.target.value)) {
       setTimeout(() => {
         handleSearchStringChange(e.target.value);
@@ -26,7 +31,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange }
   };
 
   const handleClearSearch = () => {
-    setValue("");
+    setSearchString("");
     handleSearchStringChange("");
   };
 
@@ -89,7 +94,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange }
           },
           color: "inherit",
         }}
-        value={value}
+        value={searchString}
       />
       <Tooltip arrow title="Clear Search">
         <IconButton
