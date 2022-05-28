@@ -1,7 +1,7 @@
 import {
   cloneDeep,
   filter,
-  first,
+  forEach,
   forOwn,
   indexOf,
   isArray,
@@ -375,14 +375,15 @@ export const setPrimaryNumberBooleanArray = (student: Student | null) => {
 };
 
 export const getListOfErrors = (formErrors: object): string[] => {
-  let errorMessages: string[] = [];
+  const errorMessages: string[] = [];
   forOwn(formErrors, (value, key) => {
     if (isObject(value) && key !== "ref") {
-      const error = first(getListOfErrors(value));
-      error && errorMessages.push(error);
+      forEach(getListOfErrors(value), (errorMessage) => {
+        errorMessages.push(errorMessage);
+      });
     }
     if (key === "message") {
-      errorMessages = [value];
+      errorMessages.push(value);
     }
   });
   return errorMessages;

@@ -25,7 +25,6 @@ interface StudentDatabaseToolbarProps {
   page: number;
   rowsPerPage: number;
   searchString: string;
-  setSearchString: React.Dispatch<React.SetStateAction<string>>;
   setShowActions: Dispatch<SetStateAction<boolean>>;
   showActions: boolean;
   students: Student[];
@@ -41,7 +40,6 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
   showActions,
   setShowActions,
   searchString,
-  setSearchString,
 }) => {
   const [dataFilterAnchorEl, setDataFilterAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const { iconColor } = useColors();
@@ -64,11 +62,7 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
           </IconButton>
         </Tooltip>
         <Box>
-          <Searchbar
-            handleSearchStringChange={handleSearchStringChange}
-            searchString={searchString}
-            setSearchString={setSearchString}
-          />
+          <Searchbar handleSearchStringChange={handleSearchStringChange} searchString={searchString} />
           <Tooltip arrow title="Filter Students">
             <IconButton>
               <FilterAlt sx={{ color: iconColor }} />

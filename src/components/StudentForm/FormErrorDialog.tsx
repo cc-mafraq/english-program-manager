@@ -44,9 +44,9 @@ export const FormErrorDialog: React.FC<FormErrorDialogProps> = ({
         </Tooltip>
         <Typography>The form has the following errors:</Typography>
         <Box marginLeft={2}>
-          {map(getListOfErrors(formState.errors), (e) => {
+          {map(getListOfErrors(formState.errors), (e, i) => {
             return (
-              <ListItem key={e} sx={{ display: "list-item" }}>
+              <ListItem key={`${e}-${i}`} sx={{ display: "list-item" }}>
                 {e}
               </ListItem>
             );
