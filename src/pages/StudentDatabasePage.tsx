@@ -214,7 +214,6 @@ export const StudentDatabasePage = () => {
           page={page}
           rowsPerPage={rowsPerPage}
           searchString={searchString}
-          setSearchString={setSearchString}
           setShowActions={setShowActions}
           showActions={showActions}
           students={searchString ? filteredStudents : students}
