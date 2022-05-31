@@ -155,7 +155,7 @@ export const MenuDrawer = () => {
         open={isOpen}
         PaperProps={{
           sx: {
-            backgroundColor: lightPrimaryColor,
+            flexDirection: "row",
           },
         }}
       >
