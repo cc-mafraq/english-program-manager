@@ -40,7 +40,7 @@ export const CorrespondenceList: React.FC<CorrespondenceProps> = ({ student }) =
       const recordIndex = findIndex(student.correspondence, selectedCorrespondence);
       student.correspondence[recordIndex] = data;
     } else {
-      student.correspondence.push(data);
+      student.correspondence ? student.correspondence.push(data) : (student.correspondence = [data]);
     }
     setStudentData(student);
     handleDialogClose();

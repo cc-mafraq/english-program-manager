@@ -178,9 +178,13 @@ export const StudentDatabasePage = () => {
   };
 
   const studentFormOnSubmit = (data: Student) => {
-    const primaryPhone = data.phone.phoneNumbers[data.phone.primaryPhone as number].number;
+    const primaryPhone = data.phone.phoneNumbers[data.phone.primaryPhone as number]?.number;
     if (primaryPhone) {
       data.phone.primaryPhone = primaryPhone;
+    } else {
+      // eslint-disable-next-line no-alert
+      alert("You must choose a primary phone number.");
+      return;
     }
     if (isEmpty(data.academicRecords) && data.status.currentStatus === Status.NEW) {
       data.academicRecords = [
@@ -196,6 +200,7 @@ export const StudentDatabasePage = () => {
     const dataNoNull = removeNullFromObject(dataNoSuspect) as Student;
     setStudentData(dataNoNull);
     dataNoNull.epId !== selectedStudent?.epId && selectedStudent && deleteStudentData(selectedStudent);
+    !selectedStudent && handleSearchStringChange(dataNoNull.epId.toString());
     handleStudentDialogClose();
   };
 
@@ -208,6 +213,7 @@ export const StudentDatabasePage = () => {
           handleSearchStringChange={handleSearchStringChange}
           page={page}
           rowsPerPage={rowsPerPage}
+          searchString={searchString}
           setShowActions={setShowActions}
           showActions={showActions}
           students={searchString ? filteredStudents : students}

@@ -1,7 +1,8 @@
 import { Close } from "@mui/icons-material";
 import { Box, Button, Dialog, DialogProps, Grid, IconButton, Tooltip, Typography, useTheme } from "@mui/material";
 import { green, grey } from "@mui/material/colors";
-import React, { CSSProperties, PropsWithChildren, useEffect } from "react";
+import { isEmpty } from "lodash";
+import React, { CSSProperties, PropsWithChildren, useEffect, useState } from "react";
 import {
   DeepPartial,
   FormProvider,
@@ -12,6 +13,7 @@ import {
 } from "react-hook-form";
 import { useColors } from "../../hooks";
 import { SPACING } from "../../services";
+import { FormErrorDialog } from "./FormErrorDialog";
 
 interface FormDialogProps<T> {
   dialogProps?: Partial<DialogProps>;
@@ -34,6 +36,16 @@ export const FormDialog = <T,>({
   const { popoverColor } = useColors();
   const theme = useTheme();
   const methods = useForm<T>({ criteriaMode: "all", ...useFormProps });
+
+  const [openErrorDialog, setOpenErrorDialog] = useState(false);
+
+  useEffect(() => {
+    !isEmpty(methods.formState.errors) && methods.formState.isSubmitted && setOpenErrorDialog(true);
+  }, [methods.formState.errors, methods.formState.isSubmitted]);
+
+  const closeErrorDialog = () => {
+    setOpenErrorDialog(false);
+  };
 
   useEffect(() => {
     useFormProps.defaultValues
@@ -87,6 +99,7 @@ export const FormDialog = <T,>({
               </Typography>
             </Grid>
           </form>
+          <FormErrorDialog handleDialogClose={closeErrorDialog} open={openErrorDialog} />
         </FormProvider>
       </Box>
     </Dialog>

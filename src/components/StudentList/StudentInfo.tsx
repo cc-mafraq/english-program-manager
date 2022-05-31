@@ -78,7 +78,8 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
               sx: {
                 backgroundColor:
                   student.covidVaccine?.status === CovidStatus.FULL ||
-                  student.covidVaccine?.status === CovidStatus.EXEMPT
+                  student.covidVaccine?.status === CovidStatus.EXEMPT ||
+                  student.covidVaccine?.status === CovidStatus.BOOST
                     ? green
                     : student.covidVaccine?.status === CovidStatus.PART
                     ? yellow

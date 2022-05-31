@@ -149,7 +149,16 @@ export const MenuDrawer = () => {
           <Menu />
         </IconButton>
       </Tooltip>
-      <Drawer anchor="left" onClose={toggleDrawer} open={isOpen}>
+      <Drawer
+        anchor="left"
+        onClose={toggleDrawer}
+        open={isOpen}
+        PaperProps={{
+          sx: {
+            flexDirection: "row",
+          },
+        }}
+      >
         {drawerItemList()}
       </Drawer>
     </Box>

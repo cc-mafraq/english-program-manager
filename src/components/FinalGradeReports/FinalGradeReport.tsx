@@ -117,13 +117,17 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
       academicRecord?.exitSpeakingExam?.result !== undefined
         ? FinalResult[academicRecord.exitSpeakingExam.result] === "P"
           ? "Pass"
-          : "Fail"
+          : FinalResult[academicRecord.exitSpeakingExam.result] === "F"
+          ? "Fail"
+          : "Not Applicable"
         : "Not Applicable",
     exitWritingExam:
       academicRecord?.exitWritingExam?.result !== undefined
         ? FinalResult[academicRecord.exitWritingExam.result] === "P"
           ? "Pass"
-          : "Fail"
+          : FinalResult[academicRecord.exitWritingExam.result] === "F"
+          ? "Fail"
+          : "Not Applicable"
         : "Not Applicable",
     level: academicRecord
       ? `${getLevelForNextSession({ academicRecord, noIncrement: true, sessionOptions, student })}${

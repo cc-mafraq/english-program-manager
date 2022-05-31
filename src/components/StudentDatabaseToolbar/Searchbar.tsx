@@ -1,20 +1,25 @@
 import { Close, Search } from "@mui/icons-material";
 import { alpha, Box, IconButton, InputBase, Tooltip, useTheme } from "@mui/material";
 import { isEmpty } from "lodash";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useColors } from "../../hooks";
 
 interface SearchbarProps {
   handleSearchStringChange: (value: string) => void;
+  searchString: string;
 }
 
 const minSearchLength = 3;
 const searchDelay = 500;
 
-export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange }) => {
+export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange, searchString }) => {
   const theme = useTheme();
   const { iconColor } = useColors();
   const [value, setValue] = useState("");
+
+  useEffect(() => {
+    setValue(searchString);
+  }, [searchString]);
 
   const handleLocalSearchStringChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     setValue(e.target.value);
