@@ -1,7 +1,9 @@
-import { List, ListItem } from "@mui/material";
-import { map } from "lodash";
-import React from "react";
+import { get } from "lodash";
+import React, { useCallback, useRef } from "react";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { VariableSizeList as List, VariableSizeList } from "react-window";
 import { StudentCard } from ".";
+import { useWindowResize } from "../../hooks";
 import { Student } from "../../interfaces";
 
 interface StudentListProps {
@@ -10,15 +12,51 @@ interface StudentListProps {
 }
 
 export const StudentList: React.FC<StudentListProps> = ({ studentsPage, handleEditStudentClick }) => {
+  const listRef = useRef<VariableSizeList>(null);
+  const sizeMap = useRef({});
+  const [windowWidth] = useWindowResize();
+
+  const setSize = useCallback((index, size) => {
+    listRef.current?.resetAfterIndex(index);
+    sizeMap.current = { ...sizeMap.current, [index]: size };
+    console.log(sizeMap.current);
+  }, []);
+
+  const getSize = (index: number): number => {
+    return get(sizeMap.current, index) || 600;
+  };
+
+  // const Row = ({index, style} => {
+
+  // })
+
   return (
-    <List>
-      {map(studentsPage, (student) => {
+    <AutoSizer>
+      {({ height, width }) => {
         return (
-          <ListItem key={student.epId}>
-            <StudentCard handleEditStudentClick={handleEditStudentClick} student={student} />
-          </ListItem>
+          <List
+            ref={listRef}
+            height={height}
+            itemCount={studentsPage.length}
+            itemData={studentsPage}
+            itemSize={getSize}
+            width={width}
+          >
+            {({ data, index, style }) => {
+              return (
+                <StudentCard
+                  handleEditStudentClick={handleEditStudentClick}
+                  index={index}
+                  setSize={setSize}
+                  student={data[index]}
+                  style={style}
+                  windowWidth={windowWidth}
+                />
+              );
+            }}
+          </List>
         );
-      })}
-    </List>
+      }}
+    </AutoSizer>
   );
 };
