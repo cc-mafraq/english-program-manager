@@ -35,7 +35,8 @@ export const StudentList: React.FC<StudentListProps> = ({ studentsPage, handleEd
         return (
           <VariableSizeList
             ref={listRef}
-            height={height}
+            // subtract menu bar and toolbar height
+            height={height - (2 * 64 + height / 100)}
             itemCount={studentsPage.length}
             itemData={studentsPage}
             itemSize={getSize}
