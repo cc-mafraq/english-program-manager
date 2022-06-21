@@ -1,5 +1,5 @@
 import { get } from "lodash";
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { VariableSizeList } from "react-window";
 import { StudentCard } from ".";
@@ -24,6 +24,10 @@ export const StudentList: React.FC<StudentListProps> = ({ studentsPage, handleEd
   const getSize = (index: number): number => {
     return Number(get(sizeMap.current, index)) + 16 || 600;
   };
+
+  useEffect(() => {
+    listRef.current?.scrollTo(0);
+  }, [studentsPage]);
 
   return (
     <AutoSizer>

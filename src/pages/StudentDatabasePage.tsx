@@ -131,7 +131,6 @@ export const StudentDatabasePage = () => {
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setState({ newPage });
-    window.scrollTo(0, 0);
   };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
