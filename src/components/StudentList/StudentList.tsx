@@ -1,7 +1,8 @@
-import { get } from "lodash";
+import { List, ListItem } from "@mui/material";
+import { get, map } from "lodash";
 import React, { useCallback, useRef } from "react";
 import AutoSizer from "react-virtualized-auto-sizer";
-import { VariableSizeList as List, VariableSizeList } from "react-window";
+import { VariableSizeList } from "react-window";
 import { StudentCard } from ".";
 import { useWindowResize } from "../../hooks";
 import { Student } from "../../interfaces";
@@ -19,27 +20,23 @@ export const StudentList: React.FC<StudentListProps> = ({ studentsPage, handleEd
   const setSize = useCallback((index, size) => {
     listRef.current?.resetAfterIndex(index);
     sizeMap.current = { ...sizeMap.current, [index]: size };
-    console.log(sizeMap.current);
   }, []);
 
   const getSize = (index: number): number => {
-    return get(sizeMap.current, index) || 600;
+    return Number(get(sizeMap.current, index)) + 16 || 600;
   };
 
-  // const Row = ({index, style} => {
-
-  // })
-
-  return (
+  return studentsPage.length > 50 ? (
     <AutoSizer>
       {({ height, width }) => {
         return (
-          <List
+          <VariableSizeList
             ref={listRef}
             height={height}
             itemCount={studentsPage.length}
             itemData={studentsPage}
             itemSize={getSize}
+            style={{ overflowX: "hidden" }}
             width={width}
           >
             {({ data, index, style }) => {
@@ -54,9 +51,19 @@ export const StudentList: React.FC<StudentListProps> = ({ studentsPage, handleEd
                 />
               );
             }}
-          </List>
+          </VariableSizeList>
         );
       }}
     </AutoSizer>
+  ) : (
+    <List>
+      {map(studentsPage, (student) => {
+        return (
+          <ListItem>
+            <StudentCard handleEditStudentClick={handleEditStudentClick} student={student} />
+          </ListItem>
+        );
+      })}
+    </List>
   );
 };

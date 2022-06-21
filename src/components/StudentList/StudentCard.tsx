@@ -7,11 +7,11 @@ import { AcademicRecords } from "./AcademicRecords";
 
 interface StudentCardProps {
   handleEditStudentClick: () => void;
-  index: number;
-  setSize: (index: number, size: number) => void;
+  index?: number;
+  setSize?: (index: number, size: number) => void;
   student: Student;
-  style: CSSProperties;
-  windowWidth: number;
+  style?: CSSProperties;
+  windowWidth?: number;
 }
 
 export const StudentCard: React.FC<StudentCardProps> = ({
@@ -31,7 +31,7 @@ export const StudentCard: React.FC<StudentCardProps> = ({
   const rowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (rowRef.current) {
+    if (rowRef.current && setSize && index !== undefined) {
       setSize(index, rowRef.current.clientHeight);
     }
   }, [index, setSize, windowWidth, tabValue]);
@@ -41,7 +41,7 @@ export const StudentCard: React.FC<StudentCardProps> = ({
   };
 
   return (
-    <div style={style}>
+    <div style={style ? { ...style, paddingLeft: "16px", paddingTop: "16px" } : undefined}>
       <Card
         sx={{
           backgroundColor: theme.palette.mode === "dark" ? darkBlueBackground : undefined,
@@ -88,4 +88,11 @@ export const StudentCard: React.FC<StudentCardProps> = ({
       </Card>
     </div>
   );
+};
+
+StudentCard.defaultProps = {
+  index: undefined,
+  setSize: undefined,
+  style: undefined,
+  windowWidth: undefined,
 };

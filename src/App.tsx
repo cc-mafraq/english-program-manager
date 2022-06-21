@@ -35,7 +35,7 @@ export const App = () => {
   }, [mode]);
 
   return (
-    <div style={{ background: theme.palette.background.default }}>
+    <div style={{ background: theme.palette.background.default, overflowY: "clip" }}>
       <ColorModeContext.Provider value={colorMode}>
         <ThemeProvider theme={theme}>
           <AppContext.Provider value={{ appDispatch, appState }}>
