@@ -1,5 +1,4 @@
-import { List, ListItem } from "@mui/material";
-import { get, map } from "lodash";
+import { get } from "lodash";
 import React, { useCallback, useRef } from "react";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { VariableSizeList } from "react-window";
@@ -26,7 +25,7 @@ export const StudentList: React.FC<StudentListProps> = ({ studentsPage, handleEd
     return Number(get(sizeMap.current, index)) + 16 || 600;
   };
 
-  return studentsPage.length > 50 ? (
+  return (
     <AutoSizer>
       {({ height, width }) => {
         return (
@@ -55,15 +54,5 @@ export const StudentList: React.FC<StudentListProps> = ({ studentsPage, handleEd
         );
       }}
     </AutoSizer>
-  ) : (
-    <List>
-      {map(studentsPage, (student) => {
-        return (
-          <ListItem key={student.epId}>
-            <StudentCard handleEditStudentClick={handleEditStudentClick} student={student} />
-          </ListItem>
-        );
-      })}
-    </List>
   );
 };
