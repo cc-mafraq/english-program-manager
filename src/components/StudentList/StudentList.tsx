@@ -59,7 +59,7 @@ export const StudentList: React.FC<StudentListProps> = ({ studentsPage, handleEd
     <List>
       {map(studentsPage, (student) => {
         return (
-          <ListItem>
+          <ListItem key={student.epId}>
             <StudentCard handleEditStudentClick={handleEditStudentClick} student={student} />
           </ListItem>
         );
