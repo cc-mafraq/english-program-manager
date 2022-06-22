@@ -26,7 +26,7 @@ export const FilterCheckbox: React.FC<FilterCheckBoxProps> = ({ value, path }) =
       remove(filterCopy, (filterVal) => {
         return filterVal.fieldPath === prevFieldFilter.fieldPath;
       });
-    const fieldFilterValues = prevFieldFilter ? [...prevFieldFilter.values, label] : [label];
+    const fieldFilterValues = prevFieldFilter ? [...prevFieldFilter.values, value] : [value];
     if (event.target.checked) {
       appDispatch({
         payload: {

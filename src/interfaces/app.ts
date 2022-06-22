@@ -135,7 +135,7 @@ export interface DataVisibility {
 
 interface FilterValue {
   fieldPath: string;
-  values: string[];
+  values: unknown[];
 }
 
 export interface AppState {

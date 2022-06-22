@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Box } from "@mui/material";
 import { getAuth } from "firebase/auth";
 import { collection } from "firebase/firestore";
-import { forEach, isEmpty, isUndefined, omit } from "lodash";
+import { every, filter as filterFn, forEach, get, includes, isEmpty, isUndefined, omit } from "lodash";
 import React, { ChangeEvent, useCallback, useContext, useEffect, useRef } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollection } from "react-firebase-hooks/firestore";
@@ -34,6 +34,7 @@ import {
 } from "../services";
 
 interface SetStateOptions {
+  newFilter?: boolean;
   newPage?: number;
   newRowsPerPage?: number;
   newSearchString?: string;
@@ -42,7 +43,7 @@ interface SetStateOptions {
 
 export const StudentDatabasePage = () => {
   const {
-    appState: { students, selectedStudent },
+    appState: { students, selectedStudent, filter },
     appDispatch,
   } = useContext(AppContext);
   const studentsRef = useRef(students);
@@ -63,14 +64,23 @@ export const StudentDatabasePage = () => {
   studentsRef.current = students;
 
   const setState = useCallback(
-    ({ newRowsPerPage, newPage, newSearchString, newStudents }: SetStateOptions) => {
-      const newFilteredStudents =
+    ({ newRowsPerPage, newPage, newSearchString, newStudents, newFilter }: SetStateOptions) => {
+      const newSearchedStudents =
         !isUndefined(newSearchString) || newStudents
           ? searchStudents(
               !isUndefined(newStudents) ? newStudents : studentsRef.current,
               !isUndefined(newSearchString) ? newSearchString : searchStringRef.current,
             )
           : filteredStudentsRef.current;
+      const newFilteredStudents =
+        newFilter && filter.length > 0
+          ? (filterFn(newSearchedStudents, (student) => {
+              return every(filter, (filterValue) => {
+                const value = get(student, filterValue.fieldPath);
+                return includes(filterValue.values, value);
+              });
+            }) as Student[])
+          : newSearchedStudents;
       setFilteredStudents(newFilteredStudents);
       newStudents && appDispatch({ payload: { students: newStudents } });
       !isUndefined(newPage) && setPage(newPage);
@@ -86,6 +96,7 @@ export const StudentDatabasePage = () => {
     },
     [
       appDispatch,
+      filter,
       filteredStudentsRef,
       pageRef,
       rowsPerPageRef,
@@ -128,6 +139,10 @@ export const StudentDatabasePage = () => {
       navigate("/");
     }
   }, [navigate, docsError]);
+
+  useEffect(() => {
+    setState({ newFilter: true });
+  }, [filter, setState]);
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setState({ newPage });
