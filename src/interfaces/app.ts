@@ -51,7 +51,6 @@ export const getDesignTokens = (mode: PaletteMode): ThemeOptions => {
 
 export interface AppAction {
   payload: Partial<AppState>;
-  type: "set";
 }
 
 export interface DataVisibility {
@@ -134,8 +133,14 @@ export interface DataVisibility {
   };
 }
 
+interface FilterValue {
+  fieldPath: string;
+  values: string[];
+}
+
 export interface AppState {
   dataVisibility: DataVisibility;
+  filter: FilterValue[];
   loading: boolean;
   selectedStudent: Student | null;
   students: Student[];
@@ -219,6 +224,7 @@ export const initialAppState: AppState = {
       tutorAndDetails: true,
     },
   },
+  filter: [],
   loading: true,
   selectedStudent: null,
   students: [],

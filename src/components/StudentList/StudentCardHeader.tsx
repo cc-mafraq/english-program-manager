@@ -40,7 +40,7 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ student, h
         <Tooltip arrow title="Edit Student">
           <IconButton
             onClick={() => {
-              appDispatch({ payload: { selectedStudent: student }, type: "set" });
+              appDispatch({ payload: { selectedStudent: student } });
               handleEditStudentClick();
             }}
           >

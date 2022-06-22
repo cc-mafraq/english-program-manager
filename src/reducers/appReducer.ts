@@ -8,21 +8,14 @@ import { AppAction, AppState } from "../interfaces";
 */
 export const reducer = (actionCallback: (item: AppState) => void) => {
   return (state: AppState, action: AppAction): AppState => {
-    let newState: AppState;
-    switch (action.type) {
-      case "set": {
-        newState = {
-          dataVisibility: action.payload.dataVisibility || state.dataVisibility,
-          loading: action.payload.loading === undefined ? state.loading : action.payload.loading,
-          selectedStudent:
-            action.payload.selectedStudent === undefined ? state.selectedStudent : action.payload.selectedStudent,
-          students: action.payload.students || state.students,
-        };
-        break;
-      }
-      default:
-        return state;
-    }
+    const newState: AppState = {
+      dataVisibility: action.payload.dataVisibility || state.dataVisibility,
+      filter: action.payload.filter || state.filter,
+      loading: action.payload.loading === undefined ? state.loading : action.payload.loading,
+      selectedStudent:
+        action.payload.selectedStudent === undefined ? state.selectedStudent : action.payload.selectedStudent,
+      students: action.payload.students || state.students,
+    };
     actionCallback(newState);
     return newState;
   };

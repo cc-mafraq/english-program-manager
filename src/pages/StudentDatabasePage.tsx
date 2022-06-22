@@ -72,7 +72,7 @@ export const StudentDatabasePage = () => {
             )
           : filteredStudentsRef.current;
       setFilteredStudents(newFilteredStudents);
-      newStudents && appDispatch({ payload: { students: newStudents }, type: "set" });
+      newStudents && appDispatch({ payload: { students: newStudents } });
       !isUndefined(newPage) && setPage(newPage);
       newRowsPerPage && setRowsPerPage(newRowsPerPage);
       !isUndefined(newSearchString) && setSearchString(newSearchString);
@@ -119,7 +119,7 @@ export const StudentDatabasePage = () => {
   }, [setState, spreadsheetIsLoading, appDispatch, studentDocs]);
 
   useEffect(() => {
-    appDispatch({ payload: { loading: docsLoading }, type: "set" });
+    appDispatch({ payload: { loading: docsLoading } });
   }, [appDispatch, docsLoading]);
 
   useEffect(() => {
@@ -148,13 +148,13 @@ export const StudentDatabasePage = () => {
     const file: File | null = e.target.files && e.target.files[0];
     const reader = new FileReader();
 
-    file && appDispatch({ payload: { loading: true }, type: "set" });
+    file && appDispatch({ payload: { loading: true } });
     file && reader.readAsText(file);
 
     reader.onloadend = async () => {
       const studentListString = String(reader.result);
       await spreadsheetToStudentList(studentListString, students);
-      appDispatch({ payload: { loading: false }, type: "set" });
+      appDispatch({ payload: { loading: false } });
       setSpreadsheetIsLoading(false);
     };
   };
@@ -165,7 +165,7 @@ export const StudentDatabasePage = () => {
 
   const handleStudentDialogClose = () => {
     setOpenStudentDialog(false);
-    appDispatch({ payload: { selectedStudent: null }, type: "set" });
+    appDispatch({ payload: { selectedStudent: null } });
   };
 
   const handleGenerateFGRClick = () => {
