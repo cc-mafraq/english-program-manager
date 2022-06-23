@@ -23,13 +23,13 @@ export const PlacementList: React.FC<PlacementProps> = ({ student }) => {
   const [open, setOpen] = useState(false);
 
   const handleDialogOpen = () => {
-    appDispatch({ payload: { selectedStudent: student }, type: "set" });
+    appDispatch({ payload: { selectedStudent: student } });
     setOpen(true);
   };
 
   const handleDialogClose = () => {
     setOpen(false);
-    appDispatch({ payload: { selectedStudent: null }, type: "set" });
+    appDispatch({ payload: { selectedStudent: null } });
   };
 
   const onSubmit = (data: Placement) => {

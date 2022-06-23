@@ -31,7 +31,7 @@ export const FormImageActions: React.FC<FormImageActionsProps> = ({ folderName, 
           onClick={async () => {
             if (!selectedStudent) return;
             await deleteImage(selectedStudent, imagePath);
-            appDispatch({ payload: { selectedStudent }, type: "set" });
+            appDispatch({ payload: { selectedStudent } });
           }}
         >
           <HideImage />

@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Box } from "@mui/material";
 import { getAuth } from "firebase/auth";
 import { collection } from "firebase/firestore";
-import { forEach, isEmpty, isUndefined, omit } from "lodash";
+import { every, filter as filterFn, forEach, get, includes, isEmpty, isUndefined, omit } from "lodash";
 import React, { ChangeEvent, useCallback, useContext, useEffect, useRef } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollection } from "react-firebase-hooks/firestore";
@@ -42,7 +42,7 @@ interface SetStateOptions {
 
 export const StudentDatabasePage = () => {
   const {
-    appState: { students, selectedStudent },
+    appState: { students, selectedStudent, filter },
     appDispatch,
   } = useContext(AppContext);
   const studentsRef = useRef(students);
@@ -62,17 +62,29 @@ export const StudentDatabasePage = () => {
 
   studentsRef.current = students;
 
+  const filterStudents = useCallback(
+    (student: Student) => {
+      return every(filter, (filterValue) => {
+        const value = get(student, filterValue.fieldPath);
+        return includes(filterValue.values, value);
+      });
+    },
+    [filter],
+  );
+
   const setState = useCallback(
     ({ newRowsPerPage, newPage, newSearchString, newStudents }: SetStateOptions) => {
-      const newFilteredStudents =
+      const newSearchedStudents =
         !isUndefined(newSearchString) || newStudents
           ? searchStudents(
               !isUndefined(newStudents) ? newStudents : studentsRef.current,
               !isUndefined(newSearchString) ? newSearchString : searchStringRef.current,
             )
           : filteredStudentsRef.current;
+      const newFilteredStudents =
+        filter.length > 0 ? (filterFn(newSearchedStudents, filterStudents) as Student[]) : newSearchedStudents;
       setFilteredStudents(newFilteredStudents);
-      newStudents && appDispatch({ payload: { students: newStudents }, type: "set" });
+      newStudents && appDispatch({ payload: { students: newStudents } });
       !isUndefined(newPage) && setPage(newPage);
       newRowsPerPage && setRowsPerPage(newRowsPerPage);
       !isUndefined(newSearchString) && setSearchString(newSearchString);
@@ -86,6 +98,8 @@ export const StudentDatabasePage = () => {
     },
     [
       appDispatch,
+      filter.length,
+      filterStudents,
       filteredStudentsRef,
       pageRef,
       rowsPerPageRef,
@@ -119,7 +133,7 @@ export const StudentDatabasePage = () => {
   }, [setState, spreadsheetIsLoading, appDispatch, studentDocs]);
 
   useEffect(() => {
-    appDispatch({ payload: { loading: docsLoading }, type: "set" });
+    appDispatch({ payload: { loading: docsLoading } });
   }, [appDispatch, docsLoading]);
 
   useEffect(() => {
@@ -128,6 +142,10 @@ export const StudentDatabasePage = () => {
       navigate("/");
     }
   }, [navigate, docsError]);
+
+  useEffect(() => {
+    setState({});
+  }, [filter, setState]);
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setState({ newPage });
@@ -148,13 +166,13 @@ export const StudentDatabasePage = () => {
     const file: File | null = e.target.files && e.target.files[0];
     const reader = new FileReader();
 
-    file && appDispatch({ payload: { loading: true }, type: "set" });
+    file && appDispatch({ payload: { loading: true } });
     file && reader.readAsText(file);
 
     reader.onloadend = async () => {
       const studentListString = String(reader.result);
       await spreadsheetToStudentList(studentListString, students);
-      appDispatch({ payload: { loading: false }, type: "set" });
+      appDispatch({ payload: { loading: false } });
       setSpreadsheetIsLoading(false);
     };
   };
@@ -165,7 +183,7 @@ export const StudentDatabasePage = () => {
 
   const handleStudentDialogClose = () => {
     setOpenStudentDialog(false);
-    appDispatch({ payload: { selectedStudent: null }, type: "set" });
+    appDispatch({ payload: { selectedStudent: null } });
   };
 
   const handleGenerateFGRClick = () => {
@@ -215,7 +233,7 @@ export const StudentDatabasePage = () => {
           searchString={searchString}
           setShowActions={setShowActions}
           showActions={showActions}
-          students={searchString ? filteredStudents : students}
+          students={searchString || filter.length ? filteredStudents : students}
         />
         <ActionsMenu
           handleGenerateFGRClick={handleGenerateFGRClick}

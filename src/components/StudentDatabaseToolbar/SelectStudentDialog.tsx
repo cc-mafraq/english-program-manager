@@ -31,7 +31,6 @@ export const SelectStudentDialog: React.FC<SelectStudentDialogProps> = ({
     if (!value) return;
     appDispatch({
       payload: { selectedStudent: getStudentById(Number(value.slice(0, 5)), students) },
-      type: "set",
     });
     handleDialogClose();
     handleStudentDialogOpen();

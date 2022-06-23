@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { camelCase, every, forOwn, get, set, some, values } from "lodash";
 import React, { useContext } from "react";
-import { AppContext } from "../../interfaces";
+import { AppContext } from "../../../interfaces";
 
 interface IndeterminateCheckboxProps {
   label: string;
@@ -32,7 +32,6 @@ export const IndeterminateCheckbox: React.FC<IndeterminateCheckboxProps> = ({ ch
     set(dataVisibility, camelCase(label), childrenValues);
     appDispatch({
       payload: { dataVisibility },
-      type: "set",
     });
   };
 
