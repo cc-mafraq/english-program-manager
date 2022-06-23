@@ -85,7 +85,7 @@ const stringToCovidStatus = (value: string, originalValue: string) => {
 };
 
 const stringToNationality = (value: string, originalValue: string) => {
-  return Nationality[originalValue as keyof typeof Nationality];
+  return originalValue as Nationality;
 };
 
 const stringToResult = (value: string, originalValue: string) => {

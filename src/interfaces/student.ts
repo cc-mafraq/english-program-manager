@@ -138,16 +138,17 @@ export enum CovidStatus {
 }
 
 export enum Nationality {
-  JDN = "JDN",
-  SYR = "SYR",
-  IRQ = "IRQ",
-  EGY = "EGY",
-  INDNES = "INDNES",
-  YEM = "YEM",
-  CEAFRRE = "CEAFRRE",
-  CHI = "CHI",
-  KOR = "KOR",
-  UNKNWN = "UNKNWN",
+  JDN = "Jordanian",
+  SYR = "Syrian",
+  IRQ = "Iraqi",
+  EGY = "Egyptian",
+  INDNES = "Indonesian",
+  YEM = "Yemeni",
+  CEAFRRE = "Central African",
+  CHI = "Chinese",
+  KOR = "Korean",
+  ARG = "Argentinian",
+  UNKNWN = "Unknown",
 }
 
 export enum Status {
@@ -200,6 +201,7 @@ export const nationalities = [
   Nationality.CHI,
   Nationality.INDNES,
   Nationality.CEAFRRE,
+  Nationality.ARG,
   Nationality.UNKNWN,
 ];
 
