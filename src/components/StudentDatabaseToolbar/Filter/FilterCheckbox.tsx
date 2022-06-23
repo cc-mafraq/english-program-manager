@@ -1,6 +1,6 @@
 import { Checkbox, FormControlLabel } from "@mui/material";
-import { cloneDeep, find, isEmpty, remove, toString } from "lodash";
-import React, { useContext, useState } from "react";
+import { cloneDeep, find, includes, isEmpty, remove, toString } from "lodash";
+import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../../interfaces";
 
 interface FilterCheckBoxProps {
@@ -13,8 +13,21 @@ export const FilterCheckbox: React.FC<FilterCheckBoxProps> = ({ value, path }) =
     appState: { filter },
     appDispatch,
   } = useContext(AppContext);
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(
+    includes(
+      find(filter, (fieldFilter) => {
+        return fieldFilter.fieldPath === path;
+      })?.values,
+      value,
+    ),
+  );
   const label = typeof value === "boolean" ? (value ? "Yes" : "No") : toString(value);
+
+  useEffect(() => {
+    if (checked && !filter.length) {
+      setChecked(false);
+    }
+  }, [checked, filter]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
@@ -26,7 +39,9 @@ export const FilterCheckbox: React.FC<FilterCheckBoxProps> = ({ value, path }) =
       remove(filterCopy, (filterVal) => {
         return filterVal.fieldPath === prevFieldFilter.fieldPath;
       });
-    const fieldFilterValues = prevFieldFilter ? [...prevFieldFilter.values, value] : [value];
+    const newValue =
+      value === "Yes" ? true : value === "No" ? false : value === "Male" ? "M" : value === "Female" ? "F" : value;
+    const fieldFilterValues = prevFieldFilter ? [...prevFieldFilter.values, newValue] : [newValue];
     if (event.target.checked) {
       appDispatch({
         payload: {
@@ -35,7 +50,7 @@ export const FilterCheckbox: React.FC<FilterCheckBoxProps> = ({ value, path }) =
       });
     } else if (prevFieldFilter?.values && prevFieldFilter?.values.length > 1) {
       remove(prevFieldFilter?.values, (val) => {
-        return val === value;
+        return val === newValue;
       });
       appDispatch({
         payload: {

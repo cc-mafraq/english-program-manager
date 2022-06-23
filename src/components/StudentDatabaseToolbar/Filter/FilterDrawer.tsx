@@ -1,4 +1,4 @@
-import { Box, Drawer, Typography } from "@mui/material";
+import { Box, Button, Drawer, Typography } from "@mui/material";
 import { map, sortBy, uniq } from "lodash";
 import React, { useContext, useMemo } from "react";
 import { FilterCheckbox } from "..";
@@ -23,6 +23,7 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({ anchorEl, handleClos
   const open = Boolean(anchorEl);
   const {
     appState: { students },
+    appDispatch,
   } = useContext(AppContext);
   const { popoverColor } = useColors();
 
@@ -33,7 +34,6 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({ anchorEl, handleClos
       { name: "Current Status", path: "status.currentStatus", values: statuses },
       { name: "Initial Session", path: "initialSession", values: getAllSessions(students) },
       { name: "Nationality", path: "nationality", values: nationalities },
-      // { name: "Age", path: "age" },
       { name: "Gender", path: "gender", values: ["Male", "Female"] },
       { name: "Teacher", path: "work.isTeacher", values: booleanCheckboxOptions },
       { name: "English Teacher", path: "work.isEnglishTeacher", values: booleanCheckboxOptions },
@@ -41,6 +41,10 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({ anchorEl, handleClos
       { name: "COVID Vaccine Status", path: "covidVaccine.status", values: covidStatuses },
     ];
   }, [students]);
+
+  const handleClearFilters = () => {
+    appDispatch({ payload: { filter: [] } });
+  };
 
   return (
     <Drawer
@@ -51,6 +55,7 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({ anchorEl, handleClos
       <Typography fontWeight="bold" marginLeft={1} marginTop={1} variant="h5">
         Filter Students
       </Typography>
+      <Button onClick={handleClearFilters}>Clear Filters</Button>
       <Box>
         {map(filterFields, (field, i) => {
           return (

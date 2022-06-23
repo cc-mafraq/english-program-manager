@@ -34,7 +34,6 @@ import {
 } from "../services";
 
 interface SetStateOptions {
-  newFilter?: boolean;
   newPage?: number;
   newRowsPerPage?: number;
   newSearchString?: string;
@@ -63,8 +62,18 @@ export const StudentDatabasePage = () => {
 
   studentsRef.current = students;
 
+  const filterStudents = useCallback(
+    (student: Student) => {
+      return every(filter, (filterValue) => {
+        const value = get(student, filterValue.fieldPath);
+        return includes(filterValue.values, value);
+      });
+    },
+    [filter],
+  );
+
   const setState = useCallback(
-    ({ newRowsPerPage, newPage, newSearchString, newStudents, newFilter }: SetStateOptions) => {
+    ({ newRowsPerPage, newPage, newSearchString, newStudents }: SetStateOptions) => {
       const newSearchedStudents =
         !isUndefined(newSearchString) || newStudents
           ? searchStudents(
@@ -73,14 +82,7 @@ export const StudentDatabasePage = () => {
             )
           : filteredStudentsRef.current;
       const newFilteredStudents =
-        newFilter && filter.length > 0
-          ? (filterFn(newSearchedStudents, (student) => {
-              return every(filter, (filterValue) => {
-                const value = get(student, filterValue.fieldPath);
-                return includes(filterValue.values, value);
-              });
-            }) as Student[])
-          : newSearchedStudents;
+        filter.length > 0 ? (filterFn(newSearchedStudents, filterStudents) as Student[]) : newSearchedStudents;
       setFilteredStudents(newFilteredStudents);
       newStudents && appDispatch({ payload: { students: newStudents } });
       !isUndefined(newPage) && setPage(newPage);
@@ -96,7 +98,8 @@ export const StudentDatabasePage = () => {
     },
     [
       appDispatch,
-      filter,
+      filter.length,
+      filterStudents,
       filteredStudentsRef,
       pageRef,
       rowsPerPageRef,
@@ -141,7 +144,7 @@ export const StudentDatabasePage = () => {
   }, [navigate, docsError]);
 
   useEffect(() => {
-    setState({ newFilter: true });
+    setState({});
   }, [filter, setState]);
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
@@ -230,7 +233,7 @@ export const StudentDatabasePage = () => {
           searchString={searchString}
           setShowActions={setShowActions}
           showActions={showActions}
-          students={searchString ? filteredStudents : students}
+          students={searchString || filter.length ? filteredStudents : students}
         />
         <ActionsMenu
           handleGenerateFGRClick={handleGenerateFGRClick}
