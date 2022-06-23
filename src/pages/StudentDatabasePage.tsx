@@ -17,7 +17,7 @@ import {
   StudentForm,
   StudentList,
 } from "../components";
-import { AppContext, Status, Student } from "../interfaces";
+import { AppContext, nationalities, Nationality, Status, Student } from "../interfaces";
 import {
   app,
   db,
@@ -146,6 +146,17 @@ export const StudentDatabasePage = () => {
   useEffect(() => {
     setState({});
   }, [filter, setState]);
+
+  // TODO: Remove once all student nationalities update
+  useEffect(() => {
+    forEach(students, (student) => {
+      if (!includes(nationalities, student.nationality)) {
+        student.nationality = Nationality[student.nationality as unknown as keyof typeof Nationality];
+        setStudentData(student);
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setState({ newPage });

@@ -4,7 +4,7 @@ import { camelCase, get, join, map, some, values } from "lodash";
 import React, { useContext } from "react";
 import { Image, LabeledContainer, LabeledText } from "..";
 import { useColors } from "../../hooks";
-import { AppContext, CovidStatus, Nationality, Status, Student } from "../../interfaces";
+import { AppContext, CovidStatus, Status, Student } from "../../interfaces";
 import { covidVaccineImageFolder, getRepeatNum, isActive, JOIN_STR } from "../../services";
 
 interface StudentInfoProps {
@@ -171,7 +171,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
       </LabeledContainer>
       <LabeledContainer condition={allCheckboxesFalse("Demographics")} label="Demographics">
         <LabeledText condition={dataVisibility.demographics.nationality} label="Nationality">
-          {Nationality[student.nationality]}
+          {student.nationality}
         </LabeledText>
         <LabeledText condition={dataVisibility.demographics.gender} label="Gender">
           {student.gender}

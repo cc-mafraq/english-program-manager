@@ -138,16 +138,17 @@ export enum CovidStatus {
 }
 
 export enum Nationality {
-  JDN = "JDN",
-  SYR = "SYR",
-  IRQ = "IRQ",
-  EGY = "EGY",
-  INDNES = "INDNES",
-  YEM = "YEM",
-  CEAFRRE = "CEAFRRE",
-  CHI = "CHI",
-  KOR = "KOR",
-  UNKNWN = "UNKNWN",
+  JDN = "Jordanian",
+  SYR = "Syrian",
+  ARG = "Argentinian",
+  CEAFRRE = "Central African",
+  CHI = "Chinese",
+  EGY = "Egyptian",
+  INDNES = "Indonesian",
+  IRQ = "Iraqi",
+  KOR = "Korean",
+  YEM = "Yemeni",
+  UNKNWN = "Unknown",
 }
 
 export enum Status {
@@ -190,18 +191,7 @@ export enum DroppedOutReason {
   VP = "Vision Problems",
 }
 
-export const nationalities = [
-  Nationality.JDN,
-  Nationality.SYR,
-  Nationality.EGY,
-  Nationality.YEM,
-  Nationality.IRQ,
-  Nationality.KOR,
-  Nationality.CHI,
-  Nationality.INDNES,
-  Nationality.CEAFRRE,
-  Nationality.UNKNWN,
-];
+export const nationalities = values(Nationality);
 
 export const genderedLevels: GenderedLevel[] = [
   "PL1-M",
