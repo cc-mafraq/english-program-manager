@@ -147,6 +147,7 @@ export const StudentDatabasePage = () => {
     setState({});
   }, [filter, setState]);
 
+  // TODO: Remove once all student nationalities update
   useEffect(() => {
     forEach(students, (student) => {
       if (!includes(nationalities, student.nationality)) {
