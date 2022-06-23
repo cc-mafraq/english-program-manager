@@ -35,9 +35,9 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({ anchorEl, handleClos
       { name: "Initial Session", path: "initialSession", values: getAllSessions(students) },
       { name: "Nationality", path: "nationality", values: nationalities },
       { name: "Gender", path: "gender", values: ["Male", "Female"] },
-      { name: "Teacher", path: "work.isTeacher", values: booleanCheckboxOptions },
-      { name: "English Teacher", path: "work.isEnglishTeacher", values: booleanCheckboxOptions },
-      { name: "Placement Pending", path: "placement.pending", values: booleanCheckboxOptions },
+      { name: "Teacher", path: "work.isTeacher", values: ["Yes"] },
+      { name: "English Teacher", path: "work.isEnglishTeacher", values: ["Yes"] },
+      { name: "Placement Pending", path: "placement.pending", values: ["Yes"] },
       { name: "COVID Vaccine Status", path: "covidVaccine.status", values: covidStatuses },
     ];
   }, [students]);
