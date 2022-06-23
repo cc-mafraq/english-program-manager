@@ -64,7 +64,7 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({ anchorEl, handleClos
                 {field.name}
               </Typography>
               {map(field.values ? field.values : sortBy(uniq(map(students, field.path))), (val) => {
-                return <FilterCheckbox key={`filter-field-${field.name}-${val}`} path={field.path} value={val} />;
+                return <FilterCheckbox key={`filter-field-${field.name}-${val}`} label={val} path={field.path} />;
               })}
             </Box>
           );

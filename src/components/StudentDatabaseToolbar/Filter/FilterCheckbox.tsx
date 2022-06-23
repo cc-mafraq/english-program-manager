@@ -4,15 +4,23 @@ import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../../interfaces";
 
 interface FilterCheckBoxProps {
+  label: unknown;
   path: string;
-  value: unknown;
 }
 
-export const FilterCheckbox: React.FC<FilterCheckBoxProps> = ({ value, path }) => {
+interface Mapping {
+  [key: string]: unknown;
+}
+
+const valueMappings: Mapping = { Female: "F", Male: "M", No: false, Yes: true };
+
+export const FilterCheckbox: React.FC<FilterCheckBoxProps> = ({ label, path }) => {
   const {
     appState: { filter },
     appDispatch,
   } = useContext(AppContext);
+
+  const value = includes(Object.keys(valueMappings), label) ? valueMappings[label as string] : label;
   const [checked, setChecked] = useState(
     includes(
       find(filter, (fieldFilter) => {
@@ -21,7 +29,6 @@ export const FilterCheckbox: React.FC<FilterCheckBoxProps> = ({ value, path }) =
       value,
     ),
   );
-  const label = typeof value === "boolean" ? (value ? "Yes" : "No") : toString(value);
 
   useEffect(() => {
     if (checked && !filter.length) {
@@ -39,9 +46,8 @@ export const FilterCheckbox: React.FC<FilterCheckBoxProps> = ({ value, path }) =
       remove(filterCopy, (filterVal) => {
         return filterVal.fieldPath === prevFieldFilter.fieldPath;
       });
-    const newValue =
-      value === "Yes" ? true : value === "No" ? false : value === "Male" ? "M" : value === "Female" ? "F" : value;
-    const fieldFilterValues = prevFieldFilter ? [...prevFieldFilter.values, newValue] : [newValue];
+
+    const fieldFilterValues = prevFieldFilter ? [...prevFieldFilter.values, value] : [value];
     if (event.target.checked) {
       appDispatch({
         payload: {
@@ -50,7 +56,7 @@ export const FilterCheckbox: React.FC<FilterCheckBoxProps> = ({ value, path }) =
       });
     } else if (prevFieldFilter?.values && prevFieldFilter?.values.length > 1) {
       remove(prevFieldFilter?.values, (val) => {
-        return val === newValue;
+        return val === value;
       });
       appDispatch({
         payload: {
@@ -66,12 +72,12 @@ export const FilterCheckbox: React.FC<FilterCheckBoxProps> = ({ value, path }) =
     }
   };
 
-  return value === undefined || isEmpty(toString(value)) ? (
+  return label === undefined || isEmpty(toString(label)) ? (
     <></>
   ) : (
     <FormControlLabel
       control={<Checkbox checked={checked} onChange={handleChange} />}
-      label={label}
+      label={label as string}
       sx={{ display: "flex", marginTop: -0.5 }}
     />
   );
