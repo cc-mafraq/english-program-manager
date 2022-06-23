@@ -39,6 +39,8 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({ anchorEl, handleClos
       { name: "English Teacher", path: "work.isEnglishTeacher", values: ["Yes"] },
       { name: "Placement Pending", path: "placement.pending", values: ["Yes"] },
       { name: "COVID Vaccine Status", path: "covidVaccine.status", values: covidStatuses },
+      { name: "Dropped Out Reason", path: "status.droppedOutReason" },
+      { name: "Number of Classes Taken", path: "academicRecords.length" },
     ];
   }, [students]);
 
