@@ -1,5 +1,5 @@
-import { get } from "lodash";
-import React, { useCallback, useEffect, useRef } from "react";
+import { get, isEqual, map } from "lodash";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { VariableSizeList } from "react-window";
 import { StudentCard } from ".";
@@ -15,6 +15,7 @@ export const StudentList: React.FC<StudentListProps> = ({ studentsPage, handleEd
   const listRef = useRef<VariableSizeList>(null);
   const sizeMap = useRef({});
   const [windowWidth] = useWindowResize();
+  const [pageIds, setPageIds] = useState(map(studentsPage, "epId"));
 
   const setSize = useCallback((index, size) => {
     listRef.current?.resetAfterIndex(index);
@@ -27,7 +28,12 @@ export const StudentList: React.FC<StudentListProps> = ({ studentsPage, handleEd
 
   useEffect(() => {
     listRef.current?.scrollTo(0);
-  }, [studentsPage]);
+  }, [pageIds]);
+
+  useEffect(() => {
+    const newPageIds = map(studentsPage, "epId");
+    !isEqual(newPageIds, pageIds) && setPageIds(newPageIds);
+  }, [pageIds, studentsPage]);
 
   return (
     <AutoSizer>

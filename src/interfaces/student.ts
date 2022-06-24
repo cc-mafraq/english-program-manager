@@ -163,14 +163,14 @@ export enum FinalResult {
   WD = "WD",
 }
 
-export enum DroppedOutTiming {
-  DO1 = "Dropped out after 1 ses",
-  DO2 = "Dropped out after 2 ses",
-  DO3 = "Dropped out after 3 or more ses",
-  SE = "Attended Previous Session(s) & Still Enrolled",
-  SES1 = "Still in 1st Session",
-  SKIP = "Attended a Session, Skipped a Session, & Returned",
-  WD1 = "WD 1st ses or never returned after PE",
+export enum StatusDetails {
+  DO1 = "Dropped out after 1 session",
+  DO2 = "Dropped out after 2 sessions",
+  DO3 = "Dropped out after 3 or more sessions",
+  SE = "Attended previous sessions & still enrolled",
+  SES1 = "Still in 1st session",
+  SKIP = "Attended a session, skipped a session, & returned",
+  WD1 = "WD in 1st session or never returned after PE",
 }
 
 export enum DroppedOutReason {
