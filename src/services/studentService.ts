@@ -39,6 +39,13 @@ export interface SessionResult {
   session?: string;
 }
 
+export interface FilterField {
+  fn?: (student: Student) => unknown;
+  name: string;
+  path: string;
+  values?: unknown[];
+}
+
 export const getRepeatNum = (student: Student): string | undefined => {
   const levelsTaken = map(student.academicRecords, "level");
   const levelCounts = countBy(levelsTaken);

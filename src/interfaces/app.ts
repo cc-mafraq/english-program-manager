@@ -134,6 +134,7 @@ export interface DataVisibility {
 }
 
 interface FilterValue {
+  fieldFunction?: (student: Student) => unknown;
   fieldPath: string;
   values: unknown[];
 }

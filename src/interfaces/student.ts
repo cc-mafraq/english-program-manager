@@ -228,6 +228,7 @@ export const levelsPlus: (LevelPlus | "Exempt")[] = [
 ];
 
 export const statuses = values(Status);
+export const statusDetails = values(StatusDetails);
 export const covidStatuses = values(CovidStatus);
 
 export const results = values(FinalResult);
