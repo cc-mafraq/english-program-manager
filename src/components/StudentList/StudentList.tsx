@@ -35,6 +35,24 @@ export const StudentList: React.FC<StudentListProps> = ({ studentsPage, handleEd
     !isEqual(newPageIds, pageIds) && setPageIds(newPageIds);
   }, [pageIds, studentsPage]);
 
+  const Row = useCallback(
+    ({ data, index, style }) => {
+      return (
+        <StudentCard
+          handleEditStudentClick={handleEditStudentClick}
+          index={index}
+          setSize={setSize}
+          student={data[index]}
+          style={style}
+          windowWidth={windowWidth}
+        />
+      );
+    },
+    // disable exhaustive deps because handleEditStudentClick causes StudentCard to unmount and lose tabValue state
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [setSize, windowWidth],
+  );
+
   return (
     <AutoSizer>
       {({ height, width }) => {
@@ -49,18 +67,7 @@ export const StudentList: React.FC<StudentListProps> = ({ studentsPage, handleEd
             style={{ overflowX: "hidden" }}
             width={width}
           >
-            {({ data, index, style }) => {
-              return (
-                <StudentCard
-                  handleEditStudentClick={handleEditStudentClick}
-                  index={index}
-                  setSize={setSize}
-                  student={data[index]}
-                  style={style}
-                  windowWidth={windowWidth}
-                />
-              );
-            }}
+            {Row}
           </VariableSizeList>
         );
       }}
