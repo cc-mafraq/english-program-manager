@@ -136,7 +136,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         )}
       </Box>
       <LabeledContainer condition={allCheckboxesFalse("Status")} label="Status">
-        <LabeledText label="Status Details">{getStatusDetails(student, students)}</LabeledText>
+        <LabeledText label="Status Details">{getStatusDetails({ student, students })}</LabeledText>
         <LabeledText condition={dataVisibility.status.audit} label="Audit">
           {student.status.audit}
         </LabeledText>

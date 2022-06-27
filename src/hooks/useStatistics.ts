@@ -1,4 +1,4 @@
-import { countBy, filter, forEach, get, omit, set } from "lodash";
+import { countBy, filter, forEach, get, map, omit, set } from "lodash";
 import { useCallback, useContext } from "react";
 import {
   AppContext,
@@ -8,9 +8,10 @@ import {
   Level,
   Nationality,
   Status,
+  StatusDetails,
   Student,
 } from "../interfaces";
-import { isActive } from "../services";
+import { getSessionsWithResults, getStatusDetails, isActive } from "../services";
 
 interface Statistics {
   activeLevelCounts: { [key in Level]: number };
@@ -24,6 +25,7 @@ interface Statistics {
   nationalityCounts: { [key in Nationality]: number };
   sessionCounts: { [key in Student["initialSession"]]: number };
   statusCounts: { [key in Status]: number };
+  statusDetailsCounts: { [key in StatusDetails]: number };
   totalActive: number;
   totalEligible: number;
   totalEnglishTeachers: number;
@@ -61,6 +63,8 @@ export const useStatistics = (): Statistics => {
     });
   }, [students]);
 
+  const sessions = getSessionsWithResults(students);
+
   const statistics: Statistics = {
     activeLevelCounts: countBy(filterIsActive(), "currentLevel") as { [key in GenderedLevel]: number },
     activeNationalityCounts: countBy(filterIsActive(), "nationality") as { [key in Nationality]: number },
@@ -79,6 +83,11 @@ export const useStatistics = (): Statistics => {
       [key in Student["initialSession"]]: number;
     },
     statusCounts: countBy(students, "status.currentStatus") as { [key in Status]: number },
+    statusDetailsCounts: countBy(
+      map(students, (student) => {
+        return getStatusDetails({ sessions, student });
+      }),
+    ) as { [key in StatusDetails]: number },
     totalActive: 0,
     totalEligible: 0,
     totalEnglishTeachers: 0,

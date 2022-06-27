@@ -1,6 +1,6 @@
 import { Box, Typography, TypographyProps, useTheme } from "@mui/material";
 import { getAuth } from "firebase/auth";
-import { get, keys, map, round } from "lodash";
+import { get, keys, map, round, sortBy } from "lodash";
 import React, { useContext, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
@@ -97,6 +97,17 @@ export const StatisticsPage = () => {
         return (
           <Typography {...textProps} key={`status-${key}`} marginLeft={INDENT}>
             {key}: {get(statistics.statusCounts, key)}
+          </Typography>
+        );
+      })}
+      <Typography {...textProps} fontWeight="bold">
+        Status Details
+      </Typography>
+      {map(sortBy(keys(statistics.statusDetailsCounts)), (key) => {
+        return (
+          <Typography {...textProps} key={`status-details-${key}`} marginLeft={INDENT}>
+            {key}: {get(statistics.statusDetailsCounts, key)} (
+            {round(get(statistics.statusDetailsCounts, key) / students.length, 3) * 100}%)
           </Typography>
         );
       })}

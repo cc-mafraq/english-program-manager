@@ -157,9 +157,9 @@ export const getStudentById = (id: Student["epId"], students: Student[]): Studen
   return find(students, { epId: id });
 };
 
-export const getStatusDetails = (student: Student, students: Student[]): StatusDetails => {
+export const getSessionsWithResults = (students: Student[]) => {
   const allSessions = getAllSessions(students);
-  const sessionsWithResults = filter(allSessions, (session) => {
+  return filter(allSessions, (session) => {
     return some(
       map(
         filter(flatten(map(students, "academicRecords")), (ar) => {
@@ -169,6 +169,18 @@ export const getStatusDetails = (student: Student, students: Student[]): StatusD
       ),
     );
   });
+};
+
+export const getStatusDetails = ({
+  student,
+  students,
+  sessions,
+}: {
+  sessions?: Student["initialSession"][];
+  student: Student;
+  students?: Student[];
+}): StatusDetails => {
+  const sessionsWithResults = sessions || (students && getSessionsWithResults(students));
   const sessionsAttended = mapValues(keyBy(sessionsWithResults), () => {
     return false;
   });

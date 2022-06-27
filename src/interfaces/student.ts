@@ -164,13 +164,13 @@ export enum FinalResult {
 }
 
 export enum StatusDetails {
+  WD1 = "Dropped out in 1st session or never returned after PE",
   DO1 = "Dropped out after 1 session",
   DO2 = "Dropped out after 2 sessions",
   DO3 = "Dropped out after 3 or more sessions",
   SE = "Attended previous sessions & still enrolled",
   SES1 = "Still in 1st session",
   SKIP = "Attended a session, skipped a session, & returned",
-  WD1 = "WD in 1st session or never returned after PE",
 }
 
 export enum DroppedOutReason {

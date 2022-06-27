@@ -34,7 +34,7 @@ export const StudentCard: React.FC<StudentCardProps> = ({
     if (rowRef.current && setSize && index !== undefined) {
       setSize(index, rowRef.current.clientHeight);
     }
-  }, [index, setSize, windowWidth, tabValue]);
+  }, [index, setSize, windowWidth, tabValue, rowRef.current?.clientHeight]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
