@@ -85,7 +85,7 @@ export const useStatistics = (): Statistics => {
     statusCounts: countBy(students, "status.currentStatus") as { [key in Status]: number },
     statusDetailsCounts: countBy(
       map(students, (student) => {
-        return getStatusDetails({ sessions, student });
+        return getStatusDetails({ sessions, student })[0];
       }),
     ) as { [key in StatusDetails]: number },
     totalActive: 0,

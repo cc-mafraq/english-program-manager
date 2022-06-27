@@ -17,6 +17,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
   } = useContext(AppContext);
   const theme = useTheme();
   const { defaultBackgroundColor, green, red, yellow } = useColors();
+  const statusDetailsAndNumSessions = getStatusDetails({ student, students });
 
   const allCheckboxesFalse = (label: string): boolean => {
     return some(values(get(dataVisibility, camelCase(label))));
@@ -136,7 +137,11 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         )}
       </Box>
       <LabeledContainer condition={allCheckboxesFalse("Status")} label="Status">
-        <LabeledText label="Status Details">{getStatusDetails({ student, students })}</LabeledText>
+        {/* TODO: Add dataVisibility */}
+        <LabeledText label="Status Details">{statusDetailsAndNumSessions[0]}</LabeledText>
+        <LabeledText label="Sessions Attended">
+          {statusDetailsAndNumSessions[1]} session{statusDetailsAndNumSessions[1] === 1 ? "" : "s"}
+        </LabeledText>
         <LabeledText condition={dataVisibility.status.audit} label="Audit">
           {student.status.audit}
         </LabeledText>

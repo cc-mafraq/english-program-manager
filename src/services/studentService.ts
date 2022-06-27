@@ -186,7 +186,7 @@ export const getStatusDetails = ({
   sessions?: Student["initialSession"][];
   student: Student;
   students?: Student[];
-}): StatusDetails => {
+}): [StatusDetails, number] => {
   const sessionsWithResults = sessions || (students && getSessionsWithResults(students));
   const sessionsAttended = mapValues(keyBy(sessionsWithResults), () => {
     return false;
@@ -205,11 +205,11 @@ export const getStatusDetails = ({
       numSessionsAttended === 0 &&
       !includes(sessionsWithResults, student.academicRecords[0].session))
   )
-    return StatusDetails.SES1;
-  if (numSessionsAttended === 1 && !progress[0]) return StatusDetails.DO1;
-  if (numSessionsAttended === 2 && !progress[0]) return StatusDetails.DO2;
-  if (numSessionsAttended > 2 && !progress[0]) return StatusDetails.DO3;
-  if (numSessionsAttended > 1 && progress[0] && progress[1]) return StatusDetails.SE;
-  if (numSessionsAttended === 0) return StatusDetails.WD1;
-  return StatusDetails.SKIP;
+    return [StatusDetails.SES1, numSessionsAttended];
+  if (numSessionsAttended === 1 && !progress[0]) return [StatusDetails.DO1, numSessionsAttended];
+  if (numSessionsAttended === 2 && !progress[0]) return [StatusDetails.DO2, numSessionsAttended];
+  if (numSessionsAttended > 2 && !progress[0]) return [StatusDetails.DO3, numSessionsAttended];
+  if (numSessionsAttended > 1 && progress[0] && progress[1]) return [StatusDetails.SE, numSessionsAttended];
+  if (numSessionsAttended === 0) return [StatusDetails.WD1, numSessionsAttended];
+  return [StatusDetails.SKIP, numSessionsAttended];
 };

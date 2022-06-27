@@ -1,5 +1,5 @@
 import { Box, Button, Drawer, Typography, useTheme } from "@mui/material";
-import { map, sortBy, uniq } from "lodash";
+import { map, range, sortBy, uniq } from "lodash";
 import React, { useCallback, useContext, useMemo } from "react";
 import { FilterCheckbox } from "..";
 import { useColors } from "../../../hooks";
@@ -33,7 +33,14 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({ anchorEl, handleClos
 
   const statusDetailsFn = useCallback(
     (student: Student) => {
-      return getStatusDetails({ sessions: sessionsWithResults, student });
+      return getStatusDetails({ sessions: sessionsWithResults, student })[0];
+    },
+    [sessionsWithResults],
+  );
+
+  const sessionsAttendedFn = useCallback(
+    (student: Student) => {
+      return getStatusDetails({ sessions: sessionsWithResults, student })[1];
     },
     [sessionsWithResults],
   );
@@ -52,9 +59,10 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({ anchorEl, handleClos
       { fn: statusDetailsFn, name: "Status Details", path: "statusDetails", values: statusDetails },
       { name: "COVID Vaccine Status", path: "covidVaccine.status", values: covidStatuses },
       { name: "Dropped Out Reason", path: "status.droppedOutReason" },
-      { name: "Number of Classes Taken", path: "academicRecords.length" },
+      // TODO: Add between numbers component for filtering
+      { fn: sessionsAttendedFn, name: "Sessions Attended", path: "sessionsAttended", values: range(11) },
     ];
-  }, [statusDetailsFn, students]);
+  }, [sessionsAttendedFn, statusDetailsFn, students]);
 
   const handleClearFilters = () => {
     appDispatch({ payload: { filter: [] } });
