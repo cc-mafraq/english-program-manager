@@ -59,7 +59,6 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({ anchorEl, handleClos
       { fn: statusDetailsFn, name: "Status Details", path: "statusDetails", values: statusDetails },
       { name: "COVID Vaccine Status", path: "covidVaccine.status", values: covidStatuses },
       { name: "Dropped Out Reason", path: "status.droppedOutReason" },
-      // TODO: Add between numbers component for filtering
       { fn: sessionsAttendedFn, name: "Sessions Attended", path: "sessionsAttended", values: range(11) },
     ];
   }, [sessionsAttendedFn, statusDetailsFn, students]);

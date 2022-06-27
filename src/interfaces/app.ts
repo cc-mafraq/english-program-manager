@@ -122,6 +122,8 @@ export interface DataVisibility {
     levelReevalDate: boolean;
     reactivatedDate: boolean;
     repeatNumber: boolean;
+    sessionsAttended: boolean;
+    statusDetails: boolean;
     withdrawDate: boolean;
     withdrawReason: boolean;
   };
@@ -217,6 +219,8 @@ export const initialAppState: AppState = {
       levelReevalDate: true,
       reactivatedDate: true,
       repeatNumber: true,
+      sessionsAttended: true,
+      statusDetails: true,
       withdrawDate: true,
       withdrawReason: true,
     },

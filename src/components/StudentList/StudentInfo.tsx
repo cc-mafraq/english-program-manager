@@ -137,9 +137,10 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         )}
       </Box>
       <LabeledContainer condition={allCheckboxesFalse("Status")} label="Status">
-        {/* TODO: Add dataVisibility */}
-        <LabeledText label="Status Details">{statusDetailsAndNumSessions[0]}</LabeledText>
-        <LabeledText label="Sessions Attended">
+        <LabeledText condition={dataVisibility.status.statusDetails} label="Status Details">
+          {statusDetailsAndNumSessions[0]}
+        </LabeledText>
+        <LabeledText condition={dataVisibility.status.sessionsAttended} label="Sessions Attended">
           {statusDetailsAndNumSessions[1]} session{statusDetailsAndNumSessions[1] === 1 ? "" : "s"}
         </LabeledText>
         <LabeledText condition={dataVisibility.status.audit} label="Audit">
