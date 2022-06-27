@@ -65,7 +65,9 @@ export const StudentDatabasePage = () => {
   const filterStudents = useCallback(
     (student: Student) => {
       return every(filter, (filterValue) => {
-        const value = get(student, filterValue.fieldPath);
+        const value = filterValue.fieldFunction
+          ? filterValue.fieldFunction(student)
+          : get(student, filterValue.fieldPath);
         return includes(filterValue.values, value);
       });
     },

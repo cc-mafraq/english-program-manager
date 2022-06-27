@@ -2,10 +2,11 @@ import { Checkbox, FormControlLabel } from "@mui/material";
 import { cloneDeep, find, includes, isEmpty, remove, toString } from "lodash";
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../../interfaces";
+import { FilterField } from "../../../services";
 
 interface FilterCheckBoxProps {
+  filterField: FilterField;
   label: unknown;
-  path: string;
 }
 
 interface Mapping {
@@ -14,7 +15,7 @@ interface Mapping {
 
 const valueMappings: Mapping = { Female: "F", Male: "M", No: false, Yes: true };
 
-export const FilterCheckbox: React.FC<FilterCheckBoxProps> = ({ label, path }) => {
+export const FilterCheckbox: React.FC<FilterCheckBoxProps> = ({ label, filterField }) => {
   const {
     appState: { filter },
     appDispatch,
@@ -24,7 +25,7 @@ export const FilterCheckbox: React.FC<FilterCheckBoxProps> = ({ label, path }) =
   const [checked, setChecked] = useState(
     includes(
       find(filter, (fieldFilter) => {
-        return fieldFilter.fieldPath === path;
+        return fieldFilter.fieldPath === filterField.path;
       })?.values,
       value,
     ),
@@ -40,7 +41,7 @@ export const FilterCheckbox: React.FC<FilterCheckBoxProps> = ({ label, path }) =
     setChecked(event.target.checked);
     const filterCopy = cloneDeep(filter);
     const prevFieldFilter = find(filterCopy, (fieldFilter) => {
-      return fieldFilter.fieldPath === path;
+      return fieldFilter.fieldPath === filterField.path;
     });
     prevFieldFilter &&
       remove(filterCopy, (filterVal) => {
@@ -51,7 +52,10 @@ export const FilterCheckbox: React.FC<FilterCheckBoxProps> = ({ label, path }) =
     if (event.target.checked) {
       appDispatch({
         payload: {
-          filter: [...filterCopy, { fieldPath: path, values: fieldFilterValues }],
+          filter: [
+            ...filterCopy,
+            { fieldFunction: filterField.fn, fieldPath: filterField.path, values: fieldFilterValues },
+          ],
         },
       });
     } else if (prevFieldFilter?.values && prevFieldFilter?.values.length > 1) {

@@ -3,21 +3,27 @@ import {
   filter,
   find,
   first,
+  flatten,
   forEach,
   includes,
   isEmpty,
   isUndefined,
+  keyBy,
   last,
   lowerCase,
   map,
+  mapValues,
   nth,
   replace,
   reverse,
+  set,
   slice,
+  some,
   sortBy,
+  sum,
   uniq,
 } from "lodash";
-import { FinalResult, GenderedLevel, Level, levels, Status, Student } from "../interfaces";
+import { FinalResult, GenderedLevel, Level, levels, Status, StatusDetails, Student } from "../interfaces";
 import { getLevelAtSession } from "./fgrService";
 
 export const JOIN_STR = ", ";
@@ -31,6 +37,13 @@ export interface SessionResult {
   level?: string;
   result?: FinalResult;
   session?: string;
+}
+
+export interface FilterField {
+  fn?: (student: Student) => unknown;
+  name: string;
+  path: string;
+  values?: unknown[];
 }
 
 export const getRepeatNum = (student: Student): string | undefined => {
@@ -112,22 +125,18 @@ export const filterOutById = (students: Student[], id: Student["epId"]): Student
   });
 };
 
+export const sortBySession = (session: Student["initialSession"]) => {
+  const sessionParts = session.split(" ");
+  return `${nth(sessionParts, 2)} ${replace(replace(lowerCase(nth(sessionParts, 0)), "fa", "2"), "sp", "1")} ${nth(
+    sessionParts,
+    1,
+  )}`;
+};
+
 export const getAllSessions = (students: Student[]) => {
-  return filter(
-    reverse(
-      sortBy(uniq(map(students, "initialSession")), (session) => {
-        const sessionParts = session.split(" ");
-        return `${nth(sessionParts, 2)} ${replace(
-          replace(lowerCase(nth(sessionParts, 0)), "fa", "2"),
-          "sp",
-          "1",
-        )} ${nth(sessionParts, 1)}`;
-      }),
-    ),
-    (s) => {
-      return !isEmpty(s);
-    },
-  );
+  return filter(reverse(sortBy(uniq(map(students, "initialSession")), sortBySession)), (s) => {
+    return !isEmpty(s);
+  });
 };
 
 export const generateId = (students: Student[]): number => {
@@ -153,4 +162,54 @@ export const getStudentOptions = (students: Student[]): string[] => {
 
 export const getStudentById = (id: Student["epId"], students: Student[]): Student | undefined => {
   return find(students, { epId: id });
+};
+
+export const getSessionsWithResults = (students: Student[]) => {
+  const allSessions = getAllSessions(students);
+  return filter(allSessions, (session) => {
+    return some(
+      map(
+        filter(flatten(map(students, "academicRecords")), (ar) => {
+          return ar.session === session;
+        }),
+        "finalResult.result",
+      ),
+    );
+  });
+};
+
+export const getStatusDetails = ({
+  student,
+  students,
+  sessions,
+}: {
+  sessions?: Student["initialSession"][];
+  student: Student;
+  students?: Student[];
+}): [StatusDetails, number] => {
+  const sessionsWithResults = sessions || (students && getSessionsWithResults(students));
+  const sessionsAttended = mapValues(keyBy(sessionsWithResults), () => {
+    return false;
+  });
+  forEach(student.academicRecords, (ar) => {
+    if (ar.finalResult?.result !== FinalResult.WD && includes(sessionsWithResults, ar.session)) {
+      set(sessionsAttended, ar.session, true);
+    }
+  });
+  const progress = Object.values(sessionsAttended);
+  const numSessionsAttended = sum(progress);
+  if (
+    (numSessionsAttended === 1 && progress[0]) ||
+    // Return 1st Session if the student's ar has a session in the future (not inclded in sessionWithResults) and they have no sessions in the past
+    (student.academicRecords.length &&
+      numSessionsAttended === 0 &&
+      !includes(sessionsWithResults, student.academicRecords[0].session))
+  )
+    return [StatusDetails.SES1, numSessionsAttended];
+  if (numSessionsAttended === 1 && !progress[0]) return [StatusDetails.DO1, numSessionsAttended];
+  if (numSessionsAttended === 2 && !progress[0]) return [StatusDetails.DO2, numSessionsAttended];
+  if (numSessionsAttended > 2 && !progress[0]) return [StatusDetails.DO3, numSessionsAttended];
+  if (numSessionsAttended > 1 && progress[0] && progress[1]) return [StatusDetails.SE, numSessionsAttended];
+  if (numSessionsAttended === 0) return [StatusDetails.WD1, numSessionsAttended];
+  return [StatusDetails.SKIP, numSessionsAttended];
 };

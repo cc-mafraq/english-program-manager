@@ -5,7 +5,7 @@ import React, { useContext } from "react";
 import { Image, LabeledContainer, LabeledText } from "..";
 import { useColors } from "../../hooks";
 import { AppContext, CovidStatus, Status, Student } from "../../interfaces";
-import { covidVaccineImageFolder, getRepeatNum, isActive, JOIN_STR } from "../../services";
+import { covidVaccineImageFolder, getRepeatNum, getStatusDetails, isActive, JOIN_STR } from "../../services";
 
 interface StudentInfoProps {
   student: Student;
@@ -13,10 +13,11 @@ interface StudentInfoProps {
 
 export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
   const {
-    appState: { dataVisibility },
+    appState: { dataVisibility, students },
   } = useContext(AppContext);
   const theme = useTheme();
   const { defaultBackgroundColor, green, red, yellow } = useColors();
+  const statusDetailsAndNumSessions = getStatusDetails({ student, students });
 
   const allCheckboxesFalse = (label: string): boolean => {
     return some(values(get(dataVisibility, camelCase(label))));
@@ -136,6 +137,12 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         )}
       </Box>
       <LabeledContainer condition={allCheckboxesFalse("Status")} label="Status">
+        <LabeledText condition={dataVisibility.status.statusDetails} label="Status Details">
+          {statusDetailsAndNumSessions[0]}
+        </LabeledText>
+        <LabeledText condition={dataVisibility.status.sessionsAttended} label="Sessions Attended">
+          {statusDetailsAndNumSessions[1]} session{statusDetailsAndNumSessions[1] === 1 ? "" : "s"}
+        </LabeledText>
         <LabeledText condition={dataVisibility.status.audit} label="Audit">
           {student.status.audit}
         </LabeledText>

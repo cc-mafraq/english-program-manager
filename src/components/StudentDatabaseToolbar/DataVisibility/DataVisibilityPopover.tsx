@@ -82,6 +82,8 @@ const labels: { childLabels: string[]; parentLabel: string }[] = [
       "Level Reeval Date",
       "Reactivated Date",
       "Repeat Number",
+      "Sessions Attended",
+      "Status Details",
       "Withdraw Date",
       "Withdraw Reason",
     ],

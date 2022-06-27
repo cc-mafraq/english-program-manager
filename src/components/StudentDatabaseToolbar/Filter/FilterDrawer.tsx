@@ -1,20 +1,22 @@
 import { Box, Button, Drawer, Typography, useTheme } from "@mui/material";
-import { map, sortBy, uniq } from "lodash";
-import React, { useContext, useMemo } from "react";
+import { map, range, sortBy, uniq } from "lodash";
+import React, { useCallback, useContext, useMemo } from "react";
 import { FilterCheckbox } from "..";
 import { useColors } from "../../../hooks";
-import { AppContext, covidStatuses, genderedLevels, nationalities, statuses } from "../../../interfaces";
-import { getAllSessions } from "../../../services";
+import {
+  AppContext,
+  covidStatuses,
+  genderedLevels,
+  nationalities,
+  statusDetails,
+  statuses,
+  Student,
+} from "../../../interfaces";
+import { FilterField, getAllSessions, getSessionsWithResults, getStatusDetails } from "../../../services";
 
 interface FilterDrawerProps {
   anchorEl: HTMLButtonElement | null;
   handleClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
-}
-
-interface FilterField {
-  name: string;
-  path: string;
-  values?: unknown[];
 }
 
 const booleanCheckboxOptions = ["Yes", "No"];
@@ -27,6 +29,21 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({ anchorEl, handleClos
   } = useContext(AppContext);
   const { popoverColor } = useColors();
   const theme = useTheme();
+  const sessionsWithResults = getSessionsWithResults(students);
+
+  const statusDetailsFn = useCallback(
+    (student: Student) => {
+      return getStatusDetails({ sessions: sessionsWithResults, student })[0];
+    },
+    [sessionsWithResults],
+  );
+
+  const sessionsAttendedFn = useCallback(
+    (student: Student) => {
+      return getStatusDetails({ sessions: sessionsWithResults, student })[1];
+    },
+    [sessionsWithResults],
+  );
 
   const filterFields: FilterField[] = useMemo(() => {
     return [
@@ -39,11 +56,12 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({ anchorEl, handleClos
       { name: "Teacher", path: "work.isTeacher", values: ["Yes"] },
       { name: "English Teacher", path: "work.isEnglishTeacher", values: ["Yes"] },
       { name: "Placement Pending", path: "placement.pending", values: ["Yes"] },
+      { fn: statusDetailsFn, name: "Status Details", path: "statusDetails", values: statusDetails },
       { name: "COVID Vaccine Status", path: "covidVaccine.status", values: covidStatuses },
       { name: "Dropped Out Reason", path: "status.droppedOutReason" },
-      { name: "Number of Classes Taken", path: "academicRecords.length" },
+      { fn: sessionsAttendedFn, name: "Sessions Attended", path: "sessionsAttended", values: range(11) },
     ];
-  }, [students]);
+  }, [sessionsAttendedFn, statusDetailsFn, students]);
 
   const handleClearFilters = () => {
     appDispatch({ payload: { filter: [] } });
@@ -80,7 +98,9 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({ anchorEl, handleClos
                 {field.name}
               </Typography>
               {map(field.values ? field.values : sortBy(uniq(map(students, field.path))), (val) => {
-                return <FilterCheckbox key={`filter-field-${field.name}-${val}`} label={val} path={field.path} />;
+                return (
+                  <FilterCheckbox key={`filter-field-${field.name}-${val}`} filterField={field} label={val} />
+                );
               })}
             </Box>
           );
