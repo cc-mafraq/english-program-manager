@@ -51,7 +51,6 @@ export const getDesignTokens = (mode: PaletteMode): ThemeOptions => {
 
 export interface AppAction {
   payload: Partial<AppState>;
-  type: "set";
 }
 
 export interface DataVisibility {
@@ -123,6 +122,8 @@ export interface DataVisibility {
     levelReevalDate: boolean;
     reactivatedDate: boolean;
     repeatNumber: boolean;
+    sessionsAttended: boolean;
+    statusDetails: boolean;
     withdrawDate: boolean;
     withdrawReason: boolean;
   };
@@ -134,8 +135,15 @@ export interface DataVisibility {
   };
 }
 
+interface FilterValue {
+  fieldFunction?: (student: Student) => unknown;
+  fieldPath: string;
+  values: unknown[];
+}
+
 export interface AppState {
   dataVisibility: DataVisibility;
+  filter: FilterValue[];
   loading: boolean;
   selectedStudent: Student | null;
   students: Student[];
@@ -211,6 +219,8 @@ export const initialAppState: AppState = {
       levelReevalDate: true,
       reactivatedDate: true,
       repeatNumber: true,
+      sessionsAttended: true,
+      statusDetails: true,
       withdrawDate: true,
       withdrawReason: true,
     },
@@ -219,6 +229,7 @@ export const initialAppState: AppState = {
       tutorAndDetails: true,
     },
   },
+  filter: [],
   loading: true,
   selectedStudent: null,
   students: [],

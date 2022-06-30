@@ -36,7 +36,7 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({
         onChange={async (e: ChangeEvent<HTMLInputElement>) => {
           if (!student) return;
           await setImage(student, e.target.files && e.target.files[0], imagePath, folderName);
-          appDispatch({ payload: { selectedStudent: student }, type: "set" });
+          appDispatch({ payload: { selectedStudent: student } });
         }}
         type="file"
       />

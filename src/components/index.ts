@@ -1,4 +1,3 @@
-export * from "./DataVisibility";
 export * from "./FinalGradeReports";
 export * from "./Menu";
 export * from "./StudentDatabaseToolbar";

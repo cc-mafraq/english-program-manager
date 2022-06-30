@@ -1,7 +1,7 @@
 import { Box, Checkbox, FormControlLabel } from "@mui/material";
 import { camelCase, get, map, set } from "lodash";
 import React, { useContext } from "react";
-import { AppContext } from "../../interfaces";
+import { AppContext } from "../../../interfaces";
 
 interface DataVisibilityCheckboxGroupProps {
   labels: string[];
@@ -22,7 +22,6 @@ export const DataVisibilityCheckboxGroup: React.FC<DataVisibilityCheckboxGroupPr
       set(dataVisibility, `${camelCase(parentLabel)}.${camelCase(label)}`, event.target.checked);
       appDispatch({
         payload: { dataVisibility },
-        type: "set",
       });
     };
   };

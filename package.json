@@ -30,6 +30,8 @@
     "react-loading": "^2.0.3",
     "react-router-dom": "^6.2.2",
     "react-usestateref": "^1.0.8",
+    "react-virtualized-auto-sizer": "^1.0.6",
+    "react-window": "^1.8.7",
     "vite": "^2.9.0",
     "yup": "^0.32.11"
   },
@@ -43,6 +45,8 @@
     "@types/papaparse": "^5.3.2",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.13",
+    "@types/react-virtualized-auto-sizer": "^1.0.1",
+    "@types/react-window": "^1.8.5",
     "@typescript-eslint/eslint-plugin": "^5.14.0",
     "@typescript-eslint/parser": "^5.14.0",
     "babel-jest": "^27.5.1",

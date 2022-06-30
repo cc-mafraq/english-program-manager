@@ -138,16 +138,17 @@ export enum CovidStatus {
 }
 
 export enum Nationality {
-  JDN = "JDN",
-  SYR = "SYR",
-  IRQ = "IRQ",
-  EGY = "EGY",
-  INDNES = "INDNES",
-  YEM = "YEM",
-  CEAFRRE = "CEAFRRE",
-  CHI = "CHI",
-  KOR = "KOR",
-  UNKNWN = "UNKNWN",
+  JDN = "Jordanian",
+  SYR = "Syrian",
+  ARG = "Argentinian",
+  CEAFRRE = "Central African",
+  CHI = "Chinese",
+  EGY = "Egyptian",
+  INDNES = "Indonesian",
+  IRQ = "Iraqi",
+  KOR = "Korean",
+  YEM = "Yemeni",
+  UNKNWN = "Unknown",
 }
 
 export enum Status {
@@ -162,14 +163,14 @@ export enum FinalResult {
   WD = "WD",
 }
 
-export enum DroppedOutTiming {
-  DO1 = "Dropped out after 1 ses",
-  DO2 = "Dropped out after 2 ses",
-  DO3 = "Dropped out after 3 or more ses",
-  SE = "Attended Previous Session(s) & Still Enrolled",
-  SES1 = "Still in 1st Session",
-  SKIP = "Attended a Session, Skipped a Session, & Returned",
-  WD1 = "WD 1st ses or never returned after PE",
+export enum StatusDetails {
+  WD1 = "Dropped out in 1st session or never returned after PE",
+  DO1 = "Dropped out after 1 session",
+  DO2 = "Dropped out after 2 sessions",
+  DO3 = "Dropped out after 3 or more sessions",
+  SE = "Attended previous sessions & still enrolled",
+  SES1 = "Still in 1st session",
+  SKIP = "Attended a session, skipped a session, & returned",
 }
 
 export enum DroppedOutReason {
@@ -190,18 +191,7 @@ export enum DroppedOutReason {
   VP = "Vision Problems",
 }
 
-export const nationalities = [
-  Nationality.JDN,
-  Nationality.SYR,
-  Nationality.EGY,
-  Nationality.YEM,
-  Nationality.IRQ,
-  Nationality.KOR,
-  Nationality.CHI,
-  Nationality.INDNES,
-  Nationality.CEAFRRE,
-  Nationality.UNKNWN,
-];
+export const nationalities = values(Nationality);
 
 export const genderedLevels: GenderedLevel[] = [
   "PL1-M",
@@ -238,6 +228,7 @@ export const levelsPlus: (LevelPlus | "Exempt")[] = [
 ];
 
 export const statuses = values(Status);
+export const statusDetails = values(StatusDetails);
 export const covidStatuses = values(CovidStatus);
 
 export const results = values(FinalResult);
