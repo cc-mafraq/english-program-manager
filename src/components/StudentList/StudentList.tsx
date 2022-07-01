@@ -16,6 +16,11 @@ export const StudentList: React.FC<StudentListProps> = ({ studentsPage, handleEd
   const sizeMap = useRef({});
   const [windowWidth] = useWindowResize();
   const [pageIds, setPageIds] = useState(map(studentsPage, "epId"));
+  const tabValues = useRef({});
+
+  const setTabValue = (epId: Student["epId"], tabValue: number) => {
+    tabValues.current = { ...tabValues.current, [epId]: tabValue };
+  };
 
   const setSize = useCallback((index, size) => {
     listRef.current?.resetAfterIndex(index);
@@ -42,15 +47,17 @@ export const StudentList: React.FC<StudentListProps> = ({ studentsPage, handleEd
           handleEditStudentClick={handleEditStudentClick}
           index={index}
           setSize={setSize}
+          setTabValue={setTabValue}
           student={data[index]}
           style={style}
+          tabValue={get(tabValues.current, data[index].epId) || 0}
           windowWidth={windowWidth}
         />
       );
     },
     // disable exhaustive deps because handleEditStudentClick causes StudentCard to unmount and lose tabValue state
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [setSize, windowWidth],
+    [setSize, windowWidth, tabValues],
   );
 
   return (

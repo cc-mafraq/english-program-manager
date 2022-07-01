@@ -109,7 +109,7 @@ export const getProgress = (student: Student, sessionOptions: string[]): Student
 };
 
 export const getStudentPage = (students: Student[], page: number, rowsPerPage: number): Student[] => {
-  const newRowsPerPage = rowsPerPage > students.length ? students.length : rowsPerPage;
+  const newRowsPerPage = rowsPerPage > students.length || rowsPerPage < 0 ? students.length : rowsPerPage;
   return slice(students, page * newRowsPerPage, (page + 1) * newRowsPerPage);
 };
 

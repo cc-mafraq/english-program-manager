@@ -9,8 +9,10 @@ interface StudentCardProps {
   handleEditStudentClick: () => void;
   index?: number;
   setSize?: (index: number, size: number) => void;
+  setTabValue: (epId: Student["epId"], tabValue: number) => void;
   student: Student;
   style?: CSSProperties;
+  tabValue: number;
   windowWidth?: number;
 }
 
@@ -21,24 +23,31 @@ export const StudentCard: React.FC<StudentCardProps> = ({
   windowWidth,
   index,
   style,
+  tabValue,
+  setTabValue,
 }) => {
-  const [tabValue, setTabValue] = useState(0);
   const theme = useTheme();
   const {
     appState: { dataVisibility },
   } = useContext(AppContext);
 
   const rowRef = useRef<HTMLDivElement>(null);
+  const [localTabValue, setLocalTabValue] = useState(tabValue || 0);
 
   useEffect(() => {
     if (rowRef.current && setSize && index !== undefined) {
       setSize(index, rowRef.current.clientHeight);
     }
-  }, [index, setSize, windowWidth, tabValue, rowRef.current?.clientHeight]);
+  }, [index, setSize, windowWidth, localTabValue, rowRef.current?.clientHeight]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
+    setLocalTabValue(newValue);
+    setTabValue(student.epId, newValue);
   };
+
+  useEffect(() => {
+    setLocalTabValue(tabValue);
+  }, [tabValue]);
 
   return (
     <div style={style ? { ...style, paddingLeft: "16px", paddingTop: "16px" } : undefined}>
@@ -64,22 +73,22 @@ export const StudentCard: React.FC<StudentCardProps> = ({
           <Box width="100%">
             <CardContent>
               <StudentCardHeader handleEditStudentClick={handleEditStudentClick} student={student} />
-              <Tabs onChange={handleChange} sx={{ display: "inline" }} value={tabValue}>
+              <Tabs onChange={handleChange} sx={{ display: "inline" }} value={localTabValue}>
                 <Tab id="student-card-tabpanel-0" label="Student Information" />
                 <Tab id="student-card-tabpanel-1" label="Correspondence" />
                 <Tab id="student-card-tabpanel-2" label="Academic Records" />
                 <Tab id="student-card-tabpanel-3" label="Placement" />
               </Tabs>
-              <Box hidden={tabValue !== 0} id="student-card-tabpanel-0" role="tabpanel">
+              <Box hidden={localTabValue !== 0} id="student-card-tabpanel-0" role="tabpanel">
                 <StudentInfo student={student} />
               </Box>
-              <Box hidden={tabValue !== 1} id="student-card-tabpanel-1" role="tabpanel">
+              <Box hidden={localTabValue !== 1} id="student-card-tabpanel-1" role="tabpanel">
                 <CorrespondenceList student={student} />
               </Box>
-              <Box hidden={tabValue !== 2} id="student-card-tabpanel-2" role="tabpanel">
+              <Box hidden={localTabValue !== 2} id="student-card-tabpanel-2" role="tabpanel">
                 <AcademicRecords student={student} />
               </Box>
-              <Box hidden={tabValue !== 3} id="student-card-tabpanel-3" role="tabpanel">
+              <Box hidden={localTabValue !== 3} id="student-card-tabpanel-3" role="tabpanel">
                 <PlacementList student={student} />
               </Box>
             </CardContent>
