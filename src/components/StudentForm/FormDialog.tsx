@@ -78,7 +78,7 @@ export const FormDialog = <T,>({
         <FormProvider {...methods}>
           <form>
             {children}
-            <Box sx={stickySubmit && { bottom: 10, position: "fixed" }}>
+            <Box sx={stickySubmit ? { bottom: 10, position: "fixed" } : undefined}>
               <Button
                 className="update-button"
                 onClick={methods.handleSubmit(onSubmit)}
@@ -96,7 +96,7 @@ export const FormDialog = <T,>({
                 Submit
               </Button>
             </Box>
-            <Grid item sx={{ float: stickySubmit && "right" }}>
+            <Grid item sx={{ float: stickySubmit ? "right" : undefined }}>
               <Typography variant="caption">
                 Tip: use <b>tab</b> and <b>shift + tab</b> to navigate, <b>space bar</b> to select checkboxes,{" "}
                 <b>arrow keys</b> to select radio buttons, and <b>return</b> to submit and click buttons.
