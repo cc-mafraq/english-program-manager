@@ -67,7 +67,7 @@ export const CorrespondenceList: React.FC<CorrespondenceProps> = ({ student }) =
                   marginRight: 1,
                   marginTop: 1,
                   padding: 1,
-                  width: "100%",
+                  width: "95%",
                 }}
               >
                 <Tooltip arrow title="Edit Correspondence">
@@ -76,7 +76,7 @@ export const CorrespondenceList: React.FC<CorrespondenceProps> = ({ student }) =
                     sx={{
                       color: iconColor,
                       position: "absolute",
-                      right: "-3vw",
+                      right: "-4vw",
                       top: 0,
                     }}
                   >

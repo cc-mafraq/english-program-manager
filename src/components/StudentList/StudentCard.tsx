@@ -1,7 +1,7 @@
 import { Box, Card, CardContent, Tab, Tabs, useTheme } from "@mui/material";
 import React, { CSSProperties, useContext, useEffect, useRef, useState } from "react";
 import { CorrespondenceList, Image, PlacementList, StudentCardHeader, StudentInfo } from "..";
-import { AppContext, darkBlueBackground, Student } from "../../interfaces";
+import { AppContext, darkBlueBackground, Nationality, Student } from "../../interfaces";
 import { studentImageFolder } from "../../services";
 import { AcademicRecords } from "./AcademicRecords";
 
@@ -50,11 +50,10 @@ export const StudentCard: React.FC<StudentCardProps> = ({
   }, [tabValue]);
 
   return (
-    <div style={style ? { ...style, paddingLeft: "16px", paddingTop: "16px" } : undefined}>
+    <div style={style ? { ...style, paddingLeft: "10px", paddingTop: "16px" } : undefined}>
       <Card
         sx={{
           backgroundColor: theme.palette.mode === "dark" ? darkBlueBackground : undefined,
-          marginLeft: "5px",
           width: "100%",
         }}
       >
@@ -63,7 +62,15 @@ export const StudentCard: React.FC<StudentCardProps> = ({
             <Image
               folderName={studentImageFolder}
               imagePath="imageName"
-              imageStyleProps={{ height: "35vh", minHeight: "200px" }}
+              imageStyleProps={{
+                border: "solid",
+                borderColor: student.nationality === Nationality.JDN ? "rgb(0,176,80)" : "rgb(204,102,0)",
+                borderWidth:
+                  student.nationality === Nationality.JDN || student.nationality === Nationality.SYR ? 2 : 0,
+                height: "35vh",
+                maxHeight: "250px",
+                minHeight: "200px",
+              }}
               innerContainerProps={{ height: "35vh", minHeight: "200px" }}
               outerContainerProps={{ minWidth: "150px" }}
               scale={2}

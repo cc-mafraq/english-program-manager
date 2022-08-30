@@ -53,15 +53,14 @@ export const PlacementList: React.FC<PlacementProps> = ({ student }) => {
         label="Placement"
         parentContainerProps={{ paddingBottom: 2 }}
       >
-        <LabeledText condition={dataVisibility.placement.photoContact} label="Photo Contact">
-          {student.placement.photoContact}
+        <LabeledText condition={dataVisibility.placement.pending} label="Pending">
+          {student.placement.pending ? "Yes" : undefined}
         </LabeledText>
         {map(student.placement.placement, (pl, i) => {
           return dataVisibility.placement.placement ? (
             <div key={`${student.epId}-placement-${i}`}>
               <LabeledText label="Section and Date">{pl.sectionAndDate}</LabeledText>
               <LabeledText label="Notes">{pl.notes}</LabeledText>
-              <LabeledText label="Added to CL">{pl.addedToCL ? "Yes" : "No"}</LabeledText>
             </div>
           ) : (
             <></>
@@ -76,8 +75,8 @@ export const PlacementList: React.FC<PlacementProps> = ({ student }) => {
         <LabeledText condition={dataVisibility.placement.naClassScheduleWpm} label="NA Class Schedule WPM">
           {student.placement.noAnswerClassScheduleWpm ? "Yes" : undefined}
         </LabeledText>
-        <LabeledText condition={dataVisibility.placement.pending} label="Pending">
-          {student.placement.pending ? "Yes" : undefined}
+        <LabeledText condition={dataVisibility.placement.photoContact} label="Photo Contact">
+          {student.placement.photoContact}
         </LabeledText>
         <Tooltip arrow title="Edit Placement">
           <IconButton
