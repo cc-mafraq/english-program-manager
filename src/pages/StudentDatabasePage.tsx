@@ -260,6 +260,7 @@ export const StudentDatabasePage = () => {
         handleDialogClose={handleStudentDialogClose}
         onSubmit={studentFormOnSubmit}
         open={openStudentDialog}
+        stickySubmit
         useFormProps={{
           defaultValues: setPrimaryNumberBooleanArray(selectedStudent),
           resolver: yupResolver(studentFormSchema),

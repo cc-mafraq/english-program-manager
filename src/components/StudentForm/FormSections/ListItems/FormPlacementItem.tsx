@@ -1,7 +1,7 @@
 import { Close } from "@mui/icons-material";
 import { Grid, IconButton, Tooltip } from "@mui/material";
 import React from "react";
-import { GridContainer, GridItemTextField, LabeledCheckbox } from "../..";
+import { GridContainer, GridItemTextField } from "../..";
 import { useColors } from "../../../../hooks";
 import { FormItem, SPACING } from "../../../../services";
 
@@ -11,15 +11,12 @@ export const FormPlacementItem: React.FC<FormItem> = ({ index, removeItem, name 
   return (
     <GridContainer marginBottom={0}>
       <GridItemTextField
-        gridProps={{ marginLeft: SPACING, xs: 5 }}
+        gridProps={{ marginLeft: SPACING, xs: 6 }}
         label="Placement and Date"
         name={name ? `${name}.sectionAndDate` : "sectionAndDate"}
         textFieldProps={{ required: true }}
       />
-      <GridItemTextField gridProps={{ xs: 4 }} label="Notes" name={name ? `${name}.notes` : "notes"} />
-      <Grid item xs={2}>
-        <LabeledCheckbox label="Added to CL" name={name ? `${name}.addedToCL` : "addedToCL"} />
-      </Grid>
+      <GridItemTextField gridProps={{ xs: 5 }} label="Notes" name={name ? `${name}.notes` : "notes"} />
       {removeItem && (
         <Grid item>
           <Tooltip arrow title="Remove Placement">

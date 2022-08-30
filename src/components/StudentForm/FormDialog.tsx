@@ -21,6 +21,7 @@ interface FormDialogProps<T> {
   onSubmit: SubmitHandler<T>;
   open: boolean;
   paperStyleProps?: CSSProperties;
+  stickySubmit?: boolean;
   useFormProps: UseFormProps<T>;
 }
 
@@ -32,6 +33,7 @@ export const FormDialog = <T,>({
   dialogProps,
   paperStyleProps,
   children,
+  stickySubmit,
 }: PropsWithChildren<FormDialogProps<T>>) => {
   const { popoverColor } = useColors();
   const theme = useTheme();
@@ -76,23 +78,25 @@ export const FormDialog = <T,>({
         <FormProvider {...methods}>
           <form>
             {children}
-            <Button
-              className="update-button"
-              onClick={methods.handleSubmit(onSubmit)}
-              sx={{
-                "&:hover": {
-                  backgroundColor: green[900],
-                },
-                backgroundColor: green[800],
-                color: theme.palette.mode === "light" ? "white" : grey[200],
-                marginTop: SPACING,
-              }}
-              type="submit"
-              variant="contained"
-            >
-              Submit
-            </Button>
-            <Grid item>
+            <Box sx={stickySubmit && { bottom: 10, position: "fixed" }}>
+              <Button
+                className="update-button"
+                onClick={methods.handleSubmit(onSubmit)}
+                sx={{
+                  "&:hover": {
+                    backgroundColor: green[900],
+                  },
+                  backgroundColor: green[800],
+                  color: theme.palette.mode === "light" ? "white" : grey[200],
+                  marginTop: SPACING,
+                }}
+                type="submit"
+                variant="contained"
+              >
+                Submit
+              </Button>
+            </Box>
+            <Grid item sx={{ float: stickySubmit && "right" }}>
               <Typography variant="caption">
                 Tip: use <b>tab</b> and <b>shift + tab</b> to navigate, <b>space bar</b> to select checkboxes,{" "}
                 <b>arrow keys</b> to select radio buttons, and <b>return</b> to submit and click buttons.
@@ -109,4 +113,5 @@ export const FormDialog = <T,>({
 FormDialog.defaultProps = {
   dialogProps: undefined,
   paperStyleProps: undefined,
+  stickySubmit: undefined,
 };
