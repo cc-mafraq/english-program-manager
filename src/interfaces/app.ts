@@ -53,88 +53,6 @@ export interface AppAction {
   payload: Partial<AppState>;
 }
 
-export interface DataVisibility {
-  academicRecords: {
-    attendance: boolean;
-    certificateRequests: boolean;
-    exitSpeakingExam: boolean;
-    exitWritingExam: boolean;
-    finalGrade: boolean;
-    level: boolean;
-    levelAudited: boolean;
-    progress: boolean;
-    session: boolean;
-    teacherComments: boolean;
-  };
-  covidVaccine: {
-    certificatePhoto: boolean;
-    date: boolean;
-    reason: boolean;
-    status: boolean;
-    suspectedFraud: boolean;
-    suspectedFraudReason: boolean;
-  };
-  demographics: {
-    age: boolean;
-    englishTeacher: boolean;
-    englishTeacherLocation: boolean;
-    gender: boolean;
-    lookingForJob: boolean;
-    nationality: boolean;
-    occupation: boolean;
-    teacher: boolean;
-    teachingSubjectArea: boolean;
-  };
-  literacy: {
-    arabicLiteracy: boolean;
-    englishLiteracy: boolean;
-    tutorAndDate: boolean;
-  };
-  phoneNumbersAndWhatsApp: {
-    phoneNumbers: boolean;
-    waBroadcastOtherGroups: boolean;
-    waBroadcastSar: boolean;
-    waNotes: boolean;
-  };
-  placement: {
-    classScheduleSentDate: boolean;
-    naClassScheduleWpm: boolean;
-    originalPlacementData: boolean;
-    pending: boolean;
-    photoContact: boolean;
-    placement: boolean;
-    sectionsOffered: boolean;
-  };
-  programInformation: {
-    active: boolean;
-    currentLevel: boolean;
-    familyCoordinatorEntry: boolean;
-    idNumber: boolean;
-    initialSession: boolean;
-    inviteTag: boolean;
-    noContactList: boolean;
-    status: boolean;
-  };
-  status: {
-    audit: boolean;
-    cheatingSessions: boolean;
-    finalGrSent: boolean;
-    levelReevalDate: boolean;
-    reactivatedDate: boolean;
-    repeatNumber: boolean;
-    sessionsAttended: boolean;
-    statusDetails: boolean;
-    withdrawDate: boolean;
-    withdrawReason: boolean;
-  };
-  studentImages: {
-    studentPhoto: boolean;
-  };
-  zoom: {
-    tutorAndDetails: boolean;
-  };
-}
-
 interface FilterValue {
   fieldFunction?: (student: Student) => unknown;
   fieldPath: string;
@@ -142,7 +60,6 @@ interface FilterValue {
 }
 
 export interface AppState {
-  dataVisibility: DataVisibility;
   filter: FilterValue[];
   loading: boolean;
   selectedStudent: Student | null;
@@ -150,85 +67,6 @@ export interface AppState {
 }
 
 export const initialAppState: AppState = {
-  dataVisibility: {
-    academicRecords: {
-      attendance: true,
-      certificateRequests: true,
-      exitSpeakingExam: true,
-      exitWritingExam: true,
-      finalGrade: true,
-      level: true,
-      levelAudited: true,
-      progress: true,
-      session: true,
-      teacherComments: true,
-    },
-    covidVaccine: {
-      certificatePhoto: true,
-      date: true,
-      reason: true,
-      status: true,
-      suspectedFraud: true,
-      suspectedFraudReason: true,
-    },
-    demographics: {
-      age: true,
-      englishTeacher: true,
-      englishTeacherLocation: true,
-      gender: true,
-      lookingForJob: true,
-      nationality: true,
-      occupation: true,
-      teacher: true,
-      teachingSubjectArea: true,
-    },
-    literacy: {
-      arabicLiteracy: true,
-      englishLiteracy: true,
-      tutorAndDate: true,
-    },
-    phoneNumbersAndWhatsApp: {
-      phoneNumbers: true,
-      waBroadcastOtherGroups: true,
-      waBroadcastSar: true,
-      waNotes: true,
-    },
-    placement: {
-      classScheduleSentDate: true,
-      naClassScheduleWpm: true,
-      originalPlacementData: true,
-      pending: true,
-      photoContact: true,
-      placement: true,
-      sectionsOffered: true,
-    },
-    programInformation: {
-      active: true,
-      currentLevel: true,
-      familyCoordinatorEntry: true,
-      idNumber: true,
-      initialSession: true,
-      inviteTag: true,
-      noContactList: true,
-      status: true,
-    },
-    status: {
-      audit: true,
-      cheatingSessions: true,
-      finalGrSent: true,
-      levelReevalDate: true,
-      reactivatedDate: true,
-      repeatNumber: true,
-      sessionsAttended: true,
-      statusDetails: true,
-      withdrawDate: true,
-      withdrawReason: true,
-    },
-    studentImages: { studentPhoto: true },
-    zoom: {
-      tutorAndDetails: true,
-    },
-  },
   filter: [],
   loading: true,
   selectedStudent: null,

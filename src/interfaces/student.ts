@@ -56,7 +56,6 @@ export interface Grade {
 }
 
 export interface SectionPlacement {
-  addedToCL?: boolean;
   notes?: string;
   sectionAndDate: string;
 }

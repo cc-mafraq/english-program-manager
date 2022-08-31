@@ -234,7 +234,6 @@ const phoneSchema = object()
   .required();
 
 const sectionPlacementSchema = object().shape({
-  addedToCL: bool().optional(),
   notes: string().transform(emptyToNull).nullable().optional(),
   sectionAndDate: string().required(
     "Placement is required if added. You can remove the placement by clicking the ❌ button",
