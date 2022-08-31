@@ -1,6 +1,6 @@
-import { DatePicker, LocalizationProvider } from "@mui/lab";
-import AdapterMoment from "@mui/lab/AdapterMoment";
 import { Grid, GridProps, StandardTextFieldProps, TextField, useTheme } from "@mui/material";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { includes, omit } from "lodash";
 import moment from "moment";
 import React from "react";
@@ -51,6 +51,12 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
             <LocalizationProvider dateAdapter={AdapterMoment}>
               <DatePicker
                 {...field}
+                componentsProps={{
+                  actionBar: {
+                    actions: ["today"],
+                  },
+                }}
+                inputFormat="M/D/YY"
                 label={label}
                 renderInput={(params) => {
                   return (
