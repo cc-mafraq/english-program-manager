@@ -1,7 +1,7 @@
 import { Box, Card, CardContent, Tab, Tabs, useTheme } from "@mui/material";
-import React, { CSSProperties, useContext, useEffect, useRef, useState } from "react";
+import React, { CSSProperties, useEffect, useRef, useState } from "react";
 import { CorrespondenceList, Image, PlacementList, StudentCardHeader, StudentInfo } from "..";
-import { AppContext, darkBlueBackground, Nationality, Student } from "../../interfaces";
+import { darkBlueBackground, Nationality, Student } from "../../interfaces";
 import { studentImageFolder } from "../../services";
 import { AcademicRecords } from "./AcademicRecords";
 
@@ -27,9 +27,6 @@ export const StudentCard: React.FC<StudentCardProps> = ({
   setTabValue,
 }) => {
   const theme = useTheme();
-  const {
-    appState: { dataVisibility },
-  } = useContext(AppContext);
 
   const rowRef = useRef<HTMLDivElement>(null);
   const [localTabValue, setLocalTabValue] = useState(tabValue || 0);
@@ -58,25 +55,23 @@ export const StudentCard: React.FC<StudentCardProps> = ({
         }}
       >
         <Box ref={rowRef} display="flex">
-          {dataVisibility.studentImages.studentPhoto && (
-            <Image
-              folderName={studentImageFolder}
-              imagePath="imageName"
-              imageStyleProps={{
-                border: "solid",
-                borderColor: student.nationality === Nationality.JDN ? "rgb(0,176,80)" : "rgb(204,102,0)",
-                borderWidth:
-                  student.nationality === Nationality.JDN || student.nationality === Nationality.SYR ? 2 : 0,
-                height: "35vh",
-                maxHeight: "250px",
-                minHeight: "200px",
-              }}
-              innerContainerProps={{ height: "35vh", minHeight: "200px" }}
-              outerContainerProps={{ minWidth: "150px" }}
-              scale={2}
-              student={student}
-            />
-          )}
+          <Image
+            folderName={studentImageFolder}
+            imagePath="imageName"
+            imageStyleProps={{
+              border: "solid",
+              borderColor: student.nationality === Nationality.JDN ? "rgb(0,176,80)" : "rgb(204,102,0)",
+              borderWidth:
+                student.nationality === Nationality.JDN || student.nationality === Nationality.SYR ? 2 : 0,
+              height: "35vh",
+              maxHeight: "250px",
+              minHeight: "200px",
+            }}
+            innerContainerProps={{ height: "35vh", minHeight: "200px" }}
+            outerContainerProps={{ minWidth: "150px" }}
+            scale={2}
+            student={student}
+          />
           <Box width="100%">
             <CardContent>
               <StudentCardHeader handleEditStudentClick={handleEditStudentClick} student={student} />

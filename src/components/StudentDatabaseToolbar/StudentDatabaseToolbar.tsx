@@ -1,8 +1,7 @@
-import { FilterAlt, MoreHoriz, VisibilityOff } from "@mui/icons-material";
+import { FilterAlt, MoreHoriz } from "@mui/icons-material";
 import { AppBar, Box, Divider, IconButton, TablePagination, Toolbar, Tooltip } from "@mui/material";
 import React, { Dispatch, SetStateAction } from "react";
 import { FilterDrawer, Searchbar } from ".";
-import { DataVisibilityPopover } from "..";
 import { useColors } from "../../hooks";
 import { Student } from "../../interfaces";
 
@@ -41,7 +40,6 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
   setShowActions,
   searchString,
 }) => {
-  const [dataVisibilityAnchorEl, setDataVisibilityAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const [filterAnchorEl, setFilterAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const { iconColor } = useColors();
 
@@ -69,15 +67,6 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
               <FilterAlt sx={{ color: iconColor }} />
             </IconButton>
           </Tooltip>
-          <Tooltip arrow title="Hide Student Data">
-            <IconButton onClick={handlePopoverClick(setDataVisibilityAnchorEl)}>
-              <VisibilityOff sx={{ color: iconColor }} />
-            </IconButton>
-          </Tooltip>
-          <DataVisibilityPopover
-            anchorEl={dataVisibilityAnchorEl}
-            handleClose={handlePopoverClose(setDataVisibilityAnchorEl)}
-          />
           <FilterDrawer anchorEl={filterAnchorEl} handleClose={handlePopoverClose(setFilterAnchorEl)} />
         </Box>
         <TablePagination
