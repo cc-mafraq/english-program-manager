@@ -4,6 +4,7 @@ import React from "react";
 interface LabeledIconButtonProps {
   buttonProps?: IconButtonProps & { component?: string };
   buttonStyle?: SxProps;
+  children?: React.ReactNode;
   color?: string;
   label: string;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
@@ -45,6 +46,7 @@ export const LabeledIconButton: React.FC<LabeledIconButtonProps> = ({
 LabeledIconButton.defaultProps = {
   buttonProps: undefined,
   buttonStyle: undefined,
+  children: undefined,
   color: "primary",
   onClick: undefined,
 };

@@ -1,6 +1,6 @@
 import { Grid, GridProps, StandardTextFieldProps, TextField } from "@mui/material";
 import React from "react";
-import { FieldError, useFormContext } from "react-hook-form";
+import { FieldErrorsImpl, useFormContext } from "react-hook-form";
 import { useInput } from "../../../hooks";
 
 interface GridItemTextField {
@@ -17,7 +17,11 @@ export const GridItemTextField = ({ label, gridProps, textFieldProps, value, nam
     register,
     formState: { errors },
   } = useFormContext();
-  const { name: nameFallback, errorMessage } = useInput(label, errors as FieldError, name);
+  const { name: nameFallback, errorMessage } = useInput(
+    label,
+    errors as FieldErrorsImpl<Record<string, unknown>>,
+    name,
+  );
 
   return (
     <Grid item xs {...gridProps}>

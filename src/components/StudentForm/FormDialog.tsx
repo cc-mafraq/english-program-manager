@@ -3,19 +3,12 @@ import { Box, Button, Dialog, DialogProps, Grid, IconButton, Tooltip, Typography
 import { green, grey } from "@mui/material/colors";
 import { isEmpty } from "lodash";
 import React, { CSSProperties, PropsWithChildren, useEffect, useState } from "react";
-import {
-  DeepPartial,
-  FormProvider,
-  SubmitHandler,
-  UnpackNestedValue,
-  useForm,
-  UseFormProps,
-} from "react-hook-form";
+import { DeepPartial, FieldValues, FormProvider, SubmitHandler, useForm, UseFormProps } from "react-hook-form";
 import { useColors } from "../../hooks";
 import { SPACING } from "../../services";
 import { FormErrorDialog } from "./FormErrorDialog";
 
-interface FormDialogProps<T> {
+interface FormDialogProps<T extends FieldValues> {
   dialogProps?: Partial<DialogProps>;
   handleDialogClose: () => void;
   onSubmit: SubmitHandler<T>;
@@ -25,7 +18,7 @@ interface FormDialogProps<T> {
   useFormProps: UseFormProps<T>;
 }
 
-export const FormDialog = <T,>({
+export const FormDialog = <T extends FieldValues>({
   open,
   handleDialogClose,
   onSubmit,
@@ -52,7 +45,7 @@ export const FormDialog = <T,>({
   useEffect(() => {
     useFormProps.defaultValues
       ? methods.reset(useFormProps.defaultValues)
-      : methods.reset({} as UnpackNestedValue<DeepPartial<T>>);
+      : methods.reset({} as T | DeepPartial<T> | undefined);
   }, [methods, useFormProps]);
 
   return (

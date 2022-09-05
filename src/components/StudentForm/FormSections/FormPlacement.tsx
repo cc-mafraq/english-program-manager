@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material";
 import React, { useContext } from "react";
-import { useFormContext } from "react-hook-form";
+import { FieldValues, useFormContext } from "react-hook-form";
 import {
   FormDateItem,
   FormPlacementItem,
@@ -19,7 +19,7 @@ interface FormPlacementProps {
   standAlone?: boolean;
 }
 
-export const FormPlacement = <T,>({ standAlone }: FormPlacementProps) => {
+export const FormPlacement = <T extends FieldValues>({ standAlone }: FormPlacementProps) => {
   const {
     appState: { selectedStudent },
   } = useContext(AppContext);

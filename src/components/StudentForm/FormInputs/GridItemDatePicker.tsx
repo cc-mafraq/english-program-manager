@@ -1,10 +1,10 @@
-import { DatePicker, LocalizationProvider } from "@mui/lab";
-import AdapterMoment from "@mui/lab/AdapterMoment";
 import { Grid, GridProps, StandardTextFieldProps, TextField, useTheme } from "@mui/material";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { includes, omit } from "lodash";
 import moment from "moment";
 import React from "react";
-import { Controller, FieldError, useFormContext } from "react-hook-form";
+import { Controller, FieldErrorsImpl, useFormContext } from "react-hook-form";
 import { useInput } from "../../../hooks";
 import { MOMENT_FORMAT } from "../../../services";
 
@@ -31,7 +31,11 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
     control,
     setValue,
   } = useFormContext();
-  const { name: nameFallback, errorMessage } = useInput(label, errors as FieldError, errorName ?? name);
+  const { name: nameFallback, errorMessage } = useInput(
+    label,
+    errors as FieldErrorsImpl<Record<string, unknown>>,
+    errorName ?? name,
+  );
   const theme = useTheme();
   const errorColor = errorMessage ? theme.palette.error.main : undefined;
   const defaultValueMoment = moment(value, MOMENT_FORMAT);

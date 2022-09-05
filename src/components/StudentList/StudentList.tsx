@@ -22,7 +22,7 @@ export const StudentList: React.FC<StudentListProps> = ({ studentsPage, handleEd
     tabValues.current = { ...tabValues.current, [epId]: tabValue };
   };
 
-  const setSize = useCallback((index, size) => {
+  const setSize = useCallback((index: number, size: number) => {
     listRef.current?.resetAfterIndex(index);
     sizeMap.current = { ...sizeMap.current, [index]: size };
   }, []);
@@ -41,7 +41,8 @@ export const StudentList: React.FC<StudentListProps> = ({ studentsPage, handleEd
   }, [pageIds, studentsPage]);
 
   const Row = useCallback(
-    ({ data, index, style }) => {
+    // eslint-disable-next-line react/no-unused-prop-types
+    ({ data, index, style }: { data: Student[]; index: number; style: React.CSSProperties | undefined }) => {
       return (
         <StudentCard
           handleEditStudentClick={handleEditStudentClick}

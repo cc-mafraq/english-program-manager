@@ -4,6 +4,7 @@ import React from "react";
 
 interface LabeledContainerProps {
   childContainerProps?: BoxProps;
+  children?: React.ReactNode;
   condition?: boolean;
   label: string;
   labelProps?: TypographyProps;
@@ -62,6 +63,7 @@ export const LabeledContainer: React.FC<LabeledContainerProps> = ({
 
 LabeledContainer.defaultProps = {
   childContainerProps: defaultChildContainerProps,
+  children: undefined,
   condition: true,
   labelProps: defaultLabelProps,
   parentContainerProps: defaultParentContainerProps,

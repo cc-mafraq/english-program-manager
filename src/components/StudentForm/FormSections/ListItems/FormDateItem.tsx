@@ -1,6 +1,6 @@
 import { Close } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
-import React from "react";
+import React, { Attributes } from "react";
 import { useColors } from "../../../../hooks";
 import { FormItem } from "../../../../services";
 
@@ -13,7 +13,7 @@ export const FormDateItem: React.FC<FormItem> = ({ index, removeItem, children, 
         if (React.isValidElement(child)) {
           return React.cloneElement(child, {
             name,
-          });
+          } as Partial<unknown> & Attributes);
         }
         return child;
       })}
