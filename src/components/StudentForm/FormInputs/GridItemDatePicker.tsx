@@ -55,6 +55,7 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
             <LocalizationProvider dateAdapter={AdapterMoment}>
               <DatePicker
                 {...field}
+                disableMaskedInput
                 inputFormat="M/D/YY"
                 label={label}
                 renderInput={(params) => {
@@ -78,7 +79,7 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
                     ? dateMoment.format()
                     : defaultValueMoment.isValid()
                     ? defaultValueMoment.format()
-                    : null
+                    : dateMoment
                 }
               />
             </LocalizationProvider>
