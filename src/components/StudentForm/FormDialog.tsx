@@ -5,6 +5,7 @@ import { isEmpty } from "lodash";
 import React, { CSSProperties, PropsWithChildren, useEffect, useState } from "react";
 import {
   DeepPartial,
+  FieldValues,
   FormProvider,
   SubmitHandler,
   UnpackNestedValue,
@@ -15,7 +16,7 @@ import { useColors } from "../../hooks";
 import { SPACING } from "../../services";
 import { FormErrorDialog } from "./FormErrorDialog";
 
-interface FormDialogProps<T> {
+interface FormDialogProps<T extends FieldValues> {
   dialogProps?: Partial<DialogProps>;
   handleDialogClose: () => void;
   onSubmit: SubmitHandler<T>;
@@ -25,7 +26,7 @@ interface FormDialogProps<T> {
   useFormProps: UseFormProps<T>;
 }
 
-export const FormDialog = <T,>({
+export const FormDialog = <T extends FieldValues>({
   open,
   handleDialogClose,
   onSubmit,

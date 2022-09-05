@@ -1,7 +1,7 @@
 import { Button, Grid, GridProps, Typography, useTheme } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { get, map, reverse } from "lodash";
-import React from "react";
+import React, { Attributes } from "react";
 import { useFormContext } from "react-hook-form";
 import { SPACING } from "../../services";
 
@@ -41,7 +41,7 @@ export const FormList: React.FC<FormListProps> = ({
             key: `${JSON.stringify(item)} ${i}`,
             name: `${listName}[${i}]`,
             removeItem,
-          });
+          } as Partial<unknown> & Attributes);
         }
         return child;
       });

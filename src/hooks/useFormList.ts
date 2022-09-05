@@ -1,9 +1,9 @@
 import { cloneDeep, get, isUndefined, set } from "lodash";
 import { useContext, useState } from "react";
-import { DeepPartial, Path, PathValue, UnpackNestedValue, UseFormReturn } from "react-hook-form";
+import { DeepPartial, FieldValues, Path, PathValue, UnpackNestedValue, UseFormReturn } from "react-hook-form";
 import { AppContext } from "../interfaces";
 
-export const useFormList = <T>(
+export const useFormList = <T extends FieldValues>(
   initialState: unknown[],
   listPath: string,
   methods: UseFormReturn<T, object>,
