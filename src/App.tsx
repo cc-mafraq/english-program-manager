@@ -34,11 +34,15 @@ export const App = () => {
     return createTheme(getDesignTokens(mode));
   }, [mode]);
 
+  const contextValue = React.useMemo(() => {
+    return { appDispatch, appState };
+  }, [appDispatch, appState]);
+
   return (
     <div style={{ background: theme.palette.background.default, overflowY: "clip" }}>
       <ColorModeContext.Provider value={colorMode}>
         <ThemeProvider theme={theme}>
-          <AppContext.Provider value={{ appDispatch, appState }}>
+          <AppContext.Provider value={contextValue}>
             <BrowserRouter>
               <Routes>
                 <Route

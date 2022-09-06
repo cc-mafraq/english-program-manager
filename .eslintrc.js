@@ -119,6 +119,14 @@ module.exports = {
     // https://stackoverflow.com/questions/63961803/eslint-says-all-enums-in-typescript-app-are-already-declared-in-the-upper-scope
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": ["error"],
+    "react/function-component-definition": [
+      2,
+      {
+        namedComponents: "arrow-function",
+        unnamedComponents: "arrow-function",
+      },
+    ],
+    "react/jsx-no-useless-fragment": "off",
   },
   settings: {
     // Imports with these extensions can be resolved with relative path

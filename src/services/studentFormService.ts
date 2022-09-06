@@ -46,6 +46,7 @@ export const MOMENT_FORMAT = "l";
 const sessionRegex = /(Fa|Sp) (I|II) \d{2}/;
 
 export interface FormItem {
+  children?: React.ReactNode;
   index?: number;
   name?: string;
   removeItem?: (index?: number) => () => void;

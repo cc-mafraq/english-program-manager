@@ -1,7 +1,7 @@
 import { Box, BoxProps, Checkbox, CheckboxProps, FormControlLabel, FormHelperText, useTheme } from "@mui/material";
 import { omit } from "lodash";
 import React from "react";
-import { Controller, FieldError, useFormContext } from "react-hook-form";
+import { Controller, FieldErrorsImpl, useFormContext } from "react-hook-form";
 import { useInput } from "../../../hooks";
 
 interface LabeledCheckboxProps {
@@ -24,7 +24,11 @@ export const LabeledCheckbox: React.FC<LabeledCheckboxProps> = ({
     formState: { errors },
   } = useFormContext();
   const theme = useTheme();
-  const { name: nameFallback, errorMessage } = useInput(label, errors as FieldError, errorName ?? name);
+  const { name: nameFallback, errorMessage } = useInput(
+    label,
+    errors as FieldErrorsImpl<Record<string, unknown>>,
+    errorName ?? name,
+  );
   const errorColor = errorMessage ? theme.palette.error.main : undefined;
 
   return (
