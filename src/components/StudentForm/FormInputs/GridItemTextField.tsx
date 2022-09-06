@@ -1,5 +1,6 @@
 import { Grid, GridProps, StandardTextFieldProps, TextField } from "@mui/material";
-import React from "react";
+import { omit } from "lodash";
+import React, { useMemo } from "react";
 import { FieldErrorsImpl, useFormContext } from "react-hook-form";
 import { useInput } from "../../../hooks";
 
@@ -22,6 +23,9 @@ export const GridItemTextField = ({ label, gridProps, textFieldProps, value, nam
     errors as FieldErrorsImpl<Record<string, unknown>>,
     name,
   );
+  const registerRef = useMemo(() => {
+    return register(name ?? nameFallback);
+  }, [name, nameFallback, register]);
 
   return (
     <Grid item xs {...gridProps}>
@@ -33,7 +37,8 @@ export const GridItemTextField = ({ label, gridProps, textFieldProps, value, nam
         error={!!errorMessage}
         helperText={errorMessage}
         variant="outlined"
-        {...register(name ?? nameFallback)}
+        {...omit(registerRef, "ref")}
+        inputRef={registerRef.ref}
       />
     </Grid>
   );
