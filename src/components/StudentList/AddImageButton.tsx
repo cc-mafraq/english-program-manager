@@ -11,6 +11,7 @@ interface AddImageButtonProps {
   imagePath: string;
   lightColor?: "primary" | "default" | "secondary";
   scale?: number;
+  setLoading?: React.Dispatch<React.SetStateAction<boolean>>;
   student: Student | null;
 }
 
@@ -20,6 +21,7 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({
   imagePath,
   folderName,
   lightColor,
+  setLoading,
 }) => {
   const { appDispatch } = useContext(AppContext);
   const theme = useTheme();
@@ -35,6 +37,7 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({
         id={inputId}
         onChange={async (e: ChangeEvent<HTMLInputElement>) => {
           if (!student) return;
+          setLoading && setLoading(true);
           await setImage(student, e.target.files && e.target.files[0], imagePath, folderName);
           appDispatch({ payload: { selectedStudent: student } });
         }}
@@ -61,4 +64,5 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({
 AddImageButton.defaultProps = {
   lightColor: "default",
   scale: 1,
+  setLoading: undefined,
 };

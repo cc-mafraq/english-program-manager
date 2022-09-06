@@ -1,8 +1,9 @@
-import { Box, BoxProps, CardMedia, SxProps } from "@mui/material";
+import { Box, BoxProps, CardMedia, SxProps, useTheme } from "@mui/material";
 import { get } from "lodash";
 import React, { useEffect, useState } from "react";
+import ReactLoading from "react-loading";
+import { AddImageButton } from ".";
 import { Student } from "../../interfaces";
-import { AddImageButton } from "./AddImageButton";
 
 interface StudentImageProps {
   folderName: string;
@@ -10,6 +11,7 @@ interface StudentImageProps {
   imageStyleProps?: SxProps;
   innerContainerProps?: BoxProps;
   lightColor?: "primary" | "default" | "secondary";
+  loadingContainerProps?: BoxProps;
   noButton?: boolean;
   outerContainerProps?: BoxProps;
   scale?: number;
@@ -18,6 +20,7 @@ interface StudentImageProps {
 
 export const Image: React.FC<StudentImageProps> = ({
   imageStyleProps,
+  loadingContainerProps,
   innerContainerProps,
   outerContainerProps,
   scale,
@@ -28,46 +31,60 @@ export const Image: React.FC<StudentImageProps> = ({
   lightColor,
 }) => {
   const [img, setImg] = useState("");
+  const [loading, setLoading] = useState(false);
   const imageName = get(student, imagePath);
+  const theme = useTheme();
 
   useEffect(() => {
-    const setImage = async () => {
-      try {
-        if (!student) return;
-        setImg(imageName);
-      } catch (e) {
-        setImg("");
-      }
-    };
-    setImage();
-  }, [student, imagePath, imageName]);
-
+    imageName && setLoading(true);
+    setImg(imageName);
+  }, [imageName]);
   return (
     <Box {...outerContainerProps}>
-      {get(student, imagePath) ? (
-        <CardMedia component="img" image={img} sx={imageStyleProps} />
+      {loading && (
+        <Box
+          sx={{
+            marginLeft: "50%",
+            marginTop: "50%",
+            transform: "translate(-50%, -50%)",
+            ...loadingContainerProps,
+          }}
+        >
+          <ReactLoading color={theme.palette.primary.main} type="spin" />
+        </Box>
+      )}
+      {imageName ? (
+        <CardMedia
+          component="img"
+          image={img}
+          onLoad={() => {
+            setLoading(false);
+          }}
+          sx={{ ...imageStyleProps, display: loading ? "none" : undefined }}
+        />
       ) : (
-        !noButton && (
-          <Box sx={{ ...innerContainerProps, position: "relative" }}>
-            <Box
-              sx={{
-                left: "50%",
-                margin: 0,
-                position: "absolute",
-                top: "50%",
-                transform: "translate(-50%, -50%)",
-              }}
-            >
+        <Box sx={{ ...innerContainerProps, position: "relative" }}>
+          <Box
+            sx={{
+              left: "50%",
+              margin: 0,
+              position: "absolute",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            {!noButton && !imageName && (
               <AddImageButton
                 folderName={folderName}
                 imagePath={imagePath}
                 lightColor={lightColor}
                 scale={scale}
+                setLoading={setLoading}
                 student={student}
               />
-            </Box>
+            )}
           </Box>
-        )
+        </Box>
       )}
     </Box>
   );
@@ -77,6 +94,7 @@ Image.defaultProps = {
   imageStyleProps: undefined,
   innerContainerProps: undefined,
   lightColor: "default",
+  loadingContainerProps: undefined,
   noButton: false,
   outerContainerProps: undefined,
   scale: 1,
