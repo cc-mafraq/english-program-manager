@@ -3,15 +3,16 @@ import {
   Box,
   Card,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { map } from "lodash";
 import React from "react";
-import { LabeledIconButton } from "..";
 import { getSessionFullName } from "../../services";
 
 interface FGRDialogHeaderProps {
@@ -65,17 +66,17 @@ export const FGRDialogHeader: React.FC<FGRDialogHeaderProps> = ({
             </Select>
           </FormControl>
         </Box>
-        <Box display="flex" flexDirection="row">
-          <LabeledIconButton
-            buttonProps={{ color: "primary" }}
-            label="DOWNLOAD ALL"
-            onClick={handleDownloadAllClick}
-          >
-            <Download />
-          </LabeledIconButton>
-          <LabeledIconButton color="red" label="CLOSE WINDOW" onClick={handleDialogClose}>
-            <Close color="error" />
-          </LabeledIconButton>
+        <Box display="flex" flexDirection="row" marginTop="5px">
+          <Tooltip arrow title="Download All">
+            <IconButton color="primary" onClick={handleDownloadAllClick} sx={{ height: "45px" }}>
+              <Download />
+            </IconButton>
+          </Tooltip>
+          <Tooltip arrow title="Close Window">
+            <IconButton onClick={handleDialogClose} sx={{ height: "45px" }}>
+              <Close />
+            </IconButton>
+          </Tooltip>
         </Box>
       </Card>
     </>

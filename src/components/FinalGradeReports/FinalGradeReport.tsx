@@ -1,5 +1,5 @@
 import { Close, Download, DownloadDone, Edit, EditOff } from "@mui/icons-material";
-import { Box, Card, Grid, IconButton } from "@mui/material";
+import { Box, Card, Grid, IconButton, Tooltip } from "@mui/material";
 import download from "downloadjs";
 import { toPng } from "html-to-image";
 import JSZip from "jszip";
@@ -220,26 +220,30 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
   return academicRecord ? (
     <Card sx={{ margin: cardMargin, padding: cardPadding }}>
       <Box display="flex" flexDirection="row">
-        <IconButton
-          color="error"
-          onClick={() => {
-            handleRemoveFGR(studentAcademicRecord);
-          }}
-        >
-          <Close color="error" />
-        </IconButton>
-
-        <IconButton color="primary" onClick={downloadFGR(true)}>
-          {isDownloaded ? <DownloadDone /> : <Download />}
-        </IconButton>
-        <IconButton
-          color="primary"
-          onClick={() => {
-            setIsEditing(!isEditing);
-          }}
-        >
-          {isEditing ? <EditOff /> : <Edit />}
-        </IconButton>
+        <Tooltip arrow title="Remove">
+          <IconButton
+            onClick={() => {
+              handleRemoveFGR(studentAcademicRecord);
+            }}
+          >
+            <Close />
+          </IconButton>
+        </Tooltip>
+        <Tooltip arrow title={isDownloaded ? "Download Complete" : "Download"}>
+          <IconButton color="primary" onClick={downloadFGR(true)}>
+            {isDownloaded ? <DownloadDone /> : <Download />}
+          </IconButton>
+        </Tooltip>
+        <Tooltip arrow title={isEditing ? "Cancel Edit" : "Edit"}>
+          <IconButton
+            color="primary"
+            onClick={() => {
+              setIsEditing(!isEditing);
+            }}
+          >
+            {isEditing ? <EditOff /> : <Edit />}
+          </IconButton>
+        </Tooltip>
       </Box>
       {isEditing ? (
         <Box width={width}>
