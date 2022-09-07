@@ -23,6 +23,7 @@ export const FormName: React.FC = () => {
             top: "50%",
           }}
           lightColor="primary"
+          loadingContainerProps={{ marginLeft: "25px", marginTop: 0, transform: "none" }}
           outerContainerProps={{ height: "100%", maxHeight: "100px" }}
           scale={2}
           student={selectedStudent}
