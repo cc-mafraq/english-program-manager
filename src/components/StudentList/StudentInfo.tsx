@@ -96,9 +96,9 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         <Image
           folderName={covidVaccineImageFolder}
           imagePath="covidVaccine.imageName"
-          imageStyleProps={{ maxHeight: "100px" }}
-          innerContainerProps={{ maxHeight: "100px" }}
-          loadingContainerProps={{ marginLeft: "50px", marginTop: "50px" }}
+          imageStyleProps={{ height: "100px" }}
+          innerContainerProps={{ height: "100px" }}
+          loadingContainerProps={{ marginLeft: "30px", marginTop: "30px", transform: "none" }}
           noButton
           outerContainerProps={{ display: "inline-block", marginRight: "2vh" }}
           student={student}

@@ -11,7 +11,7 @@ interface StudentImageProps {
   imageStyleProps?: SxProps;
   innerContainerProps?: BoxProps;
   lightColor?: "primary" | "default" | "secondary";
-  loadingContainerProps?: BoxProps;
+  loadingContainerProps?: BoxProps & { transform: string };
   noButton?: boolean;
   outerContainerProps?: BoxProps;
   scale?: number;
