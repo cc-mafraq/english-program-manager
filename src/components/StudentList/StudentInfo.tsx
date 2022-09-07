@@ -21,6 +21,14 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
     return getStatusDetails({ student, students });
   }, [student, students]);
 
+  const active = useMemo(() => {
+    return isActive(student) ? "Yes" : "No";
+  }, [student]);
+
+  const repeatNum = useMemo(() => {
+    return getRepeatNum(student);
+  }, [student]);
+
   return (
     <Box sx={{ display: "flex", flexWrap: "wrap" }}>
       <LabeledContainer label="Program Information">
@@ -47,7 +55,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         <LabeledText label="Current Level">{student.currentLevel}</LabeledText>
         <LabeledText label="Family Coordinator Entry">{student.familyCoordinatorEntry}</LabeledText>
         <LabeledText label="Status">{Status[student.status.currentStatus]}</LabeledText>
-        <LabeledText label="Active">{isActive(student) ? "Yes" : "No"}</LabeledText>
+        <LabeledText label="Active">{active}</LabeledText>
         <LabeledText label="Initial Session">{student.initialSession}</LabeledText>
       </LabeledContainer>
       <Box>
@@ -127,7 +135,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         <LabeledText label="Reactivated Date">{join(student.status.reactivatedDate, JOIN_STR)}</LabeledText>
         <LabeledText label="Withdraw Date">{join(student.status.withdrawDate, JOIN_STR)}</LabeledText>
         <LabeledText label="Withdraw Reason">{student.status.droppedOutReason}</LabeledText>
-        <LabeledText label="Repeat Number">{getRepeatNum(student)}</LabeledText>
+        <LabeledText label="Repeat Number">{repeatNum}</LabeledText>
       </LabeledContainer>
       <LabeledContainer label="Demographics">
         <LabeledText label="Nationality">{student.nationality}</LabeledText>
