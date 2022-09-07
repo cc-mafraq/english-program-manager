@@ -99,7 +99,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
           imageStyleProps={{ height: "100px", maxWidth: "150px" }}
           innerContainerProps={{ height: "100px", marginLeft: "-10%", top: "17px" }}
           loadingContainerProps={{ marginLeft: "30px", marginTop: "30px", transform: "none" }}
-          outerContainerProps={{ display: "inline-block", marginRight: "2vh", width: "150px" }}
+          outerContainerProps={{ display: "inline-block", height: "100px", marginRight: "2vh", width: "150px" }}
           scale={1.5}
           student={student}
         />
