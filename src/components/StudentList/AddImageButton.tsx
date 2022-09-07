@@ -2,6 +2,7 @@ import { AddPhotoAlternate } from "@mui/icons-material";
 import { IconButton, Tooltip, useTheme } from "@mui/material";
 import { get } from "lodash";
 import React, { ChangeEvent, useContext } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { useColors } from "../../hooks";
 import { AppContext, Student } from "../../interfaces";
 import { setImage } from "../../services";
@@ -11,7 +12,7 @@ interface AddImageButtonProps {
   imagePath: string;
   lightColor?: "primary" | "default" | "secondary";
   scale?: number;
-  setLoading?: React.Dispatch<React.SetStateAction<boolean>>;
+  setLoading?: (ld: boolean) => void;
   student: Student | null;
 }
 
@@ -27,7 +28,7 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({
   const theme = useTheme();
   const { iconColor } = useColors();
 
-  const inputId = `importImage-${imagePath}-${student?.epId}`;
+  const inputId = uuidv4();
 
   return (
     <label htmlFor={inputId}>

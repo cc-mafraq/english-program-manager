@@ -1,6 +1,6 @@
 import { Box, BoxProps, CardMedia, SxProps, useTheme } from "@mui/material";
 import { get } from "lodash";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ReactLoading from "react-loading";
 import { AddImageButton } from ".";
 import { Student } from "../../interfaces";
@@ -39,6 +39,11 @@ export const Image: React.FC<StudentImageProps> = ({
     imageName && setLoading(true);
     setImg(imageName);
   }, [imageName]);
+
+  const setLoadingState = useCallback((ld: boolean) => {
+    setLoading(ld);
+  }, []);
+
   return (
     <Box {...outerContainerProps}>
       {loading && (
@@ -50,7 +55,7 @@ export const Image: React.FC<StudentImageProps> = ({
             ...loadingContainerProps,
           }}
         >
-          <ReactLoading color={theme.palette.primary.main} type="spin" />
+          <ReactLoading color={theme.palette.primary.main} type="cylon" />
         </Box>
       )}
       {imageName ? (
@@ -73,13 +78,13 @@ export const Image: React.FC<StudentImageProps> = ({
               transform: "translate(-50%, -50%)",
             }}
           >
-            {!noButton && !imageName && (
+            {!noButton && !imageName && !loading && (
               <AddImageButton
                 folderName={folderName}
                 imagePath={imagePath}
                 lightColor={lightColor}
                 scale={scale}
-                setLoading={setLoading}
+                setLoading={setLoadingState}
                 student={student}
               />
             )}
