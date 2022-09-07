@@ -67,7 +67,7 @@ export const StudentCard: React.FC<StudentCardProps> = ({
               maxHeight: "250px",
               minHeight: "200px",
             }}
-            innerContainerProps={{ height: "35vh", maxHeight: "250px", minHeight: "200px" }}
+            innerContainerProps={{ height: "200px" }}
             outerContainerProps={{ minWidth: "150px" }}
             scale={2}
             student={student}
