@@ -27,6 +27,7 @@ export const FormCovidVaccine: React.FC = () => {
               top: "50%",
             }}
             lightColor="primary"
+            loadingContainerProps={{ marginLeft: "70px", marginTop: 0, transform: "none" }}
             outerContainerProps={{ height: "100%" }}
             scale={2}
             student={selectedStudent}
