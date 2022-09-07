@@ -27,9 +27,9 @@ export const StudentList: React.FC<StudentListProps> = ({ studentsPage, handleEd
     sizeMap.current = { ...sizeMap.current, [index]: size };
   }, []);
 
-  const getSize = (index: number): number => {
+  const getSize = useCallback((index: number): number => {
     return Number(get(sizeMap.current, index)) + 16 || 600;
-  };
+  }, []);
 
   useEffect(() => {
     listRef.current?.scrollTo(0);

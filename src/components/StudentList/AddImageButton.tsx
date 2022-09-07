@@ -1,7 +1,7 @@
 import { AddPhotoAlternate } from "@mui/icons-material";
 import { IconButton, Tooltip, useTheme } from "@mui/material";
 import { get } from "lodash";
-import React, { ChangeEvent, useContext } from "react";
+import React, { ChangeEvent, useContext, useMemo } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useColors } from "../../hooks";
 import { AppContext, Student } from "../../interfaces";
@@ -28,7 +28,9 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({
   const theme = useTheme();
   const { iconColor } = useColors();
 
-  const inputId = uuidv4();
+  const inputId = useMemo(() => {
+    return uuidv4();
+  }, []);
 
   return (
     <label htmlFor={inputId}>

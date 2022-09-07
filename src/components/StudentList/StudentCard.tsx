@@ -1,5 +1,5 @@
 import { Box, Card, CardContent, Tab, Tabs, useTheme } from "@mui/material";
-import React, { CSSProperties, useEffect, useRef, useState } from "react";
+import React, { CSSProperties, useCallback, useEffect, useRef, useState } from "react";
 import { CorrespondenceList, Image, PlacementList, StudentCardHeader, StudentInfo } from "..";
 import { darkBlueBackground, Nationality, Student } from "../../interfaces";
 import { studentImageFolder } from "../../services";
@@ -37,10 +37,13 @@ export const StudentCard: React.FC<StudentCardProps> = ({
     }
   }, [index, setSize, windowWidth, localTabValue, rowRef.current?.clientHeight]);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setLocalTabValue(newValue);
-    setTabValue(student.epId, newValue);
-  };
+  const handleChange = useCallback(
+    (event: React.SyntheticEvent, newValue: number) => {
+      setLocalTabValue(newValue);
+      setTabValue(student.epId, newValue);
+    },
+    [setTabValue, student.epId],
+  );
 
   useEffect(() => {
     setLocalTabValue(tabValue);

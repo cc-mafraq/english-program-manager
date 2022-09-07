@@ -1,7 +1,7 @@
 import { Box, useTheme } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { join, map } from "lodash";
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import { Image, LabeledContainer, LabeledText } from "..";
 import { useColors } from "../../hooks";
 import { AppContext, CovidStatus, Status, Student } from "../../interfaces";
@@ -17,7 +17,9 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
   } = useContext(AppContext);
   const theme = useTheme();
   const { defaultBackgroundColor, green, red, yellow } = useColors();
-  const statusDetailsAndNumSessions = getStatusDetails({ student, students });
+  const statusDetailsAndNumSessions = useMemo(() => {
+    return getStatusDetails({ student, students });
+  }, [student, students]);
 
   return (
     <Box sx={{ display: "flex", flexWrap: "wrap" }}>
