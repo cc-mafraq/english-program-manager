@@ -63,12 +63,11 @@ export const StudentCard: React.FC<StudentCardProps> = ({
               borderColor: student.nationality === Nationality.JDN ? "rgb(0,176,80)" : "rgb(204,102,0)",
               borderWidth:
                 student.nationality === Nationality.JDN || student.nationality === Nationality.SYR ? 2 : 0,
-              height: "35vh",
               maxHeight: "250px",
-              minHeight: "200px",
+              width: "175px",
             }}
             innerContainerProps={{ height: "200px" }}
-            outerContainerProps={{ minWidth: "150px" }}
+            outerContainerProps={{ minWidth: "175px" }}
             scale={2}
             student={student}
           />
