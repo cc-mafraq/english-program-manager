@@ -51,9 +51,6 @@ export const Image: React.FC<StudentImageProps> = ({
       {loading && (
         <Box
           sx={{
-            marginLeft: "50%",
-            marginTop: "50%",
-            transform: "translate(-50%, -50%)",
             ...loadingContainerProps,
           }}
         >

@@ -48,16 +48,17 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({ anchorEl, handleClos
   const filterFields: FilterField[] = useMemo(() => {
     return [
       { name: "Invite", path: "status.inviteTag", values: booleanCheckboxOptions },
+      { name: "Placement Pending", path: "placement.pending", values: ["Yes"] },
+      { name: "No Answer Class Schedule WPM", path: "placement.noAnswerClassScheduleWpm", values: ["Yes"] },
       { name: "Current Level", path: "currentLevel", values: [...genderedLevels, "L5 GRAD"] },
       { name: "Current Status", path: "status.currentStatus", values: statuses },
+      { name: "COVID Vaccine Status", path: "covidVaccine.status", values: covidStatuses },
+      { name: "Teacher", path: "work.isTeacher", values: ["Yes"] },
+      { name: "English Teacher", path: "work.isEnglishTeacher", values: ["Yes"] },
       { name: "Initial Session", path: "initialSession", values: getAllSessions(students) },
       { name: "Nationality", path: "nationality", values: nationalities },
       { name: "Gender", path: "gender", values: ["Male", "Female"] },
-      { name: "Teacher", path: "work.isTeacher", values: ["Yes"] },
-      { name: "English Teacher", path: "work.isEnglishTeacher", values: ["Yes"] },
-      { name: "Placement Pending", path: "placement.pending", values: ["Yes"] },
       { fn: statusDetailsFn, name: "Status Details", path: "statusDetails", values: statusDetails },
-      { name: "COVID Vaccine Status", path: "covidVaccine.status", values: covidStatuses },
       { name: "Dropped Out Reason", path: "status.droppedOutReason" },
       { fn: sessionsAttendedFn, name: "Sessions Attended", path: "sessionsAttended", values: range(11) },
     ];
@@ -71,7 +72,9 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({ anchorEl, handleClos
     <Drawer
       onClose={handleClose}
       open={open}
-      PaperProps={{ style: { backgroundColor: popoverColor, maxWidth: 250, paddingRight: 10 } }}
+      PaperProps={{
+        style: { backgroundColor: popoverColor, maxWidth: 250, paddingLeft: "20px", paddingRight: 10 },
+      }}
     >
       <Typography fontWeight="bold" marginLeft={1} marginTop={1} variant="h5">
         Filter Students

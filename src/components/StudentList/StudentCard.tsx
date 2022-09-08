@@ -62,15 +62,21 @@ export const StudentCard: React.FC<StudentCardProps> = ({
             folderName={studentImageFolder}
             imagePath="imageName"
             imageStyleProps={{
-              border: "solid",
-              borderColor: student.nationality === Nationality.JDN ? "rgb(0,176,80)" : "rgb(204,102,0)",
-              borderWidth:
-                student.nationality === Nationality.JDN || student.nationality === Nationality.SYR ? 2 : 0,
               maxHeight: "250px",
               width: "175px",
             }}
-            innerContainerProps={{ height: "200px" }}
-            outerContainerProps={{ minWidth: "175px" }}
+            innerContainerProps={{ height: "250px" }}
+            loadingContainerProps={{ marginLeft: "88px", marginTop: "125px", transform: "translate(-50%, -50%)" }}
+            outerContainerProps={{
+              minWidth: "175px",
+              sx: {
+                border: "solid",
+                borderColor: student.nationality === Nationality.JDN ? "rgb(0,176,80)" : "rgb(204,102,0)",
+                borderWidth:
+                  student.nationality === Nationality.JDN || student.nationality === Nationality.SYR ? 2 : 0,
+                height: "250px",
+              },
+            }}
             scale={2}
             student={student}
           />
