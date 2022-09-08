@@ -44,11 +44,9 @@ export const LabeledContainer: React.FC<LabeledContainerProps> = ({
   const childrenChildrenArr = useMemo(() => {
     return children instanceof Array ? map(children, "props.children") : [get(children, "props.children")];
   }, [children]);
-  const everyChildIsEmpty = useMemo(() => {
-    return every(childrenChildrenArr, (c) => {
-      return c === undefined || c === "";
-    });
-  }, [childrenChildrenArr]);
+  const everyChildIsEmpty = every(childrenChildrenArr, (c) => {
+    return c === undefined || c === "";
+  });
 
   return condition && (!everyChildIsEmpty || showWhenEmpty) ? (
     <Box {...defaultParentContainerProps} {...parentContainerProps}>

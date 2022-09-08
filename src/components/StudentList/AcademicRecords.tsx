@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Edit } from "@mui/icons-material";
 import { Box, Button, IconButton, Tooltip, TypographyProps, useTheme } from "@mui/material";
 import { findIndex, forOwn, map, reverse } from "lodash";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { LabeledContainer, LabeledText, ProgressBox } from ".";
 import { FormAcademicRecordsItem, FormDialog } from "..";
 import { useColors } from "../../hooks";
@@ -20,7 +20,6 @@ import {
   getAllSessions,
   getProgress,
   removeNullFromObject,
-  SessionResult,
   setStudentData,
   SPACING,
   StudentProgress,
@@ -113,16 +112,70 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
     [handleDialogClose, selectedAcademicRecord, student],
   );
 
-  const PB = useCallback((v: SessionResult[] | undefined, k: GenderedLevel) => {
-    return <ProgressBox key={k} level={k} sessionResults={v} />;
-  }, []);
+  const PB = useMemo(() => {
+    return map(forOwn(progress), (v, k) => {
+      return <ProgressBox key={k} level={k as GenderedLevel} sessionResults={v} />;
+    });
+  }, [progress]);
+
+  const RecordData = useMemo(() => {
+    return reverse(
+      map(student.academicRecords, (ar, i) => {
+        return (
+          <LabeledContainer
+            key={i}
+            childContainerProps={{ marginTop: 0.5 }}
+            label={`Session ${Number(i) + 1}`}
+            labelProps={{ fontSize: 20, fontWeight: "normal" }}
+            parentContainerProps={{
+              border: 1,
+              borderColor: theme.palette.mode === "light" ? "#999999" : "#666666",
+              marginBottom: 1,
+              padding: 2,
+              paddingTop: 1,
+              position: "relative",
+              width: "100%",
+            }}
+          >
+            <Tooltip arrow title="Edit Academic Record">
+              <IconButton
+                onClick={handleEditClick(i)}
+                sx={{
+                  color: iconColor,
+                  position: "absolute",
+                  right: "1.5vh",
+                  top: "1.5vh",
+                }}
+              >
+                <Edit />
+              </IconButton>
+            </Tooltip>
+            <LabeledContainer label="Record Information" labelProps={labelProps}>
+              <LabeledText label="Session">{ar.session}</LabeledText>
+              <LabeledText label="Level">{ar.level}</LabeledText>
+              <LabeledText label="Level Audited">{ar.levelAudited}</LabeledText>
+              <LabeledText label="Attendance">
+                {ar.attendance !== undefined ? `${ar.attendance}%` : undefined}
+              </LabeledText>
+            </LabeledContainer>
+            <GradeInfo grade={ar.finalResult} label="Final Grade" />
+            <GradeInfo grade={ar.exitWritingExam} label="Exit Writing Exam" />
+            <GradeInfo grade={ar.exitSpeakingExam} label="Exit Speaking Exam" />
+            <LabeledContainer label="Teacher Comments" labelProps={labelProps}>
+              <LabeledText label="" textProps={{ fontSize: "11pt" }}>
+                {ar.comments}
+              </LabeledText>
+            </LabeledContainer>
+          </LabeledContainer>
+        );
+      }),
+    );
+  }, [handleEditClick, iconColor, student.academicRecords, theme.palette.mode]);
 
   return (
     <>
       <LabeledContainer label="Progress" parentContainerProps={{ width: "100%" }} showWhenEmpty>
-        {map(forOwn(progress), (v, k) => {
-          return PB(v, k as GenderedLevel);
-        })}
+        {PB}
       </LabeledContainer>
       <LabeledContainer label="Academic Records" showWhenEmpty>
         <Box marginBottom={1} marginTop={1}>
@@ -130,57 +183,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
             Add Session
           </Button>
         </Box>
-        {reverse(
-          map(student.academicRecords, (ar, i) => {
-            return (
-              <LabeledContainer
-                key={i}
-                childContainerProps={{ marginTop: 0.5 }}
-                label={`Session ${Number(i) + 1}`}
-                labelProps={{ fontSize: 20, fontWeight: "normal" }}
-                parentContainerProps={{
-                  border: 1,
-                  borderColor: theme.palette.mode === "light" ? "#999999" : "#666666",
-                  marginBottom: 1,
-                  padding: 2,
-                  paddingTop: 1,
-                  position: "relative",
-                  width: "100%",
-                }}
-              >
-                <Tooltip arrow title="Edit Academic Record">
-                  <IconButton
-                    onClick={handleEditClick(i)}
-                    sx={{
-                      color: iconColor,
-                      position: "absolute",
-                      right: "1.5vh",
-                      top: "1.5vh",
-                    }}
-                  >
-                    <Edit />
-                  </IconButton>
-                </Tooltip>
-                <LabeledContainer label="Record Information" labelProps={labelProps}>
-                  <LabeledText label="Session">{ar.session}</LabeledText>
-                  <LabeledText label="Level">{ar.level}</LabeledText>
-                  <LabeledText label="Level Audited">{ar.levelAudited}</LabeledText>
-                  <LabeledText label="Attendance">
-                    {ar.attendance !== undefined ? `${ar.attendance}%` : undefined}
-                  </LabeledText>
-                </LabeledContainer>
-                <GradeInfo grade={ar.finalResult} label="Final Grade" />
-                <GradeInfo grade={ar.exitWritingExam} label="Exit Writing Exam" />
-                <GradeInfo grade={ar.exitSpeakingExam} label="Exit Speaking Exam" />
-                <LabeledContainer label="Teacher Comments" labelProps={labelProps}>
-                  <LabeledText label="" textProps={{ fontSize: "11pt" }}>
-                    {ar.comments}
-                  </LabeledText>
-                </LabeledContainer>
-              </LabeledContainer>
-            );
-          }),
-        )}
+        {RecordData}
         <LabeledText label="Certificate Requests">{student?.certificateRequests}</LabeledText>
       </LabeledContainer>
       <FormDialog

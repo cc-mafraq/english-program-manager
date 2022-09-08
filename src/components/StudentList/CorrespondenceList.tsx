@@ -3,7 +3,7 @@ import { Edit } from "@mui/icons-material";
 import { Box, Button, IconButton, Tooltip, Typography } from "@mui/material";
 import { findIndex, map, reverse } from "lodash";
 import moment from "moment";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { LabeledContainer } from ".";
 import { FormCorrespondenceItem, FormDialog, StudentFormLabel } from "..";
 import { useColors } from "../../hooks";
@@ -52,6 +52,45 @@ export const CorrespondenceList: React.FC<CorrespondenceProps> = ({ student }) =
     [handleDialogClose, selectedCorrespondence, student],
   );
 
+  const CorrespondenceData = useMemo(() => {
+    return reverse(
+      map(student.correspondence, (c, i) => {
+        return (
+          <Box
+            key={`${c.date} ${c.notes}`}
+            position="relative"
+            sx={{
+              backgroundColor: defaultBackgroundColor,
+              border: 1,
+              borderColor: defaultBorderColor,
+              marginRight: 1,
+              marginTop: 1,
+              padding: 1,
+              width: "95%",
+            }}
+          >
+            <Tooltip arrow title="Edit Correspondence">
+              <IconButton
+                onClick={handleEditClick(i)}
+                sx={{
+                  color: iconColor,
+                  position: "absolute",
+                  right: "-4vw",
+                  top: 0,
+                }}
+              >
+                <Edit />
+              </IconButton>
+            </Tooltip>
+            <Typography fontSize="11pt" variant="body2">
+              {c.date ? `${c.date}: ${c.notes}` : c.notes}
+            </Typography>
+          </Box>
+        );
+      }),
+    );
+  }, [defaultBackgroundColor, handleEditClick, iconColor, student.correspondence]);
+
   return (
     <>
       <LabeledContainer label="Correspondence" parentContainerProps={{ marginBottom: 2 }}>
@@ -60,42 +99,7 @@ export const CorrespondenceList: React.FC<CorrespondenceProps> = ({ student }) =
             Add Correspondence
           </Button>
         </Box>
-        {reverse(
-          map(student.correspondence, (c, i) => {
-            return (
-              <Box
-                key={`${c.date} ${c.notes}`}
-                position="relative"
-                sx={{
-                  backgroundColor: defaultBackgroundColor,
-                  border: 1,
-                  borderColor: defaultBorderColor,
-                  marginRight: 1,
-                  marginTop: 1,
-                  padding: 1,
-                  width: "95%",
-                }}
-              >
-                <Tooltip arrow title="Edit Correspondence">
-                  <IconButton
-                    onClick={handleEditClick(i)}
-                    sx={{
-                      color: iconColor,
-                      position: "absolute",
-                      right: "-4vw",
-                      top: 0,
-                    }}
-                  >
-                    <Edit />
-                  </IconButton>
-                </Tooltip>
-                <Typography fontSize="11pt" variant="body2">
-                  {c.date ? `${c.date}: ${c.notes}` : c.notes}
-                </Typography>
-              </Box>
-            );
-          }),
-        )}
+        {CorrespondenceData}
       </LabeledContainer>
       <FormDialog
         dialogProps={{ maxWidth: "lg" }}

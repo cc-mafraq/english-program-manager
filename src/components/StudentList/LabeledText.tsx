@@ -1,5 +1,5 @@
 import { Box, BoxProps, SxProps, Theme, Typography, TypographyProps } from "@mui/material";
-import React, { useMemo } from "react";
+import React from "react";
 import { useColors } from "../../hooks";
 import { defaultBorderColor } from "../../interfaces";
 
@@ -33,27 +33,23 @@ export const LabeledText: React.FC<LabeledTextProps> = ({
   children,
 }) => {
   const { defaultBackgroundColor } = useColors();
-  const defaultContainerProps: BoxProps = useMemo(() => {
-    return {
-      sx: {
-        backgroundColor: defaultBackgroundColor,
-        border: 1,
-        borderColor: defaultBorderColor,
-        float: "left",
-        marginRight: 0.5,
-        marginTop: 0.5,
-        padding: 2,
-        paddingBottom: 1,
-        paddingTop: 1,
-      },
-    };
-  }, [defaultBackgroundColor]);
+  const defaultContainerProps: BoxProps = {
+    sx: {
+      backgroundColor: defaultBackgroundColor,
+      border: 1,
+      borderColor: defaultBorderColor,
+      float: "left",
+      marginRight: 0.5,
+      marginTop: 0.5,
+      padding: 2,
+      paddingBottom: 1,
+      paddingTop: 1,
+    },
+  };
 
-  const sx: SxProps<Theme> | undefined = useMemo(() => {
-    return containerProps?.sx
-      ? ({ ...defaultContainerProps.sx, ...containerProps.sx } as SxProps<Theme>)
-      : defaultContainerProps.sx;
-  }, [containerProps?.sx, defaultContainerProps.sx]);
+  const sx: SxProps<Theme> | undefined = containerProps?.sx
+    ? ({ ...defaultContainerProps.sx, ...containerProps.sx } as SxProps<Theme>)
+    : defaultContainerProps.sx;
 
   return condition && (children || showWhenEmpty) ? (
     <Box {...defaultContainerProps} {...containerProps} sx={sx}>

@@ -29,8 +29,8 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
     return getRepeatNum(student);
   }, [student]);
 
-  return (
-    <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+  const ProgramInformation = useMemo(() => {
+    return (
       <LabeledContainer label="Program Information">
         <LabeledText
           containerProps={{
@@ -58,6 +58,22 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         <LabeledText label="Active">{active}</LabeledText>
         <LabeledText label="Initial Session">{student.initialSession}</LabeledText>
       </LabeledContainer>
+    );
+  }, [
+    active,
+    defaultBackgroundColor,
+    green,
+    red,
+    student.currentLevel,
+    student.familyCoordinatorEntry,
+    student.initialSession,
+    student.status.currentStatus,
+    student.status.inviteTag,
+    student.status.noContactList,
+  ]);
+
+  const CovidVaccine = useMemo(() => {
+    return (
       <Box>
         <LabeledContainer label="COVID Vaccine" parentContainerProps={{ marginRight: "2vh" }}>
           <LabeledText
@@ -114,6 +130,11 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
           student={student}
         />
       </Box>
+    );
+  }, [green, red, student, theme.palette.mode, theme.palette.text.primary, theme.palette.text.secondary, yellow]);
+
+  const StatusBox = useMemo(() => {
+    return (
       <LabeledContainer label="Status">
         <LabeledText label="Status Details">{statusDetailsAndNumSessions[0]}</LabeledText>
         <LabeledText label="Sessions Attended">
@@ -137,6 +158,23 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         <LabeledText label="Withdraw Reason">{student.status.droppedOutReason}</LabeledText>
         <LabeledText label="Repeat Number">{repeatNum}</LabeledText>
       </LabeledContainer>
+    );
+  }, [
+    defaultBackgroundColor,
+    red,
+    repeatNum,
+    statusDetailsAndNumSessions,
+    student.status.audit,
+    student.status.cheatingSessions,
+    student.status.droppedOutReason,
+    student.status.finalGradeSentDate,
+    student.status.levelReevalDate,
+    student.status.reactivatedDate,
+    student.status.withdrawDate,
+  ]);
+
+  const Demographics = useMemo(() => {
+    return (
       <LabeledContainer label="Demographics">
         <LabeledText label="Nationality">{student.nationality}</LabeledText>
         <LabeledText label="Gender">{student.gender}</LabeledText>
@@ -152,6 +190,21 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
           {student.work?.isEnglishTeacher ? student.work.englishTeacherLocation : undefined}
         </LabeledText>
       </LabeledContainer>
+    );
+  }, [
+    student.age,
+    student.gender,
+    student.nationality,
+    student.work.englishTeacherLocation,
+    student.work?.isEnglishTeacher,
+    student.work?.isTeacher,
+    student.work?.lookingForJob,
+    student.work?.occupation,
+    student.work.teachingSubjectAreas,
+  ]);
+
+  const PhoneNumbers = useMemo(() => {
+    return (
       <LabeledContainer label="Phone Numbers and WhatsApp" showWhenEmpty>
         {map(student.phone.phoneNumbers, (pn, i) => {
           return (
@@ -166,21 +219,55 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
           {join(student.phone.otherWaBroadcastGroups, JOIN_STR)}
         </LabeledText>
       </LabeledContainer>
+    );
+  }, [student.phone.otherWaBroadcastGroups, student.phone.phoneNumbers, student.phone.waBroadcastSAR]);
 
+  const PlacementData = useMemo(() => {
+    return (
       <LabeledContainer label="Original Placement Data">
         <LabeledText label="Writing">{student.origPlacementData.writing}</LabeledText>
         <LabeledText label="Speaking">{student.origPlacementData.speaking}</LabeledText>
         <LabeledText label="Placement Level">{student.origPlacementData.level}</LabeledText>
         <LabeledText label="Adjustment">{student.origPlacementData.adjustment}</LabeledText>
       </LabeledContainer>
-      <LabeledContainer label="Literacy">
-        <LabeledText label="Illiterate Arabic">{student.literacy?.illiterateAr ? "Yes" : undefined}</LabeledText>
-        <LabeledText label="Illiterate English">{student.literacy?.illiterateEng ? "Yes" : undefined}</LabeledText>
-        <LabeledText label="Tutor and Date">{student.literacy?.tutorAndDate}</LabeledText>
-      </LabeledContainer>
-      <LabeledContainer label="Zoom">
-        <LabeledText label="Tutor/Club and Details">{student.zoom}</LabeledText>
-      </LabeledContainer>
+    );
+  }, [
+    student.origPlacementData.adjustment,
+    student.origPlacementData.level,
+    student.origPlacementData.speaking,
+    student.origPlacementData.writing,
+  ]);
+  const LiteracyAndZoom = useMemo(() => {
+    return (
+      <>
+        <LabeledContainer label="Literacy">
+          <LabeledText label="Illiterate Arabic">{student.literacy?.illiterateAr ? "Yes" : undefined}</LabeledText>
+          <LabeledText label="Illiterate English">
+            {student.literacy?.illiterateEng ? "Yes" : undefined}
+          </LabeledText>
+          <LabeledText label="Tutor and Date">{student.literacy?.tutorAndDate}</LabeledText>
+        </LabeledContainer>
+        <LabeledContainer label="Zoom">
+          <LabeledText label="Tutor/Club and Details">{student.zoom}</LabeledText>
+        </LabeledContainer>
+      </>
+    );
+  }, [
+    student.literacy?.illiterateAr,
+    student.literacy?.illiterateEng,
+    student.literacy?.tutorAndDate,
+    student.zoom,
+  ]);
+
+  return (
+    <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+      {ProgramInformation}
+      {CovidVaccine}
+      {StatusBox}
+      {Demographics}
+      {PhoneNumbers}
+      {PlacementData}
+      {LiteracyAndZoom}
     </Box>
   );
 };
