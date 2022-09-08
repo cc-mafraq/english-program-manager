@@ -5,7 +5,12 @@ import { db, storage } from ".";
 import { Student } from "../interfaces";
 
 export const setStudentData = async (student: Student, options?: SetOptions) => {
-  await setDoc(doc(collection(db, "students"), toString(student.epId)), student, options ?? {});
+  try {
+    await setDoc(doc(collection(db, "students"), toString(student.epId)), student, options ?? {});
+  } catch (e) {
+    // eslint-disable-next-line no-alert
+    alert(`The following error occurred. Please try again:\n${e}`);
+  }
 };
 
 export const deleteStudentData = async (student: Student) => {

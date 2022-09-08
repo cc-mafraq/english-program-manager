@@ -1,5 +1,5 @@
 import { Box, Button, Drawer, Typography, useTheme } from "@mui/material";
-import { map, range, sortBy, uniq } from "lodash";
+import { first, includes, map, range, sortBy, uniq } from "lodash";
 import React, { useCallback, useContext, useMemo } from "react";
 import { FilterCheckbox } from "..";
 import { useColors } from "../../../hooks";
@@ -45,6 +45,20 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({ anchorEl, handleClos
     [sessionsWithResults],
   );
 
+  const whatsAppGroupFn = useCallback((student: Student) => {
+    const includesRemove = includes(student.phone.waBroadcastSAR?.toLowerCase(), "remove");
+    if (includes(student.phone.waBroadcastSAR?.toLowerCase(), "group") && !includesRemove) {
+      return (
+        `SAR ${first(student.phone.waBroadcastSAR?.match(/Group \d/))}` ||
+        `SAR Group ${first(student.phone.waBroadcastSAR?.match(/\d/))}`
+      );
+    }
+    if (includes(student.phone.waBroadcastSAR, "Y") && !includesRemove) {
+      return "SAR Group 1";
+    }
+    return "None";
+  }, []);
+
   const filterFields: FilterField[] = useMemo(() => {
     return [
       { name: "Invite", path: "status.inviteTag", values: booleanCheckboxOptions },
@@ -58,11 +72,17 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({ anchorEl, handleClos
       { name: "Initial Session", path: "initialSession", values: getAllSessions(students) },
       { name: "Nationality", path: "nationality", values: nationalities },
       { name: "Gender", path: "gender", values: ["Male", "Female"] },
+      {
+        fn: whatsAppGroupFn,
+        name: "WA BC Group",
+        path: "phone.waBroadcastSAR",
+        values: ["None", "SAR Group 1", "SAR Group 2", "SAR Group 3", "SAR Group 4", "SAR Group 5", "SAR Group 6"],
+      },
       { fn: statusDetailsFn, name: "Status Details", path: "statusDetails", values: statusDetails },
       { name: "Dropped Out Reason", path: "status.droppedOutReason" },
       { fn: sessionsAttendedFn, name: "Sessions Attended", path: "sessionsAttended", values: range(11) },
     ];
-  }, [sessionsAttendedFn, statusDetailsFn, students]);
+  }, [sessionsAttendedFn, statusDetailsFn, students, whatsAppGroupFn]);
 
   const handleClearFilters = () => {
     appDispatch({ payload: { filter: [] } });
