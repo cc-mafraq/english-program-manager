@@ -1,6 +1,6 @@
 import { Box, BoxProps, CardMedia, SxProps, useTheme } from "@mui/material";
 import { get } from "lodash";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ReactLoading from "react-loading";
 import { AddImageButton } from ".";
 import { Student } from "../../interfaces";
@@ -32,9 +32,7 @@ export const Image: React.FC<StudentImageProps> = ({
 }) => {
   const [img, setImg] = useState("");
   const [loading, setLoading] = useState(false);
-  const imageName = useMemo(() => {
-    return get(student, imagePath);
-  }, [imagePath, student]);
+  const imageName = get(student, imagePath);
   const theme = useTheme();
 
   useEffect(() => {
