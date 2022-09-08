@@ -1,7 +1,7 @@
 import { AddPhotoAlternate } from "@mui/icons-material";
 import { IconButton, Tooltip, useTheme } from "@mui/material";
 import { get } from "lodash";
-import React, { ChangeEvent, useContext, useMemo } from "react";
+import React, { ChangeEvent, useCallback, useContext, useMemo } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useColors } from "../../hooks";
 import { AppContext, Student } from "../../interfaces";
@@ -32,20 +32,22 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({
     return uuidv4();
   }, []);
 
+  const onInputChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const onChange = async (e: ChangeEvent<HTMLInputElement>) => {
+        if (!student) return;
+        setLoading && setLoading(true);
+        await setImage(student, e.target.files && e.target.files[0], imagePath, folderName);
+        appDispatch({ payload: { selectedStudent: student } });
+      };
+      onChange(event);
+    },
+    [appDispatch, folderName, imagePath, setLoading, student],
+  );
+
   return (
     <label htmlFor={inputId}>
-      <input
-        accept=".png,.jpg,.jpeg,.jfif"
-        hidden
-        id={inputId}
-        onChange={async (e: ChangeEvent<HTMLInputElement>) => {
-          if (!student) return;
-          setLoading && setLoading(true);
-          await setImage(student, e.target.files && e.target.files[0], imagePath, folderName);
-          appDispatch({ payload: { selectedStudent: student } });
-        }}
-        type="file"
-      />
+      <input accept=".png,.jpg,.jpeg,.jfif" hidden id={inputId} onChange={onInputChange} type="file" />
       <Tooltip arrow title={`${get(student, imagePath) ? "Replace" : "Add"} Image`}>
         <IconButton
           color={lightColor}

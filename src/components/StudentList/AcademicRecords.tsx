@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Edit } from "@mui/icons-material";
 import { Box, Button, IconButton, Tooltip, TypographyProps, useTheme } from "@mui/material";
 import { findIndex, forOwn, map, reverse } from "lodash";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { LabeledContainer, LabeledText, ProgressBox } from ".";
 import { FormAcademicRecordsItem, FormDialog } from "..";
 import { useColors } from "../../hooks";
@@ -20,6 +20,7 @@ import {
   getAllSessions,
   getProgress,
   removeNullFromObject,
+  SessionResult,
   setStudentData,
   SPACING,
   StudentProgress,
@@ -78,39 +79,49 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
     setProgress(getProgress(student, getAllSessions(students)));
   }, [student, students]);
 
-  const handleDialogOpen = () => {
+  const handleDialogOpen = useCallback(() => {
     setOpen(true);
-  };
+  }, []);
 
-  const handleDialogClose = () => {
+  const handleDialogClose = useCallback(() => {
     setOpen(false);
     setSelectedAcademicRecord(null);
-  };
+  }, []);
 
-  const handleEditClick = (index: number) => {
-    return () => {
-      setSelectedAcademicRecord(student.academicRecords[index]);
-      handleDialogOpen();
-    };
-  };
+  const handleEditClick = useCallback(
+    (index: number) => {
+      return () => {
+        setSelectedAcademicRecord(student.academicRecords[index]);
+        handleDialogOpen();
+      };
+    },
+    [handleDialogOpen, student.academicRecords],
+  );
 
-  const onSubmit = (data: AcademicRecord) => {
-    const dataNoNull = removeNullFromObject(data) as AcademicRecord;
-    if (selectedAcademicRecord) {
-      const recordIndex = findIndex(student.academicRecords, selectedAcademicRecord);
-      student.academicRecords[recordIndex] = dataNoNull;
-    } else {
-      student.academicRecords.push(dataNoNull);
-    }
-    setStudentData(student);
-    handleDialogClose();
-  };
+  const onSubmit = useCallback(
+    (data: AcademicRecord) => {
+      const dataNoNull = removeNullFromObject(data) as AcademicRecord;
+      if (selectedAcademicRecord) {
+        const recordIndex = findIndex(student.academicRecords, selectedAcademicRecord);
+        student.academicRecords[recordIndex] = dataNoNull;
+      } else {
+        student.academicRecords.push(dataNoNull);
+      }
+      setStudentData(student);
+      handleDialogClose();
+    },
+    [handleDialogClose, selectedAcademicRecord, student],
+  );
+
+  const PB = useCallback((v: SessionResult[] | undefined, k: GenderedLevel) => {
+    return <ProgressBox key={k} level={k} sessionResults={v} />;
+  }, []);
 
   return (
     <>
       <LabeledContainer label="Progress" parentContainerProps={{ width: "100%" }} showWhenEmpty>
         {map(forOwn(progress), (v, k) => {
-          return <ProgressBox key={k} level={k as GenderedLevel} sessionResults={v} />;
+          return PB(v, k as GenderedLevel);
         })}
       </LabeledContainer>
       <LabeledContainer label="Academic Records" showWhenEmpty>

@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Edit } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
 import { join, map } from "lodash";
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { LabeledContainer, LabeledText } from ".";
 import { FormDialog, FormPlacement } from "..";
 import { useColors } from "../../hooks";
@@ -19,22 +19,25 @@ export const PlacementList: React.FC<PlacementProps> = ({ student }) => {
   const { iconColor } = useColors();
   const [open, setOpen] = useState(false);
 
-  const handleDialogOpen = () => {
+  const handleDialogOpen = useCallback(() => {
     appDispatch({ payload: { selectedStudent: student } });
     setOpen(true);
-  };
+  }, [appDispatch, student]);
 
-  const handleDialogClose = () => {
+  const handleDialogClose = useCallback(() => {
     setOpen(false);
     appDispatch({ payload: { selectedStudent: null } });
-  };
+  }, [appDispatch]);
 
-  const onSubmit = (data: Placement) => {
-    const dataNoNull = removeNullFromObject(data) as Placement;
-    student.placement = dataNoNull;
-    setStudentData(student);
-    handleDialogClose();
-  };
+  const onSubmit = useCallback(
+    (data: Placement) => {
+      const dataNoNull = removeNullFromObject(data) as Placement;
+      student.placement = dataNoNull;
+      setStudentData(student);
+      handleDialogClose();
+    },
+    [handleDialogClose, student],
+  );
 
   return (
     <>

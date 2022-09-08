@@ -3,7 +3,7 @@ import { Edit } from "@mui/icons-material";
 import { Box, Button, IconButton, Tooltip, Typography } from "@mui/material";
 import { findIndex, map, reverse } from "lodash";
 import moment from "moment";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { LabeledContainer } from ".";
 import { FormCorrespondenceItem, FormDialog, StudentFormLabel } from "..";
 import { useColors } from "../../hooks";
@@ -19,32 +19,38 @@ export const CorrespondenceList: React.FC<CorrespondenceProps> = ({ student }) =
   const [open, setOpen] = useState(false);
   const [selectedCorrespondence, setSelectedCorrespondence] = useState<Correspondence | null>(null);
 
-  const handleDialogOpen = () => {
+  const handleDialogOpen = useCallback(() => {
     setOpen(true);
-  };
+  }, []);
 
-  const handleDialogClose = () => {
+  const handleDialogClose = useCallback(() => {
     setOpen(false);
     setSelectedCorrespondence(null);
-  };
+  }, []);
 
-  const handleEditClick = (index: number) => {
-    return () => {
-      setSelectedCorrespondence(student.correspondence[index]);
-      handleDialogOpen();
-    };
-  };
+  const handleEditClick = useCallback(
+    (index: number) => {
+      return () => {
+        setSelectedCorrespondence(student.correspondence[index]);
+        handleDialogOpen();
+      };
+    },
+    [handleDialogOpen, student.correspondence],
+  );
 
-  const onSubmit = (data: Correspondence) => {
-    if (selectedCorrespondence) {
-      const recordIndex = findIndex(student.correspondence, selectedCorrespondence);
-      student.correspondence[recordIndex] = data;
-    } else {
-      student.correspondence ? student.correspondence.push(data) : (student.correspondence = [data]);
-    }
-    setStudentData(student);
-    handleDialogClose();
-  };
+  const onSubmit = useCallback(
+    (data: Correspondence) => {
+      if (selectedCorrespondence) {
+        const recordIndex = findIndex(student.correspondence, selectedCorrespondence);
+        student.correspondence[recordIndex] = data;
+      } else {
+        student.correspondence ? student.correspondence.push(data) : (student.correspondence = [data]);
+      }
+      setStudentData(student);
+      handleDialogClose();
+    },
+    [handleDialogClose, selectedCorrespondence, student],
+  );
 
   return (
     <>
