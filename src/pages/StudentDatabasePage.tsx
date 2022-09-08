@@ -149,79 +149,94 @@ export const StudentDatabasePage = () => {
     setState({});
   }, [filter, setState]);
 
-  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-    setState({ newPage });
-  };
+  const handleChangePage = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+      setState({ newPage });
+    },
+    [setState],
+  );
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const newRowsPerPage = parseInt(event.target.value, 10);
-    setState({ newPage: 0, newRowsPerPage });
-  };
+  const handleChangeRowsPerPage = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const newRowsPerPage = parseInt(event.target.value, 10);
+      setState({ newPage: 0, newRowsPerPage });
+    },
+    [setState],
+  );
 
-  const handleSearchStringChange = (value: string) => {
-    setState({ newPage: 0, newSearchString: value });
-  };
+  const handleSearchStringChange = useCallback(
+    (value: string) => {
+      setState({ newPage: 0, newSearchString: value });
+    },
+    [setState],
+  );
 
-  const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    handleChangePage(null, 0);
-    setSpreadsheetIsLoading(true);
-    const file: File | null = e.target.files && e.target.files[0];
-    const reader = new FileReader();
+  const onInputChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      handleChangePage(null, 0);
+      setSpreadsheetIsLoading(true);
+      const file: File | null = e.target.files && e.target.files[0];
+      const reader = new FileReader();
 
-    file && appDispatch({ payload: { loading: true } });
-    file && reader.readAsText(file);
+      file && appDispatch({ payload: { loading: true } });
+      file && reader.readAsText(file);
 
-    reader.onloadend = async () => {
-      const studentListString = String(reader.result);
-      await spreadsheetToStudentList(studentListString, students);
-      appDispatch({ payload: { loading: false } });
-      setSpreadsheetIsLoading(false);
-    };
-  };
+      reader.onloadend = async () => {
+        const studentListString = String(reader.result);
+        await spreadsheetToStudentList(studentListString, students);
+        appDispatch({ payload: { loading: false } });
+        setSpreadsheetIsLoading(false);
+      };
+    },
+    [appDispatch, handleChangePage, students],
+  );
 
-  const handleStudentDialogOpen = () => {
+  const handleStudentDialogOpen = useCallback(() => {
     setOpenStudentDialog(true);
-  };
+  }, []);
 
-  const handleStudentDialogClose = () => {
+  const handleStudentDialogClose = useCallback(() => {
     setOpenStudentDialog(false);
     appDispatch({ payload: { selectedStudent: null } });
-  };
+  }, [appDispatch]);
 
-  const handleGenerateFGRClick = () => {
+  const handleGenerateFGRClick = useCallback(() => {
     setOpenFGRDialog(true);
-  };
+  }, []);
 
-  const handleFGRDialogClose = () => {
+  const handleFGRDialogClose = useCallback(() => {
     setOpenFGRDialog(false);
-  };
+  }, []);
 
-  const studentFormOnSubmit = (data: Student) => {
-    const primaryPhone = data.phone.phoneNumbers[data.phone.primaryPhone as number]?.number;
-    if (primaryPhone) {
-      data.phone.primaryPhone = primaryPhone;
-    } else {
-      // eslint-disable-next-line no-alert
-      alert("You must choose a primary phone number.");
-      return;
-    }
-    if (isEmpty(data.academicRecords) && data.status.currentStatus === Status.NEW) {
-      data.academicRecords = [
-        {
-          level: data.currentLevel,
-          session: data.initialSession,
-        },
-      ];
-    }
-    const dataNoSuspect = data.covidVaccine.suspectedFraud
-      ? data
-      : omit(data, "covidVaccine.suspectedFraudReason");
-    const dataNoNull = removeNullFromObject(dataNoSuspect) as Student;
-    setStudentData(dataNoNull);
-    dataNoNull.epId !== selectedStudent?.epId && selectedStudent && deleteStudentData(selectedStudent);
-    !selectedStudent && handleSearchStringChange(dataNoNull.epId.toString());
-    handleStudentDialogClose();
-  };
+  const studentFormOnSubmit = useCallback(
+    (data: Student) => {
+      const primaryPhone = data.phone.phoneNumbers[data.phone.primaryPhone as number]?.number;
+      if (primaryPhone) {
+        data.phone.primaryPhone = primaryPhone;
+      } else {
+        // eslint-disable-next-line no-alert
+        alert("You must choose a primary phone number.");
+        return;
+      }
+      if (isEmpty(data.academicRecords) && data.status.currentStatus === Status.NEW) {
+        data.academicRecords = [
+          {
+            level: data.currentLevel,
+            session: data.initialSession,
+          },
+        ];
+      }
+      const dataNoSuspect = data.covidVaccine.suspectedFraud
+        ? data
+        : omit(data, "covidVaccine.suspectedFraudReason");
+      const dataNoNull = removeNullFromObject(dataNoSuspect) as Student;
+      setStudentData(dataNoNull);
+      dataNoNull.epId !== selectedStudent?.epId && selectedStudent && deleteStudentData(selectedStudent);
+      !selectedStudent && handleSearchStringChange(dataNoNull.epId.toString());
+      handleStudentDialogClose();
+    },
+    [handleSearchStringChange, handleStudentDialogClose, selectedStudent],
+  );
 
   return (
     <>
