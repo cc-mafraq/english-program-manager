@@ -133,7 +133,7 @@ const percentageSchema = number()
 const dateSchema = string()
   .matches(
     /^([1-9]|1[012])[- /.]([1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d$/,
-    "Invalid date format. The format must be M/D/YY",
+    "Invalid date format. The format must be MM/DD/YY",
   )
   .transform(dateToString);
 
