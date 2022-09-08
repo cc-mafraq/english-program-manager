@@ -46,6 +46,7 @@ export const LabeledText: React.FC<LabeledTextProps> = ({
       paddingTop: 1,
     },
   };
+
   const sx: SxProps<Theme> | undefined = containerProps?.sx
     ? ({ ...defaultContainerProps.sx, ...containerProps.sx } as SxProps<Theme>)
     : defaultContainerProps.sx;
