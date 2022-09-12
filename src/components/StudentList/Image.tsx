@@ -10,6 +10,7 @@ interface StudentImageProps {
   imagePath: string;
   imageStyleProps?: SxProps;
   innerContainerProps?: BoxProps;
+  isForm?: boolean;
   lightColor?: "primary" | "default" | "secondary";
   loadingContainerProps?: BoxProps & { transform?: string };
   noButton?: boolean;
@@ -29,6 +30,7 @@ export const Image: React.FC<StudentImageProps> = ({
   folderName,
   noButton,
   lightColor,
+  isForm,
 }) => {
   const [img, setImg] = useState("");
   const [loading, setLoading] = useState(false);
@@ -39,6 +41,10 @@ export const Image: React.FC<StudentImageProps> = ({
     imageName && setLoading(true);
     setImg(imageName);
   }, [imageName]);
+
+  const setImage = useCallback((image: string) => {
+    setImg(image);
+  }, []);
 
   const setLoadingState = useCallback((ld: boolean) => {
     setLoading(ld);
@@ -79,8 +85,10 @@ export const Image: React.FC<StudentImageProps> = ({
               <AddImageButton
                 folderName={folderName}
                 imagePath={imagePath}
+                isForm={isForm}
                 lightColor={lightColor}
                 scale={scale}
+                setImg={setImage}
                 setLoading={setLoadingState}
                 student={student}
               />
@@ -95,6 +103,7 @@ export const Image: React.FC<StudentImageProps> = ({
 Image.defaultProps = {
   imageStyleProps: undefined,
   innerContainerProps: undefined,
+  isForm: false,
   lightColor: "default",
   loadingContainerProps: undefined,
   noButton: false,
