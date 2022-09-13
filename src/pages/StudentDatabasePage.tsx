@@ -17,6 +17,7 @@ import {
   StudentForm,
   StudentList,
 } from "../components";
+import { loadLocal, saveLocal } from "../hooks";
 import { AppContext, Status, Student } from "../interfaces";
 import {
   app,
@@ -50,12 +51,14 @@ export const StudentDatabasePage = () => {
   const [filteredStudents, setFilteredStudents, filteredStudentsRef] = useState<Student[]>([]);
   const [studentsPage, setStudentsPage] = useState<Student[]>([]);
   const [page, setPage, pageRef] = useState(0);
-  const [rowsPerPage, setRowsPerPage, rowsPerPageRef] = useState(-1);
+  const [rowsPerPage, setRowsPerPage, rowsPerPageRef] = useState(
+    parseInt(loadLocal("rowsPerPage") as string) || -1,
+  );
   const [openFGRDialog, setOpenFGRDialog] = useState(false);
   const [openStudentDialog, setOpenStudentDialog] = useState(false);
   const [searchString, setSearchString, searchStringRef] = useState<string>("");
   const [spreadsheetIsLoading, setSpreadsheetIsLoading] = useState(false);
-  const [showActions, setShowActions] = useState(true);
+  const [showActions, setShowActions] = useState<boolean>(!!loadLocal("showActions"));
   const navigate = useNavigate();
   const auth = getAuth(app);
   const [user, authLoading] = useAuthState(auth);
@@ -160,6 +163,7 @@ export const StudentDatabasePage = () => {
   const handleChangeRowsPerPage = useCallback(
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const newRowsPerPage = parseInt(event.target.value, 10);
+      saveLocal("rowsPerPage", newRowsPerPage);
       setState({ newPage: 0, newRowsPerPage });
     },
     [setState],

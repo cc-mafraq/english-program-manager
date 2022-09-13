@@ -2,7 +2,7 @@ import { FilterAlt, MoreHoriz } from "@mui/icons-material";
 import { AppBar, Box, Divider, IconButton, TablePagination, Toolbar, Tooltip } from "@mui/material";
 import React, { Dispatch, SetStateAction } from "react";
 import { FilterDrawer, Searchbar } from ".";
-import { useColors } from "../../hooks";
+import { saveLocal, useColors } from "../../hooks";
 import { Student } from "../../interfaces";
 
 const handlePopoverClick = (setFn: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>) => {
@@ -55,6 +55,7 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
           <Tooltip arrow placement="right" title={`${showActions ? "Hide" : "Show"} Actions`}>
             <IconButton
               onClick={() => {
+                saveLocal("showActions", !showActions);
                 setShowActions(!showActions);
               }}
             >
