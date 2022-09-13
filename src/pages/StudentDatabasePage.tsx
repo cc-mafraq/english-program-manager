@@ -21,6 +21,7 @@ import { AppContext, Status, Student } from "../interfaces";
 import {
   app,
   db,
+  deleteImage,
   deleteStudentData,
   getStudentPage,
   logout,
@@ -225,6 +226,12 @@ export const StudentDatabasePage = () => {
             session: data.initialSession,
           },
         ];
+      }
+      if (!data.imageName && selectedStudent?.imageName) {
+        deleteImage(selectedStudent, "imageName", true);
+      }
+      if (!data.covidVaccine.imageName && selectedStudent?.covidVaccine.imageName) {
+        deleteImage(selectedStudent, "covidVaccine.imageName", true);
       }
       const dataNoSuspect = data.covidVaccine.suspectedFraud
         ? data

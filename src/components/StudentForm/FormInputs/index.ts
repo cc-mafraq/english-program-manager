@@ -1,3 +1,4 @@
+export * from "./FormImage";
 export * from "./GridContainer";
 export * from "./GridItemAutocomplete";
 export * from "./GridItemDatePicker";

@@ -1,15 +1,12 @@
 import { Grid } from "@mui/material";
-import React, { useContext } from "react";
+import React from "react";
 import { useFormContext } from "react-hook-form";
-import { FormImageActions, GridContainer, GridItemAutocomplete, Image, StudentFormLabel } from "../..";
-import { AppContext, CovidStatus, covidStatuses, Student } from "../../../interfaces";
+import { GridContainer, GridItemAutocomplete, StudentFormLabel } from "../..";
+import { CovidStatus, covidStatuses, Student } from "../../../interfaces";
 import { covidVaccineImageFolder, SPACING } from "../../../services";
-import { GridItemDatePicker, GridItemTextField, LabeledCheckbox } from "../FormInputs";
+import { FormImage, GridItemDatePicker, GridItemTextField, LabeledCheckbox } from "../FormInputs";
 
 export const FormCovidVaccine: React.FC = () => {
-  const {
-    appState: { selectedStudent },
-  } = useContext(AppContext);
   const { watch } = useFormContext<Student>();
   const covidStatus = watch("covidVaccine.status");
 
@@ -17,23 +14,14 @@ export const FormCovidVaccine: React.FC = () => {
     <>
       <StudentFormLabel textProps={{ marginTop: SPACING }}>COVID Vaccine</StudentFormLabel>
       <GridContainer>
-        <Grid item xs={2}>
-          <Image
-            folderName={covidVaccineImageFolder}
-            imagePath="covidVaccine.imageName"
-            imageStyleProps={{ height: "100%", maxHeight: "100%", maxWidth: "100%" }}
-            innerContainerProps={{
-              sx: { transform: "translate(0%, -50%)" },
-              top: "50%",
-            }}
-            lightColor="primary"
-            loadingContainerProps={{ marginLeft: "70px", marginTop: 0, transform: "none" }}
-            outerContainerProps={{ height: "100%" }}
-            scale={2}
-            student={selectedStudent}
-          />
-        </Grid>
-        <FormImageActions folderName={covidVaccineImageFolder} imagePath="covidVaccine.imageName" />
+        <FormImage
+          folderName={covidVaccineImageFolder}
+          imagePath="covidVaccine.imageName"
+          imageStyleProps={{ height: "100%", maxHeight: "100%", maxWidth: "100%" }}
+          loadingContainerProps={{ marginLeft: "70px", marginTop: 0, transform: "none" }}
+          outerContainerProps={{ height: "100%" }}
+          xs={2}
+        />
         <GridItemAutocomplete
           defaultValue={CovidStatus.FULL}
           label="Vaccine Status"
