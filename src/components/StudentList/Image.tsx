@@ -42,7 +42,7 @@ export const Image: React.FC<ImageProps> = ({
   const theme = useTheme();
 
   useEffect(() => {
-    imageName && setLoading(true);
+    imageName ? setLoading(true) : setLoading(false);
     setImg(imageName);
   }, [imageName]);
 

@@ -51,16 +51,18 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
           paddingTop: "1vh",
         }}
       >
-        <Tooltip arrow placement="right" title={`${showActions ? "Hide" : "Show"} Actions`}>
-          <IconButton
-            onClick={() => {
-              setShowActions(!showActions);
-            }}
-          >
-            <MoreHoriz color="primary" />
-          </IconButton>
-        </Tooltip>
-        <Box>
+        <Box width="10vw">
+          <Tooltip arrow placement="right" title={`${showActions ? "Hide" : "Show"} Actions`}>
+            <IconButton
+              onClick={() => {
+                setShowActions(!showActions);
+              }}
+            >
+              <MoreHoriz color="primary" />
+            </IconButton>
+          </Tooltip>
+        </Box>
+        <Box margin="auto">
           <Searchbar handleSearchStringChange={handleSearchStringChange} searchString={searchString} />
           <Tooltip arrow title="Filter Students">
             <IconButton onClick={handlePopoverClick(setFilterAnchorEl)}>
@@ -69,15 +71,17 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
           </Tooltip>
           <FilterDrawer anchorEl={filterAnchorEl} handleClose={handlePopoverClose(setFilterAnchorEl)} />
         </Box>
-        <TablePagination
-          component="div"
-          count={students.length}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[10, 50, 100, 200, { label: "All", value: -1 }]}
-        />
+        <Box width="33vw">
+          <TablePagination
+            component="div"
+            count={students.length}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            rowsPerPageOptions={[10, 50, 100, 200, { label: "All", value: -1 }]}
+          />
+        </Box>
       </Toolbar>
       <Divider />
     </AppBar>

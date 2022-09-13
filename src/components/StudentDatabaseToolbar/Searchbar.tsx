@@ -1,7 +1,7 @@
 import { Close, Search } from "@mui/icons-material";
 import { alpha, Box, IconButton, InputBase, Tooltip, useTheme } from "@mui/material";
 import { isEmpty } from "lodash";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useColors } from "../../hooks";
 
 interface SearchbarProps {
@@ -16,6 +16,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange, 
   const theme = useTheme();
   const { iconColor } = useColors();
   const [value, setValue] = useState("");
+  const searchbarRef = useRef<HTMLDivElement>();
 
   useEffect(() => {
     setValue(searchString);
@@ -31,6 +32,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange, 
   };
 
   const handleClearSearch = () => {
+    searchbarRef.current?.focus();
     setValue("");
     handleSearchStringChange("");
   };
@@ -76,6 +78,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange, 
       </Box>
       <InputBase
         inputProps={{ "aria-label": "search" }}
+        inputRef={searchbarRef}
         onChange={handleLocalSearchStringChange}
         placeholder="Search students"
         sx={{
@@ -106,7 +109,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange, 
             position: "absolute",
             right: 0,
             top: 0,
-            width: "8%",
+            width: "45px",
           }}
         >
           <Close sx={{ color: iconColor }} />
