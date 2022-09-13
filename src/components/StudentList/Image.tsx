@@ -125,7 +125,7 @@ export const Image: React.FC<ImageProps> = ({
       <Grid item xs={xs}>
         {ImageBody}
       </Grid>
-      {isForm && img && (
+      {isForm && img && !loading && (
         <FormImageActions
           folderName={folderName}
           imagePath={imagePath}
