@@ -1,7 +1,7 @@
 import { Box, Card, CardContent, Tab, Tabs, useTheme } from "@mui/material";
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from "react";
-import { CorrespondenceList, Image, PlacementList, StudentCardHeader, StudentInfo } from "..";
-import { darkBlueBackground, Nationality, Student } from "../../interfaces";
+import { CorrespondenceList, Image, PlacementList, StudentCardHeader, StudentInfo, WithdrawButton } from "..";
+import { darkBlueBackground, Nationality, Status, Student } from "../../interfaces";
 import { studentImageFolder } from "../../services";
 import { AcademicRecords } from "./AcademicRecords";
 
@@ -58,28 +58,35 @@ export const StudentCard: React.FC<StudentCardProps> = ({
         }}
       >
         <Box ref={rowRef} display="flex">
-          <Image
-            folderName={studentImageFolder}
-            imagePath="imageName"
-            imageStyleProps={{
-              maxHeight: "250px",
-              width: "175px",
-            }}
-            innerContainerProps={{ height: "250px" }}
-            loadingContainerProps={{ marginLeft: "88px", marginTop: "125px", transform: "translate(-50%, -50%)" }}
-            outerContainerProps={{
-              minWidth: "175px",
-              sx: {
-                border: "solid",
-                borderColor: student.nationality === Nationality.JDN ? "rgb(0,176,80)" : "rgb(204,102,0)",
-                borderWidth:
-                  student.nationality === Nationality.JDN || student.nationality === Nationality.SYR ? 2 : 0,
-                height: "250px",
-              },
-            }}
-            scale={2}
-            student={student}
-          />
+          <Box>
+            <Image
+              folderName={studentImageFolder}
+              imagePath="imageName"
+              imageStyleProps={{
+                maxHeight: "250px",
+                width: "175px",
+              }}
+              innerContainerProps={{ height: "250px" }}
+              loadingContainerProps={{
+                marginLeft: "88px",
+                marginTop: "125px",
+                transform: "translate(-50%, -50%)",
+              }}
+              outerContainerProps={{
+                minWidth: "175px",
+                sx: {
+                  border: "solid",
+                  borderColor: student.nationality === Nationality.JDN ? "rgb(0,176,80)" : "rgb(204,102,0)",
+                  borderWidth:
+                    student.nationality === Nationality.JDN || student.nationality === Nationality.SYR ? 2 : 0,
+                  height: "250px",
+                },
+              }}
+              scale={2}
+              student={student}
+            />
+            {student.status.currentStatus !== Status.WD && <WithdrawButton student={student} />}
+          </Box>
           <Box width="100%">
             <CardContent>
               <StudentCardHeader handleEditStudentClick={handleEditStudentClick} student={student} />

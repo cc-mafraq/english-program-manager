@@ -1,10 +1,11 @@
 import { Box, BoxProps, CardMedia, Grid, SxProps, useTheme } from "@mui/material";
-import { get } from "lodash";
+import { get, omit } from "lodash";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ReactLoading from "react-loading";
 import { AddImageButton } from ".";
 import { FormImageActions } from "..";
 import { Student } from "../../interfaces";
+import { setStudentData } from "../../services";
 
 interface ImageProps {
   folderName: string;
@@ -69,6 +70,11 @@ export const Image: React.FC<ImageProps> = ({
           <CardMedia
             component="img"
             image={img}
+            onError={() => {
+              setImg(undefined);
+              setLoading(false);
+              setStudentData(omit(student, [imagePath]) as Student);
+            }}
             onLoad={() => {
               setLoading(false);
             }}

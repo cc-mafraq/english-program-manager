@@ -388,3 +388,14 @@ export const getListOfErrors = (formErrors: object): string[] => {
   });
   return errorMessages;
 };
+
+export const withdrawSchema = object().shape({
+  droppedOutReason: mixed<DroppedOutReason>()
+    .oneOf([...(Object.values(DroppedOutReason) as DroppedOutReason[]), null])
+    .transform(emptyToNull)
+    .nullable()
+    .optional(),
+  inviteTag: bool().required(),
+  noContactList: bool().required(),
+  withdrawDate: dateSchema,
+});

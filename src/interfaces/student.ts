@@ -119,6 +119,13 @@ export interface Correspondence {
   notes: string;
 }
 
+export interface Withdraw {
+  droppedOutReason?: DroppedOutReason;
+  inviteTag: boolean;
+  noContactList: boolean;
+  withdrawDate: string;
+}
+
 export type Level = "PL1" | "L1" | "L2" | "L3" | "L4" | "L5" | "L5 GRAD";
 
 export type GenderedLevel = Level | ("PL1-M" | "PL1-W" | "L1-M" | "L1-W" | "L2-M" | "L2-W");
