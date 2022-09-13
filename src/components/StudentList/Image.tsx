@@ -18,7 +18,7 @@ interface ImageProps {
   outerContainerProps?: BoxProps;
   scale?: number;
   student: Student | null;
-  xs: number | boolean;
+  xs?: number | boolean;
 }
 
 export const Image: React.FC<ImageProps> = ({
@@ -148,4 +148,5 @@ Image.defaultProps = {
   noButton: false,
   outerContainerProps: undefined,
   scale: 1,
+  xs: 1,
 };
