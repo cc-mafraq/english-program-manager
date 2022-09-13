@@ -1,6 +1,5 @@
-import { BoxProps, Grid, SxProps } from "@mui/material";
+import { BoxProps, SxProps } from "@mui/material";
 import React, { useContext } from "react";
-import { FormImageActions } from "..";
 import { Image } from "../..";
 import { AppContext } from "../../../interfaces";
 
@@ -10,7 +9,7 @@ interface FormImageProps {
   imageStyleProps: SxProps;
   loadingContainerProps: BoxProps & { transform?: string };
   outerContainerProps: BoxProps;
-  xs: number;
+  xs: number | boolean;
 }
 
 export const FormImage: React.FC<FormImageProps> = ({
@@ -26,25 +25,21 @@ export const FormImage: React.FC<FormImageProps> = ({
   } = useContext(AppContext);
 
   return (
-    <>
-      <Grid item xs={xs}>
-        <Image
-          folderName={folderName}
-          imagePath={imagePath}
-          imageStyleProps={imageStyleProps}
-          innerContainerProps={{
-            sx: { transform: "translate(0%, -50%)" },
-            top: "50%",
-          }}
-          isForm
-          lightColor="primary"
-          loadingContainerProps={loadingContainerProps}
-          outerContainerProps={outerContainerProps}
-          scale={2}
-          student={selectedStudent}
-        />
-      </Grid>
-      <FormImageActions folderName={folderName} imagePath={imagePath} />
-    </>
+    <Image
+      folderName={folderName}
+      imagePath={imagePath}
+      imageStyleProps={imageStyleProps}
+      innerContainerProps={{
+        sx: { transform: "translate(0%, -50%)" },
+        top: "50%",
+      }}
+      isForm
+      lightColor="primary"
+      loadingContainerProps={loadingContainerProps}
+      outerContainerProps={outerContainerProps}
+      scale={2}
+      student={selectedStudent}
+      xs={xs}
+    />
   );
 };

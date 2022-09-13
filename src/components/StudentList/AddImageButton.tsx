@@ -14,7 +14,7 @@ interface AddImageButtonProps {
   isForm?: boolean;
   lightColor?: "primary" | "default" | "secondary";
   scale?: number;
-  setImg?: (image: string) => void;
+  setImg?: (image: string | undefined) => void;
   setLoading?: (ld: boolean) => void;
   student: Student | null;
 }
@@ -48,6 +48,7 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({
           const imageURL = await uploadImage(student, file, imagePath, folderName);
           methods?.setValue && methods.setValue(imagePath, imageURL);
           setImg && setImg(imageURL);
+          setLoading && setLoading(false);
         } else {
           await setImage(student, file, imagePath, folderName);
           appDispatch({ payload: { selectedStudent: student } });

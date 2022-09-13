@@ -11,7 +11,7 @@ export const FormName: React.FC = () => {
         imagePath="imageName"
         imageStyleProps={{ margin: "auto", maxHeight: "100%", maxWidth: "90px", width: "auto" }}
         loadingContainerProps={{ marginLeft: "25px", marginTop: 0, transform: "none" }}
-        outerContainerProps={{ height: "100%", maxHeight: "100px" }}
+        outerContainerProps={{ display: "flex", flexDirection: "row" }}
         xs={1}
       />
       <GridItemTextField label="Name - ENG" name="name.english" textFieldProps={{ required: true }} />
