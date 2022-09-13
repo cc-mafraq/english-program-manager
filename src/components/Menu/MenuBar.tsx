@@ -4,7 +4,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { MenuDrawer } from "..";
 import { ColorModeContext } from "../../App";
-import { useColors } from "../../hooks";
+import { saveLocal, useColors } from "../../hooks";
 import { logout } from "../../services";
 
 interface MenuBarProps {
@@ -46,7 +46,14 @@ export const MenuBar: React.FC<MenuBarProps> = ({ pageName }) => {
         <Box>
           {/* https://mui.com/customization/dark-mode/ */}
           <Tooltip arrow title="Change Theme">
-            <IconButton color="inherit" onClick={colorMode.toggleColorMode} sx={{ marginRight: 3 }}>
+            <IconButton
+              color="inherit"
+              onClick={() => {
+                colorMode.toggleColorMode();
+                saveLocal("colorMode", theme.palette.mode === "dark" ? "light" : "dark");
+              }}
+              sx={{ marginRight: 3 }}
+            >
               {theme.palette.mode === "dark" ? <Brightness7 /> : <Brightness4 />}
             </IconButton>
           </Tooltip>
