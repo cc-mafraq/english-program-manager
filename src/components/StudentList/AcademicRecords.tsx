@@ -1,6 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Edit } from "@mui/icons-material";
-import { Box, Button, IconButton, Tooltip, TypographyProps, useTheme } from "@mui/material";
+import { Box, Button, IconButton, Tooltip, Typography, TypographyProps, useTheme } from "@mui/material";
+import { green as materialGreen, red as materialRed } from "@mui/material/colors";
 import { findIndex, forOwn, map, reverse } from "lodash";
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { LabeledContainer, LabeledText, ProgressBox } from ".";
@@ -73,6 +74,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
   const { iconColor } = useColors();
   const [open, setOpen] = useState(false);
   const [selectedAcademicRecord, setSelectedAcademicRecord] = useState<AcademicRecord | null>(null);
+  const { red, green } = useColors();
 
   useEffect(() => {
     setProgress(getProgress(student, getAllSessions(students)));
@@ -137,6 +139,35 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
               width: "100%",
             }}
           >
+            {ar.finalResult?.result && (
+              <Box
+                sx={{
+                  left: "35%",
+                  position: "absolute",
+                  top: "1vh",
+                }}
+              >
+                <Typography color="text.secondary" fontSize="large">
+                  Level Pass/Fail:{" "}
+                  <Typography
+                    color={
+                      ar.finalResult.result === FinalResult.P
+                        ? theme.palette.mode === "light"
+                          ? materialGreen[600]
+                          : green
+                        : theme.palette.mode === "light"
+                        ? materialRed[600]
+                        : red
+                    }
+                    display="inline"
+                    fontSize={20}
+                    fontWeight="bold"
+                  >
+                    {ar.finalResult.result}
+                  </Typography>
+                </Typography>
+              </Box>
+            )}
             <Tooltip arrow title="Edit Academic Record">
               <IconButton
                 onClick={handleEditClick(i)}
@@ -158,7 +189,19 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
                 {ar.attendance !== undefined ? `${ar.attendance}%` : undefined}
               </LabeledText>
             </LabeledContainer>
-            <GradeInfo grade={ar.finalResult} label="Final Grade" />
+            <GradeInfo
+              grade={{
+                ...ar.finalResult,
+                result: ar.finalResult
+                  ? (ar.finalResult?.percentage || 0) >= 80
+                    ? FinalResult.P
+                    : (ar.finalResult?.percentage || 0) > 0
+                    ? FinalResult.F
+                    : FinalResult.WD
+                  : undefined,
+              }}
+              label="Class Grade"
+            />
             <GradeInfo grade={ar.exitWritingExam} label="Exit Writing Exam" />
             <GradeInfo grade={ar.exitSpeakingExam} label="Exit Speaking Exam" />
             <LabeledContainer label="Teacher Comments" labelProps={labelProps}>
@@ -170,7 +213,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
         );
       }),
     );
-  }, [handleEditClick, iconColor, student.academicRecords, theme.palette.mode]);
+  }, [green, handleEditClick, iconColor, red, student.academicRecords, theme.palette.mode]);
 
   return (
     <>

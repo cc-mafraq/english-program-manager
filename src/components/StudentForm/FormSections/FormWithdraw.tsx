@@ -20,7 +20,13 @@ export const FormWithdraw: React.FC = () => {
           textFieldProps={{ required: true }}
           value={moment().format(MOMENT_FORMAT)}
         />
-        <GridItemAutocomplete label="Withdraw Reason" name="droppedOutReason" options={withdrawReasons} />
+        <GridItemAutocomplete
+          autoHighlight={false}
+          autoSelect={false}
+          label="Withdraw Reason"
+          name="droppedOutReason"
+          options={withdrawReasons}
+        />
       </GridContainer>
     </>
   );
