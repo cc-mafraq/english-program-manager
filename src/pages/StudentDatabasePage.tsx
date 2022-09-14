@@ -58,7 +58,7 @@ export const StudentDatabasePage = () => {
   const [openStudentDialog, setOpenStudentDialog] = useState(false);
   const [searchString, setSearchString, searchStringRef] = useState<string>("");
   const [spreadsheetIsLoading, setSpreadsheetIsLoading] = useState(false);
-  const [showActions, setShowActions] = useState<boolean>(!!loadLocal("showActions"));
+  const [showActions, setShowActions] = useState(loadLocal("showActions") !== false);
   const navigate = useNavigate();
   const auth = getAuth(app);
   const [user, authLoading] = useAuthState(auth);
