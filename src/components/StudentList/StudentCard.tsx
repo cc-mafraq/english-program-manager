@@ -1,6 +1,7 @@
 import { Box, Card, CardContent, Tab, Tabs, useTheme } from "@mui/material";
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from "react";
 import { CorrespondenceList, Image, PlacementList, StudentCardHeader, StudentInfo, WithdrawButton } from "..";
+import { useRole } from "../../hooks";
 import { darkBlueBackground, Nationality, Status, Student } from "../../interfaces";
 import { studentImageFolder } from "../../services";
 import { AcademicRecords } from "./AcademicRecords";
@@ -30,6 +31,7 @@ export const StudentCard: React.FC<StudentCardProps> = ({
 
   const rowRef = useRef<HTMLDivElement>(null);
   const [localTabValue, setLocalTabValue] = useState(tabValue || 0);
+  const role = useRole();
 
   useEffect(() => {
     if (rowRef.current && setSize && index !== undefined) {
@@ -99,7 +101,7 @@ export const StudentCard: React.FC<StudentCardProps> = ({
               <Box hidden={localTabValue !== 0} id="student-card-tabpanel-0" role="tabpanel">
                 <StudentInfo student={student} />
               </Box>
-              <Box hidden={localTabValue !== 1} id="student-card-tabpanel-1" role="tabpanel">
+              <Box hidden={localTabValue !== 1 || role !== "admin"} id="student-card-tabpanel-1" role="tabpanel">
                 <CorrespondenceList student={student} />
               </Box>
               <Box hidden={localTabValue !== 2} id="student-card-tabpanel-2" role="tabpanel">

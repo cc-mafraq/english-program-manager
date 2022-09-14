@@ -5,7 +5,7 @@ import { join, map } from "lodash";
 import React, { useCallback, useContext, useState } from "react";
 import { LabeledContainer, LabeledText } from ".";
 import { FormDialog, FormPlacement } from "..";
-import { useColors } from "../../hooks";
+import { useColors, useRole } from "../../hooks";
 import { AppContext, Placement, Student } from "../../interfaces";
 import { JOIN_STR, placementSchema, removeNullFromObject, setStudentData } from "../../services";
 
@@ -18,6 +18,7 @@ export const PlacementList: React.FC<PlacementProps> = ({ student }) => {
 
   const { iconColor } = useColors();
   const [open, setOpen] = useState(false);
+  const role = useRole();
 
   const handleDialogOpen = useCallback(() => {
     appDispatch({ payload: { selectedStudent: student } });
@@ -59,18 +60,20 @@ export const PlacementList: React.FC<PlacementProps> = ({ student }) => {
           {student.placement.noAnswerClassScheduleWpm ? "Yes" : undefined}
         </LabeledText>
         <LabeledText label="Photo Contact">{student.placement.photoContact}</LabeledText>
-        <Tooltip arrow title="Edit Placement">
-          <IconButton
-            onClick={handleDialogOpen}
-            sx={{
-              color: iconColor,
-              height: "100%",
-              marginTop: 1.5,
-            }}
-          >
-            <Edit />
-          </IconButton>
-        </Tooltip>
+        {role === "admin" && (
+          <Tooltip arrow title="Edit Placement">
+            <IconButton
+              onClick={handleDialogOpen}
+              sx={{
+                color: iconColor,
+                height: "100%",
+                marginTop: 1.5,
+              }}
+            >
+              <Edit />
+            </IconButton>
+          </Tooltip>
+        )}
       </LabeledContainer>
       <FormDialog
         dialogProps={{ maxWidth: "lg" }}

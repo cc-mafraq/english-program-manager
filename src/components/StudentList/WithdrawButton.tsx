@@ -57,6 +57,7 @@ export const WithdrawButton: React.FC<WithdrawButtonProps> = ({ student }) => {
         handleDialogClose={handleDialogClose}
         onSubmit={onSubmit}
         open={open}
+        paperStyleProps={{ paddingLeft: "15px" }}
         useFormProps={{
           defaultValues: {
             inviteTag: false,
