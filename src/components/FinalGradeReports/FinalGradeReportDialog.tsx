@@ -1,8 +1,8 @@
 import { Box, Dialog, SelectChangeEvent } from "@mui/material";
 import download from "downloadjs";
 import JSZip from "jszip";
-import { cloneDeep, isEqual, nth, pull, replace } from "lodash";
-import React, { useContext, useEffect, useState } from "react";
+import { cloneDeep, filter, includes, isEqual, map, nth, pull, replace } from "lodash";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { FGRDialogHeader, FinalGradeReportList } from ".";
 import { useColors } from "../../hooks";
 import { AppContext } from "../../interfaces";
@@ -10,6 +10,7 @@ import {
   getAllSessions,
   getFGRStudents,
   getSortedSARIndexArray,
+  searchStudents,
   StudentAcademicRecordIndex,
 } from "../../services";
 
@@ -37,10 +38,19 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({ 
     getFGRStudents(students, fgrSession),
   );
   const [shouldDownload, setShouldDownload] = useState(false);
+  const [searchString, setSearchString] = useState("");
+  const [filteredFgrStudents, setFilteredFgrStudents] = useState(fgrStudents);
 
   useEffect(() => {
-    setFGRStudents(getFGRStudents(students, fgrSession));
-  }, [fgrSession, students]);
+    const newFgrStudents = getFGRStudents(students, fgrSession);
+    setFGRStudents(fgrStudents);
+    const filteredStudentsIds = map(searchStudents(map(newFgrStudents, "student"), searchString), "epId");
+    setFilteredFgrStudents(
+      filter(newFgrStudents, (aris) => {
+        return includes(filteredStudentsIds, aris.student.epId);
+      }),
+    );
+  }, [fgrSession, fgrStudents, searchString, students]);
 
   const handleDownloadAllFinished = async (studentAcademicRecord: StudentAcademicRecordIndex) => {
     zippedStudentAcademicRecords.push(studentAcademicRecord);
@@ -53,19 +63,29 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({ 
     }
   };
 
-  const handleRemoveFGR = (studentAcademicRecord: StudentAcademicRecordIndex) => {
-    setFGRStudents(cloneDeep(pull(fgrStudents, studentAcademicRecord)));
-  };
+  const handleRemoveFGR = useCallback(
+    (studentAcademicRecord: StudentAcademicRecordIndex) => {
+      setFGRStudents(cloneDeep(pull(fgrStudents, studentAcademicRecord)));
+    },
+    [fgrStudents],
+  );
 
-  const handleDownloadAllClick = () => {
+  const handleDownloadAllClick = useCallback(() => {
     setShouldDownload(true);
-  };
+  }, []);
 
-  const handleSessionChange = (event: SelectChangeEvent) => {
-    const session = event.target.value as string;
-    setFGRSession(session);
-    setFGRStudents(getFGRStudents(students, session));
-  };
+  const handleSessionChange = useCallback(
+    (event: SelectChangeEvent) => {
+      const session = event.target.value as string;
+      setFGRSession(session);
+      setFGRStudents(getFGRStudents(students, session));
+    },
+    [students],
+  );
+
+  const handleSearchStringChange = useCallback((value: string) => {
+    setSearchString(value);
+  }, []);
 
   return (
     <Dialog
@@ -85,11 +105,13 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({ 
           fgrSession={fgrSession}
           handleDialogClose={handleDialogClose}
           handleDownloadAllClick={handleDownloadAllClick}
+          handleSearchStringChange={handleSearchStringChange}
           handleSessionChange={handleSessionChange}
+          searchString={searchString}
           sessionOptions={sessionOptions}
         />
         <FinalGradeReportList
-          fgrStudents={fgrStudents}
+          fgrStudents={filteredFgrStudents}
           handleDownloadFinished={handleDownloadAllFinished}
           handleRemoveFGR={handleRemoveFGR}
           scale={scale}

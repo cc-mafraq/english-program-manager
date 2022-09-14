@@ -64,7 +64,11 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
           </Tooltip>
         </Box>
         <Box margin="auto">
-          <Searchbar handleSearchStringChange={handleSearchStringChange} searchString={searchString} />
+          <Searchbar
+            handleSearchStringChange={handleSearchStringChange}
+            placeholder="Search students"
+            searchString={searchString}
+          />
           <Tooltip arrow title="Filter Students">
             <IconButton onClick={handlePopoverClick(setFilterAnchorEl)}>
               <FilterAlt sx={{ color: iconColor }} />

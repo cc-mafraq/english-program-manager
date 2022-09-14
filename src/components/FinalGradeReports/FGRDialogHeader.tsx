@@ -14,12 +14,15 @@ import {
 import { map } from "lodash";
 import React from "react";
 import { getSessionFullName } from "../../services";
+import { Searchbar } from "../StudentDatabaseToolbar";
 
 interface FGRDialogHeaderProps {
   fgrSession: string;
   handleDialogClose: () => void;
   handleDownloadAllClick: () => void;
+  handleSearchStringChange: (value: string) => void;
   handleSessionChange: (event: SelectChangeEvent) => void;
+  searchString: string;
   sessionOptions: string[];
 }
 
@@ -29,6 +32,8 @@ export const FGRDialogHeader: React.FC<FGRDialogHeaderProps> = ({
   handleDownloadAllClick,
   handleSessionChange,
   sessionOptions,
+  handleSearchStringChange,
+  searchString,
 }) => {
   return (
     <>
@@ -46,7 +51,16 @@ export const FGRDialogHeader: React.FC<FGRDialogHeaderProps> = ({
             Final Grade Reports
           </Typography>
         </Box>
-        <Box sx={{ width: "30%" }}>
+        <Box marginTop="9px">
+          <Searchbar
+            handleSearchStringChange={handleSearchStringChange}
+            noExpand
+            placeholder="Search FGRs"
+            searchString={searchString}
+            width="100%"
+          />
+        </Box>
+        <Box sx={{ width: "25%" }}>
           <FormControl fullWidth>
             <InputLabel id="session-label">Session</InputLabel>
             <Select
