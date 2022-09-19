@@ -3,7 +3,7 @@ import { Edit } from "@mui/icons-material";
 import { Box, Button, IconButton, Tooltip, Typography } from "@mui/material";
 import { findIndex, map, reverse } from "lodash";
 import moment from "moment";
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { LabeledContainer } from ".";
 import { FormCorrespondenceItem, FormDialog, StudentFormLabel } from "..";
 import { useColors } from "../../hooks";
@@ -19,32 +19,77 @@ export const CorrespondenceList: React.FC<CorrespondenceProps> = ({ student }) =
   const [open, setOpen] = useState(false);
   const [selectedCorrespondence, setSelectedCorrespondence] = useState<Correspondence | null>(null);
 
-  const handleDialogOpen = () => {
+  const handleDialogOpen = useCallback(() => {
     setOpen(true);
-  };
+  }, []);
 
-  const handleDialogClose = () => {
+  const handleDialogClose = useCallback(() => {
     setOpen(false);
     setSelectedCorrespondence(null);
-  };
+  }, []);
 
-  const handleEditClick = (index: number) => {
-    return () => {
-      setSelectedCorrespondence(student.correspondence[index]);
-      handleDialogOpen();
-    };
-  };
+  const handleEditClick = useCallback(
+    (index: number) => {
+      return () => {
+        setSelectedCorrespondence(student.correspondence[index]);
+        handleDialogOpen();
+      };
+    },
+    [handleDialogOpen, student.correspondence],
+  );
 
-  const onSubmit = (data: Correspondence) => {
-    if (selectedCorrespondence) {
-      const recordIndex = findIndex(student.correspondence, selectedCorrespondence);
-      student.correspondence[recordIndex] = data;
-    } else {
-      student.correspondence ? student.correspondence.push(data) : (student.correspondence = [data]);
-    }
-    setStudentData(student);
-    handleDialogClose();
-  };
+  const onSubmit = useCallback(
+    (data: Correspondence) => {
+      if (selectedCorrespondence) {
+        const recordIndex = findIndex(student.correspondence, selectedCorrespondence);
+        student.correspondence[recordIndex] = data;
+      } else {
+        student.correspondence ? student.correspondence.push(data) : (student.correspondence = [data]);
+      }
+      setStudentData(student);
+      handleDialogClose();
+    },
+    [handleDialogClose, selectedCorrespondence, student],
+  );
+
+  const CorrespondenceData = useMemo(() => {
+    return reverse(
+      map(student.correspondence, (c, i) => {
+        return (
+          <Box
+            key={`${c.date} ${c.notes}`}
+            position="relative"
+            sx={{
+              backgroundColor: defaultBackgroundColor,
+              border: 1,
+              borderColor: defaultBorderColor,
+              marginRight: 1,
+              marginTop: 1,
+              padding: 1,
+              width: "95%",
+            }}
+          >
+            <Tooltip arrow title="Edit Correspondence">
+              <IconButton
+                onClick={handleEditClick(i)}
+                sx={{
+                  color: iconColor,
+                  position: "absolute",
+                  right: "-4vw",
+                  top: 0,
+                }}
+              >
+                <Edit />
+              </IconButton>
+            </Tooltip>
+            <Typography fontSize="11pt" variant="body2">
+              {c.date ? `${c.date}: ${c.notes}` : c.notes}
+            </Typography>
+          </Box>
+        );
+      }),
+    );
+  }, [defaultBackgroundColor, handleEditClick, iconColor, student.correspondence]);
 
   return (
     <>
@@ -54,42 +99,7 @@ export const CorrespondenceList: React.FC<CorrespondenceProps> = ({ student }) =
             Add Correspondence
           </Button>
         </Box>
-        {reverse(
-          map(student.correspondence, (c, i) => {
-            return (
-              <Box
-                key={`${c.date} ${c.notes}`}
-                position="relative"
-                sx={{
-                  backgroundColor: defaultBackgroundColor,
-                  border: 1,
-                  borderColor: defaultBorderColor,
-                  marginRight: 1,
-                  marginTop: 1,
-                  padding: 1,
-                  width: "95%",
-                }}
-              >
-                <Tooltip arrow title="Edit Correspondence">
-                  <IconButton
-                    onClick={handleEditClick(i)}
-                    sx={{
-                      color: iconColor,
-                      position: "absolute",
-                      right: "-4vw",
-                      top: 0,
-                    }}
-                  >
-                    <Edit />
-                  </IconButton>
-                </Tooltip>
-                <Typography fontSize="11pt" variant="body2">
-                  {c.date ? `${c.date}: ${c.notes}` : c.notes}
-                </Typography>
-              </Box>
-            );
-          }),
-        )}
+        {CorrespondenceData}
       </LabeledContainer>
       <FormDialog
         dialogProps={{ maxWidth: "lg" }}

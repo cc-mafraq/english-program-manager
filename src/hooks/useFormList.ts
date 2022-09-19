@@ -1,9 +1,9 @@
 import { cloneDeep, get, isUndefined, set } from "lodash";
 import { useContext, useState } from "react";
-import { DeepPartial, Path, PathValue, UnpackNestedValue, UseFormReturn } from "react-hook-form";
+import { DeepPartial, FieldValues, Path, PathValue, UseFormReturn } from "react-hook-form";
 import { AppContext } from "../interfaces";
 
-export const useFormList = <T>(
+export const useFormList = <T extends FieldValues>(
   initialState: unknown[],
   listPath: string,
   methods: UseFormReturn<T, object>,
@@ -22,8 +22,8 @@ export const useFormList = <T>(
       setList(newList);
       const resetObject = {};
       set(resetObject, listPath, []);
-      methods.reset(resetObject as UnpackNestedValue<DeepPartial<T>>, { keepValues: true });
-      methods.setValue(listPath as Path<T>, newList as UnpackNestedValue<PathValue<T, Path<T>>>);
+      methods.reset(resetObject as T | DeepPartial<T> | undefined, { keepValues: true });
+      methods.setValue(listPath as Path<T>, newList as PathValue<T, Path<T>>);
       if (listPath === "phone.phoneNumbers") {
         const currentPrimaryPhoneList = get(methods.getValues(), "phone.primaryPhone");
         currentPrimaryPhoneList.splice(index, 1);

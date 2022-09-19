@@ -11,3 +11,4 @@ export * from "./StudentCard";
 export * from "./StudentCardHeader";
 export * from "./StudentInfo";
 export * from "./StudentList";
+export * from "./WithdrawButton";

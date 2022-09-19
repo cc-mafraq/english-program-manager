@@ -10,7 +10,7 @@ import {
   useTheme,
 } from "@mui/material";
 import React from "react";
-import { Controller, FieldError, useFormContext } from "react-hook-form";
+import { Controller, FieldErrorsImpl, useFormContext } from "react-hook-form";
 import { useInput } from "../../../hooks";
 
 interface GridItemRadioGroup {
@@ -28,7 +28,11 @@ export const GridItemRadioGroup = ({ defaultValue, gridProps, label, name, optio
     control,
     formState: { errors },
   } = useFormContext();
-  const { name: nameFallback, errorMessage } = useInput(label ?? "", errors as FieldError, name);
+  const { name: nameFallback, errorMessage } = useInput(
+    label ?? "",
+    errors as FieldErrorsImpl<Record<string, unknown>>,
+    name,
+  );
   const theme = useTheme();
   const errorColor = errorMessage ? theme.palette.error.main : undefined;
 

@@ -46,6 +46,7 @@ export const MOMENT_FORMAT = "l";
 const sessionRegex = /(Fa|Sp) (I|II) \d{2}/;
 
 export interface FormItem {
+  children?: React.ReactNode;
   index?: number;
   name?: string;
   removeItem?: (index?: number) => () => void;
@@ -132,7 +133,7 @@ const percentageSchema = number()
 const dateSchema = string()
   .matches(
     /^([1-9]|1[012])[- /.]([1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d$/,
-    "Invalid date format. The format must be MM/DD/YYYY",
+    "Invalid date format. The format must be MM/DD/YY",
   )
   .transform(dateToString);
 
@@ -234,7 +235,6 @@ const phoneSchema = object()
   .required();
 
 const sectionPlacementSchema = object().shape({
-  addedToCL: bool().optional(),
   notes: string().transform(emptyToNull).nullable().optional(),
   sectionAndDate: string().required(
     "Placement is required if added. You can remove the placement by clicking the ❌ button",
@@ -388,3 +388,14 @@ export const getListOfErrors = (formErrors: object): string[] => {
   });
   return errorMessages;
 };
+
+export const withdrawSchema = object().shape({
+  droppedOutReason: mixed<DroppedOutReason>()
+    .oneOf([...(Object.values(DroppedOutReason) as DroppedOutReason[]), null])
+    .transform(emptyToNull)
+    .nullable()
+    .optional(),
+  inviteTag: bool().required(),
+  noContactList: bool().required(),
+  withdrawDate: dateSchema,
+});

@@ -1,9 +1,10 @@
 import { Box, BoxProps, Typography, TypographyProps } from "@mui/material";
 import { every, get, map } from "lodash";
-import React from "react";
+import React, { useMemo } from "react";
 
 interface LabeledContainerProps {
   childContainerProps?: BoxProps;
+  children?: React.ReactNode;
   condition?: boolean;
   label: string;
   labelProps?: TypographyProps;
@@ -40,8 +41,9 @@ export const LabeledContainer: React.FC<LabeledContainerProps> = ({
   showWhenEmpty,
   children,
 }) => {
-  const childrenChildrenArr =
-    children instanceof Array ? map(children, "props.children") : [get(children, "props.children")];
+  const childrenChildrenArr = useMemo(() => {
+    return children instanceof Array ? map(children, "props.children") : [get(children, "props.children")];
+  }, [children]);
   const everyChildIsEmpty = every(childrenChildrenArr, (c) => {
     return c === undefined || c === "";
   });
@@ -62,6 +64,7 @@ export const LabeledContainer: React.FC<LabeledContainerProps> = ({
 
 LabeledContainer.defaultProps = {
   childContainerProps: defaultChildContainerProps,
+  children: undefined,
   condition: true,
   labelProps: defaultLabelProps,
   parentContainerProps: defaultParentContainerProps,

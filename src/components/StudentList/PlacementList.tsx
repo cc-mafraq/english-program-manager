@@ -1,8 +1,8 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Edit } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
-import { join, map, some } from "lodash";
-import React, { useContext, useState } from "react";
+import { join, map } from "lodash";
+import React, { useCallback, useContext, useState } from "react";
 import { LabeledContainer, LabeledText } from ".";
 import { FormDialog, FormPlacement } from "..";
 import { useColors } from "../../hooks";
@@ -15,81 +15,67 @@ interface PlacementProps {
 
 export const PlacementList: React.FC<PlacementProps> = ({ student }) => {
   const {
-    appState: { dataVisibility },
+    appState: { role },
     appDispatch,
   } = useContext(AppContext);
 
   const { iconColor } = useColors();
   const [open, setOpen] = useState(false);
 
-  const handleDialogOpen = () => {
+  const handleDialogOpen = useCallback(() => {
     appDispatch({ payload: { selectedStudent: student } });
     setOpen(true);
-  };
+  }, [appDispatch, student]);
 
-  const handleDialogClose = () => {
+  const handleDialogClose = useCallback(() => {
     setOpen(false);
     appDispatch({ payload: { selectedStudent: null } });
-  };
+  }, [appDispatch]);
 
-  const onSubmit = (data: Placement) => {
-    const dataNoNull = removeNullFromObject(data) as Placement;
-    student.placement = dataNoNull;
-    setStudentData(student);
-    handleDialogClose();
-  };
+  const onSubmit = useCallback(
+    (data: Placement) => {
+      const dataNoNull = removeNullFromObject(data) as Placement;
+      student.placement = dataNoNull;
+      setStudentData(student);
+      handleDialogClose();
+    },
+    [handleDialogClose, student],
+  );
 
   return (
     <>
-      <LabeledContainer
-        condition={some([
-          dataVisibility.placement.classScheduleSentDate && student.placement.classScheduleSentDate,
-          dataVisibility.placement.naClassScheduleWpm && student.placement.noAnswerClassScheduleWpm,
-          dataVisibility.placement.pending && student.placement.pending,
-          dataVisibility.placement.photoContact && student.placement.photoContact,
-          dataVisibility.placement.placement && student.placement.placement?.length,
-          dataVisibility.placement.sectionsOffered && student.placement.sectionsOffered,
-        ])}
-        label="Placement"
-        parentContainerProps={{ paddingBottom: 2 }}
-      >
-        <LabeledText condition={dataVisibility.placement.pending} label="Pending">
-          {student.placement.pending ? "Yes" : undefined}
-        </LabeledText>
+      <LabeledContainer label="Placement" parentContainerProps={{ paddingBottom: 2 }}>
+        <LabeledText label="Pending">{student.placement.pending ? "Yes" : undefined}</LabeledText>
         {map(student.placement.placement, (pl, i) => {
-          return dataVisibility.placement.placement ? (
+          return (
             <div key={`${student.epId}-placement-${i}`}>
               <LabeledText label="Section and Date">{pl.sectionAndDate}</LabeledText>
               <LabeledText label="Notes">{pl.notes}</LabeledText>
             </div>
-          ) : (
-            <></>
           );
         })}
-        <LabeledText condition={dataVisibility.placement.classScheduleSentDate} label="Class Schedule Sent Date">
+        <LabeledText label="Class Schedule Sent Date">
           {join(student.placement.classScheduleSentDate, JOIN_STR)}
         </LabeledText>
-        <LabeledText condition={dataVisibility.placement.sectionsOffered} label="Sections Offered">
-          {student.placement.sectionsOffered}
-        </LabeledText>
-        <LabeledText condition={dataVisibility.placement.naClassScheduleWpm} label="NA Class Schedule WPM">
+        <LabeledText label="Sections Offered">{student.placement.sectionsOffered}</LabeledText>
+        <LabeledText label="NA Class Schedule WPM">
           {student.placement.noAnswerClassScheduleWpm ? "Yes" : undefined}
         </LabeledText>
-        <LabeledText condition={dataVisibility.placement.photoContact} label="Photo Contact">
-          {student.placement.photoContact}
-        </LabeledText>
-        <Tooltip arrow title="Edit Placement">
-          <IconButton
-            onClick={handleDialogOpen}
-            sx={{
-              color: iconColor,
-              height: "100%",
-              marginTop: 1.5,
-            }}
-          >
-            <Edit />
-          </IconButton>
-        </Tooltip>
+        <LabeledText label="Photo Contact">{student.placement.photoContact}</LabeledText>
+        {role === "admin" && (
+          <Tooltip arrow title="Edit Placement">
+            <IconButton
+              onClick={handleDialogOpen}
+              sx={{
+                color: iconColor,
+                height: "100%",
+                marginTop: 1.5,
+              }}
+            >
+              <Edit />
+            </IconButton>
+          </Tooltip>
+        )}
       </LabeledContainer>
       <FormDialog
         dialogProps={{ maxWidth: "lg" }}

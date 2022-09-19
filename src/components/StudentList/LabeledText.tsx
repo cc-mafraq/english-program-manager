@@ -4,6 +4,7 @@ import { useColors } from "../../hooks";
 import { defaultBorderColor } from "../../interfaces";
 
 interface LabeledTextProps {
+  children?: React.ReactNode;
   condition?: boolean;
   containerProps?: BoxProps;
   label: string;
@@ -45,6 +46,7 @@ export const LabeledText: React.FC<LabeledTextProps> = ({
       paddingTop: 1,
     },
   };
+
   const sx: SxProps<Theme> | undefined = containerProps?.sx
     ? ({ ...defaultContainerProps.sx, ...containerProps.sx } as SxProps<Theme>)
     : defaultContainerProps.sx;
@@ -64,6 +66,7 @@ export const LabeledText: React.FC<LabeledTextProps> = ({
 };
 
 LabeledText.defaultProps = {
+  children: undefined,
   condition: true,
   containerProps: undefined,
   labelProps: defaultLabelProps,

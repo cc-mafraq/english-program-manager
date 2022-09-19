@@ -2,6 +2,7 @@ import { Fab, FabProps, SxProps, Tooltip } from "@mui/material";
 import React from "react";
 
 interface ActionFABProps {
+  children?: React.ReactNode;
   fabProps?: FabProps & { component: "span" };
   fabStyle?: SxProps;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -25,6 +26,7 @@ export const ActionFAB: React.FC<ActionFABProps> = ({ children, tooltipTitle, on
 };
 
 ActionFAB.defaultProps = {
+  children: undefined,
   fabProps: undefined,
   fabStyle: undefined,
   onClick: undefined,

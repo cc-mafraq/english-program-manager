@@ -1,7 +1,7 @@
 import { Button, Grid, GridProps, Typography, useTheme } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { get, map, reverse } from "lodash";
-import React from "react";
+import React, { Attributes } from "react";
 import { useFormContext } from "react-hook-form";
 import { SPACING } from "../../services";
 
@@ -9,6 +9,7 @@ interface FormListProps {
   addItem: () => void;
   buttonGridProps?: GridProps;
   buttonLabel: string;
+  children?: React.ReactNode;
   list: unknown[];
   listName: string;
   removeItem: (index?: number) => () => void;
@@ -41,7 +42,7 @@ export const FormList: React.FC<FormListProps> = ({
             key: `${JSON.stringify(item)} ${i}`,
             name: `${listName}[${i}]`,
             removeItem,
-          });
+          } as Partial<unknown> & Attributes);
         }
         return child;
       });
@@ -77,7 +78,7 @@ export const FormList: React.FC<FormListProps> = ({
             marginLeft={SPACING / 2}
             marginTop={SPACING / 2}
           >
-            {errorMessage}
+            {errorMessage.toString()}
           </Typography>
         )}
       </Grid>
@@ -95,5 +96,6 @@ export const FormList: React.FC<FormListProps> = ({
 
 FormList.defaultProps = {
   buttonGridProps: undefined,
+  children: undefined,
   reverseList: false,
 };

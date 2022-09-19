@@ -1,7 +1,7 @@
 import { useTheme } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { filter, join, last, map } from "lodash";
-import React from "react";
+import React, { useMemo } from "react";
 import { LabeledText } from "..";
 import { useColors } from "../../hooks";
 import { GenderedLevel } from "../../interfaces";
@@ -15,12 +15,16 @@ export const ProgressBox = ({
   sessionResults?: SessionResult[];
 }) => {
   const theme = useTheme();
-  const lastSessionResult =
-    last(
-      filter(sessionResults, (sr) => {
-        return !sr.level && !sr.isAudit;
-      }),
-    )?.result || last(sessionResults)?.result;
+  const lastSessionResult = useMemo(() => {
+    return (
+      last(
+        filter(sessionResults, (sr) => {
+          return !sr.level && !sr.isAudit;
+        }),
+      )?.result || last(sessionResults)?.result
+    );
+  }, [sessionResults]);
+
   const isDarkAndYellow =
     theme.palette.mode === "dark" && lastSessionResult === undefined && sessionResults?.length;
   const { defaultBackgroundColor, green, yellow, red } = useColors();

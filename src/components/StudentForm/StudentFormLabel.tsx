@@ -2,6 +2,7 @@ import { Typography, TypographyProps } from "@mui/material";
 import React from "react";
 
 interface StudentFormLabelProps {
+  children?: React.ReactNode;
   textProps?: TypographyProps;
 }
 
@@ -14,5 +15,6 @@ export const StudentFormLabel: React.FC<StudentFormLabelProps> = ({ children, te
 };
 
 StudentFormLabel.defaultProps = {
+  children: undefined,
   textProps: {},
 };

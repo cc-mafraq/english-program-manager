@@ -9,9 +9,9 @@ import { AppAction, AppState } from "../interfaces";
 export const reducer = (actionCallback: (item: AppState) => void) => {
   return (state: AppState, action: AppAction): AppState => {
     const newState: AppState = {
-      dataVisibility: action.payload.dataVisibility || state.dataVisibility,
       filter: action.payload.filter || state.filter,
       loading: action.payload.loading === undefined ? state.loading : action.payload.loading,
+      role: action.payload.role || state.role,
       selectedStudent:
         action.payload.selectedStudent === undefined ? state.selectedStudent : action.payload.selectedStudent,
       students: action.payload.students || state.students,

@@ -1,10 +1,9 @@
-import { FilterAlt, MoreHoriz, VisibilityOff } from "@mui/icons-material";
+import { FilterAlt, MoreHoriz } from "@mui/icons-material";
 import { AppBar, Box, Divider, IconButton, TablePagination, Toolbar, Tooltip } from "@mui/material";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useContext } from "react";
 import { FilterDrawer, Searchbar } from ".";
-import { DataVisibilityPopover } from "..";
-import { useColors } from "../../hooks";
-import { Student } from "../../interfaces";
+import { saveLocal, useColors } from "../../hooks";
+import { AppContext, Student } from "../../interfaces";
 
 const handlePopoverClick = (setFn: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>) => {
   return (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -41,7 +40,9 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
   setShowActions,
   searchString,
 }) => {
-  const [dataVisibilityAnchorEl, setDataVisibilityAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const {
+    appState: { role },
+  } = useContext(AppContext);
   const [filterAnchorEl, setFilterAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const { iconColor } = useColors();
 
@@ -53,42 +54,44 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
           paddingTop: "1vh",
         }}
       >
-        <Tooltip arrow placement="right" title={`${showActions ? "Hide" : "Show"} Actions`}>
-          <IconButton
-            onClick={() => {
-              setShowActions(!showActions);
-            }}
-          >
-            <MoreHoriz color="primary" />
-          </IconButton>
-        </Tooltip>
-        <Box>
-          <Searchbar handleSearchStringChange={handleSearchStringChange} searchString={searchString} />
+        {(role === "admin" || role === "faculty") && (
+          <Box width="10vw">
+            <Tooltip arrow placement="right" title={`${showActions ? "Hide" : "Show"} Actions`}>
+              <IconButton
+                onClick={() => {
+                  saveLocal("showActions", !showActions);
+                  setShowActions(!showActions);
+                }}
+              >
+                <MoreHoriz color="primary" />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        )}
+        <Box margin="auto">
+          <Searchbar
+            handleSearchStringChange={handleSearchStringChange}
+            placeholder="Search students"
+            searchString={searchString}
+          />
           <Tooltip arrow title="Filter Students">
             <IconButton onClick={handlePopoverClick(setFilterAnchorEl)}>
               <FilterAlt sx={{ color: iconColor }} />
             </IconButton>
           </Tooltip>
-          <Tooltip arrow title="Hide Student Data">
-            <IconButton onClick={handlePopoverClick(setDataVisibilityAnchorEl)}>
-              <VisibilityOff sx={{ color: iconColor }} />
-            </IconButton>
-          </Tooltip>
-          <DataVisibilityPopover
-            anchorEl={dataVisibilityAnchorEl}
-            handleClose={handlePopoverClose(setDataVisibilityAnchorEl)}
-          />
           <FilterDrawer anchorEl={filterAnchorEl} handleClose={handlePopoverClose(setFilterAnchorEl)} />
         </Box>
-        <TablePagination
-          component="div"
-          count={students.length}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[10, 50, 100, 200, { label: "All", value: -1 }]}
-        />
+        <Box width="33vw">
+          <TablePagination
+            component="div"
+            count={students.length}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            rowsPerPageOptions={[10, 50, 100, 200, { label: "All", value: -1 }]}
+          />
+        </Box>
       </Toolbar>
       <Divider />
     </AppBar>

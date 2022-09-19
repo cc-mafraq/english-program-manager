@@ -1,5 +1,5 @@
 import { Box, Button, Drawer, Typography, useTheme } from "@mui/material";
-import { map, range, sortBy, uniq } from "lodash";
+import { first, includes, map, range, sortBy, uniq } from "lodash";
 import React, { useCallback, useContext, useMemo } from "react";
 import { FilterCheckbox } from "..";
 import { useColors } from "../../../hooks";
@@ -24,12 +24,14 @@ const booleanCheckboxOptions = ["Yes", "No"];
 export const FilterDrawer: React.FC<FilterDrawerProps> = ({ anchorEl, handleClose }) => {
   const open = Boolean(anchorEl);
   const {
-    appState: { students },
+    appState: { students, role },
     appDispatch,
   } = useContext(AppContext);
   const { popoverColor } = useColors();
   const theme = useTheme();
   const sessionsWithResults = getSessionsWithResults(students);
+  const isAdmin = role === "admin";
+  const isAdminOrFaculty = isAdmin || role === "faculty";
 
   const statusDetailsFn = useCallback(
     (student: Student) => {
@@ -45,23 +47,56 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({ anchorEl, handleClos
     [sessionsWithResults],
   );
 
+  const whatsAppGroupFn = useCallback((student: Student) => {
+    const includesRemove = includes(student.phone.waBroadcastSAR?.toLowerCase(), "remove");
+    if (includes(student.phone.waBroadcastSAR?.toLowerCase(), "group") && !includesRemove) {
+      return (
+        `SAR ${first(student.phone.waBroadcastSAR?.match(/Group \d/))}` ||
+        `SAR Group ${first(student.phone.waBroadcastSAR?.match(/\d/))}`
+      );
+    }
+    if (includes(student.phone.waBroadcastSAR, "Y") && !includesRemove) {
+      return "SAR Group 1";
+    }
+    return "None";
+  }, []);
+
   const filterFields: FilterField[] = useMemo(() => {
     return [
-      { name: "Invite", path: "status.inviteTag", values: booleanCheckboxOptions },
+      { condition: isAdmin, name: "Invite", path: "status.inviteTag", values: booleanCheckboxOptions },
+      { condition: isAdmin, name: "Placement Pending", path: "placement.pending", values: ["Yes"] },
+      {
+        condition: isAdmin,
+        name: "No Answer Class Schedule WPM",
+        path: "placement.noAnswerClassScheduleWpm",
+        values: ["Yes"],
+      },
       { name: "Current Level", path: "currentLevel", values: [...genderedLevels, "L5 GRAD"] },
       { name: "Current Status", path: "status.currentStatus", values: statuses },
+      { condition: isAdmin, name: "COVID Vaccine Status", path: "covidVaccine.status", values: covidStatuses },
+      { condition: isAdminOrFaculty, name: "Teacher", path: "work.isTeacher", values: ["Yes"] },
+      { condition: isAdminOrFaculty, name: "English Teacher", path: "work.isEnglishTeacher", values: ["Yes"] },
       { name: "Initial Session", path: "initialSession", values: getAllSessions(students) },
       { name: "Nationality", path: "nationality", values: nationalities },
       { name: "Gender", path: "gender", values: ["Male", "Female"] },
-      { name: "Teacher", path: "work.isTeacher", values: ["Yes"] },
-      { name: "English Teacher", path: "work.isEnglishTeacher", values: ["Yes"] },
-      { name: "Placement Pending", path: "placement.pending", values: ["Yes"] },
-      { fn: statusDetailsFn, name: "Status Details", path: "statusDetails", values: statusDetails },
-      { name: "COVID Vaccine Status", path: "covidVaccine.status", values: covidStatuses },
-      { name: "Dropped Out Reason", path: "status.droppedOutReason" },
+      {
+        condition: isAdmin,
+        fn: whatsAppGroupFn,
+        name: "WA BC Group",
+        path: "phone.waBroadcastSAR",
+        values: ["None", "SAR Group 1", "SAR Group 2", "SAR Group 3", "SAR Group 4", "SAR Group 5", "SAR Group 6"],
+      },
+      {
+        condition: isAdminOrFaculty,
+        fn: statusDetailsFn,
+        name: "Status Details",
+        path: "statusDetails",
+        values: statusDetails,
+      },
+      { condition: isAdminOrFaculty, name: "Dropped Out Reason", path: "status.droppedOutReason" },
       { fn: sessionsAttendedFn, name: "Sessions Attended", path: "sessionsAttended", values: range(11) },
     ];
-  }, [sessionsAttendedFn, statusDetailsFn, students]);
+  }, [isAdmin, isAdminOrFaculty, sessionsAttendedFn, statusDetailsFn, students, whatsAppGroupFn]);
 
   const handleClearFilters = () => {
     appDispatch({ payload: { filter: [] } });
@@ -71,7 +106,14 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({ anchorEl, handleClos
     <Drawer
       onClose={handleClose}
       open={open}
-      PaperProps={{ style: { backgroundColor: popoverColor, maxWidth: 250, paddingRight: 10 } }}
+      PaperProps={{
+        style: {
+          backgroundColor: popoverColor,
+          paddingLeft: "20px",
+          paddingRight: 10,
+          width: "235px",
+        },
+      }}
     >
       <Typography fontWeight="bold" marginLeft={1} marginTop={1} variant="h5">
         Filter Students
@@ -93,7 +135,12 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({ anchorEl, handleClos
       <Box>
         {map(filterFields, (field, i) => {
           return (
-            <Box key={`filter-field-${i}`} margin={1} marginTop={5}>
+            <Box
+              key={`filter-field-${i}`}
+              hidden={field.condition !== undefined && !field.condition}
+              margin={1}
+              marginTop={5}
+            >
               <Typography fontSize={18} fontWeight="bold" marginBottom={0.5} width="100%">
                 {field.name}
               </Typography>

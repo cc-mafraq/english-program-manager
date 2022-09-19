@@ -71,6 +71,7 @@ export const FormStatus: React.FC = () => {
       </GridContainer>
       <GridContainer marginBottom={0}>
         <GridItemAutocomplete
+          autoSelect={false}
           gridProps={{ xs: 6 }}
           label="Withdraw Reason"
           name="status.droppedOutReason"

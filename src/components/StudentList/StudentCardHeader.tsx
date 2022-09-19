@@ -10,7 +10,10 @@ interface StudentCardHeaderProps {
 }
 
 export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ student, handleEditStudentClick }) => {
-  const { appDispatch } = useContext(AppContext);
+  const {
+    appState: { role },
+    appDispatch,
+  } = useContext(AppContext);
 
   const theme = useTheme();
   const { iconColor } = useColors();
@@ -37,16 +40,18 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ student, h
             WA Number Invalid
           </Typography>
         )}
-        <Tooltip arrow title="Edit Student">
-          <IconButton
-            onClick={() => {
-              appDispatch({ payload: { selectedStudent: student } });
-              handleEditStudentClick();
-            }}
-          >
-            <Edit sx={{ color: iconColor }} />
-          </IconButton>
-        </Tooltip>
+        {role === "admin" && (
+          <Tooltip arrow title="Edit Student">
+            <IconButton
+              onClick={() => {
+                appDispatch({ payload: { selectedStudent: student } });
+                handleEditStudentClick();
+              }}
+            >
+              <Edit sx={{ color: iconColor }} />
+            </IconButton>
+          </Tooltip>
+        )}
       </Box>
       <Box paddingBottom={1}>
         <Typography

@@ -3,22 +3,26 @@ import {
   Box,
   Card,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { map } from "lodash";
 import React from "react";
-import { LabeledIconButton } from "..";
 import { getSessionFullName } from "../../services";
+import { Searchbar } from "../StudentDatabaseToolbar";
 
 interface FGRDialogHeaderProps {
   fgrSession: string;
   handleDialogClose: () => void;
   handleDownloadAllClick: () => void;
+  handleSearchStringChange: (value: string) => void;
   handleSessionChange: (event: SelectChangeEvent) => void;
+  searchString: string;
   sessionOptions: string[];
 }
 
@@ -28,6 +32,8 @@ export const FGRDialogHeader: React.FC<FGRDialogHeaderProps> = ({
   handleDownloadAllClick,
   handleSessionChange,
   sessionOptions,
+  handleSearchStringChange,
+  searchString,
 }) => {
   return (
     <>
@@ -45,7 +51,16 @@ export const FGRDialogHeader: React.FC<FGRDialogHeaderProps> = ({
             Final Grade Reports
           </Typography>
         </Box>
-        <Box sx={{ width: "30%" }}>
+        <Box marginTop="9px">
+          <Searchbar
+            handleSearchStringChange={handleSearchStringChange}
+            noExpand
+            placeholder="Search FGRs"
+            searchString={searchString}
+            width="100%"
+          />
+        </Box>
+        <Box sx={{ width: "25%" }}>
           <FormControl fullWidth>
             <InputLabel id="session-label">Session</InputLabel>
             <Select
@@ -65,17 +80,17 @@ export const FGRDialogHeader: React.FC<FGRDialogHeaderProps> = ({
             </Select>
           </FormControl>
         </Box>
-        <Box display="flex" flexDirection="row">
-          <LabeledIconButton
-            buttonProps={{ color: "primary" }}
-            label="DOWNLOAD ALL"
-            onClick={handleDownloadAllClick}
-          >
-            <Download />
-          </LabeledIconButton>
-          <LabeledIconButton color="red" label="CLOSE WINDOW" onClick={handleDialogClose}>
-            <Close color="error" />
-          </LabeledIconButton>
+        <Box display="flex" flexDirection="row" marginTop="5px">
+          <Tooltip arrow title="Download All">
+            <IconButton color="primary" onClick={handleDownloadAllClick} sx={{ height: "45px" }}>
+              <Download />
+            </IconButton>
+          </Tooltip>
+          <Tooltip arrow title="Close Window">
+            <IconButton onClick={handleDialogClose} sx={{ height: "45px" }}>
+              <Close />
+            </IconButton>
+          </Tooltip>
         </Box>
       </Card>
     </>

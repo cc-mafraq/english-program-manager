@@ -1,7 +1,7 @@
 import { Box, Card, CardContent, Tab, Tabs, useTheme } from "@mui/material";
-import React, { CSSProperties, useContext, useEffect, useRef, useState } from "react";
-import { CorrespondenceList, Image, PlacementList, StudentCardHeader, StudentInfo } from "..";
-import { AppContext, darkBlueBackground, Nationality, Student } from "../../interfaces";
+import React, { CSSProperties, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { CorrespondenceList, Image, PlacementList, StudentCardHeader, StudentInfo, WithdrawButton } from "..";
+import { AppContext, darkBlueBackground, Nationality, Status, Student } from "../../interfaces";
 import { studentImageFolder } from "../../services";
 import { AcademicRecords } from "./AcademicRecords";
 
@@ -28,7 +28,7 @@ export const StudentCard: React.FC<StudentCardProps> = ({
 }) => {
   const theme = useTheme();
   const {
-    appState: { dataVisibility },
+    appState: { role },
   } = useContext(AppContext);
 
   const rowRef = useRef<HTMLDivElement>(null);
@@ -40,10 +40,13 @@ export const StudentCard: React.FC<StudentCardProps> = ({
     }
   }, [index, setSize, windowWidth, localTabValue, rowRef.current?.clientHeight]);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setLocalTabValue(newValue);
-    setTabValue(student.epId, newValue);
-  };
+  const handleChange = useCallback(
+    (event: React.SyntheticEvent, newValue: number) => {
+      setLocalTabValue(newValue);
+      setTabValue(student.epId, newValue);
+    },
+    [setTabValue, student.epId],
+  );
 
   useEffect(() => {
     setLocalTabValue(tabValue);
@@ -58,44 +61,70 @@ export const StudentCard: React.FC<StudentCardProps> = ({
         }}
       >
         <Box ref={rowRef} display="flex">
-          {dataVisibility.studentImages.studentPhoto && (
+          <Box>
             <Image
               folderName={studentImageFolder}
               imagePath="imageName"
               imageStyleProps={{
-                border: "solid",
-                borderColor: student.nationality === Nationality.JDN ? "rgb(0,176,80)" : "rgb(204,102,0)",
-                borderWidth:
-                  student.nationality === Nationality.JDN || student.nationality === Nationality.SYR ? 2 : 0,
-                height: "35vh",
                 maxHeight: "250px",
-                minHeight: "200px",
+                width: "175px",
               }}
-              innerContainerProps={{ height: "35vh", minHeight: "200px" }}
-              outerContainerProps={{ minWidth: "150px" }}
+              innerContainerProps={{ height: "250px" }}
+              loadingContainerProps={{
+                left: "88px",
+                position: "absolute",
+                top: "125px",
+                transform: "translate(-50%, -50%)",
+              }}
+              outerContainerProps={{
+                minWidth: "175px",
+                sx: {
+                  border: "solid",
+                  borderColor: student.nationality === Nationality.JDN ? "rgb(0,176,80)" : "rgb(204,102,0)",
+                  borderWidth:
+                    (student.nationality === Nationality.JDN || student.nationality === Nationality.SYR) &&
+                    role === "admin"
+                      ? 2
+                      : 0,
+                  height: "250px",
+                },
+              }}
               scale={2}
               student={student}
             />
-          )}
+            {student.status.currentStatus !== Status.WD && role === "admin" && (
+              <WithdrawButton student={student} />
+            )}
+          </Box>
           <Box width="100%">
             <CardContent>
               <StudentCardHeader handleEditStudentClick={handleEditStudentClick} student={student} />
-              <Tabs onChange={handleChange} sx={{ display: "inline" }} value={localTabValue}>
-                <Tab id="student-card-tabpanel-0" label="Student Information" />
-                <Tab id="student-card-tabpanel-1" label="Correspondence" />
-                <Tab id="student-card-tabpanel-2" label="Academic Records" />
-                <Tab id="student-card-tabpanel-3" label="Placement" />
-              </Tabs>
+              {(role === "admin" || role === "faculty") && (
+                <Tabs onChange={handleChange} sx={{ display: "inline" }} value={localTabValue}>
+                  <Tab id="student-card-tabpanel-0" label="Student Information" />
+                  <Tab id="student-card-tabpanel-1" label="Correspondence" />
+                  <Tab id="student-card-tabpanel-2" label="Academic Records" />
+                  <Tab id="student-card-tabpanel-3" label="Placement" />
+                </Tabs>
+              )}
               <Box hidden={localTabValue !== 0} id="student-card-tabpanel-0" role="tabpanel">
                 <StudentInfo student={student} />
               </Box>
-              <Box hidden={localTabValue !== 1} id="student-card-tabpanel-1" role="tabpanel">
+              <Box hidden={localTabValue !== 1 || role !== "admin"} id="student-card-tabpanel-1" role="tabpanel">
                 <CorrespondenceList student={student} />
               </Box>
-              <Box hidden={localTabValue !== 2} id="student-card-tabpanel-2" role="tabpanel">
+              <Box
+                hidden={localTabValue !== 2 || (role !== "admin" && role !== "faculty")}
+                id="student-card-tabpanel-2"
+                role="tabpanel"
+              >
                 <AcademicRecords student={student} />
               </Box>
-              <Box hidden={localTabValue !== 3} id="student-card-tabpanel-3" role="tabpanel">
+              <Box
+                hidden={localTabValue !== 3 || (role !== "admin" && role !== "faculty")}
+                id="student-card-tabpanel-3"
+                role="tabpanel"
+              >
                 <PlacementList student={student} />
               </Box>
             </CardContent>

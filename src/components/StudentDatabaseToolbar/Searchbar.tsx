@@ -1,21 +1,31 @@
 import { Close, Search } from "@mui/icons-material";
 import { alpha, Box, IconButton, InputBase, Tooltip, useTheme } from "@mui/material";
 import { isEmpty } from "lodash";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useColors } from "../../hooks";
 
 interface SearchbarProps {
   handleSearchStringChange: (value: string) => void;
+  noExpand?: boolean;
+  placeholder: string;
   searchString: string;
+  width?: string;
 }
 
 const minSearchLength = 3;
 const searchDelay = 500;
 
-export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange, searchString }) => {
+export const Searchbar: React.FC<SearchbarProps> = ({
+  handleSearchStringChange,
+  searchString,
+  noExpand,
+  width,
+  placeholder,
+}) => {
   const theme = useTheme();
   const { iconColor } = useColors();
   const [value, setValue] = useState("");
+  const searchbarRef = useRef<HTMLDivElement>();
 
   useEffect(() => {
     setValue(searchString);
@@ -31,6 +41,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange, 
   };
 
   const handleClearSearch = () => {
+    searchbarRef.current?.focus();
     setValue("");
     handleSearchStringChange("");
   };
@@ -53,11 +64,11 @@ export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange, 
         marginLeft: 0,
         padding: theme.spacing(1.5, 0, 1.5, 0),
         position: "relative",
-        width: "100%",
         [theme.breakpoints.up("sm")]: {
           marginLeft: theme.spacing(1),
           width: "auto",
         },
+        width: "100%",
       }}
     >
       <Box
@@ -76,8 +87,9 @@ export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange, 
       </Box>
       <InputBase
         inputProps={{ "aria-label": "search" }}
+        inputRef={searchbarRef}
         onChange={handleLocalSearchStringChange}
-        placeholder="Search students"
+        placeholder={placeholder}
         sx={{
           "& .MuiInputBase-input": {
             fontSize: "13pt",
@@ -87,9 +99,9 @@ export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange, 
             transition: theme.transitions.create("width"),
             [theme.breakpoints.up("sm")]: {
               "&:focus": {
-                width: "40vw",
+                width: noExpand ? width || "35vw" : "40vw",
               },
-              width: "35vw",
+              width: width || "35vw",
             },
           },
           color: "inherit",
@@ -106,7 +118,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange, 
             position: "absolute",
             right: 0,
             top: 0,
-            width: "8%",
+            width: "45px",
           }}
         >
           <Close sx={{ color: iconColor }} />
@@ -114,4 +126,9 @@ export const Searchbar: React.FC<SearchbarProps> = ({ handleSearchStringChange, 
       </Tooltip>
     </Box>
   );
+};
+
+Searchbar.defaultProps = {
+  noExpand: false,
+  width: undefined,
 };

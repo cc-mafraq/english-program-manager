@@ -1,34 +1,19 @@
 import { Grid } from "@mui/material";
-import React, { useContext } from "react";
-import { GridContainer, GridItemTextField, LabeledCheckbox } from "..";
-import { Image } from "../..";
-import { AppContext } from "../../../interfaces";
+import React from "react";
+import { FormImage, GridContainer, GridItemTextField, LabeledCheckbox } from "..";
 import { SPACING, studentImageFolder } from "../../../services";
-import { FormImageActions } from "./FormImageActions";
 
 export const FormName: React.FC = () => {
-  const {
-    appState: { selectedStudent },
-  } = useContext(AppContext);
-
   return (
     <GridContainer marginBottom={SPACING}>
-      <Grid item xs={1}>
-        <Image
-          folderName={studentImageFolder}
-          imagePath="imageName"
-          imageStyleProps={{ margin: "auto", maxHeight: "100%", maxWidth: "90px", width: "auto" }}
-          innerContainerProps={{
-            sx: { transform: "translate(0%, -50%)" },
-            top: "50%",
-          }}
-          lightColor="primary"
-          outerContainerProps={{ height: "100%", maxHeight: "100px" }}
-          scale={2}
-          student={selectedStudent}
-        />
-      </Grid>
-      <FormImageActions folderName={studentImageFolder} imagePath="imageName" />
+      <FormImage
+        folderName={studentImageFolder}
+        imagePath="imageName"
+        imageStyleProps={{ margin: "auto", maxHeight: "100%", maxWidth: "90px", width: "auto" }}
+        loadingContainerProps={{ marginLeft: "25px", marginTop: 0, transform: "none" }}
+        outerContainerProps={{ display: "flex", flexDirection: "row" }}
+        xs={1}
+      />
       <GridItemTextField label="Name - ENG" name="name.english" textFieldProps={{ required: true }} />
       <GridItemTextField label="Name - AR" name="name.arabic" textFieldProps={{ required: true }} />
       <Grid item>

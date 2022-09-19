@@ -1,23 +1,30 @@
-import { Box, BoxProps, CardMedia, SxProps } from "@mui/material";
-import { get } from "lodash";
-import React, { useEffect, useState } from "react";
-import { Student } from "../../interfaces";
-import { AddImageButton } from "./AddImageButton";
+import { Box, BoxProps, CardMedia, Grid, SxProps, useTheme } from "@mui/material";
+import { get, omit } from "lodash";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import ReactLoading from "react-loading";
+import { AddImageButton } from ".";
+import { FormImageActions } from "..";
+import { AppContext, Student } from "../../interfaces";
+import { setStudentData } from "../../services";
 
-interface StudentImageProps {
+interface ImageProps {
   folderName: string;
   imagePath: string;
   imageStyleProps?: SxProps;
   innerContainerProps?: BoxProps;
+  isForm?: boolean;
   lightColor?: "primary" | "default" | "secondary";
+  loadingContainerProps?: BoxProps & { transform?: string };
   noButton?: boolean;
   outerContainerProps?: BoxProps;
   scale?: number;
   student: Student | null;
+  xs?: number | boolean;
 }
 
-export const Image: React.FC<StudentImageProps> = ({
+export const Image: React.FC<ImageProps> = ({
   imageStyleProps,
+  loadingContainerProps,
   innerContainerProps,
   outerContainerProps,
   scale,
@@ -26,28 +33,57 @@ export const Image: React.FC<StudentImageProps> = ({
   folderName,
   noButton,
   lightColor,
+  isForm,
+  xs,
 }) => {
-  const [img, setImg] = useState("");
+  const [img, setImg] = useState<string | undefined>("");
+  const [loading, setLoading] = useState(false);
   const imageName = get(student, imagePath);
+  const theme = useTheme();
+  const {
+    appState: { role },
+  } = useContext(AppContext);
 
   useEffect(() => {
-    const setImage = async () => {
-      try {
-        if (!student) return;
-        setImg(imageName);
-      } catch (e) {
-        setImg("");
-      }
-    };
-    setImage();
-  }, [student, imagePath, imageName]);
+    imageName ? setLoading(true) : setLoading(false);
+    setImg(imageName);
+  }, [imageName]);
 
-  return (
-    <Box {...outerContainerProps}>
-      {get(student, imagePath) ? (
-        <CardMedia component="img" image={img} sx={imageStyleProps} />
-      ) : (
-        !noButton && (
+  const setImageState = useCallback((image: string | undefined) => {
+    setImg(image);
+  }, []);
+
+  const setLoadingState = useCallback((ld: boolean) => {
+    setLoading(ld);
+  }, []);
+
+  const ImageBody = useMemo(() => {
+    return (
+      <>
+        {loading && (
+          <Box
+            sx={{
+              ...loadingContainerProps,
+            }}
+          >
+            <ReactLoading color={theme.palette.primary.main} type="cylon" />
+          </Box>
+        )}
+        {img ? (
+          <CardMedia
+            component="img"
+            image={img}
+            onError={() => {
+              setImg(undefined);
+              setLoading(false);
+              setStudentData(omit(student, [imagePath]) as Student);
+            }}
+            onLoad={() => {
+              setLoading(false);
+            }}
+            sx={{ ...imageStyleProps, display: loading ? "none" : undefined }}
+          />
+        ) : (
           <Box sx={{ ...innerContainerProps, position: "relative" }}>
             <Box
               sx={{
@@ -58,26 +94,69 @@ export const Image: React.FC<StudentImageProps> = ({
                 transform: "translate(-50%, -50%)",
               }}
             >
-              <AddImageButton
-                folderName={folderName}
-                imagePath={imagePath}
-                lightColor={lightColor}
-                scale={scale}
-                student={student}
-              />
+              {!noButton && !img && !loading && role === "admin" && (
+                <AddImageButton
+                  folderName={folderName}
+                  imagePath={imagePath}
+                  isForm={isForm}
+                  lightColor={lightColor}
+                  scale={scale}
+                  setImg={setImageState}
+                  setLoading={setLoadingState}
+                  student={student}
+                />
+              )}
             </Box>
           </Box>
-        )
+        )}
+      </>
+    );
+  }, [
+    folderName,
+    imagePath,
+    imageStyleProps,
+    img,
+    innerContainerProps,
+    isForm,
+    lightColor,
+    loading,
+    loadingContainerProps,
+    noButton,
+    role,
+    scale,
+    setImageState,
+    setLoadingState,
+    student,
+    theme.palette.primary.main,
+  ]);
+
+  return isForm ? (
+    <>
+      <Grid item xs={xs}>
+        {ImageBody}
+      </Grid>
+      {isForm && img && !loading && (
+        <FormImageActions
+          folderName={folderName}
+          imagePath={imagePath}
+          setImg={setImageState}
+          setLoading={setLoadingState}
+        />
       )}
-    </Box>
+    </>
+  ) : (
+    <Box {...outerContainerProps}>{ImageBody}</Box>
   );
 };
 
 Image.defaultProps = {
   imageStyleProps: undefined,
   innerContainerProps: undefined,
+  isForm: false,
   lightColor: "default",
+  loadingContainerProps: undefined,
   noButton: false,
   outerContainerProps: undefined,
   scale: 1,
+  xs: 1,
 };

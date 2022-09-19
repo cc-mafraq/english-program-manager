@@ -56,7 +56,6 @@ export interface Grade {
 }
 
 export interface SectionPlacement {
-  addedToCL?: boolean;
   notes?: string;
   sectionAndDate: string;
 }
@@ -118,6 +117,13 @@ export interface PhoneNumber {
 export interface Correspondence {
   date: string | null;
   notes: string;
+}
+
+export interface Withdraw {
+  droppedOutReason?: DroppedOutReason;
+  inviteTag: boolean;
+  noContactList: boolean;
+  withdrawDate: string;
 }
 
 export type Level = "PL1" | "L1" | "L2" | "L3" | "L4" | "L5" | "L5 GRAD";

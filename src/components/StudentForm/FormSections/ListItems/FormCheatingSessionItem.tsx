@@ -14,7 +14,12 @@ export const FormCheatingSessionItem: React.FC<FormItem> = ({ index, removeItem,
 
   return (
     <>
-      <GridItemAutocomplete label="Cheating Session" name={name} options={getAllSessions(students)} />
+      <GridItemAutocomplete
+        autoSelect={false}
+        label="Cheating Session"
+        name={name}
+        options={getAllSessions(students)}
+      />
       <Tooltip arrow title="Remove Cheating Session">
         <IconButton onClick={removeItem && removeItem(index)} sx={{ color: iconColor, height: "100%" }}>
           <Close />
