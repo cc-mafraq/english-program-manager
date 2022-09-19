@@ -207,7 +207,9 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         <LabeledText label="Gender">{student.gender}</LabeledText>
         <LabeledText label="Age at Prog. Entry">{student.age}</LabeledText>
         <LabeledText label="Occupation">{student.work?.occupation}</LabeledText>
-        <LabeledText label="Looking For Job">{student.work?.lookingForJob}</LabeledText>
+        <LabeledText condition={isAdminOrFaculty} label="Looking For Job">
+          {student.work?.lookingForJob}
+        </LabeledText>
         <LabeledText label="Teacher">{student.work?.isTeacher ? "Yes" : undefined}</LabeledText>
         <LabeledText label="Teaching Subject Area">
           {student.work?.isTeacher ? student.work.teachingSubjectAreas : undefined}
@@ -219,6 +221,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
       </LabeledContainer>
     );
   }, [
+    isAdminOrFaculty,
     student.age,
     student.gender,
     student.nationality,
@@ -243,7 +246,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
             </span>
           );
         })}
-        <Box hidden={!isAdminOrFaculty}>
+        <Box hidden={role !== "admin"}>
           <LabeledText label="WA Broadcast SAR">{student.phone.waBroadcastSAR}</LabeledText>
           <LabeledText label="WA Broadcast Other Groups">
             {join(student.phone.otherWaBroadcastGroups, JOIN_STR)}
@@ -253,6 +256,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
     );
   }, [
     isAdminOrFaculty,
+    role,
     student.phone.otherWaBroadcastGroups,
     student.phone.phoneNumbers,
     student.phone.waBroadcastSAR,
