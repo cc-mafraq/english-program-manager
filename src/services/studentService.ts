@@ -40,6 +40,7 @@ export interface SessionResult {
 }
 
 export interface FilterField {
+  condition?: boolean;
   fn?: (student: Student) => unknown;
   name: string;
   path: string;

@@ -71,8 +71,9 @@ export const StudentCard: React.FC<StudentCardProps> = ({
               }}
               innerContainerProps={{ height: "250px" }}
               loadingContainerProps={{
-                marginLeft: "88px",
-                marginTop: "125px",
+                left: "88px",
+                position: "absolute",
+                top: "125px",
                 transform: "translate(-50%, -50%)",
               }}
               outerContainerProps={{
