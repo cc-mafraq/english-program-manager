@@ -115,13 +115,9 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
   );
 
   const PB = useMemo(() => {
-    return (
-      <Box height="65px">
-        {map(forOwn(progress), (v, k) => {
-          return <ProgressBox key={k} level={k as GenderedLevel} sessionResults={v} />;
-        })}
-      </Box>
-    );
+    return map(forOwn(progress), (v, k) => {
+      return <ProgressBox key={k} level={k as GenderedLevel} sessionResults={v} />;
+    });
   }, [progress]);
 
   const RecordData = useMemo(() => {
@@ -148,7 +144,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
                 sx={{
                   left: "35%",
                   position: "absolute",
-                  top: "7px",
+                  top: "1vh",
                 }}
               >
                 <Typography color="text.secondary" display="inline" fontSize="large">
@@ -223,7 +219,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
 
   return (
     <>
-      <LabeledContainer label="Progress" parentContainerProps={{ width: "100%" }} showWhenEmpty>
+      <LabeledContainer label="Progress" parentContainerProps={{ height: "90px", width: "100%" }} showWhenEmpty>
         {PB}
       </LabeledContainer>
       <LabeledContainer label="Academic Records" showWhenEmpty>
