@@ -115,9 +115,13 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
   );
 
   const PB = useMemo(() => {
-    return map(forOwn(progress), (v, k) => {
-      return <ProgressBox key={k} level={k as GenderedLevel} sessionResults={v} />;
-    });
+    return (
+      <Box height="65px">
+        {map(forOwn(progress), (v, k) => {
+          return <ProgressBox key={k} level={k as GenderedLevel} sessionResults={v} />;
+        })}
+      </Box>
+    );
   }, [progress]);
 
   const RecordData = useMemo(() => {
