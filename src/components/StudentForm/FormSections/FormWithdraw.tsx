@@ -21,7 +21,6 @@ export const FormWithdraw: React.FC = () => {
           value={moment().format(MOMENT_FORMAT)}
         />
         <GridItemAutocomplete
-          autoHighlight={false}
           autoSelect={false}
           label="Withdraw Reason"
           name="droppedOutReason"

@@ -144,7 +144,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
                 sx={{
                   left: "35%",
                   position: "absolute",
-                  top: "1vh",
+                  top: "7px",
                 }}
               >
                 <Typography color="text.secondary" display="inline" fontSize="large">

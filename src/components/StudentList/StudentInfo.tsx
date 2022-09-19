@@ -54,7 +54,9 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
           {student.status.noContactList ? "Yes" : undefined}
         </LabeledText>
         <LabeledText label="Current Level">{student.currentLevel}</LabeledText>
-        <LabeledText label="Family Coordinator Entry">{student.familyCoordinatorEntry}</LabeledText>
+        <LabeledText condition={isAdminOrFaculty} label="Family Coordinator Entry">
+          {student.familyCoordinatorEntry}
+        </LabeledText>
         <LabeledText label="Status">{Status[student.status.currentStatus]}</LabeledText>
         <LabeledText label="Active">{active}</LabeledText>
         <LabeledText label="Initial Session">{student.initialSession}</LabeledText>
@@ -64,6 +66,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
     active,
     defaultBackgroundColor,
     green,
+    isAdminOrFaculty,
     red,
     student.currentLevel,
     student.familyCoordinatorEntry,
