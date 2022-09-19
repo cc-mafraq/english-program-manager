@@ -14,7 +14,10 @@ interface PlacementProps {
 }
 
 export const PlacementList: React.FC<PlacementProps> = ({ student }) => {
-  const { appDispatch } = useContext(AppContext);
+  const {
+    appState: { role },
+    appDispatch,
+  } = useContext(AppContext);
 
   const { iconColor } = useColors();
   const [open, setOpen] = useState(false);
@@ -59,18 +62,20 @@ export const PlacementList: React.FC<PlacementProps> = ({ student }) => {
           {student.placement.noAnswerClassScheduleWpm ? "Yes" : undefined}
         </LabeledText>
         <LabeledText label="Photo Contact">{student.placement.photoContact}</LabeledText>
-        <Tooltip arrow title="Edit Placement">
-          <IconButton
-            onClick={handleDialogOpen}
-            sx={{
-              color: iconColor,
-              height: "100%",
-              marginTop: 1.5,
-            }}
-          >
-            <Edit />
-          </IconButton>
-        </Tooltip>
+        {role === "admin" && (
+          <Tooltip arrow title="Edit Placement">
+            <IconButton
+              onClick={handleDialogOpen}
+              sx={{
+                color: iconColor,
+                height: "100%",
+                marginTop: 1.5,
+              }}
+            >
+              <Edit />
+            </IconButton>
+          </Tooltip>
+        )}
       </LabeledContainer>
       <FormDialog
         dialogProps={{ maxWidth: "lg" }}

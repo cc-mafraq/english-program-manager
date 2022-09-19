@@ -13,7 +13,7 @@ interface StudentInfoProps {
 
 export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
   const {
-    appState: { students },
+    appState: { students, role },
   } = useContext(AppContext);
   const theme = useTheme();
   const { defaultBackgroundColor, green, red, yellow } = useColors();
@@ -28,6 +28,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
   const repeatNum = useMemo(() => {
     return getRepeatNum(student);
   }, [student]);
+  const isAdminOrFaculty = role === "admin" || role === "faculty";
 
   const ProgramInformation = useMemo(() => {
     return (
@@ -74,7 +75,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
 
   const CovidVaccine = useMemo(() => {
     return (
-      <Box>
+      <Box hidden={role !== "admin"}>
         <LabeledContainer label="COVID Vaccine" parentContainerProps={{ marginRight: "2vh" }}>
           <LabeledText
             containerProps={{
@@ -131,16 +132,29 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         />
       </Box>
     );
-  }, [green, red, student, theme.palette.mode, theme.palette.text.primary, theme.palette.text.secondary, yellow]);
+  }, [
+    green,
+    red,
+    role,
+    student,
+    theme.palette.mode,
+    theme.palette.text.primary,
+    theme.palette.text.secondary,
+    yellow,
+  ]);
 
   const StatusBox = useMemo(() => {
     return (
       <LabeledContainer label="Status">
-        <LabeledText label="Status Details">{statusDetailsAndNumSessions[0]}</LabeledText>
+        <LabeledText condition={isAdminOrFaculty} label="Status Details">
+          {statusDetailsAndNumSessions[0]}
+        </LabeledText>
         <LabeledText label="Sessions Attended">
           {statusDetailsAndNumSessions[1]} session{statusDetailsAndNumSessions[1] === 1 ? "" : "s"}
         </LabeledText>
-        <LabeledText label="Audit">{student.status.audit}</LabeledText>
+        <LabeledText condition={isAdminOrFaculty} label="Audit">
+          {student.status.audit}
+        </LabeledText>
         <LabeledText
           containerProps={{
             sx: {
@@ -151,16 +165,29 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         >
           {join(student.status.cheatingSessions, JOIN_STR)}
         </LabeledText>
-        <LabeledText label="Final GR Sent">{student.status.finalGradeSentDate}</LabeledText>
-        <LabeledText label="Level Reeval Date">{student.status.levelReevalDate}</LabeledText>
-        <LabeledText label="Reactivated Date">{join(student.status.reactivatedDate, JOIN_STR)}</LabeledText>
-        <LabeledText label="Withdraw Date">{join(student.status.withdrawDate, JOIN_STR)}</LabeledText>
-        <LabeledText label="Withdraw Reason">{student.status.droppedOutReason}</LabeledText>
-        <LabeledText label="Repeat Number">{repeatNum}</LabeledText>
+        <LabeledText condition={isAdminOrFaculty} label="Final GR Sent">
+          {student.status.finalGradeSentDate}
+        </LabeledText>
+        <LabeledText condition={isAdminOrFaculty} label="Level Reeval Date">
+          {student.status.levelReevalDate}
+        </LabeledText>
+        <LabeledText condition={isAdminOrFaculty} label="Reactivated Date">
+          {join(student.status.reactivatedDate, JOIN_STR)}
+        </LabeledText>
+        <LabeledText condition={isAdminOrFaculty} label="Withdraw Date">
+          {join(student.status.withdrawDate, JOIN_STR)}
+        </LabeledText>
+        <LabeledText condition={isAdminOrFaculty} label="Withdraw Reason">
+          {student.status.droppedOutReason}
+        </LabeledText>
+        <LabeledText condition={isAdminOrFaculty} label="Repeat Number">
+          {repeatNum}
+        </LabeledText>
       </LabeledContainer>
     );
   }, [
     defaultBackgroundColor,
+    isAdminOrFaculty,
     red,
     repeatNum,
     statusDetailsAndNumSessions,
@@ -180,7 +207,9 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
         <LabeledText label="Gender">{student.gender}</LabeledText>
         <LabeledText label="Age at Prog. Entry">{student.age}</LabeledText>
         <LabeledText label="Occupation">{student.work?.occupation}</LabeledText>
-        <LabeledText label="Looking For Job">{student.work?.lookingForJob}</LabeledText>
+        <LabeledText condition={isAdminOrFaculty} label="Looking For Job">
+          {student.work?.lookingForJob}
+        </LabeledText>
         <LabeledText label="Teacher">{student.work?.isTeacher ? "Yes" : undefined}</LabeledText>
         <LabeledText label="Teaching Subject Area">
           {student.work?.isTeacher ? student.work.teachingSubjectAreas : undefined}
@@ -192,6 +221,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
       </LabeledContainer>
     );
   }, [
+    isAdminOrFaculty,
     student.age,
     student.gender,
     student.nationality,
@@ -210,21 +240,31 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
           return (
             <span key={i}>
               <LabeledText label={`Number ${Number(i) + 1}`}>{pn.number}</LabeledText>
-              <LabeledText label={`Number ${Number(i) + 1} Notes`}>{pn.notes}</LabeledText>
+              <LabeledText condition={isAdminOrFaculty} label={`Number ${Number(i) + 1} Notes`}>
+                {pn.notes}
+              </LabeledText>
             </span>
           );
         })}
-        <LabeledText label="WA Broadcast SAR">{student.phone.waBroadcastSAR}</LabeledText>
-        <LabeledText label="WA Broadcast Other Groups">
-          {join(student.phone.otherWaBroadcastGroups, JOIN_STR)}
-        </LabeledText>
+        <Box hidden={role !== "admin"}>
+          <LabeledText label="WA Broadcast SAR">{student.phone.waBroadcastSAR}</LabeledText>
+          <LabeledText label="WA Broadcast Other Groups">
+            {join(student.phone.otherWaBroadcastGroups, JOIN_STR)}
+          </LabeledText>
+        </Box>
       </LabeledContainer>
     );
-  }, [student.phone.otherWaBroadcastGroups, student.phone.phoneNumbers, student.phone.waBroadcastSAR]);
+  }, [
+    isAdminOrFaculty,
+    role,
+    student.phone.otherWaBroadcastGroups,
+    student.phone.phoneNumbers,
+    student.phone.waBroadcastSAR,
+  ]);
 
   const PlacementData = useMemo(() => {
     return (
-      <LabeledContainer label="Original Placement Data">
+      <LabeledContainer condition={isAdminOrFaculty} label="Original Placement Data">
         <LabeledText label="Writing">{student.origPlacementData.writing}</LabeledText>
         <LabeledText label="Speaking">{student.origPlacementData.speaking}</LabeledText>
         <LabeledText label="Placement Level">{student.origPlacementData.level}</LabeledText>
@@ -232,6 +272,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
       </LabeledContainer>
     );
   }, [
+    isAdminOrFaculty,
     student.origPlacementData.adjustment,
     student.origPlacementData.level,
     student.origPlacementData.speaking,

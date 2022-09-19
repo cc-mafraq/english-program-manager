@@ -1,10 +1,10 @@
 import { Box, BoxProps, CardMedia, Grid, SxProps, useTheme } from "@mui/material";
 import { get, omit } from "lodash";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import ReactLoading from "react-loading";
 import { AddImageButton } from ".";
 import { FormImageActions } from "..";
-import { Student } from "../../interfaces";
+import { AppContext, Student } from "../../interfaces";
 import { setStudentData } from "../../services";
 
 interface ImageProps {
@@ -40,6 +40,9 @@ export const Image: React.FC<ImageProps> = ({
   const [loading, setLoading] = useState(false);
   const imageName = get(student, imagePath);
   const theme = useTheme();
+  const {
+    appState: { role },
+  } = useContext(AppContext);
 
   useEffect(() => {
     imageName ? setLoading(true) : setLoading(false);
@@ -91,7 +94,7 @@ export const Image: React.FC<ImageProps> = ({
                 transform: "translate(-50%, -50%)",
               }}
             >
-              {!noButton && !img && !loading && (
+              {!noButton && !img && !loading && role === "admin" && (
                 <AddImageButton
                   folderName={folderName}
                   imagePath={imagePath}
@@ -119,6 +122,7 @@ export const Image: React.FC<ImageProps> = ({
     loading,
     loadingContainerProps,
     noButton,
+    role,
     scale,
     setImageState,
     setLoadingState,

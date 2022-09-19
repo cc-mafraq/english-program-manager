@@ -11,6 +11,7 @@ export const reducer = (actionCallback: (item: AppState) => void) => {
     const newState: AppState = {
       filter: action.payload.filter || state.filter,
       loading: action.payload.loading === undefined ? state.loading : action.payload.loading,
+      role: action.payload.role || state.role,
       selectedStudent:
         action.payload.selectedStudent === undefined ? state.selectedStudent : action.payload.selectedStudent,
       students: action.payload.students || state.students,

@@ -67,7 +67,7 @@ GradeInfo.defaultProps = {
 
 export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => {
   const {
-    appState: { students },
+    appState: { students, role },
   } = useContext(AppContext);
   const [progress, setProgress] = useState<StudentProgress>({});
   const theme = useTheme();
@@ -147,40 +147,42 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
                   top: "1vh",
                 }}
               >
-                <Typography color="text.secondary" fontSize="large">
+                <Typography color="text.secondary" display="inline" fontSize="large">
                   Level Pass/Fail:{" "}
-                  <Typography
-                    color={
-                      ar.finalResult.result === FinalResult.P
-                        ? theme.palette.mode === "light"
-                          ? materialGreen[600]
-                          : green
-                        : theme.palette.mode === "light"
-                        ? materialRed[600]
-                        : red
-                    }
-                    display="inline"
-                    fontSize={20}
-                    fontWeight="bold"
-                  >
-                    {ar.finalResult.result}
-                  </Typography>
+                </Typography>
+                <Typography
+                  color={
+                    ar.finalResult.result === FinalResult.P
+                      ? theme.palette.mode === "light"
+                        ? materialGreen[600]
+                        : green
+                      : theme.palette.mode === "light"
+                      ? materialRed[600]
+                      : red
+                  }
+                  display="inline"
+                  fontSize={20}
+                  fontWeight="bold"
+                >
+                  {ar.finalResult.result}
                 </Typography>
               </Box>
             )}
-            <Tooltip arrow title="Edit Academic Record">
-              <IconButton
-                onClick={handleEditClick(i)}
-                sx={{
-                  color: iconColor,
-                  position: "absolute",
-                  right: "1.5vh",
-                  top: "1.5vh",
-                }}
-              >
-                <Edit />
-              </IconButton>
-            </Tooltip>
+            {role === "admin" && (
+              <Tooltip arrow title="Edit Academic Record">
+                <IconButton
+                  onClick={handleEditClick(i)}
+                  sx={{
+                    color: iconColor,
+                    position: "absolute",
+                    right: "1.5vh",
+                    top: "1.5vh",
+                  }}
+                >
+                  <Edit />
+                </IconButton>
+              </Tooltip>
+            )}
             <LabeledContainer label="Record Information" labelProps={labelProps}>
               <LabeledText label="Session">{ar.session}</LabeledText>
               <LabeledText label="Level">{ar.level}</LabeledText>
@@ -213,7 +215,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
         );
       }),
     );
-  }, [green, handleEditClick, iconColor, red, student.academicRecords, theme.palette.mode]);
+  }, [green, handleEditClick, iconColor, red, role, student.academicRecords, theme.palette.mode]);
 
   return (
     <>
@@ -221,11 +223,13 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
         {PB}
       </LabeledContainer>
       <LabeledContainer label="Academic Records" showWhenEmpty>
-        <Box marginBottom={1} marginTop={1}>
-          <Button color="secondary" onClick={handleDialogOpen} variant="contained">
-            Add Session
-          </Button>
-        </Box>
+        {role === "admin" && (
+          <Box marginBottom={1} marginTop={1}>
+            <Button color="secondary" onClick={handleDialogOpen} variant="contained">
+              Add Session
+            </Button>
+          </Box>
+        )}
         {RecordData}
         <LabeledText label="Certificate Requests">{student?.certificateRequests}</LabeledText>
       </LabeledContainer>
