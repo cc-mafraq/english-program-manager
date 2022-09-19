@@ -13,7 +13,7 @@ interface StudentInfoProps {
 
 export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
   const {
-    appState: { students },
+    appState: { students, role },
   } = useContext(AppContext);
   const theme = useTheme();
   const { defaultBackgroundColor, green, red, yellow } = useColors();
@@ -74,95 +74,109 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
 
   const CovidVaccine = useMemo(() => {
     return (
-      <Box>
-        <LabeledContainer label="COVID Vaccine" parentContainerProps={{ marginRight: "2vh" }}>
-          <LabeledText
-            containerProps={{
-              sx: {
-                backgroundColor:
-                  student.covidVaccine?.status === CovidStatus.FULL ||
-                  student.covidVaccine?.status === CovidStatus.EXEMPT ||
-                  student.covidVaccine?.status === CovidStatus.BOOST
-                    ? green
-                    : student.covidVaccine?.status === CovidStatus.PART
-                    ? yellow
-                    : red,
-              },
-            }}
-            label="Status"
-            labelProps={{
-              color:
-                theme.palette.mode === "dark" && student.covidVaccine?.status === CovidStatus.PART
-                  ? grey[800]
-                  : theme.palette.text.secondary,
-            }}
-            textProps={{
-              color:
-                theme.palette.mode === "dark" && student.covidVaccine?.status === CovidStatus.PART
-                  ? grey[900]
-                  : theme.palette.text.primary,
-            }}
-          >
-            {student.covidVaccine?.status}
-          </LabeledText>
-          <LabeledText label="Date">{student.covidVaccine?.date}</LabeledText>
-          <LabeledText label="Reason">{student.covidVaccine?.reason}</LabeledText>
-          <LabeledText
-            containerProps={{
-              sx: {
-                backgroundColor: student.covidVaccine?.suspectedFraud ? red : undefined,
-              },
-            }}
-            label="Suspected Fraud"
-          >
-            {student.covidVaccine?.suspectedFraud ? "Yes" : undefined}
-          </LabeledText>
-          <LabeledText label="Suspected Fraud Reason">{student.covidVaccine?.suspectedFraudReason}</LabeledText>
-        </LabeledContainer>
-        <Image
-          folderName={covidVaccineImageFolder}
-          imagePath="covidVaccine.imageName"
-          imageStyleProps={{ height: "100px", maxWidth: "150px" }}
-          innerContainerProps={{ height: "100px", marginLeft: "-10%", top: "17px" }}
-          loadingContainerProps={{ marginLeft: "30px", marginTop: "30px", transform: "none" }}
-          outerContainerProps={{ display: "inline-block", height: "100px", marginRight: "2vh", width: "150px" }}
-          scale={1.5}
-          student={student}
-        />
-      </Box>
+      role === "admin" && (
+        <Box>
+          <LabeledContainer label="COVID Vaccine" parentContainerProps={{ marginRight: "2vh" }}>
+            <LabeledText
+              containerProps={{
+                sx: {
+                  backgroundColor:
+                    student.covidVaccine?.status === CovidStatus.FULL ||
+                    student.covidVaccine?.status === CovidStatus.EXEMPT ||
+                    student.covidVaccine?.status === CovidStatus.BOOST
+                      ? green
+                      : student.covidVaccine?.status === CovidStatus.PART
+                      ? yellow
+                      : red,
+                },
+              }}
+              label="Status"
+              labelProps={{
+                color:
+                  theme.palette.mode === "dark" && student.covidVaccine?.status === CovidStatus.PART
+                    ? grey[800]
+                    : theme.palette.text.secondary,
+              }}
+              textProps={{
+                color:
+                  theme.palette.mode === "dark" && student.covidVaccine?.status === CovidStatus.PART
+                    ? grey[900]
+                    : theme.palette.text.primary,
+              }}
+            >
+              {student.covidVaccine?.status}
+            </LabeledText>
+            <LabeledText label="Date">{student.covidVaccine?.date}</LabeledText>
+            <LabeledText label="Reason">{student.covidVaccine?.reason}</LabeledText>
+            <LabeledText
+              containerProps={{
+                sx: {
+                  backgroundColor: student.covidVaccine?.suspectedFraud ? red : undefined,
+                },
+              }}
+              label="Suspected Fraud"
+            >
+              {student.covidVaccine?.suspectedFraud ? "Yes" : undefined}
+            </LabeledText>
+            <LabeledText label="Suspected Fraud Reason">{student.covidVaccine?.suspectedFraudReason}</LabeledText>
+          </LabeledContainer>
+          <Image
+            folderName={covidVaccineImageFolder}
+            imagePath="covidVaccine.imageName"
+            imageStyleProps={{ height: "100px", maxWidth: "150px" }}
+            innerContainerProps={{ height: "100px", marginLeft: "-10%", top: "17px" }}
+            loadingContainerProps={{ marginLeft: "30px", marginTop: "30px", transform: "none" }}
+            outerContainerProps={{ display: "inline-block", height: "100px", marginRight: "2vh", width: "150px" }}
+            scale={1.5}
+            student={student}
+          />
+        </Box>
+      )
     );
-  }, [green, red, student, theme.palette.mode, theme.palette.text.primary, theme.palette.text.secondary, yellow]);
+  }, [
+    green,
+    red,
+    role,
+    student,
+    theme.palette.mode,
+    theme.palette.text.primary,
+    theme.palette.text.secondary,
+    yellow,
+  ]);
 
   const StatusBox = useMemo(() => {
     return (
-      <LabeledContainer label="Status">
-        <LabeledText label="Status Details">{statusDetailsAndNumSessions[0]}</LabeledText>
-        <LabeledText label="Sessions Attended">
-          {statusDetailsAndNumSessions[1]} session{statusDetailsAndNumSessions[1] === 1 ? "" : "s"}
-        </LabeledText>
-        <LabeledText label="Audit">{student.status.audit}</LabeledText>
-        <LabeledText
-          containerProps={{
-            sx: {
-              backgroundColor: student.status.cheatingSessions?.length ? red : defaultBackgroundColor,
-            },
-          }}
-          label="Cheating Sessions"
-        >
-          {join(student.status.cheatingSessions, JOIN_STR)}
-        </LabeledText>
-        <LabeledText label="Final GR Sent">{student.status.finalGradeSentDate}</LabeledText>
-        <LabeledText label="Level Reeval Date">{student.status.levelReevalDate}</LabeledText>
-        <LabeledText label="Reactivated Date">{join(student.status.reactivatedDate, JOIN_STR)}</LabeledText>
-        <LabeledText label="Withdraw Date">{join(student.status.withdrawDate, JOIN_STR)}</LabeledText>
-        <LabeledText label="Withdraw Reason">{student.status.droppedOutReason}</LabeledText>
-        <LabeledText label="Repeat Number">{repeatNum}</LabeledText>
-      </LabeledContainer>
+      (role === "admin" || role === "faculty") && (
+        <LabeledContainer label="Status">
+          <LabeledText label="Status Details">{statusDetailsAndNumSessions[0]}</LabeledText>
+          <LabeledText label="Sessions Attended">
+            {statusDetailsAndNumSessions[1]} session{statusDetailsAndNumSessions[1] === 1 ? "" : "s"}
+          </LabeledText>
+          <LabeledText label="Audit">{student.status.audit}</LabeledText>
+          <LabeledText
+            containerProps={{
+              sx: {
+                backgroundColor: student.status.cheatingSessions?.length ? red : defaultBackgroundColor,
+              },
+            }}
+            label="Cheating Sessions"
+          >
+            {join(student.status.cheatingSessions, JOIN_STR)}
+          </LabeledText>
+          <LabeledText label="Final GR Sent">{student.status.finalGradeSentDate}</LabeledText>
+          <LabeledText label="Level Reeval Date">{student.status.levelReevalDate}</LabeledText>
+          <LabeledText label="Reactivated Date">{join(student.status.reactivatedDate, JOIN_STR)}</LabeledText>
+          <LabeledText label="Withdraw Date">{join(student.status.withdrawDate, JOIN_STR)}</LabeledText>
+          <LabeledText label="Withdraw Reason">{student.status.droppedOutReason}</LabeledText>
+          <LabeledText label="Repeat Number">{repeatNum}</LabeledText>
+        </LabeledContainer>
+      )
     );
   }, [
     defaultBackgroundColor,
     red,
     repeatNum,
+    role,
     statusDetailsAndNumSessions,
     student.status.audit,
     student.status.cheatingSessions,
@@ -210,28 +224,37 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
           return (
             <span key={i}>
               <LabeledText label={`Number ${Number(i) + 1}`}>{pn.number}</LabeledText>
-              <LabeledText label={`Number ${Number(i) + 1} Notes`}>{pn.notes}</LabeledText>
+              {(role === "admin" || role === "faculty") && (
+                <LabeledText label={`Number ${Number(i) + 1} Notes`}>{pn.notes}</LabeledText>
+              )}
             </span>
           );
         })}
-        <LabeledText label="WA Broadcast SAR">{student.phone.waBroadcastSAR}</LabeledText>
-        <LabeledText label="WA Broadcast Other Groups">
-          {join(student.phone.otherWaBroadcastGroups, JOIN_STR)}
-        </LabeledText>
+        {(role === "admin" || role === "faculty") && (
+          <>
+            <LabeledText label="WA Broadcast SAR">{student.phone.waBroadcastSAR}</LabeledText>
+            <LabeledText label="WA Broadcast Other Groups">
+              {join(student.phone.otherWaBroadcastGroups, JOIN_STR)}
+            </LabeledText>
+          </>
+        )}
       </LabeledContainer>
     );
-  }, [student.phone.otherWaBroadcastGroups, student.phone.phoneNumbers, student.phone.waBroadcastSAR]);
+  }, [role, student.phone.otherWaBroadcastGroups, student.phone.phoneNumbers, student.phone.waBroadcastSAR]);
 
   const PlacementData = useMemo(() => {
     return (
-      <LabeledContainer label="Original Placement Data">
-        <LabeledText label="Writing">{student.origPlacementData.writing}</LabeledText>
-        <LabeledText label="Speaking">{student.origPlacementData.speaking}</LabeledText>
-        <LabeledText label="Placement Level">{student.origPlacementData.level}</LabeledText>
-        <LabeledText label="Adjustment">{student.origPlacementData.adjustment}</LabeledText>
-      </LabeledContainer>
+      (role === "admin" || role === "faculty") && (
+        <LabeledContainer label="Original Placement Data">
+          <LabeledText label="Writing">{student.origPlacementData.writing}</LabeledText>
+          <LabeledText label="Speaking">{student.origPlacementData.speaking}</LabeledText>
+          <LabeledText label="Placement Level">{student.origPlacementData.level}</LabeledText>
+          <LabeledText label="Adjustment">{student.origPlacementData.adjustment}</LabeledText>
+        </LabeledContainer>
+      )
     );
   }, [
+    role,
     student.origPlacementData.adjustment,
     student.origPlacementData.level,
     student.origPlacementData.speaking,

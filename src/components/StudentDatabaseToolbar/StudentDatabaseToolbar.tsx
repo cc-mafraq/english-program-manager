@@ -1,9 +1,9 @@
 import { FilterAlt, MoreHoriz } from "@mui/icons-material";
 import { AppBar, Box, Divider, IconButton, TablePagination, Toolbar, Tooltip } from "@mui/material";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useContext } from "react";
 import { FilterDrawer, Searchbar } from ".";
 import { saveLocal, useColors } from "../../hooks";
-import { Student } from "../../interfaces";
+import { AppContext, Student } from "../../interfaces";
 
 const handlePopoverClick = (setFn: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>) => {
   return (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -40,6 +40,9 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
   setShowActions,
   searchString,
 }) => {
+  const {
+    appState: { role },
+  } = useContext(AppContext);
   const [filterAnchorEl, setFilterAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const { iconColor } = useColors();
 
@@ -51,18 +54,20 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
           paddingTop: "1vh",
         }}
       >
-        <Box width="10vw">
-          <Tooltip arrow placement="right" title={`${showActions ? "Hide" : "Show"} Actions`}>
-            <IconButton
-              onClick={() => {
-                saveLocal("showActions", !showActions);
-                setShowActions(!showActions);
-              }}
-            >
-              <MoreHoriz color="primary" />
-            </IconButton>
-          </Tooltip>
-        </Box>
+        {(role === "admin" || role === "faculty") && (
+          <Box width="10vw">
+            <Tooltip arrow placement="right" title={`${showActions ? "Hide" : "Show"} Actions`}>
+              <IconButton
+                onClick={() => {
+                  saveLocal("showActions", !showActions);
+                  setShowActions(!showActions);
+                }}
+              >
+                <MoreHoriz color="primary" />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        )}
         <Box margin="auto">
           <Searchbar
             handleSearchStringChange={handleSearchStringChange}

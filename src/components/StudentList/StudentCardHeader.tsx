@@ -1,7 +1,7 @@
 import { Edit, WhatsApp } from "@mui/icons-material";
 import { Box, Divider, IconButton, Tooltip, Typography, useTheme } from "@mui/material";
 import React, { useContext } from "react";
-import { useColors, useRole } from "../../hooks";
+import { useColors } from "../../hooks";
 import { AppContext, Student } from "../../interfaces";
 
 interface StudentCardHeaderProps {
@@ -10,11 +10,13 @@ interface StudentCardHeaderProps {
 }
 
 export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ student, handleEditStudentClick }) => {
-  const { appDispatch } = useContext(AppContext);
+  const {
+    appState: { role },
+    appDispatch,
+  } = useContext(AppContext);
 
   const theme = useTheme();
   const { iconColor } = useColors();
-  const role = useRole();
 
   return (
     <>

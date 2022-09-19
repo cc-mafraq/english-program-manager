@@ -17,7 +17,7 @@ import {
   StudentForm,
   StudentList,
 } from "../components";
-import { loadLocal, saveLocal } from "../hooks";
+import { loadLocal, saveLocal, useRole } from "../hooks";
 import { AppContext, Status, Student } from "../interfaces";
 import {
   app,
@@ -44,7 +44,7 @@ interface SetStateOptions {
 
 export const StudentDatabasePage = () => {
   const {
-    appState: { students, selectedStudent, filter },
+    appState: { students, selectedStudent, filter, role },
     appDispatch,
   } = useContext(AppContext);
   const studentsRef = useRef(students);
@@ -63,6 +63,7 @@ export const StudentDatabasePage = () => {
   const auth = getAuth(app);
   const [user, authLoading] = useAuthState(auth);
   const [studentDocs, docsLoading, docsError] = useCollection(collection(db, "students"));
+  const globalRole = useRole();
 
   studentsRef.current = students;
 
@@ -119,8 +120,12 @@ export const StudentDatabasePage = () => {
 
   useEffect(() => {
     if (authLoading) return;
-    if (!user) navigate("/", { replace: true });
-  }, [user, authLoading, navigate]);
+    if (!user) {
+      navigate("/", { replace: true });
+    } else if (role !== globalRole) {
+      appDispatch({ payload: { role: globalRole } });
+    }
+  }, [user, authLoading, navigate, role, globalRole, appDispatch]);
 
   useEffect(() => {
     if (!spreadsheetIsLoading) {

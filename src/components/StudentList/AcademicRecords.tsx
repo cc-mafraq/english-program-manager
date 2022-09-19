@@ -6,7 +6,7 @@ import { findIndex, forOwn, map, reverse } from "lodash";
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { LabeledContainer, LabeledText, ProgressBox } from ".";
 import { FormAcademicRecordsItem, FormDialog } from "..";
-import { useColors, useRole } from "../../hooks";
+import { useColors } from "../../hooks";
 import {
   AcademicRecord,
   AppContext,
@@ -67,7 +67,7 @@ GradeInfo.defaultProps = {
 
 export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => {
   const {
-    appState: { students },
+    appState: { students, role },
   } = useContext(AppContext);
   const [progress, setProgress] = useState<StudentProgress>({});
   const theme = useTheme();
@@ -75,7 +75,6 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
   const [open, setOpen] = useState(false);
   const [selectedAcademicRecord, setSelectedAcademicRecord] = useState<AcademicRecord | null>(null);
   const { red, green } = useColors();
-  const role = useRole();
 
   useEffect(() => {
     setProgress(getProgress(student, getAllSessions(students)));

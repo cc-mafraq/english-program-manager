@@ -5,7 +5,7 @@ import { join, map } from "lodash";
 import React, { useCallback, useContext, useState } from "react";
 import { LabeledContainer, LabeledText } from ".";
 import { FormDialog, FormPlacement } from "..";
-import { useColors, useRole } from "../../hooks";
+import { useColors } from "../../hooks";
 import { AppContext, Placement, Student } from "../../interfaces";
 import { JOIN_STR, placementSchema, removeNullFromObject, setStudentData } from "../../services";
 
@@ -14,11 +14,13 @@ interface PlacementProps {
 }
 
 export const PlacementList: React.FC<PlacementProps> = ({ student }) => {
-  const { appDispatch } = useContext(AppContext);
+  const {
+    appState: { role },
+    appDispatch,
+  } = useContext(AppContext);
 
   const { iconColor } = useColors();
   const [open, setOpen] = useState(false);
-  const role = useRole();
 
   const handleDialogOpen = useCallback(() => {
     appDispatch({ payload: { selectedStudent: student } });

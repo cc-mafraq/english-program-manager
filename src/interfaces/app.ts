@@ -62,6 +62,7 @@ interface FilterValue {
 export interface AppState {
   filter: FilterValue[];
   loading: boolean;
+  role: "admin" | "faculty" | "staff";
   selectedStudent: Student | null;
   students: Student[];
 }
@@ -69,6 +70,7 @@ export interface AppState {
 export const initialAppState: AppState = {
   filter: [],
   loading: true,
+  role: "staff",
   selectedStudent: null,
   students: [],
 };

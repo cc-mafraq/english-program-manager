@@ -12,7 +12,7 @@ const INDENT = 3;
 
 export const StatisticsPage = () => {
   const {
-    appState: { students },
+    appState: { students, role },
   } = useContext(AppContext);
   const auth = getAuth(app);
   const [user, loading] = useAuthState(auth);
@@ -30,7 +30,7 @@ export const StatisticsPage = () => {
     if (!statistics.totalRegistered) navigate("/epd", { replace: true });
   }, [user, loading, navigate, statistics]);
 
-  return statistics.totalRegistered ? (
+  return statistics.totalRegistered && (role === "admin" || role === "faculty") ? (
     <Box marginLeft="10%" paddingBottom={5}>
       <Typography {...textProps}>
         Active Students: {statistics.totalActive} (

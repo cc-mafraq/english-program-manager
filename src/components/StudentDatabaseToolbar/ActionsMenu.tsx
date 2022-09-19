@@ -1,7 +1,7 @@
 import { Add, Cached, Edit, Upload } from "@mui/icons-material";
 import { Box, Grow, Input, InputLabel } from "@mui/material";
-import React, { ChangeEvent, useState } from "react";
-import { useRole } from "../../hooks";
+import React, { ChangeEvent, useContext, useState } from "react";
+import { AppContext } from "../../interfaces";
 import { ActionFAB } from "./ActionFAB";
 import { SelectStudentDialog } from "./SelectStudentDialog";
 
@@ -20,7 +20,9 @@ export const ActionsMenu: React.FC<ActionsMenuProps> = ({
 }) => {
   const [openSelectStudentDialog, setOpenSelectStudentDialog] = useState(false);
   const [selectStudentValue, setSelectStudentValue] = useState<string | null>(null);
-  const role = useRole();
+  const {
+    appState: { role },
+  } = useContext(AppContext);
 
   const handleSelectStudentDialogOpen = () => {
     setOpenSelectStudentDialog(true);
@@ -34,31 +36,35 @@ export const ActionsMenu: React.FC<ActionsMenuProps> = ({
   return (
     <Grow in={showActions} style={{ transformOrigin: "0 0 0" }}>
       <Box display="flex" flexDirection="column" position="absolute">
-        <ActionFAB fabStyle={{ marginTop: 0.5 }} onClick={handleStudentDialogOpen} tooltipTitle="Add Student">
-          <Add />
-        </ActionFAB>
+        {role === "admin" && (
+          <ActionFAB fabStyle={{ marginTop: 0.5 }} onClick={handleStudentDialogOpen} tooltipTitle="Add Student">
+            <Add />
+          </ActionFAB>
+        )}
         {role === "admin" && (
           <ActionFAB onClick={handleSelectStudentDialogOpen} tooltipTitle="Edit Student">
             <Edit />
           </ActionFAB>
         )}
-        <InputLabel htmlFor="import-spreadsheet">
-          <Input
-            id="import-spreadsheet"
-            inputProps={{ accept: ".txt" }}
-            onChange={onInputChange}
-            sx={{ display: "none" }}
-            type="file"
-          />
-          {role === "admin" && (
+        {role === "admin" && (
+          <InputLabel htmlFor="import-spreadsheet">
+            <Input
+              id="import-spreadsheet"
+              inputProps={{ accept: ".txt" }}
+              onChange={onInputChange}
+              sx={{ display: "none" }}
+              type="file"
+            />
             <ActionFAB fabProps={{ component: "span" }} tooltipTitle="Import Spreadsheet">
               <Upload />
             </ActionFAB>
-          )}
-        </InputLabel>
-        <ActionFAB onClick={handleGenerateFGRClick} tooltipTitle="Generate Final Grade Reports">
-          <Cached />
-        </ActionFAB>
+          </InputLabel>
+        )}
+        {(role === "admin" || role === "faculty") && (
+          <ActionFAB onClick={handleGenerateFGRClick} tooltipTitle="Generate Final Grade Reports">
+            <Cached />
+          </ActionFAB>
+        )}
         <SelectStudentDialog
           handleDialogClose={handleSelectStudentDialogClose}
           handleStudentDialogOpen={handleStudentDialogOpen}
