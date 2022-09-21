@@ -50,7 +50,7 @@ export const ActionsMenu: React.FC<ActionsMenuProps> = ({
           <InputLabel htmlFor="import-spreadsheet">
             <Input
               id="import-spreadsheet"
-              inputProps={{ accept: ".txt" }}
+              inputProps={{ accept: [".txt", ".csv"] }}
               onChange={onInputChange}
               sx={{ display: "none" }}
               type="file"

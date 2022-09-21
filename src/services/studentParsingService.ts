@@ -2,6 +2,7 @@ import {
   filter,
   first,
   forEach,
+  get,
   includes,
   isEmpty,
   join,
@@ -31,13 +32,15 @@ import {
   PhoneNumber,
   Status,
   Student,
+  WaitingListStudent,
 } from "../interfaces";
 import { ValidFields } from "./spreadsheetService";
 
 const separatorRegex = /[;,&]/g;
 const phoneRegex = /([\d]+)/;
+export const dateRegex = /\d{1,2}(\/|-)\d{1,2}\1\d{2,4}/g;
 
-const splitAndTrim = (value: string, separator?: string | RegExp): string[] => {
+export const splitAndTrim = (value: string, separator?: string | RegExp): string[] => {
   const sep = separator || separatorRegex;
   const splitValues = split(value, sep);
   const trimmedSplitValues = map(splitValues, (v) => {
@@ -49,12 +52,12 @@ const splitAndTrim = (value: string, separator?: string | RegExp): string[] => {
 const parseDateVal = (value?: string) => {
   if (!value) return undefined;
   const valueNoLetters = trim(replace(value, /[a-z]|[A-Z]/, ""));
-  const date = moment(valueNoLetters, ["L", "l", "M/D/YY", "MM/DD/YY", "M-D-YY"]);
+  const date = moment(valueNoLetters, ["L", "l", "M/D/YY", "MM/DD/YY", "M-D-YY", "M/D"]);
   return date.isValid() ? date.format(MOMENT_FORMAT) : undefined;
 };
 
 // https://stackoverflow.com/questions/14743536/multiple-key-names-same-pair-value
-export const expand = (obj: ValidFields) => {
+export const expand = <T>(obj: ValidFields<T>) => {
   const keys = Object.keys(obj);
   forEach(keys, (key) => {
     const subkeys = key.split(/,\s?/);
@@ -67,11 +70,13 @@ export const expand = (obj: ValidFields) => {
   return obj;
 };
 
-const parseDateField = (fieldPath: string) => {
-  return (key: string, value: string, student: Student) => {
-    const date = parseDateVal(last(splitAndTrim(value)));
+export const parseDateField = <T extends object>(fieldPath: string) => {
+  return (key: string, value: string, object: T) => {
+    const lastMatch = last(value.match(dateRegex));
+    if (!lastMatch) return;
+    const date = parseDateVal(last(splitAndTrim(lastMatch)));
     if (!date || !value) return;
-    set(student, fieldPath, date);
+    set(object, fieldPath, date);
   };
 };
 
@@ -90,17 +95,17 @@ const parseDateFields = (fieldPath: string) => {
   };
 };
 
-const parseOptionalString = (fieldPath: string) => {
-  return (key: string, value: string, student: Student) => {
+export const parseOptionalString = <T extends object>(fieldPath: string) => {
+  return (key: string, value: string, object: T) => {
     if (isEmpty(value)) return;
-    set(student, fieldPath, value);
+    set(object, fieldPath, value);
   };
 };
 
-const parseOptionalBoolean = (fieldPath: string) => {
-  return (key: string, value: string, student: Student) => {
+export const parseOptionalBoolean = <T extends object>(fieldPath: string) => {
+  return (key: string, value: string, object: T) => {
     if (Number(value) !== 1) return;
-    set(student, fieldPath, true);
+    set(object, fieldPath, true);
   };
 };
 
@@ -175,11 +180,11 @@ export const parseCurrentStatus = (key: string, value: string, student: Student)
   }
 };
 
-export const parseCorrespondence = (key: string, value: string, student: Student) => {
+export const parseCorrespondence = (key: string, value: string, student: Student | WaitingListStudent) => {
   if (isEmpty(value)) return;
-  const dateRegex = /\d{1,2}(\/|-)\d{1,2}\1\d{2,4}:/g;
-  const splitCorrespondence = pullAll(splitAndTrim(value, dateRegex), ["", "/", "-"]);
-  const dates = value.match(dateRegex);
+  const dateRegexWithColon = /\d{1,2}(\/|-)\d{1,2}\1\d{2,4}:/g;
+  const splitCorrespondence = pullAll(splitAndTrim(value, dateRegexWithColon), ["", "/", "-"]);
+  const dates = value.match(dateRegexWithColon);
 
   // Handle if the value doesn't start with a date
   if (!startsWith(trim(value), first(dates))) {
@@ -243,21 +248,25 @@ export const parseEnglishTeacherLocation = parseOptionalString("work.englishTeac
 export const parseTeacher = parseOptionalBoolean("work.isTeacher");
 export const parseEnglishTeacher = parseOptionalBoolean("work.isEnglishTeacher");
 
-export const parsePhone = (key: string, value: string, student: Student) => {
-  if (isEmpty(value)) return;
-  const strippedValue = replace(value, /[" "]/g, "");
-  const insideParenRegex = /\(([^)]+)\)/;
-  const phoneNumber = strippedValue.match(phoneRegex);
-  const phoneNumberNotesMatches = value.match(insideParenRegex);
-  const phoneNumberNotes = phoneNumberNotesMatches !== null && phoneNumberNotesMatches[1];
-  const numberObject: PhoneNumber = {
-    number: Number(first(phoneNumber)),
+export const parsePhone = <T extends object>(fieldPath: string) => {
+  return (key: string, value: string, object: T) => {
+    if (isEmpty(value)) return;
+    const strippedValue = replace(value, /[" "]/g, "");
+    const insideParenRegex = /\(([^)]+)\)/;
+    const phoneNumber = strippedValue.match(phoneRegex);
+    const phoneNumberNotesMatches = value.match(insideParenRegex);
+    const phoneNumberNotes = phoneNumberNotesMatches !== null && phoneNumberNotesMatches[1];
+    const numberObject: PhoneNumber = {
+      number: Number(first(phoneNumber)),
+    };
+    if (phoneNumberNotes) {
+      numberObject.notes = String(phoneNumberNotes);
+    }
+    phoneNumber && get(object, fieldPath).push(numberObject);
   };
-  if (phoneNumberNotes) {
-    numberObject.notes = String(phoneNumberNotes);
-  }
-  phoneNumber && student.phone.phoneNumbers.push(numberObject);
 };
+
+export const parseStudentPhone = parsePhone("phone.phoneNumbers");
 
 export const parseWABroadcastSAR = parseOptionalString("phone.waBroadcastSAR");
 

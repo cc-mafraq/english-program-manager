@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Box } from "@mui/material";
 import { getAuth } from "firebase/auth";
 import { collection } from "firebase/firestore";
-import { every, filter as filterFn, forEach, get, includes, isEmpty, isUndefined, omit } from "lodash";
+import { forEach, isEmpty, omit } from "lodash";
 import React, { ChangeEvent, useCallback, useContext, useEffect, useRef } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollection } from "react-firebase-hooks/firestore";
@@ -10,24 +10,22 @@ import { useNavigate } from "react-router-dom";
 import useState from "react-usestateref";
 import {
   ActionsMenu,
+  CustomToolbar,
   FinalGradeReportDialog,
   FormDialog,
   Loading,
-  StudentDatabaseToolbar,
   StudentForm,
   StudentList,
 } from "../components";
-import { loadLocal, saveLocal, useRole } from "../hooks";
+import { usePageState, useRole } from "../hooks";
 import { AppContext, Status, Student } from "../interfaces";
 import {
   app,
   db,
   deleteImage,
   deleteStudentData,
-  getStudentPage,
   logout,
   removeNullFromObject,
-  searchStudents,
   setPrimaryNumberBooleanArray,
   setStudentData,
   sortStudents,
@@ -35,88 +33,34 @@ import {
   studentFormSchema,
 } from "../services";
 
-interface SetStateOptions {
-  newPage?: number;
-  newRowsPerPage?: number;
-  newSearchString?: string;
-  newStudents?: Student[];
-}
-
 export const StudentDatabasePage = () => {
   const {
     appState: { students, selectedStudent, filter, role },
     appDispatch,
   } = useContext(AppContext);
   const studentsRef = useRef(students);
-  const [filteredStudents, setFilteredStudents, filteredStudentsRef] = useState<Student[]>([]);
-  const [studentsPage, setStudentsPage] = useState<Student[]>([]);
-  const [page, setPage, pageRef] = useState(0);
-  const [rowsPerPage, setRowsPerPage, rowsPerPageRef] = useState(
-    parseInt(loadLocal("rowsPerPage") as string) || -1,
-  );
   const [openFGRDialog, setOpenFGRDialog] = useState(false);
   const [openStudentDialog, setOpenStudentDialog] = useState(false);
-  const [searchString, setSearchString, searchStringRef] = useState<string>("");
   const [spreadsheetIsLoading, setSpreadsheetIsLoading] = useState(false);
-  const [showActions, setShowActions] = useState(loadLocal("showActions") !== false);
   const navigate = useNavigate();
   const auth = getAuth(app);
   const [user, authLoading] = useAuthState(auth);
   const [studentDocs, docsLoading, docsError] = useCollection(collection(db, "students"));
   const globalRole = useRole();
-
   studentsRef.current = students;
-
-  const filterStudents = useCallback(
-    (student: Student) => {
-      return every(filter, (filterValue) => {
-        const value = filterValue.fieldFunction
-          ? filterValue.fieldFunction(student)
-          : get(student, filterValue.fieldPath);
-        return includes(filterValue.values, value);
-      });
-    },
-    [filter],
-  );
-
-  const setState = useCallback(
-    ({ newRowsPerPage, newPage, newSearchString, newStudents }: SetStateOptions) => {
-      const newSearchedStudents =
-        !isUndefined(newSearchString) || newStudents
-          ? searchStudents(
-              !isUndefined(newStudents) ? newStudents : studentsRef.current,
-              !isUndefined(newSearchString) ? newSearchString : searchStringRef.current,
-            )
-          : filteredStudentsRef.current;
-      const newFilteredStudents =
-        filter.length > 0 ? (filterFn(newSearchedStudents, filterStudents) as Student[]) : newSearchedStudents;
-      setFilteredStudents(newFilteredStudents);
-      newStudents && appDispatch({ payload: { students: newStudents } });
-      !isUndefined(newPage) && setPage(newPage);
-      newRowsPerPage && setRowsPerPage(newRowsPerPage);
-      !isUndefined(newSearchString) && setSearchString(newSearchString);
-      setStudentsPage(
-        getStudentPage(
-          newFilteredStudents,
-          !isUndefined(newPage) ? newPage : pageRef.current,
-          newRowsPerPage || rowsPerPageRef.current,
-        ),
-      );
-    },
-    [
-      appDispatch,
-      filter.length,
-      filterStudents,
-      filteredStudentsRef,
-      pageRef,
-      rowsPerPageRef,
-      searchStringRef,
-      setFilteredStudents,
-      setPage,
-      setRowsPerPage,
-      setSearchString,
-    ],
-  );
+  const {
+    filteredStudents,
+    handleChangePage,
+    handleChangeRowsPerPage,
+    handleSearchStringChange,
+    page,
+    rowsPerPage,
+    searchString,
+    setShowActions,
+    setState,
+    showActions,
+    studentsPage,
+  } = usePageState({ studentsRef });
 
   useEffect(() => {
     if (authLoading) return;
@@ -157,29 +101,6 @@ export const StudentDatabasePage = () => {
   useEffect(() => {
     setState({});
   }, [filter, setState]);
-
-  const handleChangePage = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-      setState({ newPage });
-    },
-    [setState],
-  );
-
-  const handleChangeRowsPerPage = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const newRowsPerPage = parseInt(event.target.value, 10);
-      saveLocal("rowsPerPage", newRowsPerPage);
-      setState({ newPage: 0, newRowsPerPage });
-    },
-    [setState],
-  );
-
-  const handleSearchStringChange = useCallback(
-    (value: string) => {
-      setState({ newPage: 0, newSearchString: value });
-    },
-    [setState],
-  );
 
   const onInputChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -257,16 +178,16 @@ export const StudentDatabasePage = () => {
   return (
     <>
       <Box position="sticky" top={0} zIndex={5}>
-        <StudentDatabaseToolbar
+        <CustomToolbar
           handleChangePage={handleChangePage}
           handleChangeRowsPerPage={handleChangeRowsPerPage}
           handleSearchStringChange={handleSearchStringChange}
+          list={searchString || filter.length ? filteredStudents : students}
           page={page}
           rowsPerPage={rowsPerPage}
           searchString={searchString}
           setShowActions={setShowActions}
           showActions={showActions}
-          students={searchString || filter.length ? filteredStudents : students}
         />
         <ActionsMenu
           handleGenerateFGRClick={handleGenerateFGRClick}

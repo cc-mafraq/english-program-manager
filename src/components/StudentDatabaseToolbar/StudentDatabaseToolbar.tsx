@@ -3,7 +3,7 @@ import { AppBar, Box, Divider, IconButton, TablePagination, Toolbar, Tooltip } f
 import React, { Dispatch, SetStateAction, useContext } from "react";
 import { FilterDrawer, Searchbar } from ".";
 import { saveLocal, useColors } from "../../hooks";
-import { AppContext, Student } from "../../interfaces";
+import { AppContext } from "../../interfaces";
 
 const handlePopoverClick = (setFn: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>) => {
   return (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -17,20 +17,20 @@ const handlePopoverClose = (setFn: React.Dispatch<React.SetStateAction<HTMLButto
   };
 };
 
-interface StudentDatabaseToolbarProps {
+interface CustomToolbarProps<T> {
   handleChangePage: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
   handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   handleSearchStringChange: (value: string) => void;
+  list: T[];
   page: number;
   rowsPerPage: number;
   searchString: string;
   setShowActions: Dispatch<SetStateAction<boolean>>;
   showActions: boolean;
-  students: Student[];
 }
 
-export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
-  students,
+export const CustomToolbar = <T,>({
+  list,
   page,
   rowsPerPage,
   handleChangePage,
@@ -39,7 +39,7 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
   showActions,
   setShowActions,
   searchString,
-}) => {
+}: CustomToolbarProps<T>) => {
   const {
     appState: { role },
   } = useContext(AppContext);
@@ -84,7 +84,7 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
         <Box width="33vw">
           <TablePagination
             component="div"
-            count={students.length}
+            count={list.length}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
             page={page}
