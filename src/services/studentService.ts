@@ -109,9 +109,9 @@ export const getProgress = (student: Student, sessionOptions: string[]): Student
   return progress;
 };
 
-export const getStudentPage = (students: Student[], page: number, rowsPerPage: number): Student[] => {
-  const newRowsPerPage = rowsPerPage > students.length || rowsPerPage < 0 ? students.length : rowsPerPage;
-  return slice(students, page * newRowsPerPage, (page + 1) * newRowsPerPage);
+export const getPage = <T>(list: T[], page: number, rowsPerPage: number): T[] => {
+  const newRowsPerPage = rowsPerPage > list.length || rowsPerPage < 0 ? list.length : rowsPerPage;
+  return slice(list, page * newRowsPerPage, (page + 1) * newRowsPerPage);
 };
 
 export const filterBySession = (students: Student[], session: Student["initialSession"]): Student[] => {

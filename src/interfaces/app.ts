@@ -53,14 +53,14 @@ export interface AppAction {
   payload: Partial<AppState>;
 }
 
-interface FilterValue {
-  fieldFunction?: (student: Student) => unknown;
+export interface FilterValue<T> {
+  fieldFunction?: (object: T) => unknown;
   fieldPath: string;
   values: unknown[];
 }
 
 export interface AppState {
-  filter: FilterValue[];
+  filter: FilterValue<Student>[];
   loading: boolean;
   role: "admin" | "faculty" | "staff";
   selectedStudent: Student | null;

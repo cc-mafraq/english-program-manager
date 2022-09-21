@@ -1,25 +1,29 @@
-import { every, filter as filterFn, get, includes, isUndefined } from "lodash";
+import { every, filter as filterFn, get, includes, isUndefined, set } from "lodash";
 import { useCallback, useContext } from "react";
 import useState from "react-usestateref";
-import { AppContext, Student } from "../interfaces";
-import { getStudentPage, searchStudents } from "../services";
+import { AppContext, AppState, FilterValue } from "../interfaces";
+import { getPage } from "../services";
 import { loadLocal, saveLocal } from "./useLocal";
 
-interface SetStateOptions {
+interface UsePageStateParams<T> {
+  filter?: FilterValue<T>[];
+  listRef: React.MutableRefObject<T[]>;
+  payloadPath: keyof AppState;
+  searchFn: (list: T[], searchString: string) => T[];
+}
+
+interface SetStateOptions<T> {
+  newList?: T[];
   newPage?: number;
   newRowsPerPage?: number;
   newSearchString?: string;
-  newStudents?: Student[];
 }
 
-export const usePageState = ({ studentsRef }: { studentsRef: React.MutableRefObject<Student[]> }) => {
-  const {
-    appState: { filter },
-    appDispatch,
-  } = useContext(AppContext);
+export const usePageState = <T>({ listRef, searchFn, filter, payloadPath }: UsePageStateParams<T>) => {
+  const { appDispatch } = useContext(AppContext);
 
-  const [filteredStudents, setFilteredStudents, filteredStudentsRef] = useState<Student[]>([]);
-  const [studentsPage, setStudentsPage] = useState<Student[]>([]);
+  const [filteredList, setFilteredList, filteredListRef] = useState<T[]>([]);
+  const [listPage, setListPage] = useState<T[]>([]);
   const [page, setPage, pageRef] = useState(0);
   const [rowsPerPage, setRowsPerPage, rowsPerPageRef] = useState(
     parseInt(loadLocal("rowsPerPage") as string) || -1,
@@ -27,12 +31,12 @@ export const usePageState = ({ studentsRef }: { studentsRef: React.MutableRefObj
   const [searchString, setSearchString, searchStringRef] = useState<string>("");
   const [showActions, setShowActions] = useState(loadLocal("showActions") !== false);
 
-  const filterStudents = useCallback(
-    (student: Student) => {
+  const filterList = useCallback(
+    (object: T) => {
       return every(filter, (filterValue) => {
         const value = filterValue.fieldFunction
-          ? filterValue.fieldFunction(student)
-          : get(student, filterValue.fieldPath);
+          ? filterValue.fieldFunction(object)
+          : get(object, filterValue.fieldPath);
         return includes(filterValue.values, value);
       });
     },
@@ -40,42 +44,46 @@ export const usePageState = ({ studentsRef }: { studentsRef: React.MutableRefObj
   );
 
   const setState = useCallback(
-    ({ newRowsPerPage, newPage, newSearchString, newStudents }: SetStateOptions) => {
-      const newSearchedStudents =
-        !isUndefined(newSearchString) || newStudents
-          ? searchStudents(
-              !isUndefined(newStudents) ? newStudents : studentsRef.current,
+    ({ newRowsPerPage, newPage, newSearchString, newList }: SetStateOptions<T>) => {
+      const newSearchedList =
+        !isUndefined(newSearchString) || newList
+          ? searchFn(
+              !isUndefined(newList) ? newList : listRef.current,
               !isUndefined(newSearchString) ? newSearchString : searchStringRef.current,
             )
-          : filteredStudentsRef.current;
-      const newFilteredStudents =
-        filter.length > 0 ? (filterFn(newSearchedStudents, filterStudents) as Student[]) : newSearchedStudents;
-      setFilteredStudents(newFilteredStudents);
-      newStudents && appDispatch({ payload: { students: newStudents } });
+          : filteredListRef.current;
+      const newFilteredList =
+        filter && filter.length > 0 ? (filterFn(newSearchedList, filterList) as T[]) : newSearchedList;
+      setFilteredList(newFilteredList);
+      const newPayload: Partial<AppState> = {};
+      set(newPayload, payloadPath, newList);
+      newList && appDispatch({ payload: newPayload });
       !isUndefined(newPage) && setPage(newPage);
       newRowsPerPage && setRowsPerPage(newRowsPerPage);
       !isUndefined(newSearchString) && setSearchString(newSearchString);
-      setStudentsPage(
-        getStudentPage(
-          newFilteredStudents,
+      setListPage(
+        getPage(
+          newFilteredList,
           !isUndefined(newPage) ? newPage : pageRef.current,
           newRowsPerPage || rowsPerPageRef.current,
         ),
       );
     },
     [
-      appDispatch,
-      filter.length,
-      filterStudents,
-      filteredStudentsRef,
-      pageRef,
-      rowsPerPageRef,
+      searchFn,
+      listRef,
       searchStringRef,
-      setFilteredStudents,
+      filteredListRef,
+      filter,
+      filterList,
+      setFilteredList,
+      payloadPath,
+      appDispatch,
       setPage,
       setRowsPerPage,
       setSearchString,
-      studentsRef,
+      pageRef,
+      rowsPerPageRef,
     ],
   );
 
@@ -103,16 +111,16 @@ export const usePageState = ({ studentsRef }: { studentsRef: React.MutableRefObj
   );
 
   return {
-    filteredStudents,
+    filteredList,
     handleChangePage,
     handleChangeRowsPerPage,
     handleSearchStringChange,
+    listPage,
     page,
     rowsPerPage,
     searchString,
-    setState,
-    studentsPage,
-    showActions,
     setShowActions,
+    setState,
+    showActions,
   };
 };

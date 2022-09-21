@@ -26,6 +26,7 @@ import {
   deleteStudentData,
   logout,
   removeNullFromObject,
+  searchStudents,
   setPrimaryNumberBooleanArray,
   setStudentData,
   sortStudents,
@@ -49,7 +50,7 @@ export const StudentDatabasePage = () => {
   const globalRole = useRole();
   studentsRef.current = students;
   const {
-    filteredStudents,
+    filteredList: filteredStudents,
     handleChangePage,
     handleChangeRowsPerPage,
     handleSearchStringChange,
@@ -59,8 +60,8 @@ export const StudentDatabasePage = () => {
     setShowActions,
     setState,
     showActions,
-    studentsPage,
-  } = usePageState({ studentsRef });
+    listPage: studentsPage,
+  } = usePageState({ filter, listRef: studentsRef, payloadPath: "students", searchFn: searchStudents });
 
   useEffect(() => {
     if (authLoading) return;
@@ -82,7 +83,7 @@ export const StudentDatabasePage = () => {
       });
       const sortedStudentData = sortStudents(studentData);
       setState({
-        newStudents: sortedStudentData,
+        newList: sortedStudentData,
       });
     }
   }, [setState, spreadsheetIsLoading, appDispatch, studentDocs]);
