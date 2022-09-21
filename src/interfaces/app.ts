@@ -1,7 +1,7 @@
 import { PaletteMode, ThemeOptions } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { createContext, Dispatch } from "react";
-import { Student } from ".";
+import { Student, WaitingListStudent } from ".";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const voidFn = () => {};
@@ -65,6 +65,7 @@ export interface AppState {
   role: "admin" | "faculty" | "staff";
   selectedStudent: Student | null;
   students: Student[];
+  waitingList: WaitingListStudent[];
 }
 
 export const initialAppState: AppState = {
@@ -73,6 +74,7 @@ export const initialAppState: AppState = {
   role: "staff",
   selectedStudent: null,
   students: [],
+  waitingList: [],
 };
 
 export interface AppContext {

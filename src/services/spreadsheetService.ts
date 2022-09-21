@@ -172,6 +172,12 @@ const waitlistFieldsUnexpanded: ValidFields<WaitingListStudent> = {
   Waiting: wlps.parseWLWaiting,
 };
 const waitlistFields = ps.expand(waitlistFieldsUnexpanded);
-export const waitlistToList = (csvString: string) => {
-  return spreadsheetToList(csvString, waitlistFields, emptyWaitListStudent, 1);
+export const waitingListToList = (csvString: string) => {
+  const newWaitingList = spreadsheetToList(csvString, waitlistFields, emptyWaitListStudent, 1);
+  forEach(newWaitingList, (nwls) => {
+    forEach(nwls.correspondence, (c) => {
+      if (c.date === null) c.date = nwls.entryDate;
+    });
+  });
+  return newWaitingList;
 };

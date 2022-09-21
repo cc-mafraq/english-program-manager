@@ -1,11 +1,30 @@
 import { Upload } from "@mui/icons-material";
 import { Input, InputLabel } from "@mui/material";
-import React, { ChangeEvent, useState } from "react";
-import { ActionFAB } from "../components";
-import { waitlistToList } from "../services";
+import React, { ChangeEvent, useContext, useRef } from "react";
+import { ActionFAB, CustomToolbar } from "../components";
+import { usePageState } from "../hooks";
+import { AppContext } from "../interfaces";
+import { searchWaitingList, waitingListToList } from "../services";
 
 export const WaitingListPage = () => {
-  const [waitingList, setWaitingList] = useState("");
+  const {
+    appState: { waitingList },
+    appDispatch,
+  } = useContext(AppContext);
+  const waitingListRef = useRef(waitingList);
+  waitingListRef.current = waitingList;
+  const {
+    filteredList: filteredWaitingList,
+    handleChangePage,
+    handleChangeRowsPerPage,
+    handleSearchStringChange,
+    listPage: waitingListPage,
+    page,
+    rowsPerPage,
+    searchString,
+    setShowActions,
+    showActions,
+  } = usePageState({ listRef: waitingListRef, payloadPath: "waitingList", searchFn: searchWaitingList });
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file: File | null = e.target.files && e.target.files[0];
     const reader = new FileReader();
@@ -14,13 +33,24 @@ export const WaitingListPage = () => {
 
     reader.onloadend = async () => {
       const studentListString = String(reader.result);
-      const waitlist = waitlistToList(studentListString);
-      setWaitingList(JSON.stringify(waitlist));
+      const newWaitingList = waitingListToList(studentListString);
+      appDispatch({ payload: { waitingList: newWaitingList } });
     };
   };
 
   return (
     <>
+      <CustomToolbar
+        handleChangePage={handleChangePage}
+        handleChangeRowsPerPage={handleChangeRowsPerPage}
+        handleSearchStringChange={handleSearchStringChange}
+        list={searchString ? filteredWaitingList : waitingList}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        searchString={searchString}
+        setShowActions={setShowActions}
+        showActions={showActions}
+      />
       <InputLabel htmlFor="import-waiting-list">
         <Input
           id="import-waiting-list"
@@ -33,7 +63,7 @@ export const WaitingListPage = () => {
           <Upload />
         </ActionFAB>
       </InputLabel>
-      {waitingList}
+      {JSON.stringify(waitingListPage)}
     </>
   );
 };

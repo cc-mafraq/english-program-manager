@@ -15,6 +15,7 @@ export const reducer = (actionCallback: (item: AppState) => void) => {
       selectedStudent:
         action.payload.selectedStudent === undefined ? state.selectedStudent : action.payload.selectedStudent,
       students: action.payload.students || state.students,
+      waitingList: action.payload.waitingList || state.waitingList,
     };
     actionCallback(newState);
     return newState;
