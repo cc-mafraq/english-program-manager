@@ -54,7 +54,7 @@ const drawerList: DrawerListItem[] = [
   {
     component: PendingActions,
     name: "Waiting List",
-    route: "/waiting-list",
+    route: "/waitlist",
   },
   {
     component: Create,

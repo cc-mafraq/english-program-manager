@@ -6,8 +6,8 @@ import { ActionFAB } from "./ActionFAB";
 import { SelectStudentDialog } from "./SelectStudentDialog";
 
 interface ActionsMenuProps {
-  handleGenerateFGRClick: () => void;
-  handleStudentDialogOpen: () => void;
+  handleGenerateFGRClick?: () => void;
+  handleStudentDialogOpen?: () => void;
   onInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
   showActions: boolean;
 }
@@ -36,7 +36,7 @@ export const ActionsMenu: React.FC<ActionsMenuProps> = ({
   return (
     <Grow in={showActions} style={{ transformOrigin: "0 0 0" }}>
       <Box display="flex" flexDirection="column" position="absolute">
-        {role === "admin" && (
+        {role === "admin" && handleStudentDialogOpen && (
           <ActionFAB fabStyle={{ marginTop: 0.5 }} onClick={handleStudentDialogOpen} tooltipTitle="Add Student">
             <Add />
           </ActionFAB>
@@ -60,19 +60,26 @@ export const ActionsMenu: React.FC<ActionsMenuProps> = ({
             </ActionFAB>
           </InputLabel>
         )}
-        {(role === "admin" || role === "faculty") && (
+        {(role === "admin" || role === "faculty") && handleGenerateFGRClick && (
           <ActionFAB onClick={handleGenerateFGRClick} tooltipTitle="Generate Final Grade Reports">
             <Cached />
           </ActionFAB>
         )}
-        <SelectStudentDialog
-          handleDialogClose={handleSelectStudentDialogClose}
-          handleStudentDialogOpen={handleStudentDialogOpen}
-          open={openSelectStudentDialog}
-          setValue={setSelectStudentValue}
-          value={selectStudentValue}
-        />
+        {handleStudentDialogOpen && (
+          <SelectStudentDialog
+            handleDialogClose={handleSelectStudentDialogClose}
+            handleStudentDialogOpen={handleStudentDialogOpen}
+            open={openSelectStudentDialog}
+            setValue={setSelectStudentValue}
+            value={selectStudentValue}
+          />
+        )}
       </Box>
     </Grow>
   );
+};
+
+ActionsMenu.defaultProps = {
+  handleGenerateFGRClick: undefined,
+  handleStudentDialogOpen: undefined,
 };

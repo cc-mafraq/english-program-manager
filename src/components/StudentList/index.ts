@@ -10,5 +10,5 @@ export * from "./ProgressBox";
 export * from "./StudentCard";
 export * from "./StudentCardHeader";
 export * from "./StudentInfo";
-export * from "./StudentList";
+export * from "./VirtualizedList";
 export * from "./WithdrawButton";

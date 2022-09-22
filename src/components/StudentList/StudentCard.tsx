@@ -7,9 +7,10 @@ import { AcademicRecords } from "./AcademicRecords";
 
 interface StudentCardProps {
   handleEditStudentClick: () => void;
+  id: string | number;
   index?: number;
   setSize?: (index: number, size: number) => void;
-  setTabValue: (epId: Student["epId"], tabValue: number) => void;
+  setTabValue: (id: string | number, tabValue: number) => void;
   student: Student;
   style?: CSSProperties;
   tabValue: number;
@@ -17,6 +18,7 @@ interface StudentCardProps {
 }
 
 export const StudentCard: React.FC<StudentCardProps> = ({
+  id,
   student,
   handleEditStudentClick,
   setSize,
@@ -43,9 +45,9 @@ export const StudentCard: React.FC<StudentCardProps> = ({
   const handleChange = useCallback(
     (event: React.SyntheticEvent, newValue: number) => {
       setLocalTabValue(newValue);
-      setTabValue(student.epId, newValue);
+      setTabValue(id, newValue);
     },
-    [setTabValue, student.epId],
+    [setTabValue, id],
   );
 
   useEffect(() => {

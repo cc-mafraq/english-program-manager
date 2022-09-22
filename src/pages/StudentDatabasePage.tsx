@@ -15,7 +15,7 @@ import {
   FormDialog,
   Loading,
   StudentForm,
-  StudentList,
+  VirtualizedList,
 } from "../components";
 import { usePageState, useRole } from "../hooks";
 import { AppContext, Status, Student } from "../interfaces";
@@ -186,6 +186,7 @@ export const StudentDatabasePage = () => {
           list={searchString || filter.length ? filteredStudents : students}
           page={page}
           rowsPerPage={rowsPerPage}
+          searchPlaceholder="Search students"
           searchString={searchString}
           setShowActions={setShowActions}
           showActions={showActions}
@@ -221,7 +222,7 @@ export const StudentDatabasePage = () => {
       >
         <StudentForm />
       </FormDialog>
-      <StudentList handleEditStudentClick={handleStudentDialogOpen} studentsPage={studentsPage} />
+      <VirtualizedList handleEditStudentClick={handleStudentDialogOpen} idPath="epId" page={studentsPage} />
     </>
   );
 };

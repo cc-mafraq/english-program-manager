@@ -64,7 +64,7 @@ export const App = () => {
                       <WaitingListPage />
                     </>
                   }
-                  path="/waiting-list"
+                  path="/waitlist"
                 />
                 <Route
                   element={

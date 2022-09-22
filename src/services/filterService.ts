@@ -26,6 +26,7 @@ export const searchWaitingList = (wlStudents: WaitingListStudent[], searchString
     return (
       isEmpty(searchString) ||
       includes(toLower(wls.name), toLower(searchString)) ||
+      includes(toLower(wls.referral), toLower(searchString)) ||
       some(map(wls.phoneNumbers, "number"), phoneConditionFn(searchString))
     );
   });

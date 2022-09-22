@@ -24,6 +24,7 @@ interface CustomToolbarProps<T> {
   list: T[];
   page: number;
   rowsPerPage: number;
+  searchPlaceholder: string;
   searchString: string;
   setShowActions: Dispatch<SetStateAction<boolean>>;
   showActions: boolean;
@@ -39,6 +40,7 @@ export const CustomToolbar = <T,>({
   showActions,
   setShowActions,
   searchString,
+  searchPlaceholder,
 }: CustomToolbarProps<T>) => {
   const {
     appState: { role },
@@ -71,7 +73,7 @@ export const CustomToolbar = <T,>({
         <Box margin="auto">
           <Searchbar
             handleSearchStringChange={handleSearchStringChange}
-            placeholder="Search students"
+            placeholder={searchPlaceholder}
             searchString={searchString}
           />
           <Tooltip arrow title="Filter Students">
