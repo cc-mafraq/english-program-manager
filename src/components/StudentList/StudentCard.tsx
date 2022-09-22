@@ -6,12 +6,12 @@ import { studentImageFolder } from "../../services";
 import { AcademicRecords } from "./AcademicRecords";
 
 interface StudentCardProps {
+  data: Student;
   handleEditStudentClick: () => void;
-  id: string | number;
+  id?: string | number;
   index?: number;
   setSize?: (index: number, size: number) => void;
-  setTabValue: (id: string | number, tabValue: number) => void;
-  student: Student;
+  setTabValue?: (id: string | number, tabValue: number) => void;
   style?: CSSProperties;
   tabValue: number;
   windowWidth?: number;
@@ -19,7 +19,7 @@ interface StudentCardProps {
 
 export const StudentCard: React.FC<StudentCardProps> = ({
   id,
-  student,
+  data: student,
   handleEditStudentClick,
   setSize,
   windowWidth,
@@ -45,7 +45,7 @@ export const StudentCard: React.FC<StudentCardProps> = ({
   const handleChange = useCallback(
     (event: React.SyntheticEvent, newValue: number) => {
       setLocalTabValue(newValue);
-      setTabValue(id, newValue);
+      setTabValue && setTabValue(id || 0, newValue);
     },
     [setTabValue, id],
   );
@@ -138,8 +138,10 @@ export const StudentCard: React.FC<StudentCardProps> = ({
 };
 
 StudentCard.defaultProps = {
+  id: undefined,
   index: undefined,
   setSize: undefined,
+  setTabValue: undefined,
   style: undefined,
   windowWidth: undefined,
 };

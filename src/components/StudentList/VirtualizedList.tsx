@@ -1,18 +1,16 @@
-import { get } from "lodash";
-import React, { useCallback, useEffect, useRef } from "react";
+import { first, get } from "lodash";
+import React, { Attributes, ComponentType, useCallback, useEffect, useRef } from "react";
 import AutoSizer from "react-virtualized-auto-sizer";
-import { VariableSizeList } from "react-window";
-import { StudentCard } from ".";
+import { ListChildComponentProps, VariableSizeList } from "react-window";
 import { useWindowResize } from "../../hooks";
-import { Student } from "../../interfaces";
 
 interface VirtualizedListProps<T> {
-  handleEditStudentClick: () => void;
-  idPath: keyof T;
+  children: React.ReactNode;
+  idPath: string;
   page: T[];
 }
 
-export const VirtualizedList = <T,>({ page, handleEditStudentClick, idPath }: VirtualizedListProps<T>) => {
+export const VirtualizedList = <T,>({ page, idPath, children }: VirtualizedListProps<T>) => {
   const listRef = useRef<VariableSizeList>(null);
   const sizeMap = useRef({});
   const [windowWidth] = useWindowResize();
@@ -39,18 +37,22 @@ export const VirtualizedList = <T,>({ page, handleEditStudentClick, idPath }: Vi
     // eslint-disable-next-line react/no-unused-prop-types
     ({ data, index, style }: { data: T[]; index: number; style: React.CSSProperties | undefined }) => {
       const id = get(data[index], idPath);
-      return (
-        <StudentCard
-          handleEditStudentClick={handleEditStudentClick}
-          id={id}
-          index={index}
-          setSize={setSize}
-          setTabValue={setTabValue}
-          student={data[index] as Student}
-          style={style}
-          tabValue={get(tabValues.current, id) || 0}
-          windowWidth={windowWidth}
-        />
+      return first(
+        React.Children.map(children, (child) => {
+          if (React.isValidElement(child)) {
+            return React.cloneElement(child, {
+              data: data[index],
+              id,
+              index,
+              setSize,
+              setTabValue,
+              style,
+              tabValue: get(tabValues.current, id) || 0,
+              windowWidth,
+            } as Partial<unknown> & Attributes);
+          }
+          return child;
+        }),
       );
     },
     // disable exhaustive deps because handleEditStudentClick causes StudentCard to unmount and lose tabValue state
@@ -72,7 +74,7 @@ export const VirtualizedList = <T,>({ page, handleEditStudentClick, idPath }: Vi
             style={{ overflowX: "hidden" }}
             width={width}
           >
-            {Row}
+            {Row as ComponentType<ListChildComponentProps<T>>}
           </VariableSizeList>
         );
       }}

@@ -14,11 +14,12 @@ import {
   FinalGradeReportDialog,
   FormDialog,
   Loading,
+  StudentCard,
   StudentForm,
   VirtualizedList,
 } from "../components";
 import { usePageState, useRole } from "../hooks";
-import { AppContext, Status, Student } from "../interfaces";
+import { AppContext, emptyStudent, Status, Student } from "../interfaces";
 import {
   app,
   db,
@@ -222,7 +223,9 @@ export const StudentDatabasePage = () => {
       >
         <StudentForm />
       </FormDialog>
-      <VirtualizedList handleEditStudentClick={handleStudentDialogOpen} idPath="epId" page={studentsPage} />
+      <VirtualizedList idPath="epId" page={studentsPage}>
+        <StudentCard data={emptyStudent} handleEditStudentClick={handleStudentDialogOpen} tabValue={0} />
+      </VirtualizedList>
     </>
   );
 };
