@@ -9,15 +9,21 @@ import { useCollection } from "react-firebase-hooks/firestore";
 import { useNavigate } from "react-router-dom";
 import useState from "react-usestateref";
 import {
+  AcademicRecords,
   ActionsMenu,
+  CorrespondenceList,
+  CustomCard,
   CustomToolbar,
   FinalGradeReportDialog,
   FormDialog,
   Loading,
-  StudentCard,
+  PlacementList,
+  StudentCardHeader,
   StudentForm,
+  StudentInfo,
   VirtualizedList,
 } from "../components";
+import { StudentCardImage } from "../components/StudentList/StudentCardImage";
 import { usePageState, useRole } from "../hooks";
 import { AppContext, emptyStudent, Status, Student } from "../interfaces";
 import {
@@ -49,6 +55,7 @@ export const StudentDatabasePage = () => {
   const [user, authLoading] = useAuthState(auth);
   const [studentDocs, docsLoading, docsError] = useCollection(collection(db, "students"));
   const globalRole = useRole();
+  const isAdminOrFaculty = role === "admin" || role === "faculty";
   studentsRef.current = students;
   const {
     filteredList: filteredStudents,
@@ -224,7 +231,22 @@ export const StudentDatabasePage = () => {
         <StudentForm />
       </FormDialog>
       <VirtualizedList idPath="epId" page={studentsPage}>
-        <StudentCard data={emptyStudent} handleEditStudentClick={handleStudentDialogOpen} tabValue={0} />
+        <CustomCard
+          data={emptyStudent}
+          header={<StudentCardHeader data={emptyStudent} handleEditStudentClick={handleStudentDialogOpen} />}
+          image={<StudentCardImage data={emptyStudent} />}
+          noTabs={!isAdminOrFaculty}
+          tabContents={[
+            { component: StudentInfo, label: "Student Information" },
+            { component: CorrespondenceList, hidden: role !== "admin", label: "Correspondence" },
+            {
+              component: AcademicRecords,
+              hidden: !isAdminOrFaculty,
+              label: "Academic Records",
+            },
+            { component: PlacementList, hidden: !isAdminOrFaculty, label: "Placement" },
+          ]}
+        />
       </VirtualizedList>
     </>
   );

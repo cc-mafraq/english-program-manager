@@ -11,10 +11,10 @@ import { Correspondence, defaultBorderColor, Student } from "../../interfaces";
 import { correspondenceSchema, MOMENT_FORMAT, setStudentData } from "../../services";
 
 interface CorrespondenceProps {
-  student: Student;
+  data: Student;
 }
 
-export const CorrespondenceList: React.FC<CorrespondenceProps> = ({ student }) => {
+export const CorrespondenceList: React.FC<CorrespondenceProps> = ({ data: student }) => {
   const { defaultBackgroundColor, iconColor } = useColors();
   const [open, setOpen] = useState(false);
   const [selectedCorrespondence, setSelectedCorrespondence] = useState<Correspondence | null>(null);

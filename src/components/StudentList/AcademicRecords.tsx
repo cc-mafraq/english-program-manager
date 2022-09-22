@@ -27,7 +27,7 @@ import {
 } from "../../services";
 
 interface AcademicRecordsProps {
-  student: Student;
+  data: Student;
 }
 
 interface GradeInfoProps {
@@ -65,7 +65,7 @@ GradeInfo.defaultProps = {
   grade: undefined,
 };
 
-export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => {
+export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student }) => {
   const {
     appState: { students, role },
   } = useContext(AppContext);

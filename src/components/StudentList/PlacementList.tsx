@@ -10,10 +10,10 @@ import { AppContext, Placement, Student } from "../../interfaces";
 import { JOIN_STR, placementSchema, removeNullFromObject, setStudentData } from "../../services";
 
 interface PlacementProps {
-  student: Student;
+  data: Student;
 }
 
-export const PlacementList: React.FC<PlacementProps> = ({ student }) => {
+export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
   const {
     appState: { role },
     appDispatch,
