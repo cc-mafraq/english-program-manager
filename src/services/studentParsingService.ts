@@ -32,7 +32,7 @@ import {
   PhoneNumber,
   Status,
   Student,
-  WaitingListStudent,
+  WaitingListEntry,
 } from "../interfaces";
 import { ValidFields } from "./spreadsheetService";
 
@@ -180,7 +180,7 @@ export const parseCurrentStatus = (key: string, value: string, student: Student)
   }
 };
 
-export const parseCorrespondence = (key: string, value: string, student: Student | WaitingListStudent) => {
+export const parseCorrespondence = (key: string, value: string, student: Student | WaitingListEntry) => {
   if (isEmpty(value)) return;
   const dateRegexWithColon = /\d{1,2}(\/|-)\d{1,2}\1\d{2,4}:/g;
   const splitCorrespondence = pullAll(splitAndTrim(value, dateRegexWithColon), ["", "/", "-"]);

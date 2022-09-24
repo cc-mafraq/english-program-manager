@@ -1,16 +1,25 @@
 import { Box } from "@mui/material";
 import React, { ChangeEvent, useContext, useRef } from "react";
-import { ActionsMenu, CustomToolbar } from "../components";
+import {
+  ActionsMenu,
+  CorrespondenceList,
+  CustomCard,
+  CustomToolbar,
+  VirtualizedList,
+  WaitingListCardHeader,
+  WaitingListEntryInfo,
+} from "../components";
 import { usePageState } from "../hooks";
-import { AppContext } from "../interfaces";
-import { searchWaitingList, waitingListToList } from "../services";
+import { AppContext, emptyWaitingListEntry } from "../interfaces";
+import { searchWaitingList, sortWaitingList, waitingListToList } from "../services";
 
 export const WaitingListPage = () => {
   const {
-    appState: { waitingList },
+    appState: { waitingList, role },
     appDispatch,
   } = useContext(AppContext);
   const waitingListRef = useRef(waitingList);
+  waitingListRef.current = waitingList;
   const {
     filteredList: filteredWaitingList,
     handleChangePage,
@@ -33,7 +42,7 @@ export const WaitingListPage = () => {
     reader.onloadend = async () => {
       const studentListString = String(reader.result);
       const newWaitingList = waitingListToList(studentListString);
-      appDispatch({ payload: { waitingList: newWaitingList } });
+      appDispatch({ payload: { waitingList: sortWaitingList(newWaitingList) } });
     };
   };
 
@@ -54,7 +63,17 @@ export const WaitingListPage = () => {
         />
         <ActionsMenu onInputChange={onInputChange} showActions={showActions} />
       </Box>
-      {JSON.stringify(waitingListPage)}
+      <VirtualizedList deps={[role]} idPath="id" page={waitingListPage}>
+        <CustomCard
+          data={emptyWaitingListEntry}
+          header={<WaitingListCardHeader data={emptyWaitingListEntry} handleEditEntryClick={() => {}} />}
+          noTabs={role !== "admin"}
+          tabContents={[
+            { component: WaitingListEntryInfo, label: "Entry Information" },
+            { component: CorrespondenceList, hidden: role !== "admin", label: "Correspondence" },
+          ]}
+        />
+      </VirtualizedList>
     </>
   );
 };

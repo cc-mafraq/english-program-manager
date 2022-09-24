@@ -1,10 +1,8 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box } from "@mui/material";
-import { getAuth } from "firebase/auth";
 import { collection } from "firebase/firestore";
 import { forEach, isEmpty, omit } from "lodash";
 import React, { ChangeEvent, useCallback, useContext, useEffect, useRef } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useNavigate } from "react-router-dom";
 import useState from "react-usestateref";
@@ -24,10 +22,9 @@ import {
   VirtualizedList,
 } from "../components";
 import { StudentCardImage } from "../components/StudentList/StudentCardImage";
-import { usePageState, useRole } from "../hooks";
+import { usePageState } from "../hooks";
 import { AppContext, emptyStudent, Status, Student } from "../interfaces";
 import {
-  app,
   db,
   deleteImage,
   deleteStudentData,
@@ -51,10 +48,7 @@ export const StudentDatabasePage = () => {
   const [openStudentDialog, setOpenStudentDialog] = useState(false);
   const [spreadsheetIsLoading, setSpreadsheetIsLoading] = useState(false);
   const navigate = useNavigate();
-  const auth = getAuth(app);
-  const [user, authLoading] = useAuthState(auth);
   const [studentDocs, docsLoading, docsError] = useCollection(collection(db, "students"));
-  const globalRole = useRole();
   const isAdminOrFaculty = role === "admin" || role === "faculty";
   studentsRef.current = students;
   const {
@@ -70,15 +64,6 @@ export const StudentDatabasePage = () => {
     showActions,
     listPage: studentsPage,
   } = usePageState({ filter, listRef: studentsRef, payloadPath: "students", searchFn: searchStudents });
-
-  useEffect(() => {
-    if (authLoading) return;
-    if (!user) {
-      navigate("/", { replace: true });
-    } else if (role !== globalRole) {
-      appDispatch({ payload: { role: globalRole } });
-    }
-  }, [user, authLoading, navigate, role, globalRole, appDispatch]);
 
   useEffect(() => {
     if (!spreadsheetIsLoading) {

@@ -1,19 +1,20 @@
 import { filter, orderBy } from "lodash";
 import moment from "moment";
-import { WaitingListStudent } from "../interfaces";
+import { WaitingListEntry } from "../interfaces";
 import { MOMENT_FORMAT } from "./studentFormService";
 
-export const sortWaitingList = (waitingList: WaitingListStudent[]) => {
+export const sortWaitingList = (waitingList: WaitingListEntry[], shouldFilter?: boolean) => {
   return orderBy(
     filter(waitingList, (wl) => {
-      return wl.waiting;
+      return shouldFilter !== true || wl.waiting;
     }),
     [
+      "waiting",
       "highPriority",
-      (wls) => {
-        return moment(wls.entryDate, MOMENT_FORMAT);
+      (wle) => {
+        return moment(wle.entryDate, MOMENT_FORMAT);
       },
     ],
-    ["desc", "asc"],
+    ["desc", "desc", "asc"],
   );
 };

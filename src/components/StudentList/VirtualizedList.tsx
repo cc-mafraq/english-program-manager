@@ -1,5 +1,5 @@
-import { first, get } from "lodash";
-import React, { Attributes, ComponentType, useCallback, useEffect, useRef } from "react";
+import { first, get, isEqual, map } from "lodash";
+import React, { Attributes, ComponentType, useCallback, useEffect, useRef, useState } from "react";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { ListChildComponentProps, VariableSizeList } from "react-window";
 import { useWindowResize } from "../../hooks";
@@ -15,6 +15,7 @@ export const VirtualizedList = <T,>({ page, idPath, deps, children }: Virtualize
   const listRef = useRef<VariableSizeList>(null);
   const sizeMap = useRef({});
   const [windowWidth] = useWindowResize();
+  const [pageIds, setPageIds] = useState(map(page, idPath));
   const tabValues = useRef({});
 
   const setTabValue = (id: string | number, tabValue: number) => {
@@ -32,7 +33,12 @@ export const VirtualizedList = <T,>({ page, idPath, deps, children }: Virtualize
 
   useEffect(() => {
     listRef.current?.scrollTo(0);
-  }, [page]);
+  }, [pageIds]);
+
+  useEffect(() => {
+    const newPageIds = map(page, idPath);
+    !isEqual(newPageIds, pageIds) && setPageIds(newPageIds);
+  }, [pageIds, page, idPath]);
 
   const Row = useCallback(
     // eslint-disable-next-line react/no-unused-prop-types

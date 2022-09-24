@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Edit } from "@mui/icons-material";
 import { Box, Button, IconButton, Tooltip, Typography } from "@mui/material";
-import { findIndex, map, reverse } from "lodash";
+import { findIndex, get, map, reverse, set } from "lodash";
 import moment from "moment";
 import React, { useCallback, useMemo, useState } from "react";
 import { LabeledContainer } from ".";
@@ -10,14 +10,15 @@ import { useColors } from "../../hooks";
 import { Correspondence, defaultBorderColor, Student } from "../../interfaces";
 import { correspondenceSchema, MOMENT_FORMAT, setStudentData } from "../../services";
 
-interface CorrespondenceProps {
-  data: Student;
+interface CorrespondenceProps<T extends object> {
+  data: T;
 }
 
-export const CorrespondenceList: React.FC<CorrespondenceProps> = ({ data: student }) => {
+export const CorrespondenceList = <T extends object>({ data }: CorrespondenceProps<T>) => {
   const { defaultBackgroundColor, iconColor } = useColors();
   const [open, setOpen] = useState(false);
   const [selectedCorrespondence, setSelectedCorrespondence] = useState<Correspondence | null>(null);
+  const correspondence = get(data, "correspondence");
 
   const handleDialogOpen = useCallback(() => {
     setOpen(true);
@@ -31,30 +32,31 @@ export const CorrespondenceList: React.FC<CorrespondenceProps> = ({ data: studen
   const handleEditClick = useCallback(
     (index: number) => {
       return () => {
-        setSelectedCorrespondence(student.correspondence[index]);
+        setSelectedCorrespondence(correspondence[index]);
         handleDialogOpen();
       };
     },
-    [handleDialogOpen, student.correspondence],
+    [correspondence, handleDialogOpen],
   );
 
   const onSubmit = useCallback(
-    (data: Correspondence) => {
+    (newCorrespondence: Correspondence) => {
       if (selectedCorrespondence) {
-        const recordIndex = findIndex(student.correspondence, selectedCorrespondence);
-        student.correspondence[recordIndex] = data;
+        const recordIndex = findIndex(correspondence, selectedCorrespondence);
+        correspondence[recordIndex] = newCorrespondence;
       } else {
-        student.correspondence ? student.correspondence.push(data) : (student.correspondence = [data]);
+        correspondence ? correspondence.push(newCorrespondence) : set(data, "correspondence", [newCorrespondence]);
       }
-      setStudentData(student);
+      // TODO: make generic
+      setStudentData(data as Student);
       handleDialogClose();
     },
-    [handleDialogClose, selectedCorrespondence, student],
+    [correspondence, data, handleDialogClose, selectedCorrespondence],
   );
 
   const CorrespondenceData = useMemo(() => {
     return reverse(
-      map(student.correspondence, (c, i) => {
+      map(correspondence, (c, i) => {
         return (
           <Box
             key={`${c.date} ${c.notes}`}
@@ -71,7 +73,7 @@ export const CorrespondenceList: React.FC<CorrespondenceProps> = ({ data: studen
           >
             <Tooltip arrow title="Edit Correspondence">
               <IconButton
-                onClick={handleEditClick(i)}
+                onClick={handleEditClick(Number(i))}
                 sx={{
                   color: iconColor,
                   position: "absolute",
@@ -89,7 +91,7 @@ export const CorrespondenceList: React.FC<CorrespondenceProps> = ({ data: studen
         );
       }),
     );
-  }, [defaultBackgroundColor, handleEditClick, iconColor, student.correspondence]);
+  }, [correspondence, defaultBackgroundColor, handleEditClick, iconColor]);
 
   return (
     <>

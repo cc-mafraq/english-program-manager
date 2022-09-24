@@ -154,6 +154,7 @@ export const MenuDrawer = () => {
         onClose={toggleDrawer}
         open={isOpen}
         PaperProps={{
+          elevation: 0,
           sx: {
             bgcolor: lightPrimaryColor,
             flexDirection: "row",

@@ -2,7 +2,7 @@
 import { v4 } from "uuid";
 import { Correspondence, CovidStatus, PhoneNumber } from "./student";
 
-export interface WaitingListStudent {
+export interface WaitingListEntry {
   correspondence: Correspondence[];
   covidStatus: CovidStatus;
   covidVaccineNotes?: string;
@@ -11,10 +11,11 @@ export interface WaitingListStudent {
   highPriority: HighPriority;
   id: string;
   name?: string;
-  numStudents: number;
+  numPeople: number;
   outcome?: WaitlistOutcome;
   phoneNumbers: PhoneNumber[];
   placementExam: string[];
+  primaryPhone: number;
   probL3Plus?: boolean;
   probPL1?: boolean;
   referral?: string;
@@ -51,15 +52,16 @@ export enum WaitlistOutcome {
   WD = "Withdrawn",
 }
 
-export const emptyWaitListStudent: WaitingListStudent = {
+export const emptyWaitingListEntry: WaitingListEntry = {
   correspondence: [],
   covidStatus: CovidStatus.NORPT,
   entryDate: "",
   highPriority: HighPriority.NO,
   id: v4(),
-  numStudents: 0,
+  numPeople: 0,
   phoneNumbers: [],
   placementExam: [],
+  primaryPhone: -1,
   status: WaitlistStatus.POT,
   waiting: false,
 };

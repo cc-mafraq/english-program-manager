@@ -1,6 +1,20 @@
-import { cloneDeep, filter, find, forEach, get, isEqual, join, map, omit, replace, slice, sortBy } from "lodash";
+import {
+  cloneDeep,
+  filter,
+  find,
+  first,
+  forEach,
+  get,
+  isEqual,
+  join,
+  map,
+  omit,
+  replace,
+  slice,
+  sortBy,
+} from "lodash";
 import papa from "papaparse";
-import { emptyStudent, emptyWaitListStudent, Student, WaitingListStudent } from "../interfaces";
+import { emptyStudent, emptyWaitingListEntry, Student, WaitingListEntry } from "../interfaces";
 import { covidVaccineImageFolder, studentImageFolder } from "./firebaseService";
 import { setImages, setStudentData } from "./studentDataService";
 import * as ps from "./studentParsingService";
@@ -153,7 +167,7 @@ export const spreadsheetToStudentList = async (
   return sortBy(students, "name.english");
 };
 
-const waitlistFieldsUnexpanded: ValidFields<WaitingListStudent> = {
+const waitlistFieldsUnexpanded: ValidFields<WaitingListEntry> = {
   CORRESPONDENCEDONOTDELETE: ps.parseCorrespondence,
   EntryDate: wlps.parseWLEntryDate,
   HIGHPRIORITY: wlps.parseWLHighPriority,
@@ -173,11 +187,12 @@ const waitlistFieldsUnexpanded: ValidFields<WaitingListStudent> = {
 };
 const waitlistFields = ps.expand(waitlistFieldsUnexpanded);
 export const waitingListToList = (csvString: string) => {
-  const newWaitingList = spreadsheetToList(csvString, waitlistFields, emptyWaitListStudent, 1);
-  forEach(newWaitingList, (nwls) => {
-    forEach(nwls.correspondence, (c) => {
-      if (c.date === null) c.date = nwls.entryDate;
+  const newWaitingList = spreadsheetToList(csvString, waitlistFields, emptyWaitingListEntry, 1);
+  forEach(newWaitingList, (nwlEntry) => {
+    forEach(nwlEntry.correspondence, (c) => {
+      if (c.date === null) c.date = nwlEntry.entryDate;
     });
+    nwlEntry.primaryPhone = first(nwlEntry.phoneNumbers)?.number || -1;
   });
   return newWaitingList;
 };
