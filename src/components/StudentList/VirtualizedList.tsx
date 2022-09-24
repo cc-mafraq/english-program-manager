@@ -6,11 +6,12 @@ import { useWindowResize } from "../../hooks";
 
 interface VirtualizedListProps<T> {
   children: React.ReactNode;
+  deps: unknown[];
   idPath: string;
   page: T[];
 }
 
-export const VirtualizedList = <T,>({ page, idPath, children }: VirtualizedListProps<T>) => {
+export const VirtualizedList = <T,>({ page, idPath, deps, children }: VirtualizedListProps<T>) => {
   const listRef = useRef<VariableSizeList>(null);
   const sizeMap = useRef({});
   const [windowWidth] = useWindowResize();
@@ -57,7 +58,7 @@ export const VirtualizedList = <T,>({ page, idPath, children }: VirtualizedListP
     },
     // disable exhaustive deps because handleEditStudentClick causes StudentCard to unmount and lose tabValue state
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [idPath, setSize, windowWidth, tabValues],
+    [idPath, setSize, windowWidth, tabValues, ...deps],
   );
 
   return (

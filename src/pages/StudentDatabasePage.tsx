@@ -230,12 +230,12 @@ export const StudentDatabasePage = () => {
       >
         <StudentForm />
       </FormDialog>
-      <VirtualizedList idPath="epId" page={studentsPage}>
+      <VirtualizedList deps={[role]} idPath="epId" page={studentsPage}>
         <CustomCard
           data={emptyStudent}
           header={<StudentCardHeader data={emptyStudent} handleEditStudentClick={handleStudentDialogOpen} />}
           image={<StudentCardImage data={emptyStudent} />}
-          noTabs={!isAdminOrFaculty}
+          noTabs={role !== "admin" && role !== "faculty"}
           tabContents={[
             { component: StudentInfo, label: "Student Information" },
             { component: CorrespondenceList, hidden: role !== "admin", label: "Correspondence" },

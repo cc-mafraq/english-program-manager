@@ -78,15 +78,16 @@ export const CustomCard = <T,>({
               {!noTabs && (
                 <Tabs onChange={handleChange} sx={{ display: "inline" }} value={localTabValue}>
                   {map(tabContents, (content, i) => {
-                    return <Tab id={`student-card-tabpanel-${i}`} label={content.label} />;
+                    return <Tab key={`card-tabpanel-${i}`} id={`card-tabpanel-${i}`} label={content.label} />;
                   })}
                 </Tabs>
               )}
               {map(tabContents, (content, i) => {
                 return (
                   <Box
+                    key={`card-tabbox-${i}`}
                     hidden={content.hidden || localTabValue !== i}
-                    id={`student-card-tabpanel-${i}`}
+                    id={`card-tabpanel-${i}`}
                     role="tabpanel"
                   >
                     <content.component data={data} />

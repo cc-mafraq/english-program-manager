@@ -1,4 +1,5 @@
 /* eslint-disable typescript-sort-keys/string-enum */
+import { v4 } from "uuid";
 import { Correspondence, CovidStatus, PhoneNumber } from "./student";
 
 export interface WaitingListStudent {
@@ -8,6 +9,7 @@ export interface WaitingListStudent {
   enteredInPhone?: boolean;
   entryDate: string;
   highPriority: HighPriority;
+  id: string;
   name?: string;
   numStudents: number;
   outcome?: WaitlistOutcome;
@@ -54,6 +56,7 @@ export const emptyWaitListStudent: WaitingListStudent = {
   covidStatus: CovidStatus.NORPT,
   entryDate: "",
   highPriority: HighPriority.NO,
+  id: v4(),
   numStudents: 0,
   phoneNumbers: [],
   placementExam: [],
