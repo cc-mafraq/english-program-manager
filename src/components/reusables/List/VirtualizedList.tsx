@@ -85,7 +85,7 @@ export const VirtualizedList = <T,>({ page, idPath, defaultSize, deps, children 
             style={{ overflowX: "hidden" }}
             width={width}
           >
-            {Row as ComponentType<ListChildComponentProps<T>>}
+            {Row as unknown as ComponentType<ListChildComponentProps<T>>}
           </VariableSizeList>
         );
       }}

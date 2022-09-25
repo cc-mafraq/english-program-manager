@@ -1,7 +1,7 @@
 import { Box, Card, CardContent, Tab, Tabs, useTheme } from "@mui/material";
 import { map } from "lodash";
 import React, { Attributes, CSSProperties, useCallback, useEffect, useRef, useState } from "react";
-import { darkBlueBackground } from "../../interfaces";
+import { darkBlueBackground } from "../../../interfaces";
 
 interface TabProps<T> {
   component: React.FC<{ data: T }>;

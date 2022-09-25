@@ -1,9 +1,10 @@
 import { Grid } from "@mui/material";
 import React from "react";
 import { useFormContext } from "react-hook-form";
-import { GridContainer, GridItemTextField, LabeledCheckbox, StudentFormLabel } from "..";
 import { Student } from "../../../interfaces";
 import { SPACING } from "../../../services";
+import { GridContainer, GridItemTextField, LabeledCheckbox } from "../../reusables";
+import { StudentFormLabel } from "../StudentFormLabel";
 
 export const FormLiteracyAndZoom: React.FC = () => {
   const { watch } = useFormContext<Student>();

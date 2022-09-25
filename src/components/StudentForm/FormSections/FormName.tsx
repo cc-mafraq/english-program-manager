@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
 import React from "react";
-import { FormImage, GridContainer, GridItemTextField, LabeledCheckbox } from "..";
 import { SPACING, studentImageFolder } from "../../../services";
+import { FormImage, GridContainer, GridItemTextField, LabeledCheckbox } from "../../reusables";
 
 export const FormName: React.FC = () => {
   return (

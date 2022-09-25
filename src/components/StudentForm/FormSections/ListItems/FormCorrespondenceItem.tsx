@@ -2,9 +2,9 @@ import { Close } from "@mui/icons-material";
 import { Grid, IconButton, Tooltip } from "@mui/material";
 import moment from "moment";
 import React from "react";
-import { GridItemDatePicker, GridItemTextField } from "../..";
 import { useColors } from "../../../../hooks";
 import { FormItem, MOMENT_FORMAT, SPACING } from "../../../../services";
+import { GridItemDatePicker, GridItemTextField } from "../../../reusables";
 
 export const FormCorrespondenceItem: React.FC<FormItem> = ({ index, removeItem, name }) => {
   const { iconColor } = useColors();

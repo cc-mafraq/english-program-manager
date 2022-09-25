@@ -17,6 +17,7 @@ import {
   Loading,
   PlacementList,
   StudentCardHeader,
+  StudentFilter,
   StudentForm,
   StudentInfo,
   VirtualizedList,
@@ -40,7 +41,7 @@ import {
 
 export const StudentDatabasePage = () => {
   const {
-    appState: { students, selectedStudent, filter, role },
+    appState: { students, selectedStudent, studentFilter: filter, role },
     appDispatch,
   } = useContext(AppContext);
   const studentsRef = useRef(students);
@@ -173,6 +174,7 @@ export const StudentDatabasePage = () => {
     <>
       <Box position="sticky" top={0} zIndex={5}>
         <CustomToolbar
+          filterComponent={<StudentFilter />}
           handleChangePage={handleChangePage}
           handleChangeRowsPerPage={handleChangeRowsPerPage}
           handleSearchStringChange={handleSearchStringChange}

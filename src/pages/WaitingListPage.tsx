@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import React, { ChangeEvent, useContext, useRef } from "react";
+import React, { ChangeEvent, useContext, useEffect, useRef } from "react";
 import {
   ActionsMenu,
   CorrespondenceList,
@@ -9,13 +9,14 @@ import {
   WaitingListCardHeader,
   WaitingListEntryInfo,
 } from "../components";
+import { WaitingListFilter } from "../components/WaitingList/WaitingListFilter";
 import { usePageState } from "../hooks";
 import { AppContext, emptyWaitingListEntry } from "../interfaces";
 import { searchWaitingList, sortWaitingList, waitingListToList } from "../services";
 
 export const WaitingListPage = () => {
   const {
-    appState: { waitingList, role },
+    appState: { waitingList, role, waitingListFilter: filter },
     appDispatch,
   } = useContext(AppContext);
   const waitingListRef = useRef(waitingList);
@@ -31,7 +32,12 @@ export const WaitingListPage = () => {
     searchString,
     setShowActions,
     showActions,
-  } = usePageState({ listRef: waitingListRef, payloadPath: "waitingList", searchFn: searchWaitingList });
+    setState,
+  } = usePageState({ filter, listRef: waitingListRef, payloadPath: "waitingList", searchFn: searchWaitingList });
+
+  useEffect(() => {
+    setState({});
+  }, [filter, setState]);
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file: File | null = e.target.files && e.target.files[0];
@@ -50,10 +56,11 @@ export const WaitingListPage = () => {
     <>
       <Box position="sticky" top={0} zIndex={5}>
         <CustomToolbar
+          filterComponent={<WaitingListFilter />}
           handleChangePage={handleChangePage}
           handleChangeRowsPerPage={handleChangeRowsPerPage}
           handleSearchStringChange={handleSearchStringChange}
-          list={searchString ? filteredWaitingList : waitingList}
+          list={searchString || filter.length ? filteredWaitingList : waitingList}
           page={page}
           rowsPerPage={rowsPerPage}
           searchPlaceholder="Search waiting list"

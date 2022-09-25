@@ -4,7 +4,8 @@ import { Box, IconButton, Tooltip } from "@mui/material";
 import React, { useCallback, useState } from "react";
 import { FinalResult, Status, Student, Withdraw } from "../../interfaces";
 import { setStudentData, SPACING, withdrawSchema } from "../../services";
-import { FormDialog, FormWithdraw } from "../StudentForm";
+import { FormDialog } from "../reusables";
+import { FormWithdraw } from "../StudentForm";
 
 interface WithdrawButtonProps {
   student: Student;

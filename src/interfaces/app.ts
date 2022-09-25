@@ -60,21 +60,23 @@ export interface FilterValue<T> {
 }
 
 export interface AppState {
-  filter: FilterValue<Student>[];
   loading: boolean;
   role: "admin" | "faculty" | "staff";
   selectedStudent: Student | null;
+  studentFilter: FilterValue<Student>[];
   students: Student[];
   waitingList: WaitingListEntry[];
+  waitingListFilter: FilterValue<WaitingListEntry>[];
 }
 
 export const initialAppState: AppState = {
-  filter: [],
   loading: true,
   role: "staff",
   selectedStudent: null,
+  studentFilter: [],
   students: [],
   waitingList: [],
+  waitingListFilter: [],
 };
 
 export interface AppContext {

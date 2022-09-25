@@ -1,8 +1,5 @@
-import { Box, Button, Drawer, Typography, useTheme } from "@mui/material";
-import { first, includes, map, range, sortBy, uniq } from "lodash";
+import { first, includes, range } from "lodash";
 import React, { useCallback, useContext, useMemo } from "react";
-import { FilterCheckbox } from "..";
-import { useColors } from "../../../hooks";
 import {
   AppContext,
   covidStatuses,
@@ -11,24 +8,23 @@ import {
   statusDetails,
   statuses,
   Student,
-} from "../../../interfaces";
-import { FilterField, getAllSessions, getSessionsWithResults, getStatusDetails } from "../../../services";
+} from "../../interfaces";
+import { FilterField, getAllSessions, getSessionsWithResults, getStatusDetails } from "../../services";
+import { FilterDrawer } from "../reusables";
 
-interface FilterDrawerProps {
-  anchorEl: HTMLButtonElement | null;
-  handleClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
+interface StudentFilterProps {
+  anchorEl?: HTMLButtonElement | null;
+  handleClose?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const booleanCheckboxOptions = ["Yes", "No"];
 
-export const FilterDrawer: React.FC<FilterDrawerProps> = ({ anchorEl, handleClose }) => {
-  const open = Boolean(anchorEl);
+export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleClose }) => {
   const {
     appState: { students, role },
     appDispatch,
   } = useContext(AppContext);
-  const { popoverColor } = useColors();
-  const theme = useTheme();
+
   const sessionsWithResults = getSessionsWithResults(students);
   const isAdmin = role === "admin";
   const isAdminOrFaculty = isAdmin || role === "faculty";
@@ -60,6 +56,10 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({ anchorEl, handleClos
     }
     return "None";
   }, []);
+
+  const handleClearFilters = useCallback(() => {
+    appDispatch({ payload: { studentFilter: [] } });
+  }, [appDispatch]);
 
   const filterFields: FilterField[] = useMemo(() => {
     return [
@@ -97,62 +97,19 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({ anchorEl, handleClos
       { fn: sessionsAttendedFn, name: "Sessions Attended", path: "sessionsAttended", values: range(11) },
     ];
   }, [isAdmin, isAdminOrFaculty, sessionsAttendedFn, statusDetailsFn, students, whatsAppGroupFn]);
-
-  const handleClearFilters = () => {
-    appDispatch({ payload: { filter: [] } });
-  };
-
   return (
-    <Drawer
-      onClose={handleClose}
-      open={open}
-      PaperProps={{
-        style: {
-          backgroundColor: popoverColor,
-          paddingLeft: "20px",
-          paddingRight: 10,
-          width: "235px",
-        },
-      }}
-    >
-      <Typography fontWeight="bold" marginLeft={1} marginTop={1} variant="h5">
-        Filter Students
-      </Typography>
-      <Button
-        color={theme.palette.mode === "light" ? "secondary" : undefined}
-        onClick={handleClearFilters}
-        sx={{
-          borderRadius: 8,
-          marginBottom: -3,
-          marginLeft: theme.palette.mode === "light" ? "3%" : 0.5,
-          marginTop: 1,
-          width: theme.palette.mode === "light" ? "75%" : "60%",
-        }}
-        variant={theme.palette.mode === "light" ? "contained" : undefined}
-      >
-        Clear Filters
-      </Button>
-      <Box>
-        {map(filterFields, (field, i) => {
-          return (
-            <Box
-              key={`filter-field-${i}`}
-              hidden={field.condition !== undefined && !field.condition}
-              margin={1}
-              marginTop={5}
-            >
-              <Typography fontSize={18} fontWeight="bold" marginBottom={0.5} width="100%">
-                {field.name}
-              </Typography>
-              {map(field.values ? field.values : sortBy(uniq(map(students, field.path))), (val) => {
-                return (
-                  <FilterCheckbox key={`filter-field-${field.name}-${val}`} filterField={field} label={val} />
-                );
-              })}
-            </Box>
-          );
-        })}
-      </Box>
-    </Drawer>
+    <FilterDrawer
+      anchorEl={anchorEl}
+      data={students}
+      filterFields={filterFields}
+      filterStatePath="studentFilter"
+      handleClearFilters={handleClearFilters}
+      handleClose={handleClose}
+    />
   );
+};
+
+StudentFilter.defaultProps = {
+  anchorEl: null,
+  handleClose: undefined,
 };

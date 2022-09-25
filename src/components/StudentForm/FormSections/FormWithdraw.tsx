@@ -1,9 +1,10 @@
 import { Grid } from "@mui/material";
 import moment from "moment";
 import React from "react";
-import { GridContainer, GridItemAutocomplete, GridItemDatePicker, LabeledCheckbox, StudentFormLabel } from "..";
 import { withdrawReasons } from "../../../interfaces";
 import { MOMENT_FORMAT, SPACING } from "../../../services";
+import { GridContainer, GridItemAutocomplete, GridItemDatePicker, LabeledCheckbox } from "../../reusables";
+import { StudentFormLabel } from "../StudentFormLabel";
 
 export const FormWithdraw: React.FC = () => {
   return (

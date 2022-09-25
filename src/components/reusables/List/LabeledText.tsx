@@ -1,7 +1,7 @@
 import { Box, BoxProps, SxProps, Theme, Typography, TypographyProps } from "@mui/material";
 import React from "react";
-import { useColors } from "../../hooks";
-import { defaultBorderColor } from "../../interfaces";
+import { useColors } from "../../../hooks";
+import { defaultBorderColor } from "../../../interfaces";
 
 interface LabeledTextProps {
   children?: React.ReactNode;

@@ -1,10 +1,12 @@
 import { Grid } from "@mui/material";
 import React, { useContext } from "react";
 import { useFormContext } from "react-hook-form";
-import { FormList, FormPhoneItem, GridContainer, GridItemTextField, StudentFormLabel } from "..";
 import { useFormList } from "../../../hooks";
 import { AppContext, Student } from "../../../interfaces";
 import { SPACING } from "../../../services";
+import { FormList, GridContainer, GridItemTextField } from "../../reusables";
+import { StudentFormLabel } from "../StudentFormLabel";
+import { FormPhoneItem } from "./ListItems";
 
 export const FormPhoneNumbers: React.FC = () => {
   const {

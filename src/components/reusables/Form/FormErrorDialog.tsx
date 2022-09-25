@@ -3,8 +3,8 @@ import { Box, Dialog, DialogProps, IconButton, ListItem, Tooltip, Typography } f
 import { map } from "lodash";
 import React, { CSSProperties } from "react";
 import { useFormContext } from "react-hook-form";
-import { useColors } from "../../hooks";
-import { getListOfErrors } from "../../services";
+import { useColors } from "../../../hooks";
+import { getListOfErrors } from "../../../services";
 
 interface FormErrorDialogProps {
   dialogProps?: Partial<DialogProps>;

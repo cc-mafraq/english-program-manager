@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
-import { GridContainer, GridItemAutocomplete, GridItemTextField, StudentFormLabel } from "..";
 import { AppContext, genderedLevels, statuses } from "../../../interfaces";
 import { generateId, getAllSessions, SPACING } from "../../../services";
+import { GridContainer, GridItemAutocomplete, GridItemTextField } from "../../reusables";
+import { StudentFormLabel } from "../StudentFormLabel";
 
 export const FormProgramInformation: React.FC = () => {
   const {

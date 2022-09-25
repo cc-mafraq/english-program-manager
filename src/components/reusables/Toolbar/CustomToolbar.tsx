@@ -1,9 +1,8 @@
 import { FilterAlt, MoreHoriz } from "@mui/icons-material";
 import { AppBar, Box, Divider, IconButton, TablePagination, Toolbar, Tooltip } from "@mui/material";
-import React, { Dispatch, SetStateAction, useContext } from "react";
+import React, { Attributes, Dispatch, SetStateAction, useContext } from "react";
 import { saveLocal, useColors } from "../../../hooks";
 import { AppContext } from "../../../interfaces";
-import { FilterDrawer } from "../../StudentDatabaseToolbar";
 import { Searchbar } from "./Searchbar";
 
 const handlePopoverClick = (setFn: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>) => {
@@ -19,6 +18,7 @@ const handlePopoverClose = (setFn: React.Dispatch<React.SetStateAction<HTMLButto
 };
 
 interface CustomToolbarProps<T> {
+  filterComponent: React.ReactNode;
   handleChangePage: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
   handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   handleSearchStringChange: (value: string) => void;
@@ -42,6 +42,7 @@ export const CustomToolbar = <T,>({
   setShowActions,
   searchString,
   searchPlaceholder,
+  filterComponent,
 }: CustomToolbarProps<T>) => {
   const {
     appState: { role },
@@ -82,7 +83,11 @@ export const CustomToolbar = <T,>({
               <FilterAlt sx={{ color: iconColor }} />
             </IconButton>
           </Tooltip>
-          <FilterDrawer anchorEl={filterAnchorEl} handleClose={handlePopoverClose(setFilterAnchorEl)} />
+          {React.isValidElement(filterComponent) &&
+            React.cloneElement(filterComponent, {
+              anchorEl: filterAnchorEl,
+              handleClose: handlePopoverClose(setFilterAnchorEl),
+            } as Partial<unknown> & Attributes)}
         </Box>
         <Box width="33vw">
           <TablePagination

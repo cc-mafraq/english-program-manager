@@ -30,8 +30,8 @@ export interface TransferralAndDate {
 }
 
 export enum HighPriority {
-  NO = "No",
   YES = "Yes",
+  NO = "No",
   PAST = "Past",
 }
 

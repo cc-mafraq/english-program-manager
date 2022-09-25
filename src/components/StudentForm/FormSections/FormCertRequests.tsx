@@ -1,6 +1,7 @@
 import React from "react";
-import { GridContainer, GridItemTextField, StudentFormLabel } from "..";
 import { SPACING } from "../../../services";
+import { GridContainer, GridItemTextField } from "../../reusables";
+import { StudentFormLabel } from "../StudentFormLabel";
 
 export const FormCertRequests: React.FC = () => {
   return (

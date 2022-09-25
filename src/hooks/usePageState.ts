@@ -37,6 +37,8 @@ export const usePageState = <T>({ listRef, searchFn, filter, payloadPath }: UseP
         const value = filterValue.fieldFunction
           ? filterValue.fieldFunction(object)
           : get(object, filterValue.fieldPath);
+        console.log(value);
+        console.log(filterValue.values);
         return includes(filterValue.values, value);
       });
     },

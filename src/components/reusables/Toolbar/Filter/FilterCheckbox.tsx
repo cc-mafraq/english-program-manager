@@ -1,11 +1,12 @@
 import { Checkbox, FormControlLabel } from "@mui/material";
-import { cloneDeep, find, includes, isEmpty, remove, toString } from "lodash";
+import { cloneDeep, find, get, includes, isEmpty, remove, set, toString } from "lodash";
 import React, { useContext, useEffect, useState } from "react";
-import { AppContext } from "../../../interfaces";
-import { FilterField } from "../../../services";
+import { AppContext } from "../../../../interfaces";
+import { FilterField } from "../../../../services";
 
 interface FilterCheckBoxProps {
   filterField: FilterField;
+  filterStatePath: string;
   label: unknown;
 }
 
@@ -15,11 +16,9 @@ interface Mapping {
 
 const valueMappings: Mapping = { Female: "F", Male: "M", No: false, Yes: true };
 
-export const FilterCheckbox: React.FC<FilterCheckBoxProps> = ({ label, filterField }) => {
-  const {
-    appState: { filter },
-    appDispatch,
-  } = useContext(AppContext);
+export const FilterCheckbox: React.FC<FilterCheckBoxProps> = ({ label, filterField, filterStatePath }) => {
+  const { appState, appDispatch } = useContext(AppContext);
+  const filter = get(appState, filterStatePath);
 
   const value = includes(Object.keys(valueMappings), label) ? valueMappings[label as string] : label;
   const [checked, setChecked] = useState(
@@ -32,7 +31,7 @@ export const FilterCheckbox: React.FC<FilterCheckBoxProps> = ({ label, filterFie
   );
 
   useEffect(() => {
-    if (checked && !filter.length) {
+    if (checked && !filter?.length) {
       setChecked(false);
     }
   }, [checked, filter]);
@@ -45,34 +44,25 @@ export const FilterCheckbox: React.FC<FilterCheckBoxProps> = ({ label, filterFie
     });
     prevFieldFilter &&
       remove(filterCopy, (filterVal) => {
-        return filterVal.fieldPath === prevFieldFilter.fieldPath;
+        return get(filterVal, "fieldPath") === prevFieldFilter.fieldPath;
       });
 
     const fieldFilterValues = prevFieldFilter ? [...prevFieldFilter.values, value] : [value];
     if (event.target.checked) {
-      appDispatch({
-        payload: {
-          filter: [
-            ...filterCopy,
-            { fieldFunction: filterField.fn, fieldPath: filterField.path, values: fieldFilterValues },
-          ],
-        },
-      });
+      const payload = set({}, filterStatePath, [
+        ...filterCopy,
+        { fieldFunction: filterField.fn, fieldPath: filterField.path, values: fieldFilterValues },
+      ]);
+      appDispatch({ payload });
     } else if (prevFieldFilter?.values && prevFieldFilter?.values.length > 1) {
       remove(prevFieldFilter?.values, (val) => {
         return val === value;
       });
-      appDispatch({
-        payload: {
-          filter: [...filterCopy, prevFieldFilter],
-        },
-      });
+      const payload = set({}, filterStatePath, [...filterCopy, prevFieldFilter]);
+      appDispatch({ payload });
     } else {
-      appDispatch({
-        payload: {
-          filter: [...filterCopy],
-        },
-      });
+      const payload = set({}, filterStatePath, [...filterCopy]);
+      appDispatch({ payload });
     }
   };
 

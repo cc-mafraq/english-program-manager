@@ -2,7 +2,7 @@ import { Close, Search } from "@mui/icons-material";
 import { alpha, Box, IconButton, InputBase, Tooltip, useTheme } from "@mui/material";
 import { isEmpty } from "lodash";
 import React, { useEffect, useRef, useState } from "react";
-import { useColors } from "../../hooks";
+import { useColors } from "../../../hooks";
 
 interface SearchbarProps {
   handleSearchStringChange: (value: string) => void;
