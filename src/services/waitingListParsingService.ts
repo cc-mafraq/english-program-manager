@@ -1,5 +1,4 @@
 import { filter, first, isEmpty, join, pullAll, replace, trim } from "lodash";
-import { dateRegex, parseDateField, parseOptionalBoolean, parseOptionalString, parsePhone, splitAndTrim } from ".";
 import {
   CovidStatus,
   HighPriority,
@@ -8,6 +7,14 @@ import {
   WaitlistOutcome,
   WaitlistStatus,
 } from "../interfaces";
+import {
+  dateRegex,
+  parseDateField,
+  parseOptionalBoolean,
+  parseOptionalString,
+  parsePhone,
+  splitAndTrim,
+} from "./studentParsingService";
 
 export const parseWLWaiting = (key: string, value: string, wlEntry: WaitingListEntry) => {
   const valueInt = parseInt(value);
