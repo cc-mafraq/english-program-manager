@@ -1,19 +1,12 @@
 import { Grid } from "@mui/material";
 import React, { useContext } from "react";
 import { FieldValues, useFormContext } from "react-hook-form";
-import {
-  FormDateItem,
-  FormPlacementItem,
-  GridContainer,
-  GridItemDatePicker,
-  GridItemTextField,
-  LabeledCheckbox,
-  StudentFormLabel,
-} from "..";
 import { useDateInitialState, useFormList } from "../../../hooks";
 import { AppContext } from "../../../interfaces";
 import { SPACING } from "../../../services";
-import { FormList } from "../FormList";
+import { FormList, GridContainer, GridItemDatePicker, GridItemTextField, LabeledCheckbox } from "../../reusables";
+import { StudentFormLabel } from "../StudentFormLabel";
+import { FormDateItem, FormPlacementItem } from "./ListItems";
 
 interface FormPlacementProps {
   standAlone?: boolean;

@@ -28,5 +28,6 @@ export const Authorization: React.FC<AuthorizationProps> = ({ children }) => {
       appDispatch({ payload: { role: globalRole } });
     }
   }, [user, authLoading, navigate, globalRole, appDispatch, role]);
+
   return <>{children}</>;
 };

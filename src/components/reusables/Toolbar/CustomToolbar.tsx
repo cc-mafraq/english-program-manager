@@ -1,9 +1,10 @@
 import { FilterAlt, MoreHoriz } from "@mui/icons-material";
 import { AppBar, Box, Divider, IconButton, TablePagination, Toolbar, Tooltip } from "@mui/material";
 import React, { Dispatch, SetStateAction, useContext } from "react";
-import { FilterDrawer, Searchbar } from ".";
-import { saveLocal, useColors } from "../../hooks";
-import { AppContext } from "../../interfaces";
+import { saveLocal, useColors } from "../../../hooks";
+import { AppContext } from "../../../interfaces";
+import { FilterDrawer } from "../../StudentDatabaseToolbar";
+import { Searchbar } from "./Searchbar";
 
 const handlePopoverClick = (setFn: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>) => {
   return (event: React.MouseEvent<HTMLButtonElement>) => {

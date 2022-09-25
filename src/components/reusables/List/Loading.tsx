@@ -1,7 +1,7 @@
 import { Box, useTheme } from "@mui/material";
 import React, { useContext } from "react";
 import ReactLoading from "react-loading";
-import { AppContext } from "../../interfaces";
+import { AppContext } from "../../../interfaces";
 
 export const Loading: React.FC = () => {
   const theme = useTheme();

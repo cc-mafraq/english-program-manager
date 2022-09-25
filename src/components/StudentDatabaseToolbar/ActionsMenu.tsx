@@ -2,7 +2,7 @@ import { Add, Cached, Edit, Upload } from "@mui/icons-material";
 import { Box, Grow, Input, InputLabel } from "@mui/material";
 import React, { ChangeEvent, useContext, useState } from "react";
 import { AppContext } from "../../interfaces";
-import { ActionFAB } from "./ActionFAB";
+import { ActionFAB } from "../reusables/Toolbar/ActionFAB";
 import { SelectStudentDialog } from "./SelectStudentDialog";
 
 interface ActionsMenuProps {
@@ -41,7 +41,7 @@ export const ActionsMenu: React.FC<ActionsMenuProps> = ({
             <Add />
           </ActionFAB>
         )}
-        {role === "admin" && (
+        {role === "admin" && handleStudentDialogOpen && (
           <ActionFAB onClick={handleSelectStudentDialogOpen} tooltipTitle="Edit Student">
             <Edit />
           </ActionFAB>

@@ -2,7 +2,7 @@ import { Grid, GridProps, StandardTextFieldProps, TextField } from "@mui/materia
 import { omit } from "lodash";
 import React, { useMemo } from "react";
 import { FieldErrorsImpl, useFormContext } from "react-hook-form";
-import { useInput } from "../../../hooks";
+import { useInput } from "../../../../hooks";
 
 interface GridItemTextField {
   gridProps?: GridProps;

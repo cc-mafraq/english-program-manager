@@ -1,10 +1,17 @@
 import { Grid } from "@mui/material";
 import React from "react";
 import { useFormContext } from "react-hook-form";
-import { GridContainer, GridItemAutocomplete, StudentFormLabel } from "../..";
 import { CovidStatus, covidStatuses, Student } from "../../../interfaces";
 import { covidVaccineImageFolder, SPACING } from "../../../services";
-import { FormImage, GridItemDatePicker, GridItemTextField, LabeledCheckbox } from "../FormInputs";
+import {
+  FormImage,
+  GridContainer,
+  GridItemAutocomplete,
+  GridItemDatePicker,
+  GridItemTextField,
+  LabeledCheckbox,
+} from "../../reusables";
+import { StudentFormLabel } from "../StudentFormLabel";
 
 export const FormCovidVaccine: React.FC = () => {
   const { watch } = useFormContext<Student>();

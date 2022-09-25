@@ -2,7 +2,7 @@ import { first, get, isEqual, map } from "lodash";
 import React, { Attributes, ComponentType, useCallback, useEffect, useRef, useState } from "react";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { ListChildComponentProps, VariableSizeList } from "react-window";
-import { useWindowResize } from "../../hooks";
+import { useWindowResize } from "../../../hooks";
 
 interface VirtualizedListProps<T> {
   children: React.ReactNode;

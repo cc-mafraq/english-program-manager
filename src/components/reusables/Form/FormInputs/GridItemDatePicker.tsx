@@ -5,8 +5,8 @@ import { includes, omit } from "lodash";
 import moment from "moment";
 import React from "react";
 import { Controller, FieldErrorsImpl, useFormContext } from "react-hook-form";
-import { useInput } from "../../../hooks";
-import { MOMENT_FORMAT } from "../../../services";
+import { useInput } from "../../../../hooks";
+import { MOMENT_FORMAT } from "../../../../services";
 
 interface GridItemDatePickerProps {
   errorName?: string;

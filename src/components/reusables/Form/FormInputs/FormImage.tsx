@@ -1,7 +1,7 @@
 import { BoxProps, SxProps } from "@mui/material";
 import React, { useContext } from "react";
-import { Image } from "../..";
-import { AppContext } from "../../../interfaces";
+import { Image } from "../../..";
+import { AppContext } from "../../../../interfaces";
 
 interface FormImageProps {
   folderName: string;

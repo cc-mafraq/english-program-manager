@@ -4,11 +4,11 @@ import { Box, Button, IconButton, Tooltip, Typography } from "@mui/material";
 import { findIndex, get, map, reverse, set } from "lodash";
 import moment from "moment";
 import React, { useCallback, useMemo, useState } from "react";
-import { LabeledContainer } from ".";
-import { FormCorrespondenceItem, FormDialog, StudentFormLabel } from "..";
-import { useColors } from "../../hooks";
-import { Correspondence, defaultBorderColor, Student } from "../../interfaces";
-import { correspondenceSchema, MOMENT_FORMAT, setStudentData } from "../../services";
+import { FormDialog, LabeledContainer } from "..";
+import { useColors } from "../../../hooks";
+import { Correspondence, defaultBorderColor, Student } from "../../../interfaces";
+import { correspondenceSchema, MOMENT_FORMAT, setStudentData } from "../../../services";
+import { FormCorrespondenceItem, StudentFormLabel } from "../../StudentForm";
 
 interface CorrespondenceProps<T extends object> {
   data: T;

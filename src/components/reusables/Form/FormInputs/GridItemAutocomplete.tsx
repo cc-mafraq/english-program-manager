@@ -9,7 +9,7 @@ import {
 import { omit } from "lodash";
 import React from "react";
 import { Controller, FieldErrorsImpl, useFormContext } from "react-hook-form";
-import { useInput } from "../../../hooks";
+import { useInput } from "../../../../hooks";
 
 interface GridItemAutocomplete {
   defaultValue?: string[] | string;
