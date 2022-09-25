@@ -6,12 +6,13 @@ import { useWindowResize } from "../../hooks";
 
 interface VirtualizedListProps<T> {
   children: React.ReactNode;
+  defaultSize: number;
   deps: unknown[];
   idPath: string;
   page: T[];
 }
 
-export const VirtualizedList = <T,>({ page, idPath, deps, children }: VirtualizedListProps<T>) => {
+export const VirtualizedList = <T,>({ page, idPath, defaultSize, deps, children }: VirtualizedListProps<T>) => {
   const listRef = useRef<VariableSizeList>(null);
   const sizeMap = useRef({});
   const [windowWidth] = useWindowResize();
@@ -27,9 +28,12 @@ export const VirtualizedList = <T,>({ page, idPath, deps, children }: Virtualize
     sizeMap.current = { ...sizeMap.current, [index]: size };
   }, []);
 
-  const getSize = useCallback((index: number): number => {
-    return Number(get(sizeMap.current, index)) + 16 || 600;
-  }, []);
+  const getSize = useCallback(
+    (index: number): number => {
+      return Number(get(sizeMap.current, index)) + 16 || defaultSize;
+    },
+    [defaultSize],
+  );
 
   useEffect(() => {
     listRef.current?.scrollTo(0);

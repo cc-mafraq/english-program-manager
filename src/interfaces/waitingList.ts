@@ -36,20 +36,20 @@ export enum HighPriority {
 }
 
 export enum WaitlistStatus {
-  POT = "Potential",
-  NEW = "New",
-  WD = "Withdrawn",
-  UNC = "Unclear",
-  BLOCKED = "Blocked",
-  NA = "Not Applicable",
+  POT = "POT",
+  NEW = "NEW",
+  WD = "WD",
+  UNC = "UNCLEAR",
+  BLOCKED = "BLOCKED",
+  NA = "N/A",
   ALREADEST = "Already Student",
 }
 
 export enum WaitlistOutcome {
-  NA = "No Answer",
-  NS = "No Show",
-  N = "New",
-  WD = "Withdrawn",
+  NA = "NO ANSWER",
+  NS = "NO SHOW",
+  N = "NEW",
+  WD = "WD",
 }
 
 export const emptyWaitingListEntry: WaitingListEntry = {

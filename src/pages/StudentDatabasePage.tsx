@@ -215,7 +215,7 @@ export const StudentDatabasePage = () => {
       >
         <StudentForm />
       </FormDialog>
-      <VirtualizedList deps={[role]} idPath="epId" page={studentsPage}>
+      <VirtualizedList defaultSize={600} deps={[role]} idPath="epId" page={studentsPage}>
         <CustomCard
           data={emptyStudent}
           header={<StudentCardHeader data={emptyStudent} handleEditStudentClick={handleStudentDialogOpen} />}

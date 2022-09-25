@@ -57,20 +57,18 @@ export const WaitingListCardHeader: React.FC<WaitingListHeaderProps> = ({
           </Tooltip>
         )}
       </Box>
-      {wlEntry.waiting && (
-        <Box paddingBottom={1}>
-          <Typography
-            color={theme.palette.mode === "light" ? theme.palette.secondary.main : theme.palette.primary.light}
-            variant="h6"
-          >
-            {`Position: ${
-              findIndex(waitingList, (wle) => {
-                return wle.primaryPhone === wlEntry.primaryPhone;
-              }) + 1
-            }`}
-          </Typography>
-        </Box>
-      )}
+      <Box hidden={!wlEntry.waiting} paddingBottom={1}>
+        <Typography
+          color={theme.palette.mode === "light" ? theme.palette.secondary.main : theme.palette.primary.light}
+          variant="h6"
+        >
+          {`Position: ${
+            findIndex(waitingList, (wle) => {
+              return wle.id === wlEntry.id;
+            }) + 1
+          }`}
+        </Typography>
+      </Box>
       <Divider />
     </>
   );

@@ -14,6 +14,7 @@ import {
   sortBy,
 } from "lodash";
 import papa from "papaparse";
+import { v4 } from "uuid";
 import { emptyStudent, emptyWaitingListEntry, Student, WaitingListEntry } from "../interfaces";
 import { covidVaccineImageFolder, studentImageFolder } from "./firebaseService";
 import { setImages, setStudentData } from "./studentDataService";
@@ -193,6 +194,7 @@ export const waitingListToList = (csvString: string) => {
       if (c.date === null) c.date = nwlEntry.entryDate;
     });
     nwlEntry.primaryPhone = first(nwlEntry.phoneNumbers)?.number || -1;
+    nwlEntry.id = v4();
   });
   return newWaitingList;
 };

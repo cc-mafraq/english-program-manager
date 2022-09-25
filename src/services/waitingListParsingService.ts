@@ -1,4 +1,4 @@
-import { first, isEmpty, join, pullAll, replace, trim } from "lodash";
+import { filter, first, isEmpty, join, pullAll, replace, trim } from "lodash";
 import { dateRegex, parseDateField, parseOptionalBoolean, parseOptionalString, parsePhone, splitAndTrim } from ".";
 import {
   CovidStatus,
@@ -50,7 +50,9 @@ export const parseWLCovidVaccineStatus = (key: string, value: string, wlEntry: W
 export const parseWLCovidVaccineNotes = parseOptionalString("covidVaccineNotes");
 
 export const parseWLPlacementExam = (key: string, value: string, wlEntry: WaitingListEntry) => {
-  wlEntry.placementExam = splitAndTrim(value, "//");
+  wlEntry.placementExam = filter(splitAndTrim(value, "//"), (pe) => {
+    return !isEmpty(pe);
+  });
 };
 
 export const parseWLHighPriority = (key: string, value: string, wlEntry: WaitingListEntry) => {

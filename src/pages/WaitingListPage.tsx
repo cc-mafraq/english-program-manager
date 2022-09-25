@@ -63,13 +63,13 @@ export const WaitingListPage = () => {
         />
         <ActionsMenu onInputChange={onInputChange} showActions={showActions} />
       </Box>
-      <VirtualizedList deps={[role]} idPath="id" page={waitingListPage}>
+      <VirtualizedList defaultSize={275} deps={[role]} idPath="id" page={waitingListPage}>
         <CustomCard
           data={emptyWaitingListEntry}
           header={<WaitingListCardHeader data={emptyWaitingListEntry} handleEditEntryClick={() => {}} />}
           noTabs={role !== "admin"}
           tabContents={[
-            { component: WaitingListEntryInfo, label: "Entry Information" },
+            { component: WaitingListEntryInfo, label: "Entry" },
             { component: CorrespondenceList, hidden: role !== "admin", label: "Correspondence" },
           ]}
         />
