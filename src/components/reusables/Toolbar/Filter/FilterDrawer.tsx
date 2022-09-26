@@ -74,6 +74,7 @@ export const FilterDrawer = <T,>({
                     key={`filter-field-${field.name}-${val}`}
                     filterField={field}
                     filterStatePath={filterStatePath}
+                    ignoreValueMappings={field.ignoreValueMappings}
                     label={val}
                   />
                 );

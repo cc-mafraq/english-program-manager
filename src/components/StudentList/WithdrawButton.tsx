@@ -3,7 +3,7 @@ import { Logout } from "@mui/icons-material";
 import { Box, IconButton, Tooltip } from "@mui/material";
 import React, { useCallback, useState } from "react";
 import { FinalResult, Status, Student, Withdraw } from "../../interfaces";
-import { setStudentData, SPACING, withdrawSchema } from "../../services";
+import { setData, SPACING, withdrawSchema } from "../../services";
 import { FormDialog } from "../reusables";
 import { FormWithdraw } from "../StudentForm";
 
@@ -37,7 +37,7 @@ export const WithdrawButton: React.FC<WithdrawButtonProps> = ({ student }) => {
       } else {
         student.academicRecords[student.academicRecords.length - 1].finalResult = { result: FinalResult.WD };
       }
-      setStudentData(student);
+      setData(student, "students", "epId");
       handleDialogClose();
     },
     [handleDialogClose, student],

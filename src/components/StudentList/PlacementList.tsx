@@ -6,7 +6,7 @@ import React, { useCallback, useContext, useState } from "react";
 import { FormDialog, FormPlacement, LabeledContainer, LabeledText } from "..";
 import { useColors } from "../../hooks";
 import { AppContext, Placement, Student } from "../../interfaces";
-import { JOIN_STR, placementSchema, removeNullFromObject, setStudentData } from "../../services";
+import { JOIN_STR, placementSchema, removeNullFromObject, setData } from "../../services";
 
 interface PlacementProps {
   data: Student;
@@ -35,7 +35,7 @@ export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
     (data: Placement) => {
       const dataNoNull = removeNullFromObject(data) as Placement;
       student.placement = dataNoNull;
-      setStudentData(student);
+      setData(student, "students", "epId");
       handleDialogClose();
     },
     [handleDialogClose, student],

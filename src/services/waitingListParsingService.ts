@@ -66,20 +66,25 @@ export const parseWLHighPriority = (key: string, value: string, wlEntry: Waiting
   const valueInt = parseInt(value);
   if (valueInt === 3) {
     wlEntry.highPriority = HighPriority.YES;
-  }
-  if (valueInt === 22) {
+  } else if (valueInt === 22) {
     wlEntry.highPriority = HighPriority.PAST;
+  } else {
+    wlEntry.highPriority = HighPriority.NO;
   }
 };
 
 export const parseWLStatus = (key: string, value: string, wlEntry: WaitingListEntry) => {
+  if (isEmpty(value)) return;
   const valueNoSpace = replace(value, /\s/g, "");
   if (valueNoSpace === "N/A") {
     wlEntry.status = WaitlistStatus.NA;
   } else if (valueNoSpace.includes("NEW")) {
     wlEntry.status = WaitlistStatus.NEW;
   } else {
-    wlEntry.status = WaitlistStatus[valueNoSpace as keyof typeof WaitlistStatus];
+    const status = WaitlistStatus[valueNoSpace as keyof typeof WaitlistStatus];
+    if (status !== undefined) {
+      wlEntry.status = status;
+    }
   }
 };
 
@@ -97,8 +102,11 @@ export const parseWLTransferralAndDate = (key: string, value: string, wlEntry: W
 };
 
 export const parseWLOutcome = (key: string, value: string, wlEntry: WaitingListEntry) => {
-  if (Number(value) < 1) return;
+  if (isEmpty(value) || Number(value) < 1) return;
   if (key.includes("WD")) wlEntry.outcome = WaitlistOutcome.WD;
-  wlEntry.outcome = WaitlistOutcome[key as keyof typeof WaitlistOutcome];
+  const outcome = WaitlistOutcome[key as keyof typeof WaitlistOutcome];
+  if (outcome !== undefined) {
+    wlEntry.outcome = outcome;
+  }
   if (!wlEntry.waiting) wlEntry.numPeople += Number(value);
 };

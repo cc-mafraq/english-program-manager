@@ -9,8 +9,8 @@ service cloud.firestore {
       allow read, write: if signedInAndWhitelisted();
     }
 
-    match /users/{document=**} {
-      allow read, write: if request.auth != null;
+    match /waitingList/{document=**} {
+      allow read, write: if signedInAndWhitelisted();
     }
 
     match /whitelist/{document=**} {

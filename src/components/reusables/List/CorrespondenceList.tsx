@@ -7,7 +7,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import { FormDialog, LabeledContainer } from "..";
 import { useColors } from "../../../hooks";
 import { Correspondence, defaultBorderColor, Student } from "../../../interfaces";
-import { correspondenceSchema, MOMENT_FORMAT, setStudentData } from "../../../services";
+import { correspondenceSchema, MOMENT_FORMAT, setData } from "../../../services";
 import { FormCorrespondenceItem, StudentFormLabel } from "../../StudentForm";
 
 interface CorrespondenceProps<T extends object> {
@@ -48,7 +48,7 @@ export const CorrespondenceList = <T extends object>({ data }: CorrespondencePro
         correspondence ? correspondence.push(newCorrespondence) : set(data, "correspondence", [newCorrespondence]);
       }
       // TODO: make generic
-      setStudentData(data as Student);
+      setData(data as Student, "students", "epId");
       handleDialogClose();
     },
     [correspondence, data, handleDialogClose, selectedCorrespondence],

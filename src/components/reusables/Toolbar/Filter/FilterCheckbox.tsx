@@ -7,6 +7,7 @@ import { FilterField } from "../../../../services";
 interface FilterCheckBoxProps {
   filterField: FilterField;
   filterStatePath: string;
+  ignoreValueMappings?: boolean;
   label: unknown;
 }
 
@@ -16,11 +17,17 @@ interface Mapping {
 
 const valueMappings: Mapping = { Female: "F", Male: "M", No: false, Yes: true };
 
-export const FilterCheckbox: React.FC<FilterCheckBoxProps> = ({ label, filterField, filterStatePath }) => {
+export const FilterCheckbox: React.FC<FilterCheckBoxProps> = ({
+  label,
+  filterField,
+  filterStatePath,
+  ignoreValueMappings,
+}) => {
   const { appState, appDispatch } = useContext(AppContext);
   const filter = get(appState, filterStatePath);
 
-  const value = includes(Object.keys(valueMappings), label) ? valueMappings[label as string] : label;
+  const value =
+    !ignoreValueMappings && includes(Object.keys(valueMappings), label) ? valueMappings[label as string] : label;
   const [checked, setChecked] = useState(
     includes(
       find(filter, (fieldFilter) => {
@@ -75,4 +82,8 @@ export const FilterCheckbox: React.FC<FilterCheckBoxProps> = ({ label, filterFie
       sx={{ display: "flex", marginTop: -0.5 }}
     />
   );
+};
+
+FilterCheckbox.defaultProps = {
+  ignoreValueMappings: false,
 };

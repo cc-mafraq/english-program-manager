@@ -1,10 +1,11 @@
 import { Box } from "@mui/material";
-import React, { ChangeEvent, useContext, useEffect, useRef } from "react";
+import React, { ChangeEvent, useContext, useRef, useState } from "react";
 import {
   ActionsMenu,
   CorrespondenceList,
   CustomCard,
   CustomToolbar,
+  Loading,
   VirtualizedList,
   WaitingListCardHeader,
   WaitingListEntryInfo,
@@ -21,6 +22,7 @@ export const WaitingListPage = () => {
   } = useContext(AppContext);
   const waitingListRef = useRef(waitingList);
   waitingListRef.current = waitingList;
+  const [spreadsheetIsLoading, setSpreadsheetIsLoading] = useState(false);
   const {
     filteredList: filteredWaitingList,
     handleChangePage,
@@ -32,23 +34,31 @@ export const WaitingListPage = () => {
     searchString,
     setShowActions,
     showActions,
-    setState,
-  } = usePageState({ filter, listRef: waitingListRef, payloadPath: "waitingList", searchFn: searchWaitingList });
-
-  useEffect(() => {
-    setState({});
-  }, [filter, setState]);
+  } = usePageState({
+    collectionName: "waitingList",
+    conditionToAddPath: "primaryPhone",
+    filter,
+    listRef: waitingListRef,
+    payloadPath: "waitingList",
+    searchFn: searchWaitingList,
+    sortFn: sortWaitingList,
+    spreadsheetIsLoading,
+  });
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    handleChangePage(null, 0);
+    setSpreadsheetIsLoading(true);
     const file: File | null = e.target.files && e.target.files[0];
     const reader = new FileReader();
 
+    file && appDispatch({ payload: { loading: true } });
     file && reader.readAsText(file);
 
     reader.onloadend = async () => {
-      const studentListString = String(reader.result);
-      const newWaitingList = waitingListToList(studentListString);
-      appDispatch({ payload: { waitingList: sortWaitingList(newWaitingList) } });
+      const waitingListString = String(reader.result);
+      await waitingListToList(waitingListString);
+      appDispatch({ payload: { loading: false } });
+      setSpreadsheetIsLoading(false);
     };
   };
 
@@ -70,6 +80,7 @@ export const WaitingListPage = () => {
         />
         <ActionsMenu onInputChange={onInputChange} showActions={showActions} />
       </Box>
+      <Loading />
       <VirtualizedList defaultSize={275} deps={[role]} idPath="id" page={waitingListPage}>
         <CustomCard
           data={emptyWaitingListEntry}

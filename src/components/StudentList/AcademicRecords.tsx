@@ -20,7 +20,7 @@ import {
   getAllSessions,
   getProgress,
   removeNullFromObject,
-  setStudentData,
+  setData,
   SPACING,
   StudentProgress,
 } from "../../services";
@@ -107,7 +107,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
       } else {
         student.academicRecords.push(dataNoNull);
       }
-      setStudentData(student);
+      setData(student, "students", "epId");
       handleDialogClose();
     },
     [handleDialogClose, selectedAcademicRecord, student],

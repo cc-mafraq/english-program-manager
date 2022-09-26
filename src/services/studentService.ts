@@ -42,6 +42,7 @@ export interface SessionResult {
 export interface FilterField {
   condition?: boolean;
   fn?: (student: Student) => unknown;
+  ignoreValueMappings?: boolean;
   name: string;
   path: string;
   values?: unknown[];

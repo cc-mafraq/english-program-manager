@@ -4,9 +4,14 @@ import { find, forEach, get, map, omit, set, toString } from "lodash";
 import { db, storage } from ".";
 import { Student } from "../interfaces";
 
-export const setStudentData = async (student: Student, options?: SetOptions) => {
+export const setData = async <T extends object>(
+  data: T,
+  collectionName: string,
+  idPath: string,
+  options?: SetOptions,
+) => {
   try {
-    await setDoc(doc(collection(db, "students"), toString(student.epId)), student, options ?? {});
+    await setDoc(doc(collection(db, collectionName), toString(get(data, idPath))), data, options ?? {});
   } catch (e) {
     // eslint-disable-next-line no-alert
     alert(`The following error occurred. Please try again:\n${e}`);
@@ -47,7 +52,7 @@ export const deleteImage = async (student: Student, imagePath: string, shouldNot
   await deleteObject(storageRef);
   set(student, imagePath, "");
   if (shouldNotSetStudent) return;
-  await setStudentData(omit(student, imagePath) as Student);
+  await setData(omit(student, imagePath) as Student, "students", "epId");
 };
 
 export const uploadImage = async (epId: Student["epId"], file: File | null, folderName: string) => {
@@ -61,5 +66,5 @@ export const uploadImage = async (epId: Student["epId"], file: File | null, fold
 export const setImage = async (student: Student, file: File | null, imagePath: string, folderName: string) => {
   const imageURL = await uploadImage(student.epId, file, folderName);
   set(student, imagePath, imageURL);
-  await setStudentData(student, { merge: true });
+  await setData(student, "students", "epId", { merge: true });
 };

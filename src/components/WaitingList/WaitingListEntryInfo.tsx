@@ -128,7 +128,7 @@ export const WaitingListEntryInfo: React.FC<WaitingListEntryInfoProps> = ({ data
 
   const PlacementExam = useMemo(() => {
     return (
-      <LabeledContainer condition={wlEntry.placementExam.length > 0} label="Placement Exam">
+      <LabeledContainer condition={wlEntry.placementExam?.length > 0} label="Placement Exam">
         {map(wlEntry.placementExam, (pe, i) => {
           return (
             <span key={i}>

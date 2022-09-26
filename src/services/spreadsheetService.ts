@@ -17,9 +17,10 @@ import papa from "papaparse";
 import { v4 } from "uuid";
 import { emptyStudent, emptyWaitingListEntry, Student, WaitingListEntry } from "../interfaces";
 import { covidVaccineImageFolder, studentImageFolder } from "./firebaseService";
-import { setImages, setStudentData } from "./studentDataService";
+import { setData, setImages } from "./studentDataService";
 import * as ps from "./studentParsingService";
 import * as wlps from "./waitingListParsingService";
+import { sortWaitingList } from "./waitingListService";
 
 export interface ValidFields<T> {
   [key: string]: (key: string, value: string, object: T) => void;
@@ -161,7 +162,7 @@ export const spreadsheetToStudentList = async (
           student,
         )
       ) {
-        await setStudentData(student, { merge: true });
+        await setData(student, "students", "epId", { merge: true });
       }
     }),
   );
@@ -187,7 +188,8 @@ const waitlistFieldsUnexpanded: ValidFields<WaitingListEntry> = {
   Waiting: wlps.parseWLWaiting,
 };
 const waitlistFields = ps.expand(waitlistFieldsUnexpanded);
-export const waitingListToList = (csvString: string) => {
+
+export const waitingListToList = async (csvString: string) => {
   const newWaitingList = spreadsheetToList(csvString, waitlistFields, emptyWaitingListEntry, 1);
   forEach(newWaitingList, (nwlEntry) => {
     forEach(nwlEntry.correspondence, (c) => {
@@ -196,5 +198,10 @@ export const waitingListToList = (csvString: string) => {
     nwlEntry.primaryPhone = first(nwlEntry.phoneNumbers)?.number || -1;
     nwlEntry.id = v4();
   });
-  return newWaitingList;
+  await Promise.all(
+    map(newWaitingList, async (nwlEntry) => {
+      await setData(nwlEntry, "waitingList", "id", { merge: true });
+    }),
+  );
+  return sortWaitingList(newWaitingList);
 };

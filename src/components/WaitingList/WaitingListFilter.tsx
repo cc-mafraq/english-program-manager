@@ -29,6 +29,7 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({ anchorEl, 
       { condition: isAdminOrFaculty, name: "Waiting", path: "waiting", values: booleanCheckboxOptions },
       {
         condition: isAdminOrFaculty,
+        ignoreValueMappings: true,
         name: "High Priority",
         path: "highPriority",
         values: values(HighPriority),

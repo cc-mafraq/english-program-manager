@@ -1,10 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box } from "@mui/material";
-import { collection } from "firebase/firestore";
-import { forEach, isEmpty, omit } from "lodash";
-import React, { ChangeEvent, useCallback, useContext, useEffect, useRef } from "react";
-import { useCollection } from "react-firebase-hooks/firestore";
-import { useNavigate } from "react-router-dom";
+import { isEmpty, omit } from "lodash";
+import React, { ChangeEvent, useCallback, useContext, useRef } from "react";
 import useState from "react-usestateref";
 import {
   AcademicRecords,
@@ -26,14 +23,12 @@ import { StudentCardImage } from "../components/StudentList/StudentCardImage";
 import { usePageState } from "../hooks";
 import { AppContext, emptyStudent, Status, Student } from "../interfaces";
 import {
-  db,
   deleteImage,
   deleteStudentData,
-  logout,
   removeNullFromObject,
   searchStudents,
+  setData,
   setPrimaryNumberBooleanArray,
-  setStudentData,
   sortStudents,
   spreadsheetToStudentList,
   studentFormSchema,
@@ -48,8 +43,6 @@ export const StudentDatabasePage = () => {
   const [openFGRDialog, setOpenFGRDialog] = useState(false);
   const [openStudentDialog, setOpenStudentDialog] = useState(false);
   const [spreadsheetIsLoading, setSpreadsheetIsLoading] = useState(false);
-  const navigate = useNavigate();
-  const [studentDocs, docsLoading, docsError] = useCollection(collection(db, "students"));
   const isAdminOrFaculty = role === "admin" || role === "faculty";
   studentsRef.current = students;
   const {
@@ -61,41 +54,18 @@ export const StudentDatabasePage = () => {
     rowsPerPage,
     searchString,
     setShowActions,
-    setState,
     showActions,
     listPage: studentsPage,
-  } = usePageState({ filter, listRef: studentsRef, payloadPath: "students", searchFn: searchStudents });
-
-  useEffect(() => {
-    if (!spreadsheetIsLoading) {
-      const studentData: Student[] = [];
-      forEach(studentDocs?.docs, (d) => {
-        const data = d.data();
-        if (data.name?.english) {
-          studentData.push(data as Student);
-        }
-      });
-      const sortedStudentData = sortStudents(studentData);
-      setState({
-        newList: sortedStudentData,
-      });
-    }
-  }, [setState, spreadsheetIsLoading, appDispatch, studentDocs]);
-
-  useEffect(() => {
-    appDispatch({ payload: { loading: docsLoading } });
-  }, [appDispatch, docsLoading]);
-
-  useEffect(() => {
-    if (docsError?.code === "permission-denied") {
-      logout();
-      navigate("/");
-    }
-  }, [navigate, docsError]);
-
-  useEffect(() => {
-    setState({});
-  }, [filter, setState]);
+  } = usePageState({
+    collectionName: "students",
+    conditionToAddPath: "name.english",
+    filter,
+    listRef: studentsRef,
+    payloadPath: "students",
+    searchFn: searchStudents,
+    sortFn: sortStudents,
+    spreadsheetIsLoading,
+  });
 
   const onInputChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -162,7 +132,7 @@ export const StudentDatabasePage = () => {
         ? data
         : omit(data, "covidVaccine.suspectedFraudReason");
       const dataNoNull = removeNullFromObject(dataNoSuspect) as Student;
-      setStudentData(dataNoNull);
+      setData(dataNoNull, "students", "epId");
       dataNoNull.epId !== selectedStudent?.epId && selectedStudent && deleteStudentData(selectedStudent);
       !selectedStudent && handleSearchStringChange(dataNoNull.epId.toString());
       handleStudentDialogClose();
