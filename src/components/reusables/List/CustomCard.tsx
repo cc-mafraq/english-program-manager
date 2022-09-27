@@ -3,8 +3,8 @@ import { map } from "lodash";
 import React, { Attributes, CSSProperties, useCallback, useEffect, useRef, useState } from "react";
 import { darkBlueBackground } from "../../../interfaces";
 
-interface TabProps<T> {
-  component: React.FC<{ data: T }>;
+interface TabProps {
+  component: React.ReactNode;
   hidden?: boolean;
   label: string;
 }
@@ -19,7 +19,7 @@ interface CustomCardProps<T> {
   setSize?: (index: number, size: number) => void;
   setTabValue?: (id: string | number, tabValue: number) => void;
   style?: CSSProperties;
-  tabContents: TabProps<T>[];
+  tabContents: TabProps[];
   tabValue?: number;
   windowWidth?: number;
 }
@@ -90,7 +90,8 @@ export const CustomCard = <T,>({
                     id={`card-tabpanel-${i}`}
                     role="tabpanel"
                   >
-                    <content.component data={data} />
+                    {React.isValidElement(content.component) &&
+                      React.cloneElement(content.component, { data } as Partial<unknown> & Attributes)}
                   </Box>
                 );
               })}

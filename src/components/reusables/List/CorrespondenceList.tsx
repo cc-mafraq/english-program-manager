@@ -6,15 +6,17 @@ import moment from "moment";
 import React, { useCallback, useMemo, useState } from "react";
 import { FormDialog, LabeledContainer } from "..";
 import { useColors } from "../../../hooks";
-import { Correspondence, defaultBorderColor, Student } from "../../../interfaces";
+import { Correspondence, defaultBorderColor } from "../../../interfaces";
 import { correspondenceSchema, MOMENT_FORMAT, setData } from "../../../services";
 import { FormCorrespondenceItem, StudentFormLabel } from "../../StudentForm";
 
 interface CorrespondenceProps<T extends object> {
+  collectionName: string;
   data: T;
+  idPath: string;
 }
 
-export const CorrespondenceList = <T extends object>({ data }: CorrespondenceProps<T>) => {
+export const CorrespondenceList = <T extends object>({ data, collectionName, idPath }: CorrespondenceProps<T>) => {
   const { defaultBackgroundColor, iconColor } = useColors();
   const [open, setOpen] = useState(false);
   const [selectedCorrespondence, setSelectedCorrespondence] = useState<Correspondence | null>(null);
@@ -47,11 +49,10 @@ export const CorrespondenceList = <T extends object>({ data }: CorrespondencePro
       } else {
         correspondence ? correspondence.push(newCorrespondence) : set(data, "correspondence", [newCorrespondence]);
       }
-      // TODO: make generic
-      setData(data as Student, "students", "epId");
+      setData(data as T, collectionName, idPath);
       handleDialogClose();
     },
-    [correspondence, data, handleDialogClose, selectedCorrespondence],
+    [collectionName, correspondence, data, handleDialogClose, idPath, selectedCorrespondence],
   );
 
   const CorrespondenceData = useMemo(() => {

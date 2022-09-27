@@ -194,14 +194,18 @@ export const StudentDatabasePage = () => {
           image={<StudentCardImage data={emptyStudent} />}
           noTabs={role !== "admin" && role !== "faculty"}
           tabContents={[
-            { component: StudentInfo, label: "Student Information" },
-            { component: CorrespondenceList, hidden: role !== "admin", label: "Correspondence" },
+            { component: <StudentInfo data={emptyStudent} />, label: "Student Information" },
             {
-              component: AcademicRecords,
+              component: <CorrespondenceList collectionName="students" data={emptyStudent} idPath="epId" />,
+              hidden: role !== "admin",
+              label: "Correspondence",
+            },
+            {
+              component: <AcademicRecords data={emptyStudent} />,
               hidden: !isAdminOrFaculty,
               label: "Academic Records",
             },
-            { component: PlacementList, hidden: !isAdminOrFaculty, label: "Placement" },
+            { component: <PlacementList data={emptyStudent} />, hidden: !isAdminOrFaculty, label: "Placement" },
           ]}
         />
       </VirtualizedList>

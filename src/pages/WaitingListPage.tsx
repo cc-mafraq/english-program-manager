@@ -87,8 +87,14 @@ export const WaitingListPage = () => {
           header={<WaitingListCardHeader data={emptyWaitingListEntry} handleEditEntryClick={() => {}} />}
           noTabs={role !== "admin"}
           tabContents={[
-            { component: WaitingListEntryInfo, label: "Entry" },
-            { component: CorrespondenceList, hidden: role !== "admin", label: "Correspondence" },
+            { component: <WaitingListEntryInfo data={emptyWaitingListEntry} />, label: "Entry" },
+            {
+              component: (
+                <CorrespondenceList collectionName="waitingList" data={emptyWaitingListEntry} idPath="id" />
+              ),
+              hidden: role !== "admin",
+              label: "Correspondence",
+            },
           ]}
         />
       </VirtualizedList>
