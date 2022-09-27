@@ -3,6 +3,7 @@ import {
   filter,
   forEach,
   forOwn,
+  get,
   indexOf,
   isArray,
   isEmpty,
@@ -17,6 +18,7 @@ import {
   merge,
   omitBy,
   pickBy,
+  set,
   some,
   split,
   startsWith,
@@ -38,7 +40,6 @@ import {
   levelsPlus,
   Nationality,
   Status,
-  Student,
 } from "../interfaces";
 
 export const SPACING = 2;
@@ -363,13 +364,16 @@ export const removeNullFromObject = (obj: object): object => {
   return merge(subObjects, subValues, subArrays);
 };
 
-export const setPrimaryNumberBooleanArray = (student: Student | null) => {
-  if (student) {
-    const studentCopy = cloneDeep(student);
-    studentCopy.phone.primaryPhone = map(studentCopy.phone.phoneNumbers, (num) => {
-      return num.number === studentCopy.phone.primaryPhone;
-    });
-    return studentCopy;
+export const setPrimaryNumberBooleanArray = <T>(data: T | null, phonePath: string) => {
+  if (data) {
+    const dataCopy = cloneDeep(data);
+    return set(
+      dataCopy,
+      phonePath,
+      map(get(dataCopy, phonePath), (num) => {
+        return num.number === get(dataCopy, phonePath);
+      }),
+    );
   }
   return undefined;
 };

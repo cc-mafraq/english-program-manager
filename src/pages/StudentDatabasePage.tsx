@@ -20,7 +20,7 @@ import {
   VirtualizedList,
 } from "../components";
 import { StudentCardImage } from "../components/StudentList/StudentCardImage";
-import { usePageState } from "../hooks";
+import { useFormDialog, usePageState } from "../hooks";
 import { AppContext, emptyStudent, Status, Student } from "../interfaces";
 import {
   deleteImage,
@@ -41,7 +41,6 @@ export const StudentDatabasePage = () => {
   } = useContext(AppContext);
   const studentsRef = useRef(students);
   const [openFGRDialog, setOpenFGRDialog] = useState(false);
-  const [openStudentDialog, setOpenStudentDialog] = useState(false);
   const [spreadsheetIsLoading, setSpreadsheetIsLoading] = useState(false);
   const isAdminOrFaculty = role === "admin" || role === "faculty";
   studentsRef.current = students;
@@ -67,6 +66,12 @@ export const StudentDatabasePage = () => {
     spreadsheetIsLoading,
   });
 
+  const {
+    handleDialogClose: handleStudentDialogClose,
+    handleDialogOpen: handleStudentDialogOpen,
+    openDialog: openStudentDialog,
+  } = useFormDialog({ selectedDataPath: "selectedStudent" });
+
   const onInputChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       handleChangePage(null, 0);
@@ -86,15 +91,6 @@ export const StudentDatabasePage = () => {
     },
     [appDispatch, handleChangePage, students],
   );
-
-  const handleStudentDialogOpen = useCallback(() => {
-    setOpenStudentDialog(true);
-  }, []);
-
-  const handleStudentDialogClose = useCallback(() => {
-    setOpenStudentDialog(false);
-    appDispatch({ payload: { selectedStudent: null } });
-  }, [appDispatch]);
 
   const handleGenerateFGRClick = useCallback(() => {
     setOpenFGRDialog(true);
@@ -181,7 +177,7 @@ export const StudentDatabasePage = () => {
         open={openStudentDialog}
         stickySubmit
         useFormProps={{
-          defaultValues: setPrimaryNumberBooleanArray(selectedStudent),
+          defaultValues: setPrimaryNumberBooleanArray(selectedStudent, "phone.phoneNumbers"),
           resolver: yupResolver(studentFormSchema),
         }}
       >

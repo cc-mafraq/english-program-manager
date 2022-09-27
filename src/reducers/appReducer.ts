@@ -12,6 +12,10 @@ export const reducer = (state: AppState, action: AppAction): AppState => {
     role: action.payload.role || state.role,
     selectedStudent:
       action.payload.selectedStudent === undefined ? state.selectedStudent : action.payload.selectedStudent,
+    selectedWaitingListEntry:
+      action.payload.selectedWaitingListEntry === undefined
+        ? state.selectedWaitingListEntry
+        : action.payload.selectedWaitingListEntry,
     studentFilter: action.payload.studentFilter || state.studentFilter,
     students: action.payload.students || state.students,
     waitingList: action.payload.waitingList || state.waitingList,

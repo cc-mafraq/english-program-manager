@@ -1,23 +1,31 @@
 import { Box } from "@mui/material";
-import React, { ChangeEvent, useContext, useRef, useState } from "react";
+import React, { ChangeEvent, useCallback, useContext, useRef, useState } from "react";
 import {
   ActionsMenu,
   CorrespondenceList,
   CustomCard,
   CustomToolbar,
+  FormDialog,
   Loading,
   VirtualizedList,
   WaitingListCardHeader,
   WaitingListEntryInfo,
 } from "../components";
 import { WaitingListFilter } from "../components/WaitingList/WaitingListFilter";
-import { usePageState } from "../hooks";
-import { AppContext, emptyWaitingListEntry } from "../interfaces";
-import { searchWaitingList, sortWaitingList, waitingListToList } from "../services";
+import { useFormDialog, usePageState } from "../hooks";
+import { AppContext, emptyWaitingListEntry, WaitingListEntry } from "../interfaces";
+import {
+  removeNullFromObject,
+  searchWaitingList,
+  setData,
+  setPrimaryNumberBooleanArray,
+  sortWaitingList,
+  waitingListToList,
+} from "../services";
 
 export const WaitingListPage = () => {
   const {
-    appState: { waitingList, role, waitingListFilter: filter },
+    appState: { waitingList, role, waitingListFilter: filter, selectedWaitingListEntry },
     appDispatch,
   } = useContext(AppContext);
   const waitingListRef = useRef(waitingList);
@@ -45,6 +53,12 @@ export const WaitingListPage = () => {
     spreadsheetIsLoading,
   });
 
+  const {
+    handleDialogClose: handleWLEntryDialogClose,
+    handleDialogOpen: handleWLEntryDialogOpen,
+    openDialog: openWLEntryDialog,
+  } = useFormDialog({ selectedDataPath: "selectedWaitingListEntry" });
+
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     handleChangePage(null, 0);
     setSpreadsheetIsLoading(true);
@@ -61,6 +75,24 @@ export const WaitingListPage = () => {
       setSpreadsheetIsLoading(false);
     };
   };
+
+  const wlEntryFormOnSubmit = useCallback(
+    (data: WaitingListEntry) => {
+      const primaryPhone = data.phoneNumbers[data.primaryPhone as number]?.number;
+      if (primaryPhone) {
+        data.primaryPhone = primaryPhone;
+      } else {
+        // eslint-disable-next-line no-alert
+        alert("You must choose a primary phone number.");
+        return;
+      }
+      const dataNoNull = removeNullFromObject(data) as WaitingListEntry;
+      setData(dataNoNull, "waitingList", "id");
+      !selectedWaitingListEntry && handleSearchStringChange(dataNoNull.primaryPhone.toString());
+      handleWLEntryDialogClose();
+    },
+    [handleSearchStringChange, handleWLEntryDialogClose, selectedWaitingListEntry],
+  );
 
   return (
     <>
@@ -84,7 +116,9 @@ export const WaitingListPage = () => {
       <VirtualizedList defaultSize={275} deps={[role]} idPath="id" page={waitingListPage}>
         <CustomCard
           data={emptyWaitingListEntry}
-          header={<WaitingListCardHeader data={emptyWaitingListEntry} handleEditEntryClick={() => {}} />}
+          header={
+            <WaitingListCardHeader data={emptyWaitingListEntry} handleEditEntryClick={handleWLEntryDialogOpen} />
+          }
           noTabs={role !== "admin"}
           tabContents={[
             { component: <WaitingListEntryInfo data={emptyWaitingListEntry} />, label: "Entry" },
@@ -98,6 +132,25 @@ export const WaitingListPage = () => {
           ]}
         />
       </VirtualizedList>
+      <FormDialog
+        dialogProps={{
+          fullScreen: true,
+          sx: {
+            width: "100%",
+          },
+        }}
+        handleDialogClose={handleWLEntryDialogClose}
+        onSubmit={wlEntryFormOnSubmit}
+        open={openWLEntryDialog}
+        stickySubmit
+        useFormProps={{
+          defaultValues: setPrimaryNumberBooleanArray(selectedWaitingListEntry, "phoneNumbers"),
+          // resolver: yupResolver(waitingListFormSchema),
+        }}
+      >
+        <></>
+        {/* <StudentForm /> */}
+      </FormDialog>
     </>
   );
 };

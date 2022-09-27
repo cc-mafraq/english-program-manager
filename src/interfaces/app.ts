@@ -63,6 +63,7 @@ export interface AppState {
   loading: boolean;
   role: "admin" | "faculty" | "staff";
   selectedStudent: Student | null;
+  selectedWaitingListEntry: WaitingListEntry | null;
   studentFilter: FilterValue<Student>[];
   students: Student[];
   waitingList: WaitingListEntry[];
@@ -73,6 +74,7 @@ export const initialAppState: AppState = {
   loading: true,
   role: "staff",
   selectedStudent: null,
+  selectedWaitingListEntry: null,
   studentFilter: [],
   students: [],
   waitingList: [],

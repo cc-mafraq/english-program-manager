@@ -1,7 +1,7 @@
 import { Checkbox, FormControlLabel } from "@mui/material";
 import { cloneDeep, find, get, includes, isEmpty, remove, set, toString } from "lodash";
 import React, { useContext, useEffect, useState } from "react";
-import { AppContext } from "../../../../interfaces";
+import { AppContext, FilterValue } from "../../../../interfaces";
 import { FilterField } from "../../../../services";
 
 interface FilterCheckBoxProps {
@@ -17,14 +17,14 @@ interface Mapping {
 
 const valueMappings: Mapping = { Female: "F", Male: "M", No: false, Yes: true };
 
-export const FilterCheckbox: React.FC<FilterCheckBoxProps> = ({
+export const FilterCheckbox = <T,>({
   label,
   filterField,
   filterStatePath,
   ignoreValueMappings,
-}) => {
+}: FilterCheckBoxProps) => {
   const { appState, appDispatch } = useContext(AppContext);
-  const filter = get(appState, filterStatePath);
+  const filter: FilterValue<T>[] = get(appState, filterStatePath);
 
   const value =
     !ignoreValueMappings && includes(Object.keys(valueMappings), label) ? valueMappings[label as string] : label;
