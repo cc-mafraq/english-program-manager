@@ -16,8 +16,8 @@ import {
 import papa from "papaparse";
 import { v4 } from "uuid";
 import { emptyStudent, emptyWaitingListEntry, Student, WaitingListEntry } from "../interfaces";
+import { deleteCollection, setData, setImages } from "./dataService";
 import { covidVaccineImageFolder, studentImageFolder } from "./firebaseService";
-import { setData, setImages } from "./studentDataService";
 import * as ps from "./studentParsingService";
 import * as wlps from "./waitingListParsingService";
 import { sortWaitingList } from "./waitingListService";
@@ -198,6 +198,8 @@ export const waitingListToList = async (csvString: string) => {
     nwlEntry.primaryPhone = first(nwlEntry.phoneNumbers)?.number || -1;
     nwlEntry.id = v4();
   });
+
+  await deleteCollection("waitingList");
   await Promise.all(
     map(newWaitingList, async (nwlEntry) => {
       await setData(nwlEntry, "waitingList", "id", { merge: true });

@@ -1,4 +1,4 @@
-import { collection, deleteDoc, doc, setDoc, SetOptions } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, setDoc, SetOptions } from "firebase/firestore";
 import { deleteObject, getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
 import { find, forEach, get, map, omit, set, toString } from "lodash";
 import { db, storage } from ".";
@@ -20,6 +20,15 @@ export const setData = async <T extends object>(
 
 export const deleteStudentData = async (student: Student) => {
   await deleteDoc(doc(collection(db, "students"), toString(student.epId)));
+};
+
+export const deleteCollection = async (collectionName: string) => {
+  const querySnapshot = await getDocs(collection(db, collectionName));
+  await Promise.all(
+    map(querySnapshot.docs, async (d) => {
+      await deleteDoc(doc(collection(db, collectionName), d.id));
+    }),
+  );
 };
 
 export const setImages = async (

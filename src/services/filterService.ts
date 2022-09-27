@@ -1,5 +1,6 @@
 import { filter, includes, isEmpty, map, some, toLower } from "lodash";
 import { Student, WaitingListEntry } from "../interfaces";
+import { sortWaitingList } from "./waitingListService";
 
 const phoneConditionFn = (searchString: string) => {
   return (n: number) => {
@@ -22,12 +23,14 @@ export const searchStudents = (students: Student[], searchString: string) => {
 };
 
 export const searchWaitingList = (wlEntries: WaitingListEntry[], searchString: string) => {
-  return filter(wlEntries, (wle) => {
-    return (
-      isEmpty(searchString) ||
-      includes(toLower(wle.name), toLower(searchString)) ||
-      includes(toLower(wle.referral), toLower(searchString)) ||
-      some(map(wle.phoneNumbers, "number"), phoneConditionFn(searchString))
-    );
-  });
+  return sortWaitingList(
+    filter(wlEntries, (wle) => {
+      return (
+        isEmpty(searchString) ||
+        includes(toLower(wle.name), toLower(searchString)) ||
+        includes(toLower(wle.referral), toLower(searchString)) ||
+        some(map(wle.phoneNumbers, "number"), phoneConditionFn(searchString))
+      );
+    }),
+  );
 };

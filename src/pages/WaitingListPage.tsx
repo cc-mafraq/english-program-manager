@@ -56,8 +56,8 @@ export const WaitingListPage = () => {
 
     reader.onloadend = async () => {
       const waitingListString = String(reader.result);
-      await waitingListToList(waitingListString);
-      appDispatch({ payload: { loading: false } });
+      const newWaitingList = await waitingListToList(waitingListString);
+      appDispatch({ payload: { loading: false, waitingList: newWaitingList } });
       setSpreadsheetIsLoading(false);
     };
   };

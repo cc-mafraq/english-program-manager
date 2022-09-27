@@ -1,9 +1,9 @@
 import { Edit, WhatsApp } from "@mui/icons-material";
 import { Box, Divider, IconButton, Tooltip, Typography, useTheme } from "@mui/material";
-import { findIndex } from "lodash";
 import React, { useContext } from "react";
 import { useColors } from "../../hooks";
 import { AppContext, WaitingListEntry } from "../../interfaces";
+import { getPosition } from "../../services";
 
 interface WaitingListHeaderProps {
   data: WaitingListEntry;
@@ -25,7 +25,7 @@ export const WaitingListCardHeader: React.FC<WaitingListHeaderProps> = ({
   return (
     <>
       <Typography component="div" display="inline" fontSize={28} gutterBottom>
-        {wlEntry.primaryPhone}
+        {wlEntry.primaryPhone === -1 ? "No Number" : wlEntry.primaryPhone}
       </Typography>
       <Typography component="div" display="inline" fontSize={28} gutterBottom marginLeft="25%">
         {wlEntry.name}
@@ -62,11 +62,7 @@ export const WaitingListCardHeader: React.FC<WaitingListHeaderProps> = ({
           color={theme.palette.mode === "light" ? theme.palette.secondary.main : theme.palette.primary.light}
           variant="h6"
         >
-          {`Position: ${
-            findIndex(waitingList, (wle) => {
-              return wle.id === wlEntry.id;
-            }) + 1
-          }`}
+          {`Position: ${getPosition(waitingList, wlEntry)}`}
         </Typography>
       </Box>
       <Divider />
