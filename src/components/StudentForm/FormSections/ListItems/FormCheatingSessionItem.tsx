@@ -1,10 +1,10 @@
 import { Close } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
 import React, { useContext } from "react";
-import { GridItemAutocomplete } from "../..";
 import { useColors } from "../../../../hooks";
 import { AppContext } from "../../../../interfaces";
 import { FormItem, getAllSessions } from "../../../../services";
+import { GridItemAutocomplete } from "../../../reusables";
 
 export const FormCheatingSessionItem: React.FC<FormItem> = ({ index, removeItem, name }) => {
   const { iconColor } = useColors();

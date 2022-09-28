@@ -4,8 +4,7 @@ import { Box, Button, IconButton, Tooltip, Typography, TypographyProps, useTheme
 import { green as materialGreen, red as materialRed } from "@mui/material/colors";
 import { findIndex, forOwn, map, reverse } from "lodash";
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { LabeledContainer, LabeledText, ProgressBox } from ".";
-import { FormAcademicRecordsItem, FormDialog } from "..";
+import { FormAcademicRecordsItem, FormDialog, LabeledContainer, LabeledText, ProgressBox } from "..";
 import { useColors } from "../../hooks";
 import {
   AcademicRecord,
@@ -21,13 +20,13 @@ import {
   getAllSessions,
   getProgress,
   removeNullFromObject,
-  setStudentData,
+  setData,
   SPACING,
   StudentProgress,
 } from "../../services";
 
 interface AcademicRecordsProps {
-  student: Student;
+  data: Student;
 }
 
 interface GradeInfoProps {
@@ -65,7 +64,7 @@ GradeInfo.defaultProps = {
   grade: undefined,
 };
 
-export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => {
+export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student }) => {
   const {
     appState: { students, role },
   } = useContext(AppContext);
@@ -108,7 +107,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ student }) => 
       } else {
         student.academicRecords.push(dataNoNull);
       }
-      setStudentData(student);
+      setData(student, "students", "epId");
       handleDialogClose();
     },
     [handleDialogClose, selectedAcademicRecord, student],

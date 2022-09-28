@@ -5,7 +5,7 @@ import ReactLoading from "react-loading";
 import { AddImageButton } from ".";
 import { FormImageActions } from "..";
 import { AppContext, Student } from "../../interfaces";
-import { setStudentData } from "../../services";
+import { setData } from "../../services";
 
 interface ImageProps {
   folderName: string;
@@ -76,7 +76,7 @@ export const Image: React.FC<ImageProps> = ({
             onError={() => {
               setImg(undefined);
               setLoading(false);
-              setStudentData(omit(student, [imagePath]) as Student);
+              setData(omit(student, [imagePath]) as Student, "students", "epId");
             }}
             onLoad={() => {
               setLoading(false);

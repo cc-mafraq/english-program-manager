@@ -3,17 +3,16 @@ import { Edit } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
 import { join, map } from "lodash";
 import React, { useCallback, useContext, useState } from "react";
-import { LabeledContainer, LabeledText } from ".";
-import { FormDialog, FormPlacement } from "..";
+import { FormDialog, FormPlacement, LabeledContainer, LabeledText } from "..";
 import { useColors } from "../../hooks";
 import { AppContext, Placement, Student } from "../../interfaces";
-import { JOIN_STR, placementSchema, removeNullFromObject, setStudentData } from "../../services";
+import { JOIN_STR, placementSchema, removeNullFromObject, setData } from "../../services";
 
 interface PlacementProps {
-  student: Student;
+  data: Student;
 }
 
-export const PlacementList: React.FC<PlacementProps> = ({ student }) => {
+export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
   const {
     appState: { role },
     appDispatch,
@@ -36,7 +35,7 @@ export const PlacementList: React.FC<PlacementProps> = ({ student }) => {
     (data: Placement) => {
       const dataNoNull = removeNullFromObject(data) as Placement;
       student.placement = dataNoNull;
-      setStudentData(student);
+      setData(student, "students", "epId");
       handleDialogClose();
     },
     [handleDialogClose, student],

@@ -1,25 +1,29 @@
 import React, { useContext } from "react";
-import { useFormContext } from "react-hook-form";
-import { FormCorrespondenceItem, FormList, GridContainer, StudentFormLabel } from "..";
+import { get, useFormContext } from "react-hook-form";
 import { useFormList } from "../../../hooks";
-import { AppContext, Student } from "../../../interfaces";
+import { AppContext } from "../../../interfaces";
 import { SPACING } from "../../../services";
+import { FormLabel, FormList, GridContainer } from "../../reusables";
+import { FormCorrespondenceItem } from "./ListItems";
 
-export const FormCorrespondence: React.FC = () => {
-  const {
-    appState: { selectedStudent },
-  } = useContext(AppContext);
+interface FormCorrespondenceProps {
+  selectedStudentPath: string;
+}
 
-  const methods = useFormContext<Student>();
+export const FormCorrespondence = <T extends object>({ selectedStudentPath }: FormCorrespondenceProps) => {
+  const { appState } = useContext(AppContext);
+  const selectedData = get(appState, selectedStudentPath);
+
+  const methods = useFormContext<T>();
   const [correspondence, addCorrespondence, removeCorrespondence] = useFormList(
-    selectedStudent && selectedStudent.correspondence ? selectedStudent?.correspondence : [],
+    selectedData && selectedData.correspondence ? selectedData?.correspondence : [],
     "correspondence",
     methods,
   );
 
   return (
     <>
-      <StudentFormLabel textProps={{ marginTop: SPACING }}>Correspondence</StudentFormLabel>
+      <FormLabel textProps={{ marginTop: SPACING }}>Correspondence</FormLabel>
       <GridContainer>
         <FormList
           addItem={addCorrespondence}

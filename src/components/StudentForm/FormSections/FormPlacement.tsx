@@ -1,19 +1,18 @@
 import { Grid } from "@mui/material";
 import React, { useContext } from "react";
 import { FieldValues, useFormContext } from "react-hook-form";
+import { useDateInitialState, useFormList } from "../../../hooks";
+import { AppContext } from "../../../interfaces";
+import { SPACING } from "../../../services";
 import {
-  FormDateItem,
-  FormPlacementItem,
+  FormLabel,
+  FormList,
   GridContainer,
   GridItemDatePicker,
   GridItemTextField,
   LabeledCheckbox,
-  StudentFormLabel,
-} from "..";
-import { useDateInitialState, useFormList } from "../../../hooks";
-import { AppContext } from "../../../interfaces";
-import { SPACING } from "../../../services";
-import { FormList } from "../FormList";
+} from "../../reusables";
+import { FormDateItem, FormPlacementItem } from "./ListItems";
 
 interface FormPlacementProps {
   standAlone?: boolean;
@@ -40,7 +39,7 @@ export const FormPlacement = <T extends FieldValues>({ standAlone }: FormPlaceme
 
   return (
     <>
-      <StudentFormLabel textProps={{ marginTop: SPACING }}>Placement</StudentFormLabel>
+      <FormLabel textProps={{ marginTop: SPACING }}>Placement</FormLabel>
       <GridContainer marginBottom={0}>
         <GridItemTextField gridProps={{ xs: 6 }} label="Sections Offered" name={`${namePrefix}sectionsOffered`} />
         <FormList

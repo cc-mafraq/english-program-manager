@@ -1,8 +1,9 @@
 import React, { useContext } from "react";
 import { useFormContext } from "react-hook-form";
-import { FormAcademicRecordsItem, FormList, GridContainer } from "..";
 import { useFormList } from "../../../hooks";
 import { AppContext, Student } from "../../../interfaces";
+import { FormList, GridContainer } from "../../reusables";
+import { FormAcademicRecordsItem } from "./ListItems";
 
 export const FormAcademicRecords: React.FC = () => {
   const {

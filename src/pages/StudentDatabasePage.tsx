@@ -1,185 +1,76 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box } from "@mui/material";
-import { getAuth } from "firebase/auth";
-import { collection } from "firebase/firestore";
-import { every, filter as filterFn, forEach, get, includes, isEmpty, isUndefined, omit } from "lodash";
-import React, { ChangeEvent, useCallback, useContext, useEffect, useRef } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useCollection } from "react-firebase-hooks/firestore";
-import { useNavigate } from "react-router-dom";
+import { isEmpty, omit } from "lodash";
+import React, { ChangeEvent, useCallback, useContext, useRef } from "react";
 import useState from "react-usestateref";
 import {
+  AcademicRecords,
   ActionsMenu,
+  CorrespondenceList,
+  CustomCard,
+  CustomToolbar,
   FinalGradeReportDialog,
   FormDialog,
   Loading,
-  StudentDatabaseToolbar,
+  PlacementList,
+  StudentCardHeader,
+  StudentFilter,
   StudentForm,
-  StudentList,
+  StudentInfo,
+  VirtualizedList,
 } from "../components";
-import { loadLocal, saveLocal, useRole } from "../hooks";
-import { AppContext, Status, Student } from "../interfaces";
+import { StudentCardImage } from "../components/StudentList/StudentCardImage";
+import { useFormDialog, usePageState } from "../hooks";
+import { AppContext, emptyStudent, Status, Student } from "../interfaces";
 import {
-  app,
-  db,
   deleteImage,
   deleteStudentData,
-  getStudentPage,
-  logout,
   removeNullFromObject,
   searchStudents,
+  setData,
   setPrimaryNumberBooleanArray,
-  setStudentData,
   sortStudents,
   spreadsheetToStudentList,
   studentFormSchema,
 } from "../services";
 
-interface SetStateOptions {
-  newPage?: number;
-  newRowsPerPage?: number;
-  newSearchString?: string;
-  newStudents?: Student[];
-}
-
 export const StudentDatabasePage = () => {
   const {
-    appState: { students, selectedStudent, filter, role },
+    appState: { students, selectedStudent, studentFilter: filter, role },
     appDispatch,
   } = useContext(AppContext);
   const studentsRef = useRef(students);
-  const [filteredStudents, setFilteredStudents, filteredStudentsRef] = useState<Student[]>([]);
-  const [studentsPage, setStudentsPage] = useState<Student[]>([]);
-  const [page, setPage, pageRef] = useState(0);
-  const [rowsPerPage, setRowsPerPage, rowsPerPageRef] = useState(
-    parseInt(loadLocal("rowsPerPage") as string) || -1,
-  );
   const [openFGRDialog, setOpenFGRDialog] = useState(false);
-  const [openStudentDialog, setOpenStudentDialog] = useState(false);
-  const [searchString, setSearchString, searchStringRef] = useState<string>("");
   const [spreadsheetIsLoading, setSpreadsheetIsLoading] = useState(false);
-  const [showActions, setShowActions] = useState(loadLocal("showActions") !== false);
-  const navigate = useNavigate();
-  const auth = getAuth(app);
-  const [user, authLoading] = useAuthState(auth);
-  const [studentDocs, docsLoading, docsError] = useCollection(collection(db, "students"));
-  const globalRole = useRole();
-
+  const isAdminOrFaculty = role === "admin" || role === "faculty";
   studentsRef.current = students;
+  const {
+    filteredList: filteredStudents,
+    handleChangePage,
+    handleChangeRowsPerPage,
+    handleSearchStringChange,
+    page,
+    rowsPerPage,
+    searchString,
+    setShowActions,
+    showActions,
+    listPage: studentsPage,
+  } = usePageState({
+    collectionName: "students",
+    conditionToAddPath: "name.english",
+    filter,
+    listRef: studentsRef,
+    payloadPath: "students",
+    searchFn: searchStudents,
+    sortFn: sortStudents,
+    spreadsheetIsLoading,
+  });
 
-  const filterStudents = useCallback(
-    (student: Student) => {
-      return every(filter, (filterValue) => {
-        const value = filterValue.fieldFunction
-          ? filterValue.fieldFunction(student)
-          : get(student, filterValue.fieldPath);
-        return includes(filterValue.values, value);
-      });
-    },
-    [filter],
-  );
-
-  const setState = useCallback(
-    ({ newRowsPerPage, newPage, newSearchString, newStudents }: SetStateOptions) => {
-      const newSearchedStudents =
-        !isUndefined(newSearchString) || newStudents
-          ? searchStudents(
-              !isUndefined(newStudents) ? newStudents : studentsRef.current,
-              !isUndefined(newSearchString) ? newSearchString : searchStringRef.current,
-            )
-          : filteredStudentsRef.current;
-      const newFilteredStudents =
-        filter.length > 0 ? (filterFn(newSearchedStudents, filterStudents) as Student[]) : newSearchedStudents;
-      setFilteredStudents(newFilteredStudents);
-      newStudents && appDispatch({ payload: { students: newStudents } });
-      !isUndefined(newPage) && setPage(newPage);
-      newRowsPerPage && setRowsPerPage(newRowsPerPage);
-      !isUndefined(newSearchString) && setSearchString(newSearchString);
-      setStudentsPage(
-        getStudentPage(
-          newFilteredStudents,
-          !isUndefined(newPage) ? newPage : pageRef.current,
-          newRowsPerPage || rowsPerPageRef.current,
-        ),
-      );
-    },
-    [
-      appDispatch,
-      filter.length,
-      filterStudents,
-      filteredStudentsRef,
-      pageRef,
-      rowsPerPageRef,
-      searchStringRef,
-      setFilteredStudents,
-      setPage,
-      setRowsPerPage,
-      setSearchString,
-    ],
-  );
-
-  useEffect(() => {
-    if (authLoading) return;
-    if (!user) {
-      navigate("/", { replace: true });
-    } else if (role !== globalRole) {
-      appDispatch({ payload: { role: globalRole } });
-    }
-  }, [user, authLoading, navigate, role, globalRole, appDispatch]);
-
-  useEffect(() => {
-    if (!spreadsheetIsLoading) {
-      const studentData: Student[] = [];
-      forEach(studentDocs?.docs, (d) => {
-        const data = d.data();
-        if (data.name?.english) {
-          studentData.push(data as Student);
-        }
-      });
-      const sortedStudentData = sortStudents(studentData);
-      setState({
-        newStudents: sortedStudentData,
-      });
-    }
-  }, [setState, spreadsheetIsLoading, appDispatch, studentDocs]);
-
-  useEffect(() => {
-    appDispatch({ payload: { loading: docsLoading } });
-  }, [appDispatch, docsLoading]);
-
-  useEffect(() => {
-    if (docsError?.code === "permission-denied") {
-      logout();
-      navigate("/");
-    }
-  }, [navigate, docsError]);
-
-  useEffect(() => {
-    setState({});
-  }, [filter, setState]);
-
-  const handleChangePage = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-      setState({ newPage });
-    },
-    [setState],
-  );
-
-  const handleChangeRowsPerPage = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const newRowsPerPage = parseInt(event.target.value, 10);
-      saveLocal("rowsPerPage", newRowsPerPage);
-      setState({ newPage: 0, newRowsPerPage });
-    },
-    [setState],
-  );
-
-  const handleSearchStringChange = useCallback(
-    (value: string) => {
-      setState({ newPage: 0, newSearchString: value });
-    },
-    [setState],
-  );
+  const {
+    handleDialogClose: handleStudentDialogClose,
+    handleDialogOpen: handleStudentDialogOpen,
+    openDialog: openStudentDialog,
+  } = useFormDialog({ selectedDataPath: "selectedStudent" });
 
   const onInputChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -200,15 +91,6 @@ export const StudentDatabasePage = () => {
     },
     [appDispatch, handleChangePage, students],
   );
-
-  const handleStudentDialogOpen = useCallback(() => {
-    setOpenStudentDialog(true);
-  }, []);
-
-  const handleStudentDialogClose = useCallback(() => {
-    setOpenStudentDialog(false);
-    appDispatch({ payload: { selectedStudent: null } });
-  }, [appDispatch]);
 
   const handleGenerateFGRClick = useCallback(() => {
     setOpenFGRDialog(true);
@@ -246,7 +128,7 @@ export const StudentDatabasePage = () => {
         ? data
         : omit(data, "covidVaccine.suspectedFraudReason");
       const dataNoNull = removeNullFromObject(dataNoSuspect) as Student;
-      setStudentData(dataNoNull);
+      setData(dataNoNull, "students", "epId");
       dataNoNull.epId !== selectedStudent?.epId && selectedStudent && deleteStudentData(selectedStudent);
       !selectedStudent && handleSearchStringChange(dataNoNull.epId.toString());
       handleStudentDialogClose();
@@ -257,22 +139,25 @@ export const StudentDatabasePage = () => {
   return (
     <>
       <Box position="sticky" top={0} zIndex={5}>
-        <StudentDatabaseToolbar
+        <CustomToolbar
+          filterComponent={<StudentFilter />}
           handleChangePage={handleChangePage}
           handleChangeRowsPerPage={handleChangeRowsPerPage}
           handleSearchStringChange={handleSearchStringChange}
+          list={searchString || filter.length ? filteredStudents : students}
           page={page}
           rowsPerPage={rowsPerPage}
+          searchPlaceholder="Search students"
           searchString={searchString}
           setShowActions={setShowActions}
           showActions={showActions}
-          students={searchString || filter.length ? filteredStudents : students}
         />
         <ActionsMenu
+          handleDialogOpen={handleStudentDialogOpen}
           handleGenerateFGRClick={handleGenerateFGRClick}
-          handleStudentDialogOpen={handleStudentDialogOpen}
           onInputChange={onInputChange}
           showActions={showActions}
+          tooltipObjectName="Student"
         />
       </Box>
       {students.length > 0 ? (
@@ -293,13 +178,34 @@ export const StudentDatabasePage = () => {
         open={openStudentDialog}
         stickySubmit
         useFormProps={{
-          defaultValues: setPrimaryNumberBooleanArray(selectedStudent),
+          defaultValues: setPrimaryNumberBooleanArray(selectedStudent, "phone.phoneNumbers"),
           resolver: yupResolver(studentFormSchema),
         }}
       >
         <StudentForm />
       </FormDialog>
-      <StudentList handleEditStudentClick={handleStudentDialogOpen} studentsPage={studentsPage} />
+      <VirtualizedList defaultSize={600} deps={[role]} idPath="epId" page={studentsPage}>
+        <CustomCard
+          data={emptyStudent}
+          header={<StudentCardHeader data={emptyStudent} handleEditStudentClick={handleStudentDialogOpen} />}
+          image={<StudentCardImage data={emptyStudent} />}
+          noTabs={role !== "admin" && role !== "faculty"}
+          tabContents={[
+            { component: <StudentInfo data={emptyStudent} />, label: "Student Information" },
+            {
+              component: <CorrespondenceList collectionName="students" data={emptyStudent} idPath="epId" />,
+              hidden: role !== "admin",
+              label: "Correspondence",
+            },
+            {
+              component: <AcademicRecords data={emptyStudent} />,
+              hidden: !isAdminOrFaculty,
+              label: "Academic Records",
+            },
+            { component: <PlacementList data={emptyStudent} />, hidden: !isAdminOrFaculty, label: "Placement" },
+          ]}
+        />
+      </VirtualizedList>
     </>
   );
 };

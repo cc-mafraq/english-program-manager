@@ -1,8 +1,8 @@
 import { FormLabel, FormLabelProps } from "@mui/material";
 import React from "react";
-import { GridContainer, GridItemRadioGroup, GridItemTextField } from "..";
 import { results } from "../../../interfaces";
 import { SPACING } from "../../../services";
+import { GridContainer, GridItemRadioGroup, GridItemTextField } from "../../reusables";
 
 interface FormGradeProps {
   gradePath: string;

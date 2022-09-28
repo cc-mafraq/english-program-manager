@@ -1,7 +1,7 @@
 import { Close } from "@mui/icons-material";
 import { Grid, IconButton, Tooltip } from "@mui/material";
 import React, { useContext } from "react";
-import { FormGrade, GridContainer, GridItemAutocomplete, GridItemTextField, StudentFormLabel } from "../../..";
+import { FormGrade, FormLabel, GridContainer, GridItemAutocomplete, GridItemTextField } from "../../..";
 import { useColors } from "../../../../hooks";
 import { AppContext, genderedLevels } from "../../../../interfaces";
 import { FormItem, getAllSessions, SPACING } from "../../../../services";
@@ -16,9 +16,9 @@ export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem,
   return (
     <>
       <Grid container marginLeft={SPACING}>
-        <StudentFormLabel textProps={{ marginTop: SPACING }}>
+        <FormLabel textProps={{ marginTop: SPACING }}>
           Session {index === undefined ? "" : Number(index) + 1}
-        </StudentFormLabel>
+        </FormLabel>
         {removeItem && (
           <Tooltip arrow title="Remove Session">
             <IconButton

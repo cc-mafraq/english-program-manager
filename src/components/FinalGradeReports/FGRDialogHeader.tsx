@@ -14,7 +14,7 @@ import {
 import { map } from "lodash";
 import React from "react";
 import { getSessionFullName } from "../../services";
-import { Searchbar } from "../StudentDatabaseToolbar";
+import { Searchbar } from "../reusables";
 
 interface FGRDialogHeaderProps {
   fgrSession: string;

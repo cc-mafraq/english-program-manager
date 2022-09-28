@@ -58,7 +58,7 @@ import {
   parseOrigPlacementSpeaking,
   parseOrigPlacementWriting,
   parsePendingPlacement,
-  parsePhone,
+  parseStudentPhone,
   parsePhotoContact,
   parseReactivatedDate,
   parseSectionsOffered,
@@ -433,7 +433,7 @@ describe("test expand", () => {
     expect(pKeys).toEqual("P,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9");
   });
   it("expands keys", () => {
-    const fieldObj: ValidFields = {};
+    const fieldObj: ValidFields<Student> = {};
     fieldObj[pKeys] = () => {
       // eslint-disable-next-line no-useless-return
       return;
@@ -604,40 +604,40 @@ describe("parses phone", () => {
     note ? expect(phone?.notes).toEqual(note) : expect(phone?.notes).toBeUndefined();
   };
   it("parses normal phone", () => {
-    parsePhone("", "700000000", student);
+    parseStudentPhone("", "700000000", student);
     firstPhoneExpects({});
   });
   it("parses leading 0 phone", () => {
-    parsePhone("", "0700000000", student);
+    parseStudentPhone("", "0700000000", student);
     firstPhoneExpects({});
   });
   it("parses phone with spaces", () => {
-    parsePhone("", "070 000 0000", student);
+    parseStudentPhone("", "070 000 0000", student);
     firstPhoneExpects({});
   });
   it("parses phone with note", () => {
     const note = "WA Note";
-    parsePhone("", `0700000000 (${note})`, student);
+    parseStudentPhone("", `0700000000 (${note})`, student);
     firstPhoneExpects({ note });
   });
   it("doesn't parse text", () => {
-    parsePhone("", "No WA", student);
+    parseStudentPhone("", "No WA", student);
     expect(student.phone.phoneNumbers).toEqual([]);
   });
   it("doesn't parse empty", () => {
-    parsePhone("", "", student);
+    parseStudentPhone("", "", student);
     expect(student.phone.phoneNumbers).toEqual([]);
   });
   it("parses foreign number", () => {
-    parsePhone("", "+900 11 222 3333", student);
+    parseStudentPhone("", "+900 11 222 3333", student);
     firstPhoneExpects({ number: 900112223333 });
   });
   it("parses many numbers", () => {
     const number = "70000000";
     const note = "WA Note";
-    parsePhone("", `${number}0 (${note} 0)`, student);
-    parsePhone("", `${number}1 (${note} 1)`, student);
-    parsePhone("", `0${number}2`, student);
+    parseStudentPhone("", `${number}0 (${note} 0)`, student);
+    parseStudentPhone("", `${number}1 (${note} 1)`, student);
+    parseStudentPhone("", `0${number}2`, student);
     expect(student.phone.phoneNumbers).toEqual([
       { notes: `${note} 0`, number: Number(`${number}0`) },
       { notes: `${note} 1`, number: Number(`${number}1`) },

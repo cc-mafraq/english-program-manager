@@ -1,16 +1,16 @@
 import { Grid } from "@mui/material";
 import React from "react";
 import { useFormContext } from "react-hook-form";
+import { nationalities, Student } from "../../../interfaces";
+import { SPACING } from "../../../services";
 import {
+  FormLabel,
   GridContainer,
   GridItemAutocomplete,
   GridItemRadioGroup,
   GridItemTextField,
   LabeledCheckbox,
-  StudentFormLabel,
-} from "..";
-import { nationalities, Student } from "../../../interfaces";
-import { SPACING } from "../../../services";
+} from "../../reusables";
 
 export const FormDemographics: React.FC = () => {
   const { watch } = useFormContext<Student>();
@@ -18,7 +18,7 @@ export const FormDemographics: React.FC = () => {
 
   return (
     <>
-      <StudentFormLabel textProps={{ marginTop: SPACING }}>Demographics</StudentFormLabel>
+      <FormLabel textProps={{ marginTop: SPACING }}>Demographics</FormLabel>
       <GridContainer marginBottom={0}>
         <GridItemRadioGroup gridProps={{ xs: 2 }} label="Gender *" options={["M", "F"]} />
         <GridItemAutocomplete label="Nationality" options={nationalities} textFieldProps={{ required: true }} />

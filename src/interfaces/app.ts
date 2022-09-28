@@ -1,7 +1,7 @@
 import { PaletteMode, ThemeOptions } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { createContext, Dispatch } from "react";
-import { Student } from ".";
+import { Student, WaitingListEntry } from ".";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const voidFn = () => {};
@@ -53,34 +53,40 @@ export interface AppAction {
   payload: Partial<AppState>;
 }
 
-interface FilterValue {
-  fieldFunction?: (student: Student) => unknown;
+export interface FilterValue<T> {
+  fieldFunction?: (object: T) => unknown;
   fieldPath: string;
   values: unknown[];
 }
 
 export interface AppState {
-  filter: FilterValue[];
   loading: boolean;
   role: "admin" | "faculty" | "staff";
   selectedStudent: Student | null;
+  selectedWaitingListEntry: WaitingListEntry | null;
+  studentFilter: FilterValue<Student>[];
   students: Student[];
+  waitingList: WaitingListEntry[];
+  waitingListFilter: FilterValue<WaitingListEntry>[];
 }
 
 export const initialAppState: AppState = {
-  filter: [],
   loading: true,
   role: "staff",
   selectedStudent: null,
+  selectedWaitingListEntry: null,
+  studentFilter: [],
   students: [],
+  waitingList: [],
+  waitingListFilter: [],
 };
 
-export interface AppContext {
+export interface IAppContext {
   appDispatch: Dispatch<AppAction> | (() => void);
   appState: AppState;
 }
 
-export const AppContext = createContext<AppContext>({
+export const AppContext = createContext<IAppContext>({
   appDispatch: voidFn,
   appState: initialAppState,
 });
