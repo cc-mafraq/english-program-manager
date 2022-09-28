@@ -113,7 +113,13 @@ export const WaitingListPage = () => {
           setShowActions={setShowActions}
           showActions={showActions}
         />
-        <ActionsMenu onInputChange={onInputChange} showActions={showActions} />
+        <ActionsMenu
+          handleDialogOpen={handleWLEntryDialogOpen}
+          noEditButton
+          onInputChange={onInputChange}
+          showActions={showActions}
+          tooltipObjectName="Waiting List Entry"
+        />
       </Box>
       <Loading />
       <VirtualizedList defaultSize={275} deps={[role]} idPath="id" page={waitingListPage}>

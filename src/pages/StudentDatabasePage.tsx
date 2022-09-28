@@ -153,10 +153,11 @@ export const StudentDatabasePage = () => {
           showActions={showActions}
         />
         <ActionsMenu
+          handleDialogOpen={handleStudentDialogOpen}
           handleGenerateFGRClick={handleGenerateFGRClick}
-          handleStudentDialogOpen={handleStudentDialogOpen}
           onInputChange={onInputChange}
           showActions={showActions}
+          tooltipObjectName="Student"
         />
       </Box>
       {students.length > 0 ? (
