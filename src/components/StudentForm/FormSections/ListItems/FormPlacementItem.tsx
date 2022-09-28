@@ -1,9 +1,9 @@
 import { Close } from "@mui/icons-material";
 import { Grid, IconButton, Tooltip } from "@mui/material";
 import React from "react";
-import { GridContainer, GridItemTextField } from "../..";
 import { useColors } from "../../../../hooks";
 import { FormItem, SPACING } from "../../../../services";
+import { GridContainer, GridItemTextField } from "../../../reusables";
 
 export const FormPlacementItem: React.FC<FormItem> = ({ index, removeItem, name }) => {
   const { iconColor } = useColors();

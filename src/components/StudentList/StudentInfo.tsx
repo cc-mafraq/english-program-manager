@@ -8,10 +8,10 @@ import { AppContext, CovidStatus, Status, Student } from "../../interfaces";
 import { covidVaccineImageFolder, getRepeatNum, getStatusDetails, isActive, JOIN_STR } from "../../services";
 
 interface StudentInfoProps {
-  student: Student;
+  data: Student;
 }
 
-export const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
+export const StudentInfo: React.FC<StudentInfoProps> = ({ data: student }) => {
   const {
     appState: { students, role },
   } = useContext(AppContext);

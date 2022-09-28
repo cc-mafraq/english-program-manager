@@ -4,7 +4,9 @@ import {
   FormAcademicRecords,
   FormCertRequests,
   FormCorrespondence,
+  FormCovidVaccine,
   FormDemographics,
+  FormLabel,
   FormLiteracyAndZoom,
   FormName,
   FormOriginalPlacement,
@@ -12,11 +14,9 @@ import {
   FormPlacement,
   FormProgramInformation,
   FormStatus,
-  StudentFormLabel,
 } from "..";
 import { AppContext } from "../../interfaces";
 import { SPACING } from "../../services";
-import { FormCovidVaccine } from "./FormSections";
 
 export const StudentForm: React.FC = () => {
   const {
@@ -38,11 +38,11 @@ export const StudentForm: React.FC = () => {
       <Divider />
       <FormDemographics />
       <Divider />
-      <FormCorrespondence />
+      <FormCorrespondence selectedStudentPath="selectedStudent" />
       <Divider />
       <FormCovidVaccine />
       <Divider />
-      <FormPhoneNumbers />
+      <FormPhoneNumbers phonePath="phone.phoneNumbers" selectedStudentPath="selectedStudent" />
       <Divider />
       <FormOriginalPlacement />
       <Divider />
@@ -54,7 +54,7 @@ export const StudentForm: React.FC = () => {
       <Divider />
       <FormCertRequests />
       <Divider />
-      <StudentFormLabel textProps={{ marginTop: SPACING }}>Academic Records</StudentFormLabel>
+      <FormLabel textProps={{ marginTop: SPACING }}>Academic Records</FormLabel>
       <FormAcademicRecords />
     </>
   );

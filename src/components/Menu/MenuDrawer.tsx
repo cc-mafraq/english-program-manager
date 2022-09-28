@@ -1,5 +1,4 @@
 import {
-  AttachFile,
   AutoGraph,
   Create,
   Equalizer,
@@ -7,6 +6,7 @@ import {
   Home,
   LibraryBooks,
   Menu,
+  PendingActions,
   Person,
   Schedule,
 } from "@mui/icons-material";
@@ -47,17 +47,14 @@ const drawerList: DrawerListItem[] = [
     route: "/epd",
   },
   {
-    component: LibraryBooks,
-    name: "Virtual Library",
-  },
-  {
     component: Person,
     name: "Student Database",
     route: "/epd",
   },
   {
-    component: FormatListBulleted,
-    name: "Class Lists",
+    component: PendingActions,
+    name: "Waiting List",
+    route: "/waitlist",
   },
   {
     component: Create,
@@ -68,12 +65,16 @@ const drawerList: DrawerListItem[] = [
     name: "Gradebook",
   },
   {
-    component: Schedule,
-    name: "Schedules",
+    component: FormatListBulleted,
+    name: "Class Lists",
   },
   {
-    component: AttachFile,
-    name: "Admin Documents",
+    component: LibraryBooks,
+    name: "Virtual Library",
+  },
+  {
+    component: Schedule,
+    name: "Schedules",
   },
   {
     component: AutoGraph,
@@ -102,7 +103,6 @@ export const MenuDrawer = () => {
       <Box
         role="presentation"
         sx={{
-          bgcolor: lightPrimaryColor,
           color: "white",
           width: DRAWER_WIDTH,
         }}
@@ -154,7 +154,9 @@ export const MenuDrawer = () => {
         onClose={toggleDrawer}
         open={isOpen}
         PaperProps={{
+          elevation: 0,
           sx: {
+            bgcolor: lightPrimaryColor,
             flexDirection: "row",
           },
         }}

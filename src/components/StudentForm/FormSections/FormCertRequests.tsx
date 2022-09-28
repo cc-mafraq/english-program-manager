@@ -1,11 +1,11 @@
 import React from "react";
-import { GridContainer, GridItemTextField, StudentFormLabel } from "..";
 import { SPACING } from "../../../services";
+import { FormLabel, GridContainer, GridItemTextField } from "../../reusables";
 
 export const FormCertRequests: React.FC = () => {
   return (
     <>
-      <StudentFormLabel textProps={{ marginTop: SPACING }}>Certificate Requests</StudentFormLabel>
+      <FormLabel textProps={{ marginTop: SPACING }}>Certificate Requests</FormLabel>
       <GridContainer>
         <GridItemTextField label="Request and Date" name="certificateRequests" />
       </GridContainer>

@@ -5,11 +5,11 @@ import { useColors } from "../../hooks";
 import { AppContext, Student } from "../../interfaces";
 
 interface StudentCardHeaderProps {
+  data: Student;
   handleEditStudentClick: () => void;
-  student: Student;
 }
 
-export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ student, handleEditStudentClick }) => {
+export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ data: student, handleEditStudentClick }) => {
   const {
     appState: { role },
     appDispatch,

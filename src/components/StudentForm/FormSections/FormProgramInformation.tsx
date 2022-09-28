@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import { GridContainer, GridItemAutocomplete, GridItemTextField, StudentFormLabel } from "..";
-import { AppContext, genderedLevels, statuses } from "../../../interfaces";
+import { AppContext, genderedLevels, Status, statuses } from "../../../interfaces";
 import { generateId, getAllSessions, SPACING } from "../../../services";
+import { FormLabel, GridContainer, GridItemAutocomplete, GridItemTextField } from "../../reusables";
 
 export const FormProgramInformation: React.FC = () => {
   const {
@@ -10,7 +10,7 @@ export const FormProgramInformation: React.FC = () => {
 
   return (
     <>
-      <StudentFormLabel textProps={{ marginTop: SPACING }}>Program Information</StudentFormLabel>
+      <FormLabel textProps={{ marginTop: SPACING }}>Program Information</FormLabel>
       <GridContainer>
         <GridItemTextField
           label="ID"
@@ -24,7 +24,7 @@ export const FormProgramInformation: React.FC = () => {
           textFieldProps={{ required: true }}
         />
         <GridItemAutocomplete
-          defaultValue="NEW"
+          defaultValue={Status.NEW}
           label="Current Status"
           name="status.currentStatus"
           options={statuses}
