@@ -371,11 +371,12 @@ export const removeNullFromObject = (obj: object): object => {
 export const setPrimaryNumberBooleanArray = <T>(data: T | null, phonePath: string) => {
   if (data) {
     const dataCopy = cloneDeep(data);
+    const subPath = phonePath.substring(0, indexOf(phonePath, ".") + 1);
     return set(
       dataCopy,
-      phonePath,
+      `${subPath}primaryPhone`,
       map(get(dataCopy, phonePath), (num) => {
-        return num.number === get(dataCopy, phonePath);
+        return num.number === get(dataCopy, `${subPath}primaryPhone`);
       }),
     );
   }

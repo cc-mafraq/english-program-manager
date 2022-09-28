@@ -3,6 +3,7 @@ import { useFormContext } from "react-hook-form";
 import { FormPlacementExamItem } from "..";
 import { useFormList } from "../../hooks";
 import { AppContext, WaitingListEntry } from "../../interfaces";
+import { SPACING } from "../../services";
 import { FormLabel, FormList, GridContainer } from "../reusables";
 
 export const FormPlacementExam = () => {
@@ -22,7 +23,7 @@ export const FormPlacementExam = () => {
   );
   return (
     <>
-      <FormLabel>Placement Exam</FormLabel>
+      <FormLabel textProps={{ marginTop: SPACING }}>Placement Exam</FormLabel>
       <GridContainer>
         <FormList
           addItem={addPlacementExam}

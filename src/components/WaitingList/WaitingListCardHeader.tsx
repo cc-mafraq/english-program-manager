@@ -48,7 +48,7 @@ export const WaitingListCardHeader: React.FC<WaitingListHeaderProps> = ({
           <Tooltip arrow title="Edit Waiting List Entry">
             <IconButton
               onClick={() => {
-                // appDispatch({ payload: { selectedStudent: wlEntry } });
+                appDispatch({ payload: { selectedWaitingListEntry: wlEntry } });
                 handleEditEntryClick();
               }}
             >

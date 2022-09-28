@@ -39,7 +39,7 @@ export const FormPhoneNumbers = <T extends object>({
           buttonGridProps={{ xs: 2 }}
           buttonLabel="Add Phone"
           list={phoneNumbers}
-          listName="phone.phoneNumbers"
+          listName={phonePath}
           removeItem={removePhone}
         >
           <FormPhoneItem />

@@ -1,4 +1,4 @@
-import { cloneDeep, find, get, isUndefined, set } from "lodash";
+import { cloneDeep, get, includes, indexOf, isUndefined, set } from "lodash";
 import { useContext, useState } from "react";
 import { DeepPartial, FieldValues, Path, PathValue, UseFormReturn } from "react-hook-form";
 import { AppContext } from "../interfaces";
@@ -24,11 +24,11 @@ export const useFormList = <T extends FieldValues>(
       set(resetObject, listPath, []);
       methods.reset(resetObject as T | DeepPartial<T> | undefined, { keepValues: true });
       methods.setValue(listPath as Path<T>, newList as PathValue<T, Path<T>>);
-      const phoneListPath = find(["phoneNumbers", "phone.phoneNumbers"], listPath);
-      if (phoneListPath) {
-        const currentPrimaryPhoneList = get(methods.getValues(), phoneListPath);
+      if (includes(listPath, "phone")) {
+        const subPath = listPath.substring(0, indexOf(listPath, ".") + 1);
+        const currentPrimaryPhoneList = get(methods.getValues(), `${subPath}primaryPhone`);
         currentPrimaryPhoneList.splice(index, 1);
-        methods.setValue(phoneListPath as Path<T>, currentPrimaryPhoneList);
+        methods.setValue(`${subPath}primaryPhone` as Path<T>, currentPrimaryPhoneList);
       }
     };
   };
