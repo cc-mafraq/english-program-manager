@@ -369,7 +369,7 @@ export const removeNullFromObject = (obj: object): object => {
   return merge(subObjects, subValues, subArrays);
 };
 
-export const setPrimaryNumberBooleanArray = <T>(data: T | null, phonePath: string) => {
+export const setPrimaryNumberBooleanArray = <T extends object>(data: T | null, phonePath: string) => {
   if (data) {
     const dataCopy = cloneDeep(data);
     const subPath = includes(phonePath, ".") ? phonePath.substring(0, indexOf(phonePath, ".") + 1) : "";
