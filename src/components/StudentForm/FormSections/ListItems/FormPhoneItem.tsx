@@ -1,7 +1,8 @@
 import { Close } from "@mui/icons-material";
 import { Grid, IconButton, Tooltip } from "@mui/material";
-import { includes, indexOf } from "lodash";
+import { includes, indexOf, isEqual } from "lodash";
 import React from "react";
+import { useFormContext } from "react-hook-form";
 import { useColors } from "../../../../hooks";
 import { FormItem, SPACING } from "../../../../services";
 import { GridItemTextField, LabeledCheckbox } from "../../../reusables";
@@ -9,6 +10,8 @@ import { GridItemTextField, LabeledCheckbox } from "../../../reusables";
 export const FormPhoneItem: React.FC<FormItem> = ({ index, removeItem, name }) => {
   const { iconColor } = useColors();
   const subPath = includes(name, ".") ? name?.substring(0, indexOf(name, ".") + 1) : "";
+  const { getValues } = useFormContext();
+  const primaryPhoneArr = getValues(`${subPath}primaryPhone`);
 
   return (
     <>
@@ -24,6 +27,9 @@ export const FormPhoneItem: React.FC<FormItem> = ({ index, removeItem, name }) =
           name={`${name}.notes`}
         />
         <LabeledCheckbox
+          checkboxProps={{
+            defaultChecked: isEqual(primaryPhoneArr, [false]) || primaryPhoneArr === undefined ? true : undefined,
+          }}
           errorName={`${subPath}primaryPhone`}
           label="Primary"
           name={`${subPath}primaryPhone[${index}]`}

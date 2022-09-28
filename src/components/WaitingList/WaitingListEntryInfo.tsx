@@ -104,15 +104,14 @@ export const WaitingListEntryInfo: React.FC<WaitingListEntryInfoProps> = ({ data
 
   const CovidVaccine = useMemo(() => {
     return (
-      <LabeledContainer condition={wlEntry.covidStatus !== CovidStatus.NORPT} label="COVID Vaccine">
+      <LabeledContainer label="COVID Vaccine">
         <LabeledText
-          condition={wlEntry.covidStatus !== CovidStatus.NORPT}
           containerProps={{
             sx: {
               backgroundColor:
                 wlEntry.covidStatus === CovidStatus.FULL
                   ? green
-                  : wlEntry.covidStatus === CovidStatus.UNV
+                  : wlEntry.covidStatus === CovidStatus.UNV || wlEntry.covidStatus === CovidStatus.NORPT
                   ? red
                   : undefined,
             },

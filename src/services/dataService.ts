@@ -11,8 +11,6 @@ export const setData = async <T extends object>(
   options?: SetOptions,
 ) => {
   try {
-    console.log(data);
-    console.log(get(data, idPath));
     await setDoc(doc(collection(db, collectionName), toString(get(data, idPath))), data, options ?? {});
   } catch (e) {
     // eslint-disable-next-line no-alert

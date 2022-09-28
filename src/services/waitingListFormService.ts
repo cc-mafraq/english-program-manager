@@ -13,19 +13,19 @@ import {
 const optionalStringSchema = string().transform(emptyToNull).nullable().optional();
 
 const stringToHighPriority = (value: string, originalValue: string) => {
-  return HighPriority[originalValue as keyof typeof HighPriority];
+  return originalValue as HighPriority;
 };
 
 const stringToWaitlistOutcome = (value: string, originalValue: string) => {
-  return originalValue ? WaitlistOutcome[originalValue as keyof typeof WaitlistOutcome] : null;
+  return originalValue !== undefined ? (originalValue as WaitlistOutcome) : null;
 };
 
 const stringToWaitlistStatus = (value: string, originalValue: string) => {
-  return WaitlistStatus[originalValue as keyof typeof WaitlistStatus];
+  return WaitlistStatus[originalValue as keyof typeof WaitlistStatus] || (originalValue as WaitlistStatus);
 };
 
 export const waitingListFormSchema = object().shape({
-  correspondence: correspondenceSchema,
+  correspondence: array().of(correspondenceSchema),
   covidStatus: covidStatusSchema,
   covidVaccineNotes: optionalStringSchema,
   enteredInPhone: bool().optional(),
@@ -36,8 +36,8 @@ export const waitingListFormSchema = object().shape({
     .required("High priority is required"),
   name: optionalStringSchema,
   numPeople: number().transform(stringToInteger).required("Number of people is required"),
-  outcome: mixed<WaitlistOutcome>()
-    .oneOf(Object.values(WaitlistOutcome) as WaitlistOutcome[])
+  outcome: mixed<WaitlistOutcome | null>()
+    .oneOf([...Object.values(WaitlistOutcome), null] as WaitlistOutcome[])
     .transform(stringToWaitlistOutcome)
     .nullable()
     .optional(),
@@ -52,7 +52,7 @@ export const waitingListFormSchema = object().shape({
     .transform(stringToWaitlistStatus)
     .required("Status is required"),
   transferralAndDate: object().shape({
-    date: dateSchema,
+    date: dateSchema.nullable(),
     transferral: optionalStringSchema,
   }),
   waiting: bool().required(),

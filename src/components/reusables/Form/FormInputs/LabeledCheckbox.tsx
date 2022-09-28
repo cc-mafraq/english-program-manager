@@ -30,6 +30,7 @@ export const LabeledCheckbox: React.FC<LabeledCheckboxProps> = ({
     errorName ?? name,
   );
   const errorColor = errorMessage ? theme.palette.error.main : undefined;
+  if (name?.includes("primaryPhone")) console.log(checkboxProps?.defaultChecked);
 
   return (
     <Box {...containerProps}>

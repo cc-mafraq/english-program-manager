@@ -1,6 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box } from "@mui/material";
 import React, { ChangeEvent, useCallback, useContext, useRef, useState } from "react";
+import { v4 } from "uuid";
 import {
   ActionsMenu,
   CorrespondenceList,
@@ -89,6 +90,7 @@ export const WaitingListPage = () => {
         alert("You must choose a primary phone number.");
         return;
       }
+      if (!data.id) data.id = v4();
       const dataNoNull = removeNullFromObject(data) as WaitingListEntry;
       setData(dataNoNull, "waitingList", "id");
       !selectedWaitingListEntry && handleSearchStringChange(dataNoNull.primaryPhone.toString());
