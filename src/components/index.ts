@@ -6,3 +6,4 @@ export * from "./StudentDatabaseToolbar";
 export * from "./StudentForm";
 export * from "./StudentList";
 export * from "./WaitingList";
+export * from "./WaitingListForm";

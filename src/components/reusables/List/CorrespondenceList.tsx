@@ -4,11 +4,11 @@ import { Box, Button, IconButton, Tooltip, Typography } from "@mui/material";
 import { findIndex, get, map, reverse, set } from "lodash";
 import moment from "moment";
 import React, { useCallback, useMemo, useState } from "react";
-import { FormDialog, LabeledContainer } from "..";
+import { FormDialog, FormLabel, LabeledContainer } from "..";
 import { useColors } from "../../../hooks";
 import { Correspondence, defaultBorderColor } from "../../../interfaces";
 import { correspondenceSchema, MOMENT_FORMAT, setData } from "../../../services";
-import { FormCorrespondenceItem, StudentFormLabel } from "../../StudentForm";
+import { FormCorrespondenceItem } from "../../StudentForm";
 
 interface CorrespondenceProps<T extends object> {
   collectionName: string;
@@ -117,7 +117,7 @@ export const CorrespondenceList = <T extends object>({ data, collectionName, idP
           resolver: yupResolver(correspondenceSchema),
         }}
       >
-        <StudentFormLabel>Correspondence</StudentFormLabel>
+        <FormLabel>Correspondence</FormLabel>
         <FormCorrespondenceItem />
       </FormDialog>
     </>

@@ -5,13 +5,13 @@ import { CovidStatus, covidStatuses, Student } from "../../../interfaces";
 import { covidVaccineImageFolder, SPACING } from "../../../services";
 import {
   FormImage,
+  FormLabel,
   GridContainer,
   GridItemAutocomplete,
   GridItemDatePicker,
   GridItemTextField,
   LabeledCheckbox,
 } from "../../reusables";
-import { StudentFormLabel } from "../StudentFormLabel";
 
 export const FormCovidVaccine: React.FC = () => {
   const { watch } = useFormContext<Student>();
@@ -19,7 +19,7 @@ export const FormCovidVaccine: React.FC = () => {
 
   return (
     <>
-      <StudentFormLabel textProps={{ marginTop: SPACING }}>COVID Vaccine</StudentFormLabel>
+      <FormLabel textProps={{ marginTop: SPACING }}>COVID Vaccine</FormLabel>
       <GridContainer>
         <FormImage
           folderName={covidVaccineImageFolder}

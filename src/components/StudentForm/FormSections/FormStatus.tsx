@@ -4,13 +4,13 @@ import { useDateInitialState, useFormList } from "../../../hooks";
 import { AppContext, Student, withdrawReasons } from "../../../interfaces";
 import { SPACING } from "../../../services";
 import {
+  FormLabel,
   FormList,
   GridContainer,
   GridItemAutocomplete,
   GridItemDatePicker,
   GridItemTextField,
 } from "../../reusables";
-import { StudentFormLabel } from "../StudentFormLabel";
 import { FormCheatingSessionItem, FormDateItem } from "./ListItems";
 
 export const FormStatus: React.FC = () => {
@@ -41,7 +41,7 @@ export const FormStatus: React.FC = () => {
 
   return (
     <>
-      <StudentFormLabel textProps={{ marginTop: SPACING }}>Status</StudentFormLabel>
+      <FormLabel textProps={{ marginTop: SPACING }}>Status</FormLabel>
       <GridContainer marginBottom={0}>
         <FormList
           addItem={addWithdrawDate}

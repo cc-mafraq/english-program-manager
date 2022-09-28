@@ -53,7 +53,7 @@ export interface FormItem {
   removeItem?: (index?: number) => () => void;
 }
 
-const stringToArray = (value: string, originalValue: string) => {
+export const stringToArray = (value: string, originalValue: string) => {
   const separators = /,|;/;
   return originalValue
     ? isArray(originalValue)
@@ -68,11 +68,11 @@ const stringToArray = (value: string, originalValue: string) => {
     : null;
 };
 
-const dateStringToArray = (value: string, originalValue: string) => {
+export const dateStringToArray = (value: string, originalValue: string) => {
   return isArray(originalValue) && some(originalValue) ? originalValue : [];
 };
 
-const stringToInteger = (value: string, originalValue: string) => {
+export const stringToInteger = (value: string, originalValue: string) => {
   if (lowerCase(originalValue) === "unknown") return originalValue;
   const parsedInt = parseInt(originalValue);
   return isNaN(parsedInt) ? undefined : parsedInt;
@@ -82,7 +82,7 @@ const stringToStatus = (value: string, originalValue: string) => {
   return Status[originalValue as keyof typeof Status];
 };
 
-const stringToCovidStatus = (value: string, originalValue: string) => {
+export const stringToCovidStatus = (value: string, originalValue: string) => {
   return originalValue as CovidStatus;
 };
 
@@ -94,17 +94,17 @@ const stringToResult = (value: string, originalValue: string) => {
   return originalValue ? FinalResult[originalValue as keyof typeof FinalResult] : null;
 };
 
-const dateToString = (value: string, originalValue: string) => {
+export const dateToString = (value: string, originalValue: string) => {
   if (isEmpty(originalValue)) return null;
   const momentVal = moment(originalValue, MOMENT_FORMAT);
   return momentVal.isValid() ? momentVal.format(MOMENT_FORMAT) : moment(originalValue).format(MOMENT_FORMAT);
 };
 
-const emptyToNull = (value: string, originalValue: string) => {
+export const emptyToNull = (value: string, originalValue: string) => {
   return isEmpty(originalValue) ? null : originalValue;
 };
 
-const stringToPhoneNumber = (value: string, originalValue: string) => {
+export const stringToPhoneNumber = (value: string, originalValue: string) => {
   const numberNoSpacesOrSpecialChars = toString(originalValue).replace(/[-()+\s]/g, "");
   const numberNoCountryCode = numberNoSpacesOrSpecialChars.startsWith("962")
     ? numberNoSpacesOrSpecialChars.slice(3)
@@ -131,7 +131,7 @@ const percentageSchema = number()
   .optional();
 
 // https://www.regular-expressions.info/dates.html
-const dateSchema = string()
+export const dateSchema = string()
   .matches(
     /^([1-9]|1[012])[- /.]([1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d$/,
     "Invalid date format. The format must be MM/DD/YY",
@@ -168,13 +168,15 @@ export const correspondenceSchema = object().shape({
   ),
 });
 
+export const covidStatusSchema = mixed<CovidStatus>()
+  .oneOf(values(CovidStatus))
+  .transform(stringToCovidStatus)
+  .required("Vaccine status is required");
+
 const covidSchema = object().shape({
   date: dateSchema.nullable().optional(),
   reason: string().transform(emptyToNull).nullable().optional(),
-  status: mixed<CovidStatus>()
-    .oneOf(values(CovidStatus))
-    .transform(stringToCovidStatus)
-    .required("Vaccine status is required"),
+  status: covidStatusSchema,
   suspectedFraud: bool().optional(),
   suspectedFraudReason: string().transform(emptyToNull).nullable().optional(),
 });
@@ -194,7 +196,26 @@ const nameSchema = object()
   })
   .required();
 
-const phoneNumberSchema = object()
+export const primaryPhoneSchema = number()
+  .test("one-primary-phone", "Exactly one primary number must be selected", (value) => {
+    return value !== undefined && value >= 0;
+  })
+  .transform((value, originalValue) => {
+    const originalValueBool = map(originalValue, (val) => {
+      return val === true || val === "true";
+    });
+    const trueIndex = indexOf(originalValueBool, true);
+    if (trueIndex !== -1) {
+      originalValueBool.splice(trueIndex, 1);
+      if (indexOf(originalValueBool, true) === -1) {
+        return trueIndex;
+      }
+    }
+    return undefined;
+  })
+  .required();
+
+export const phoneNumberSchema = object()
   .shape({
     notes: string().transform(emptyToNull).nullable().optional(),
     number: number()
@@ -212,24 +233,7 @@ const phoneSchema = object()
   .shape({
     otherWaBroadcastGroups: array().of(string()).transform(stringToArray).nullable().optional(),
     phoneNumbers: array().of(phoneNumberSchema).min(1, "There must be at least 1 phone number"),
-    primaryPhone: number()
-      .test("one-primary-phone", "Exactly one primary number must be selected", (value) => {
-        return value !== undefined && value >= 0;
-      })
-      .transform((value, originalValue) => {
-        const originalValueBool = map(originalValue, (val) => {
-          return val === true || val === "true";
-        });
-        const trueIndex = indexOf(originalValueBool, true);
-        if (trueIndex !== -1) {
-          originalValueBool.splice(trueIndex, 1);
-          if (indexOf(originalValueBool, true) === -1) {
-            return trueIndex;
-          }
-        }
-        return undefined;
-      })
-      .required(),
+    primaryPhone: primaryPhoneSchema,
     waBroadcastSAR: string().transform(emptyToNull).nullable().optional(),
     whatsappNotes: string().transform(emptyToNull).nullable().optional(),
   })

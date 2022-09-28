@@ -47,7 +47,7 @@ export const parseWLReferral = parseOptionalString("referral");
 export const parseWLCovidVaccineStatus = (key: string, value: string, wlEntry: WaitingListEntry) => {
   const valueInt = parseInt(value);
   if (valueInt === 3) {
-    wlEntry.covidStatus = CovidStatus.UNV;
+    wlEntry.covidStatus = CovidStatus.NORPT;
   }
   if (valueInt === 10) {
     wlEntry.covidStatus = CovidStatus.FULL;

@@ -1,3 +1,4 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Box } from "@mui/material";
 import React, { ChangeEvent, useCallback, useContext, useRef, useState } from "react";
 import {
@@ -10,6 +11,7 @@ import {
   VirtualizedList,
   WaitingListCardHeader,
   WaitingListEntryInfo,
+  WaitingListForm,
 } from "../components";
 import { WaitingListFilter } from "../components/WaitingList/WaitingListFilter";
 import { useFormDialog, usePageState } from "../hooks";
@@ -20,6 +22,7 @@ import {
   setData,
   setPrimaryNumberBooleanArray,
   sortWaitingList,
+  waitingListFormSchema,
   waitingListToList,
 } from "../services";
 
@@ -145,11 +148,10 @@ export const WaitingListPage = () => {
         stickySubmit
         useFormProps={{
           defaultValues: setPrimaryNumberBooleanArray(selectedWaitingListEntry, "phoneNumbers"),
-          // resolver: yupResolver(waitingListFormSchema),
+          resolver: yupResolver(waitingListFormSchema),
         }}
       >
-        <></>
-        {/* <StudentForm /> */}
+        <WaitingListForm />
       </FormDialog>
     </>
   );

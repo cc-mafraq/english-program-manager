@@ -4,8 +4,14 @@ import { FieldValues, useFormContext } from "react-hook-form";
 import { useDateInitialState, useFormList } from "../../../hooks";
 import { AppContext } from "../../../interfaces";
 import { SPACING } from "../../../services";
-import { FormList, GridContainer, GridItemDatePicker, GridItemTextField, LabeledCheckbox } from "../../reusables";
-import { StudentFormLabel } from "../StudentFormLabel";
+import {
+  FormLabel,
+  FormList,
+  GridContainer,
+  GridItemDatePicker,
+  GridItemTextField,
+  LabeledCheckbox,
+} from "../../reusables";
 import { FormDateItem, FormPlacementItem } from "./ListItems";
 
 interface FormPlacementProps {
@@ -33,7 +39,7 @@ export const FormPlacement = <T extends FieldValues>({ standAlone }: FormPlaceme
 
   return (
     <>
-      <StudentFormLabel textProps={{ marginTop: SPACING }}>Placement</StudentFormLabel>
+      <FormLabel textProps={{ marginTop: SPACING }}>Placement</FormLabel>
       <GridContainer marginBottom={0}>
         <GridItemTextField gridProps={{ xs: 6 }} label="Sections Offered" name={`${namePrefix}sectionsOffered`} />
         <FormList

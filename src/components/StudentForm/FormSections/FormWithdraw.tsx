@@ -3,13 +3,18 @@ import moment from "moment";
 import React from "react";
 import { withdrawReasons } from "../../../interfaces";
 import { MOMENT_FORMAT, SPACING } from "../../../services";
-import { GridContainer, GridItemAutocomplete, GridItemDatePicker, LabeledCheckbox } from "../../reusables";
-import { StudentFormLabel } from "../StudentFormLabel";
+import {
+  FormLabel,
+  GridContainer,
+  GridItemAutocomplete,
+  GridItemDatePicker,
+  LabeledCheckbox,
+} from "../../reusables";
 
 export const FormWithdraw: React.FC = () => {
   return (
     <>
-      <StudentFormLabel textProps={{ marginTop: SPACING }}>Withdraw Student</StudentFormLabel>
+      <FormLabel textProps={{ marginTop: SPACING }}>Withdraw Student</FormLabel>
       <GridContainer marginBottom={SPACING}>
         <Grid item>
           <LabeledCheckbox containerProps={{ marginTop: -1 }} label="Invite" name="inviteTag" />

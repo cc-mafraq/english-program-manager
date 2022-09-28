@@ -6,7 +6,7 @@ interface StudentFormLabelProps {
   textProps?: TypographyProps;
 }
 
-export const StudentFormLabel: React.FC<StudentFormLabelProps> = ({ children, textProps }) => {
+export const FormLabel: React.FC<StudentFormLabelProps> = ({ children, textProps }) => {
   return (
     <Typography fontWeight={600} variant="h6" {...textProps}>
       {children}
@@ -14,7 +14,7 @@ export const StudentFormLabel: React.FC<StudentFormLabelProps> = ({ children, te
   );
 };
 
-StudentFormLabel.defaultProps = {
+FormLabel.defaultProps = {
   children: undefined,
   textProps: {},
 };

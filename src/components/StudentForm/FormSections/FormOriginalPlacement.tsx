@@ -1,13 +1,12 @@
 import React from "react";
 import { levels, levelsPlus } from "../../../interfaces";
 import { SPACING } from "../../../services";
-import { GridContainer, GridItemAutocomplete, GridItemTextField } from "../../reusables";
-import { StudentFormLabel } from "../StudentFormLabel";
+import { FormLabel, GridContainer, GridItemAutocomplete, GridItemTextField } from "../../reusables";
 
 export const FormOriginalPlacement: React.FC = () => {
   return (
     <>
-      <StudentFormLabel textProps={{ marginTop: SPACING }}>Original Placement</StudentFormLabel>
+      <FormLabel textProps={{ marginTop: SPACING }}>Original Placement</FormLabel>
       <GridContainer>
         <GridItemAutocomplete
           label="Writing Placement"

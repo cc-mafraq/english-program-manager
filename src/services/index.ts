@@ -8,5 +8,6 @@ export * from "./statisticsService";
 export * from "./studentFormService";
 export * from "./studentParsingService";
 export * from "./studentService";
+export * from "./waitingListFormService";
 export * from "./waitingListParsingService";
 export * from "./waitingListService";

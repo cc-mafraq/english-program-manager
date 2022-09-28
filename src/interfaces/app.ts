@@ -81,12 +81,12 @@ export const initialAppState: AppState = {
   waitingListFilter: [],
 };
 
-export interface AppContext {
+export interface IAppContext {
   appDispatch: Dispatch<AppAction> | (() => void);
   appState: AppState;
 }
 
-export const AppContext = createContext<AppContext>({
+export const AppContext = createContext<IAppContext>({
   appDispatch: voidFn,
   appState: initialAppState,
 });
