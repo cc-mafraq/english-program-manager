@@ -104,8 +104,11 @@ export const parseOptionalString = <T extends object>(fieldPath: string) => {
 
 export const parseOptionalBoolean = <T extends object>(fieldPath: string) => {
   return (key: string, value: string, object: T) => {
-    if (Number(value) !== 1) return;
-    set(object, fieldPath, true);
+    if (Number(value) === 1 || value.toLowerCase() === "yes") {
+      set(object, fieldPath, true);
+    } else if (value.toLowerCase() === "no") {
+      set(object, fieldPath, true);
+    }
   };
 };
 

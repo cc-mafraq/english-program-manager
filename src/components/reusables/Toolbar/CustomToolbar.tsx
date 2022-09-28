@@ -1,5 +1,5 @@
 import { FilterAlt, MoreHoriz } from "@mui/icons-material";
-import { AppBar, Box, Divider, IconButton, TablePagination, Toolbar, Tooltip } from "@mui/material";
+import { AppBar, Box, IconButton, TablePagination, Toolbar, Tooltip } from "@mui/material";
 import React, { Attributes, Dispatch, SetStateAction, useContext } from "react";
 import { saveLocal, useColors } from "../../../hooks";
 import { AppContext } from "../../../interfaces";
@@ -51,7 +51,7 @@ export const CustomToolbar = <T,>({
   const { iconColor } = useColors();
 
   return (
-    <AppBar color="default" elevation={0} position="sticky">
+    <AppBar color="default" elevation={1} position="sticky">
       <Toolbar
         sx={{
           justifyContent: "space-between",
@@ -101,7 +101,6 @@ export const CustomToolbar = <T,>({
           />
         </Box>
       </Toolbar>
-      <Divider />
     </AppBar>
   );
 };

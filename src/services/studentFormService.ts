@@ -223,7 +223,7 @@ export const phoneNumberSchema = object()
       .transform(stringToPhoneNumber)
       .test("valid-phone-number", "The phone number is not valid", (value) => {
         return (
-          value !== undefined && ((value > 700000000 && value < 800000000) || startsWith(toString(value), "2012"))
+          value !== undefined && ((value > 700000000 && value < 800000000) || !startsWith(toString(value), "7"))
         );
       })
       .required("Phone number is required if added. You can remove the phone number by clicking the ❌ button"),
