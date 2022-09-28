@@ -39,9 +39,9 @@ export interface SessionResult {
   session?: string;
 }
 
-export interface FilterField {
+export interface FilterField<T> {
   condition?: boolean;
-  fn?: (student: Student) => unknown;
+  fn?: (data: T) => unknown;
   ignoreValueMappings?: boolean;
   name: string;
   path: string;

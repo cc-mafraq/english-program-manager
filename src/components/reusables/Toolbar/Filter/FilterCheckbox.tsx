@@ -4,8 +4,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { AppContext, FilterValue } from "../../../../interfaces";
 import { FilterField } from "../../../../services";
 
-interface FilterCheckBoxProps {
-  filterField: FilterField;
+interface FilterCheckBoxProps<T> {
+  filterField: FilterField<T>;
   filterStatePath: string;
   ignoreValueMappings?: boolean;
   label: unknown;
@@ -22,7 +22,7 @@ export const FilterCheckbox = <T,>({
   filterField,
   filterStatePath,
   ignoreValueMappings,
-}: FilterCheckBoxProps) => {
+}: FilterCheckBoxProps<T>) => {
   const { appState, appDispatch } = useContext(AppContext);
   const filter: FilterValue<T>[] = get(appState, filterStatePath);
 

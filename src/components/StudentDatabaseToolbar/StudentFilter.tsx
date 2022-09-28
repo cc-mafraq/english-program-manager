@@ -61,7 +61,7 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
     appDispatch({ payload: { studentFilter: [] } });
   }, [appDispatch]);
 
-  const filterFields: FilterField[] = useMemo(() => {
+  const filterFields: FilterField<Student>[] = useMemo(() => {
     return [
       { condition: isAdmin, name: "Invite", path: "status.inviteTag", values: booleanCheckboxOptions },
       { condition: isAdmin, name: "Placement Pending", path: "placement.pending", values: ["Yes"] },

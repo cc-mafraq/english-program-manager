@@ -1,6 +1,6 @@
-import { values } from "lodash";
+import { countBy, find, get, values } from "lodash";
 import React, { useCallback, useContext, useMemo } from "react";
-import { AppContext, HighPriority, WaitlistOutcome, WaitlistStatus } from "../../interfaces";
+import { AppContext, HighPriority, WaitingListEntry, WaitlistOutcome, WaitlistStatus } from "../../interfaces";
 import { FilterField } from "../../services";
 import { FilterDrawer } from "../reusables";
 
@@ -13,9 +13,12 @@ const booleanCheckboxOptions = ["Yes", "No"];
 
 export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({ anchorEl, handleClose }) => {
   const {
-    appState: { students, role },
+    appState: { role, waitingList },
     appDispatch,
   } = useContext(AppContext);
+  const waitingListPhoneCounts = useMemo(() => {
+    return countBy(waitingList, "primaryPhone");
+  }, [waitingList]);
 
   const isAdmin = role === "admin";
   const isAdminOrFaculty = isAdmin || role === "faculty";
@@ -24,7 +27,19 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({ anchorEl, 
     appDispatch({ payload: { waitingListFilter: [] } });
   }, [appDispatch]);
 
-  const filterFields: FilterField[] = useMemo(() => {
+  const removeDuplicates = useCallback(
+    (wlEntry: WaitingListEntry) => {
+      return (
+        get(waitingListPhoneCounts, wlEntry.primaryPhone) === 1 ||
+        find(waitingList, (wl) => {
+          return wl.primaryPhone === wlEntry.primaryPhone;
+        })?.id === wlEntry.id
+      );
+    },
+    [waitingList, waitingListPhoneCounts],
+  );
+
+  const filterFields: FilterField<WaitingListEntry>[] = useMemo(() => {
     return [
       { condition: isAdminOrFaculty, name: "Waiting", path: "waiting", values: booleanCheckboxOptions },
       {
@@ -33,6 +48,19 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({ anchorEl, 
         name: "High Priority",
         path: "highPriority",
         values: values(HighPriority),
+      },
+      {
+        condition: isAdminOrFaculty,
+        fn: removeDuplicates,
+        name: "Remove Duplicates",
+        path: "phone.primaryPhone",
+        values: ["Yes"],
+      },
+      {
+        condition: isAdminOrFaculty,
+        name: "Entered in Phone",
+        path: "enteredInPhone",
+        values: booleanCheckboxOptions,
       },
       {
         condition: isAdminOrFaculty,
@@ -48,12 +76,6 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({ anchorEl, 
       },
       {
         condition: isAdminOrFaculty,
-        name: "Entered in Phone",
-        path: "enteredInPhone",
-        values: booleanCheckboxOptions,
-      },
-      {
-        condition: isAdminOrFaculty,
         name: "Probable PL1",
         path: "probPL1",
         values: booleanCheckboxOptions,
@@ -65,11 +87,11 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({ anchorEl, 
         values: booleanCheckboxOptions,
       },
     ];
-  }, [isAdminOrFaculty]);
+  }, [isAdminOrFaculty, removeDuplicates]);
   return (
     <FilterDrawer
       anchorEl={anchorEl}
-      data={students}
+      data={waitingList}
       filterFields={filterFields}
       filterStatePath="waitingListFilter"
       handleClearFilters={handleClearFilters}

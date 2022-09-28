@@ -8,7 +8,7 @@ import { FilterField } from "../../../../services";
 interface FilterDrawerProps<T> {
   anchorEl?: HTMLButtonElement | null;
   data: T[];
-  filterFields: FilterField[];
+  filterFields: FilterField<T>[];
   filterStatePath: string;
   handleClearFilters: () => void;
   handleClose?: (event: React.MouseEvent<HTMLButtonElement>) => void;
