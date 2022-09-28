@@ -4,6 +4,7 @@ import {
   forEach,
   forOwn,
   get,
+  includes,
   indexOf,
   isArray,
   isEmpty,
@@ -371,14 +372,12 @@ export const removeNullFromObject = (obj: object): object => {
 export const setPrimaryNumberBooleanArray = <T>(data: T | null, phonePath: string) => {
   if (data) {
     const dataCopy = cloneDeep(data);
-    const subPath = phonePath.substring(0, indexOf(phonePath, ".") + 1);
-    return set(
-      dataCopy,
-      `${subPath}primaryPhone`,
-      map(get(dataCopy, phonePath), (num) => {
-        return num.number === get(dataCopy, `${subPath}primaryPhone`);
-      }),
-    );
+    const subPath = includes(phonePath, ".") ? phonePath.substring(0, indexOf(phonePath, ".") + 1) : "";
+    const primaryPhoneBooleanArray = map(get(dataCopy, phonePath), (num) => {
+      return num.number === get(dataCopy, `${subPath}primaryPhone`);
+    });
+    set(dataCopy, `${subPath}primaryPhone`, primaryPhoneBooleanArray);
+    return dataCopy;
   }
   return undefined;
 };

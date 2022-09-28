@@ -1,5 +1,6 @@
 import { Close } from "@mui/icons-material";
 import { Grid, IconButton, Tooltip } from "@mui/material";
+import { includes, indexOf } from "lodash";
 import React from "react";
 import { useColors } from "../../../../hooks";
 import { FormItem, SPACING } from "../../../../services";
@@ -7,6 +8,7 @@ import { GridItemTextField, LabeledCheckbox } from "../../../reusables";
 
 export const FormPhoneItem: React.FC<FormItem> = ({ index, removeItem, name }) => {
   const { iconColor } = useColors();
+  const subPath = includes(name, ".") ? name?.substring(0, indexOf(name, ".") + 1) : "";
 
   return (
     <>
@@ -21,7 +23,11 @@ export const FormPhoneItem: React.FC<FormItem> = ({ index, removeItem, name }) =
           label={`Phone Notes ${Number(index) + 1}`}
           name={`${name}.notes`}
         />
-        <LabeledCheckbox errorName="phone.primaryPhone" label="Primary" name={`phone.primaryPhone[${index}]`} />
+        <LabeledCheckbox
+          errorName={`${subPath}primaryPhone`}
+          label="Primary"
+          name={`${subPath}primaryPhone[${index}]`}
+        />
       </Grid>
       <Tooltip arrow title="Remove Phone Number">
         <IconButton

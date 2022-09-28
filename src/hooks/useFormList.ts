@@ -25,7 +25,7 @@ export const useFormList = <T extends FieldValues>(
       methods.reset(resetObject as T | DeepPartial<T> | undefined, { keepValues: true });
       methods.setValue(listPath as Path<T>, newList as PathValue<T, Path<T>>);
       if (includes(listPath, "phone")) {
-        const subPath = listPath.substring(0, indexOf(listPath, ".") + 1);
+        const subPath = includes(listPath, ".") ? listPath.substring(0, indexOf(listPath, ".") + 1) : "";
         const currentPrimaryPhoneList = get(methods.getValues(), `${subPath}primaryPhone`);
         currentPrimaryPhoneList.splice(index, 1);
         methods.setValue(`${subPath}primaryPhone` as Path<T>, currentPrimaryPhoneList);
