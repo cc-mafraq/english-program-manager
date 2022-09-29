@@ -27,9 +27,11 @@ export const WaitingListCardHeader: React.FC<WaitingListHeaderProps> = ({
       <Typography component="div" display="inline" fontSize={28} gutterBottom>
         {wlEntry.primaryPhone === -1 ? "No Number" : wlEntry.primaryPhone}
       </Typography>
-      <Typography component="div" display="inline" fontSize={28} gutterBottom marginLeft="25%">
-        {wlEntry.name}
-      </Typography>
+      {(role === "admin" || role === "faculty") && (
+        <Typography component="div" display="inline" fontSize={28} gutterBottom marginLeft="25%">
+          {wlEntry.name}
+        </Typography>
+      )}
       <Box sx={{ flexDirection: "row", flexGrow: 1, float: "right" }}>
         {wlEntry.primaryPhone > 700000000 ? (
           <>
