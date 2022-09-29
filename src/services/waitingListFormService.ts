@@ -35,7 +35,7 @@ export const waitingListFormSchema = object().shape({
     .transform(stringToHighPriority)
     .required("High priority is required"),
   name: optionalStringSchema,
-  numPeople: number().transform(stringToInteger).required("Number of people is required"),
+  numPeople: number().transform(stringToInteger).optional().nullable(),
   outcome: mixed<WaitlistOutcome | null>()
     .oneOf([...Object.values(WaitlistOutcome), null] as WaitlistOutcome[])
     .transform(stringToWaitlistOutcome)
