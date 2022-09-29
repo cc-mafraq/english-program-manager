@@ -1,5 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box } from "@mui/material";
+import { get, includes, map, nth } from "lodash";
 import React, { ChangeEvent, useCallback, useContext, useRef, useState } from "react";
 import { v4 } from "uuid";
 import {
@@ -11,6 +12,7 @@ import {
   Loading,
   VirtualizedList,
   WaitingListCardHeader,
+  WaitingListDupPhoneDialog,
   WaitingListEntryInfo,
   WaitingListForm,
 } from "../components";
@@ -63,6 +65,14 @@ export const WaitingListPage = () => {
     openDialog: openWLEntryDialog,
   } = useFormDialog({ selectedDataPath: "selectedWaitingListEntry" });
 
+  const {
+    handleDialogClose: handleDupPhoneDialogClose,
+    handleDialogOpen: handleDupPhoneDialogOpen,
+    openDialog: openDupPhoneDialog,
+  } = useFormDialog({});
+
+  const [submitData, setSubmitData] = useState(emptyWaitingListEntry);
+
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     handleChangePage(null, 0);
     setSpreadsheetIsLoading(true);
@@ -82,14 +92,6 @@ export const WaitingListPage = () => {
 
   const wlEntryFormOnSubmit = useCallback(
     (data: WaitingListEntry) => {
-      const primaryPhone = data.phoneNumbers[data.primaryPhone as number]?.number;
-      if (primaryPhone) {
-        data.primaryPhone = primaryPhone;
-      } else {
-        // eslint-disable-next-line no-alert
-        alert("You must choose a primary phone number.");
-        return;
-      }
       if (!data.id) data.id = v4();
       const dataNoNull = removeNullFromObject(data) as WaitingListEntry;
       setData(dataNoNull, "waitingList", "id");
@@ -97,6 +99,24 @@ export const WaitingListPage = () => {
       handleWLEntryDialogClose();
     },
     [handleSearchStringChange, handleWLEntryDialogClose, selectedWaitingListEntry],
+  );
+
+  const checkDuplicatePhone = useCallback(
+    (data: WaitingListEntry) => {
+      const primaryPhone = get(nth(data?.phoneNumbers, data.primaryPhone as number), "number");
+      primaryPhone && setSubmitData(data);
+      if (primaryPhone) {
+        data.primaryPhone = primaryPhone;
+      }
+      if (
+        includes(map(waitingList, "primaryPhone"), data.primaryPhone ? data.primaryPhone : submitData.primaryPhone)
+      ) {
+        handleDupPhoneDialogOpen();
+        return;
+      }
+      wlEntryFormOnSubmit(data.primaryPhone ? data : submitData);
+    },
+    [handleDupPhoneDialogOpen, submitData, waitingList, wlEntryFormOnSubmit],
   );
 
   return (
@@ -151,7 +171,7 @@ export const WaitingListPage = () => {
           },
         }}
         handleDialogClose={handleWLEntryDialogClose}
-        onSubmit={wlEntryFormOnSubmit}
+        onSubmit={checkDuplicatePhone}
         open={openWLEntryDialog}
         stickySubmit
         useFormProps={{
@@ -161,6 +181,12 @@ export const WaitingListPage = () => {
       >
         <WaitingListForm />
       </FormDialog>
+      <WaitingListDupPhoneDialog
+        data={submitData}
+        handleDialogClose={handleDupPhoneDialogClose}
+        onSubmit={wlEntryFormOnSubmit}
+        open={openDupPhoneDialog}
+      />
     </>
   );
 };

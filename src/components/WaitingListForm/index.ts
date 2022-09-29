@@ -4,3 +4,4 @@ export * from "./FormPlacementExam";
 export * from "./FormPlacementExamItem";
 export * from "./FormWaitingListVaccine";
 export * from "./WaitingListForm";
+export * from "./WaitingListDupPhoneDialog"
