@@ -3,7 +3,7 @@ import { useCallback, useContext, useState } from "react";
 import { AppContext } from "../interfaces";
 
 interface UseFormDialogProps {
-  selectedDataPath?: string;
+  selectedDataPath: string;
 }
 
 export const useFormDialog = ({ selectedDataPath }: UseFormDialogProps) => {
@@ -16,10 +16,8 @@ export const useFormDialog = ({ selectedDataPath }: UseFormDialogProps) => {
 
   const handleDialogClose = useCallback(() => {
     setOpenDialog(false);
-    if (selectedDataPath) {
-      const payload = set({}, selectedDataPath, null);
-      appDispatch({ payload });
-    }
+    const payload = set({}, selectedDataPath, null);
+    appDispatch({ payload });
   }, [appDispatch, selectedDataPath]);
 
   return { handleDialogClose, handleDialogOpen, openDialog };
