@@ -12,6 +12,7 @@ interface FilterDrawerProps<T> {
   filterStatePath: string;
   handleClearFilters: () => void;
   handleClose?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  tooltipObjectName?: string;
 }
 
 export const FilterDrawer = <T,>({
@@ -21,6 +22,7 @@ export const FilterDrawer = <T,>({
   anchorEl,
   handleClose,
   handleClearFilters,
+  tooltipObjectName,
 }: FilterDrawerProps<T>) => {
   const open = Boolean(anchorEl);
   const { popoverColor } = useColors();
@@ -40,7 +42,7 @@ export const FilterDrawer = <T,>({
       }}
     >
       <Typography fontWeight="bold" marginLeft={1} marginTop={1} variant="h5">
-        Filter Students
+        Filter {tooltipObjectName}
       </Typography>
       <Button
         color={theme.palette.mode === "light" ? "secondary" : undefined}
@@ -90,4 +92,5 @@ export const FilterDrawer = <T,>({
 FilterDrawer.defaultProps = {
   anchorEl: null,
   handleClose: undefined,
+  tooltipObjectName: undefined,
 };

@@ -25,10 +25,10 @@ interface CustomToolbarProps<T> {
   list: T[];
   page: number;
   rowsPerPage: number;
-  searchPlaceholder: string;
   searchString: string;
   setShowActions: Dispatch<SetStateAction<boolean>>;
   showActions: boolean;
+  tooltipObjectName: string;
 }
 
 export const CustomToolbar = <T,>({
@@ -41,7 +41,7 @@ export const CustomToolbar = <T,>({
   showActions,
   setShowActions,
   searchString,
-  searchPlaceholder,
+  tooltipObjectName,
   filterComponent,
 }: CustomToolbarProps<T>) => {
   const {
@@ -75,10 +75,10 @@ export const CustomToolbar = <T,>({
         <Box margin="auto">
           <Searchbar
             handleSearchStringChange={handleSearchStringChange}
-            placeholder={searchPlaceholder}
+            placeholder={`Search ${tooltipObjectName.toLowerCase()}`}
             searchString={searchString}
           />
-          <Tooltip arrow title="Filter Students">
+          <Tooltip arrow title={`Filter ${tooltipObjectName}`}>
             <IconButton onClick={handlePopoverClick(setFilterAnchorEl)}>
               <FilterAlt sx={{ color: iconColor }} />
             </IconButton>
@@ -87,6 +87,7 @@ export const CustomToolbar = <T,>({
             React.cloneElement(filterComponent, {
               anchorEl: filterAnchorEl,
               handleClose: handlePopoverClose(setFilterAnchorEl),
+              tooltipObjectName,
             } as Partial<unknown> & Attributes)}
         </Box>
         <Box width="33vw">

@@ -147,10 +147,10 @@ export const StudentDatabasePage = () => {
           list={searchString || filter.length ? filteredStudents : students}
           page={page}
           rowsPerPage={rowsPerPage}
-          searchPlaceholder="Search students"
           searchString={searchString}
           setShowActions={setShowActions}
           showActions={showActions}
+          tooltipObjectName="Students"
         />
         <ActionsMenu
           handleDialogOpen={handleStudentDialogOpen}
