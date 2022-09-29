@@ -26,6 +26,7 @@ export const GridItemTextField = ({ label, gridProps, textFieldProps, value, nam
   const registerRef = useMemo(() => {
     return register(name ?? nameFallback);
   }, [name, nameFallback, register]);
+
   return (
     <Grid item xs {...gridProps}>
       <TextField
