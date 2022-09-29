@@ -39,7 +39,6 @@ export const WaitingListDupPhoneDialog: React.FC<WaitingListDupPhoneDialogProps>
       </DialogContent>
       <DialogActions>
         <Button
-          autoFocus
           onClick={() => {
             handleDialogClose();
             onSubmit(data);
@@ -47,7 +46,9 @@ export const WaitingListDupPhoneDialog: React.FC<WaitingListDupPhoneDialogProps>
         >
           Yes
         </Button>
-        <Button onClick={handleDialogClose}>No</Button>
+        <Button autoFocus onClick={handleDialogClose}>
+          No
+        </Button>
       </DialogActions>
     </Dialog>
   );
