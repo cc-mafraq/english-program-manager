@@ -130,10 +130,10 @@ export const WaitingListPage = () => {
           list={searchString || filter.length ? filteredWaitingList : waitingList}
           page={page}
           rowsPerPage={rowsPerPage}
-          searchPlaceholder="Search waiting list"
           searchString={searchString}
           setShowActions={setShowActions}
           showActions={showActions}
+          tooltipObjectName="Waiting List"
         />
         <ActionsMenu
           handleDialogOpen={handleWLEntryDialogOpen}

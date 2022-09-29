@@ -104,7 +104,7 @@ export const WaitingListEntryInfo: React.FC<WaitingListEntryInfoProps> = ({ data
 
   const CovidVaccine = useMemo(() => {
     return (
-      <LabeledContainer label="COVID Vaccine">
+      <LabeledContainer condition={role === "admin"} label="COVID Vaccine">
         <LabeledText
           containerProps={{
             sx: {
@@ -123,11 +123,11 @@ export const WaitingListEntryInfo: React.FC<WaitingListEntryInfoProps> = ({ data
         <LabeledText label="Vaccine Notes">{wlEntry.covidVaccineNotes}</LabeledText>
       </LabeledContainer>
     );
-  }, [green, red, wlEntry.covidStatus, wlEntry.covidVaccineNotes]);
+  }, [green, red, role, wlEntry.covidStatus, wlEntry.covidVaccineNotes]);
 
   const PlacementExam = useMemo(() => {
     return (
-      <LabeledContainer condition={wlEntry.placementExam?.length > 0} label="Placement Exam">
+      <LabeledContainer condition={wlEntry.placementExam?.length > 0 && isAdminOrFaculty} label="Placement Exam">
         {map(wlEntry.placementExam, (pe, i) => {
           return (
             <span key={i}>
@@ -137,18 +137,16 @@ export const WaitingListEntryInfo: React.FC<WaitingListEntryInfoProps> = ({ data
         })}
       </LabeledContainer>
     );
-  }, [wlEntry.placementExam]);
+  }, [isAdminOrFaculty, wlEntry.placementExam]);
 
   const PhoneNumbers = useMemo(() => {
     return (
-      <LabeledContainer label="Phone Numbers" showWhenEmpty>
+      <LabeledContainer condition={isAdminOrFaculty} label="Phone Numbers" showWhenEmpty>
         {map(wlEntry.phoneNumbers, (pn, i) => {
           return (
             <span key={i}>
               <LabeledText label={`Number ${Number(i) + 1}`}>{pn.number}</LabeledText>
-              <LabeledText condition={isAdminOrFaculty} label={`Number ${Number(i) + 1} Notes`}>
-                {pn.notes}
-              </LabeledText>
+              <LabeledText label={`Number ${Number(i) + 1} Notes`}>{pn.notes}</LabeledText>
             </span>
           );
         })}

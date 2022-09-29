@@ -7,11 +7,16 @@ import { FilterDrawer } from "../reusables";
 interface WaitingListFilterProps {
   anchorEl?: HTMLButtonElement | null;
   handleClose?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  tooltipObjectName?: string;
 }
 
 const booleanCheckboxOptions = ["Yes", "No"];
 
-export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({ anchorEl, handleClose }) => {
+export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({
+  anchorEl,
+  handleClose,
+  tooltipObjectName,
+}) => {
   const {
     appState: { role, waitingList },
     appDispatch,
@@ -96,6 +101,7 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({ anchorEl, 
       filterStatePath="waitingListFilter"
       handleClearFilters={handleClearFilters}
       handleClose={handleClose}
+      tooltipObjectName={tooltipObjectName}
     />
   );
 };
@@ -103,4 +109,5 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({ anchorEl, 
 WaitingListFilter.defaultProps = {
   anchorEl: null,
   handleClose: undefined,
+  tooltipObjectName: undefined,
 };

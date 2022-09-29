@@ -15,11 +15,12 @@ import { FilterDrawer } from "../reusables";
 interface StudentFilterProps {
   anchorEl?: HTMLButtonElement | null;
   handleClose?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  tooltipObjectName?: string;
 }
 
 const booleanCheckboxOptions = ["Yes", "No"];
 
-export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleClose }) => {
+export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleClose, tooltipObjectName }) => {
   const {
     appState: { students, role },
     appDispatch,
@@ -105,6 +106,7 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
       filterStatePath="studentFilter"
       handleClearFilters={handleClearFilters}
       handleClose={handleClose}
+      tooltipObjectName={tooltipObjectName}
     />
   );
 };
@@ -112,4 +114,5 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
 StudentFilter.defaultProps = {
   anchorEl: null,
   handleClose: undefined,
+  tooltipObjectName: undefined,
 };
