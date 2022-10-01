@@ -107,14 +107,10 @@ export const WaitingListPage = () => {
       primaryPhone && setSubmitData(data);
       if (primaryPhone) {
         data.primaryPhone = primaryPhone;
+      } else {
+        data.primaryPhone = submitData.primaryPhone;
       }
-      if (
-        includes(
-          map(waitingList, "primaryPhone"),
-          data.primaryPhone ? data.primaryPhone : submitData.primaryPhone,
-        ) &&
-        !selectedWaitingListEntry
-      ) {
+      if (includes(map(waitingList, "primaryPhone"), data.primaryPhone) && !selectedWaitingListEntry) {
         handleDupPhoneDialogOpen();
         return;
       }
