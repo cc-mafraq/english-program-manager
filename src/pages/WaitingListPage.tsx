@@ -109,14 +109,24 @@ export const WaitingListPage = () => {
         data.primaryPhone = primaryPhone;
       }
       if (
-        includes(map(waitingList, "primaryPhone"), data.primaryPhone ? data.primaryPhone : submitData.primaryPhone)
+        includes(
+          map(waitingList, "primaryPhone"),
+          data.primaryPhone ? data.primaryPhone : submitData.primaryPhone,
+        ) &&
+        !selectedWaitingListEntry
       ) {
         handleDupPhoneDialogOpen();
         return;
       }
-      wlEntryFormOnSubmit(data.primaryPhone ? data : submitData);
+      wlEntryFormOnSubmit(data);
     },
-    [handleDupPhoneDialogOpen, submitData, waitingList, wlEntryFormOnSubmit],
+    [
+      handleDupPhoneDialogOpen,
+      selectedWaitingListEntry,
+      submitData.primaryPhone,
+      waitingList,
+      wlEntryFormOnSubmit,
+    ],
   );
 
   return (
