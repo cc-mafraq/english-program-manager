@@ -1,4 +1,4 @@
-import { first, get, isEqual, map } from "lodash";
+import { differenceWith, first, get, isEqual, map, sortBy } from "lodash";
 import React, { Attributes, ComponentType, useCallback, useEffect, useRef, useState } from "react";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { ListChildComponentProps, VariableSizeList } from "react-window";
@@ -41,7 +41,9 @@ export const VirtualizedList = <T,>({ page, idPath, defaultSize, deps, children 
 
   useEffect(() => {
     const newPageIds = map(page, idPath);
-    !isEqual(newPageIds, pageIds) && setPageIds(newPageIds);
+    (differenceWith(sortBy(newPageIds), sortBy(pageIds), isEqual).length > 1 ||
+      newPageIds.length !== pageIds.length) &&
+      setPageIds(newPageIds);
   }, [pageIds, page, idPath]);
 
   const Row = useCallback(

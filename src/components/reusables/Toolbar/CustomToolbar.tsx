@@ -90,7 +90,7 @@ export const CustomToolbar = <T,>({
               tooltipObjectName,
             } as Partial<unknown> & Attributes)}
         </Box>
-        <Box width="33vw">
+        <Box width="40vw">
           <TablePagination
             component="div"
             count={list.length}
