@@ -11,6 +11,7 @@ import {
   FormDialog,
   Loading,
   VirtualizedList,
+  WaitingListActions,
   WaitingListCardHeader,
   WaitingListCounter,
   WaitingListDupPhoneDialog,
@@ -73,6 +74,7 @@ export const WaitingListPage = () => {
   } = useFormDialog({});
 
   const [submitData, setSubmitData] = useState(emptyWaitingListEntry);
+  const [scrollToIndex, setScrollToIndex] = useState<undefined | number>(undefined);
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     handleChangePage(null, 0);
@@ -95,6 +97,7 @@ export const WaitingListPage = () => {
     (data: WaitingListEntry) => {
       if (!data.id) data.id = v4();
       const dataNoNull = removeNullFromObject(data) as WaitingListEntry;
+      console.log(dataNoNull.primaryPhone);
       setData(dataNoNull, "waitingList", "id");
       !selectedWaitingListEntry && handleSearchStringChange(dataNoNull.primaryPhone.toString());
       handleWLEntryDialogClose();
@@ -147,12 +150,20 @@ export const WaitingListPage = () => {
           handleDialogOpen={handleWLEntryDialogOpen}
           noEditButton
           onInputChange={onInputChange}
+          otherActions={<WaitingListActions setScrollToIndex={setScrollToIndex} />}
           showActions={showActions}
           tooltipObjectName="Waiting List Entry"
         />
       </Box>
       <Loading />
-      <VirtualizedList defaultSize={275} deps={[role]} idPath="id" page={waitingListPage}>
+      <VirtualizedList
+        defaultSize={275}
+        deps={[role]}
+        idPath="id"
+        page={waitingListPage}
+        scrollToIndex={scrollToIndex}
+        setScrollToIndex={setScrollToIndex}
+      >
         <CustomCard
           data={emptyWaitingListEntry}
           header={

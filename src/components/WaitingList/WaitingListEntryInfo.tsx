@@ -17,6 +17,9 @@ export const WaitingListEntryInfo: React.FC<WaitingListEntryInfoProps> = ({ data
   const { green, red, defaultBackgroundColor } = useColors();
   const theme = useTheme();
   const isAdminOrFaculty = role === "admin" || role === "faculty";
+  if (wlEntry.primaryPhone === -1) {
+    console.log(wlEntry);
+  }
 
   const EntryInformation = useMemo(() => {
     return (
