@@ -1,7 +1,7 @@
 import { Button, Dialog, Paper, TextField, Typography, useTheme } from "@mui/material";
 import { findIndex } from "lodash";
 import React, { Dispatch, SetStateAction, useContext, useState } from "react";
-import { useColors } from "../../hooks";
+import { loadLocal, saveLocal, useColors } from "../../hooks";
 import { AppContext } from "../../interfaces";
 import { phoneConditionFn } from "../../services";
 
@@ -17,10 +17,11 @@ export const JumpToEntryDialog: React.FC<JumpToEntryDialogProps> = ({ handleDial
   const {
     appState: { waitingList },
   } = useContext(AppContext);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState<string | undefined>(loadLocal("jumpPhone"));
 
   const onSubmit = () => {
     if (!value) return;
+    saveLocal("jumpPhone", value);
     const scrollToIndex = findIndex(waitingList, (wle) => {
       return !!phoneConditionFn(value)(wle.primaryPhone);
     });
@@ -48,6 +49,7 @@ export const JumpToEntryDialog: React.FC<JumpToEntryDialogProps> = ({ handleDial
           }}
           placeholder="Phone Number"
           sx={{ margin: theme.spacing(2, 0, 2, 0), width: "40vw" }}
+          value={value}
         />
         <Button
           onClick={onSubmit}
