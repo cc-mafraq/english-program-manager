@@ -97,7 +97,6 @@ export const WaitingListPage = () => {
     (data: WaitingListEntry) => {
       if (!data.id) data.id = v4();
       const dataNoNull = removeNullFromObject(data) as WaitingListEntry;
-      console.log(dataNoNull.primaryPhone);
       setData(dataNoNull, "waitingList", "id");
       !selectedWaitingListEntry && handleSearchStringChange(dataNoNull.primaryPhone.toString());
       handleWLEntryDialogClose();
