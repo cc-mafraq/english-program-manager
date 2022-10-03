@@ -1,5 +1,4 @@
 import { Button, Dialog, Paper, TextField, Typography, useTheme } from "@mui/material";
-import { grey } from "@mui/material/colors";
 import { findIndex } from "lodash";
 import React, { Dispatch, SetStateAction, useContext, useState } from "react";
 import { useColors } from "../../hooks";
@@ -57,7 +56,6 @@ export const JumpToEntryDialog: React.FC<JumpToEntryDialogProps> = ({ handleDial
               backgroundColor: theme.palette.primary.dark,
             },
             backgroundColor: theme.palette.primary.main,
-            color: theme.palette.mode === "light" ? "white" : grey[200],
           }}
           type="button"
           variant="contained"
