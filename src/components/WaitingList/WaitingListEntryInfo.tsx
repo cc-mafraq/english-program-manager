@@ -109,16 +109,20 @@ export const WaitingListEntryInfo: React.FC<WaitingListEntryInfoProps> = ({ data
           containerProps={{
             sx: {
               backgroundColor:
-                wlEntry.covidStatus === CovidStatus.FULL
+                wlEntry.covidStatus === CovidStatus.FULL ||
+                wlEntry.covidStatus === CovidStatus.BOOST ||
+                wlEntry.covidStatus === CovidStatus.EXEMPT
                   ? green
-                  : wlEntry.covidStatus === CovidStatus.UNV || wlEntry.covidStatus === CovidStatus.NORPT
-                  ? red
-                  : undefined,
+                  : red,
             },
           }}
           label="Vaccine Certificate in WA"
         >
-          {wlEntry.covidStatus === CovidStatus.FULL ? "Yes" : "No"}
+          {wlEntry.covidStatus === CovidStatus.FULL || wlEntry.covidStatus === CovidStatus.BOOST
+            ? "Yes"
+            : wlEntry.covidStatus === CovidStatus.EXEMPT
+            ? "Exempt"
+            : "No"}
         </LabeledText>
         <LabeledText label="Vaccine Notes">{wlEntry.covidVaccineNotes}</LabeledText>
       </LabeledContainer>
