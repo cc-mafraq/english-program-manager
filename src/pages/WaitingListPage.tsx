@@ -12,11 +12,12 @@ import {
   Loading,
   VirtualizedList,
   WaitingListCardHeader,
+  WaitingListCounter,
   WaitingListDupPhoneDialog,
   WaitingListEntryInfo,
+  WaitingListFilter,
   WaitingListForm,
 } from "../components";
-import { WaitingListFilter } from "../components/WaitingList/WaitingListFilter";
 import { useFormDialog, usePageState } from "../hooks";
 import { AppContext, emptyWaitingListEntry, WaitingListEntry } from "../interfaces";
 import {
@@ -127,6 +128,7 @@ export const WaitingListPage = () => {
 
   return (
     <>
+      <WaitingListCounter />
       <Box position="sticky" top={0} zIndex={5}>
         <CustomToolbar
           filterComponent={<WaitingListFilter />}
