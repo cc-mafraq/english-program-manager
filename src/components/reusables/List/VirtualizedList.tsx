@@ -1,5 +1,14 @@
 import { differenceWith, first, get, isEqual, map, sortBy } from "lodash";
-import React, { Attributes, ComponentType, useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  Attributes,
+  ComponentType,
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { ListChildComponentProps, VariableSizeList } from "react-window";
 import { useWindowResize } from "../../../hooks";
@@ -10,9 +19,19 @@ interface VirtualizedListProps<T> {
   deps: unknown[];
   idPath: string;
   page: T[];
+  scrollToIndex?: number;
+  setScrollToIndex?: Dispatch<SetStateAction<number | undefined>>;
 }
 
-export const VirtualizedList = <T,>({ page, idPath, defaultSize, deps, children }: VirtualizedListProps<T>) => {
+export const VirtualizedList = <T,>({
+  page,
+  idPath,
+  defaultSize,
+  scrollToIndex,
+  setScrollToIndex,
+  deps,
+  children,
+}: VirtualizedListProps<T>) => {
   const listRef = useRef<VariableSizeList>(null);
   const sizeMap = useRef({});
   const [windowWidth] = useWindowResize();
@@ -38,6 +57,12 @@ export const VirtualizedList = <T,>({ page, idPath, defaultSize, deps, children 
   useEffect(() => {
     listRef.current?.scrollTo(0);
   }, [pageIds]);
+
+  useEffect(() => {
+    if (scrollToIndex === undefined) return;
+    listRef.current?.scrollToItem(scrollToIndex);
+    setScrollToIndex && setScrollToIndex(undefined);
+  }, [scrollToIndex, setScrollToIndex]);
 
   useEffect(() => {
     const newPageIds = map(page, idPath);
@@ -93,4 +118,9 @@ export const VirtualizedList = <T,>({ page, idPath, defaultSize, deps, children 
       }}
     </AutoSizer>
   );
+};
+
+VirtualizedList.defaultProps = {
+  scrollToIndex: undefined,
+  setScrollToIndex: undefined,
 };

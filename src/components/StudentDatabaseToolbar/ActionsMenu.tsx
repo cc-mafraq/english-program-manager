@@ -10,6 +10,7 @@ interface ActionsMenuProps {
   handleGenerateFGRClick?: () => void;
   noEditButton?: boolean;
   onInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  otherActions?: React.ReactNode;
   showActions: boolean;
   tooltipObjectName?: string;
 }
@@ -21,6 +22,7 @@ export const ActionsMenu: React.FC<ActionsMenuProps> = ({
   showActions,
   tooltipObjectName,
   noEditButton,
+  otherActions,
 }) => {
   const [openSelectDialog, setOpenSelectDialog] = useState(false);
   const [selectValue, setSelectValue] = useState<string | null>(null);
@@ -75,6 +77,7 @@ export const ActionsMenu: React.FC<ActionsMenuProps> = ({
             <Cached />
           </ActionFAB>
         )}
+        {otherActions}
         {handleDialogOpen && (
           <SelectStudentDialog
             handleDialogClose={handleSelectDialogClose}
@@ -93,5 +96,6 @@ ActionsMenu.defaultProps = {
   handleDialogOpen: undefined,
   handleGenerateFGRClick: undefined,
   noEditButton: undefined,
+  otherActions: undefined,
   tooltipObjectName: undefined,
 };
