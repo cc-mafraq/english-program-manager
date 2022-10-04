@@ -1,6 +1,6 @@
 import { Button, Dialog, Paper, TextField, Typography, useTheme } from "@mui/material";
 import { findIndex } from "lodash";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { loadLocal, saveLocal, useColors } from "../../hooks";
 import { WaitingListEntry } from "../../interfaces";
 import { phoneConditionFn } from "../../services";
@@ -32,6 +32,20 @@ export const JumpToEntryDialog: React.FC<JumpToEntryDialogProps> = ({
     handleDialogClose();
   };
 
+  const inputRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (open) {
+        inputRef.current?.focus();
+      }
+    }, 100);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [open]);
+
   return (
     <Dialog
       onClose={handleDialogClose}
@@ -41,8 +55,12 @@ export const JumpToEntryDialog: React.FC<JumpToEntryDialogProps> = ({
       <Paper sx={{ padding: 2 }}>
         <Typography variant="h6">Enter a phone number to jump to the entry:</Typography>
         <TextField
+          inputRef={inputRef}
           onChange={(event) => {
             setValue(event.target.value);
+          }}
+          onFocus={(event) => {
+            event.target.select();
           }}
           onKeyDown={(event) => {
             if (event.key === "Enter") {

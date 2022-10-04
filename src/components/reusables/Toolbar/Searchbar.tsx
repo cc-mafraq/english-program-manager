@@ -1,7 +1,7 @@
 import { Close, Search } from "@mui/icons-material";
 import { alpha, Box, IconButton, InputBase, Tooltip, useTheme } from "@mui/material";
 import { isEmpty } from "lodash";
-import React, { useEffect, useRef, useState } from "react";
+import React, { MouseEvent, useEffect, useRef, useState } from "react";
 import { useColors } from "../../../hooks";
 
 interface SearchbarProps {
@@ -40,8 +40,8 @@ export const Searchbar: React.FC<SearchbarProps> = ({
     }
   };
 
-  const handleClearSearch = () => {
-    searchbarRef.current?.focus();
+  const handleClearSearch = (e: MouseEvent) => {
+    e.preventDefault();
     setValue("");
     handleSearchStringChange("");
   };
@@ -110,7 +110,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({
       />
       <Tooltip arrow title="Clear Search">
         <IconButton
-          onClick={handleClearSearch}
+          onMouseDown={handleClearSearch}
           sx={{
             display: "flex",
             height: "100%",
