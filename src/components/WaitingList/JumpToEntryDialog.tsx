@@ -1,28 +1,31 @@
 import { Button, Dialog, Paper, TextField, Typography, useTheme } from "@mui/material";
 import { findIndex } from "lodash";
-import React, { Dispatch, SetStateAction, useContext, useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { loadLocal, saveLocal, useColors } from "../../hooks";
-import { AppContext } from "../../interfaces";
+import { WaitingListEntry } from "../../interfaces";
 import { phoneConditionFn } from "../../services";
 
 interface JumpToEntryDialogProps {
+  filteredWaitingList: WaitingListEntry[];
   handleDialogClose: () => void;
   open: boolean;
   submitValue: Dispatch<SetStateAction<number | undefined>>;
 }
 
-export const JumpToEntryDialog: React.FC<JumpToEntryDialogProps> = ({ handleDialogClose, open, submitValue }) => {
+export const JumpToEntryDialog: React.FC<JumpToEntryDialogProps> = ({
+  handleDialogClose,
+  open,
+  submitValue,
+  filteredWaitingList,
+}) => {
   const { popoverColor } = useColors();
   const theme = useTheme();
-  const {
-    appState: { waitingList },
-  } = useContext(AppContext);
   const [value, setValue] = useState<string | undefined>(loadLocal("jumpPhone"));
 
   const onSubmit = () => {
     if (!value) return;
     saveLocal("jumpPhone", value);
-    const scrollToIndex = findIndex(waitingList, (wle) => {
+    const scrollToIndex = findIndex(filteredWaitingList, (wle) => {
       return !!phoneConditionFn(value)(wle.primaryPhone);
     });
     scrollToIndex !== -1 && submitValue(scrollToIndex);

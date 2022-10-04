@@ -149,7 +149,9 @@ export const WaitingListPage = () => {
           handleDialogOpen={handleWLEntryDialogOpen}
           noEditButton
           onInputChange={onInputChange}
-          otherActions={<WaitingListActions setScrollToIndex={setScrollToIndex} />}
+          otherActions={
+            <WaitingListActions filteredWaitingList={filteredWaitingList} setScrollToIndex={setScrollToIndex} />
+          }
           showActions={showActions}
           tooltipObjectName="Waiting List Entry"
         />
