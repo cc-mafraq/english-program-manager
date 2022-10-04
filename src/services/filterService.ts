@@ -2,7 +2,7 @@ import { filter, includes, isEmpty, map, some, toLower } from "lodash";
 import { Student, WaitingListEntry } from "../interfaces";
 import { sortWaitingList } from "./waitingListService";
 
-const phoneConditionFn = (searchString: string) => {
+export const phoneConditionFn = (searchString: string) => {
   return (n: number) => {
     return (
       n?.toString().match(new RegExp(`${searchString}$`)) || n?.toString().match(new RegExp(`^${searchString}`))
