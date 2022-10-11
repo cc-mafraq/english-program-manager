@@ -42,6 +42,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({
 
   const handleClearSearch = (e: MouseEvent) => {
     e.preventDefault();
+    searchbarRef.current?.focus();
     setValue("");
     handleSearchStringChange("");
   };

@@ -152,6 +152,7 @@ export enum Nationality {
   EGY = "Egyptian",
   INDNES = "Indonesian",
   IRQ = "Iraqi",
+  ITL = "Italian",
   KOR = "Korean",
   YEM = "Yemeni",
   UNKNWN = "Unknown",
