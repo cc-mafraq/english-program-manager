@@ -1,4 +1,5 @@
 import {
+  concat,
   countBy,
   filter,
   find,
@@ -14,6 +15,7 @@ import {
   map,
   mapValues,
   nth,
+  omit,
   replace,
   reverse,
   set,
@@ -62,7 +64,7 @@ export const isActive = (student: Student): boolean => {
 
 export const getProgress = (student: Student, sessionOptions: string[]): StudentProgress => {
   // eslint-disable-next-line sort-keys-fix/sort-keys-fix
-  const progress: StudentProgress = { PL1: [], L1: [], L2: [], L3: [], L4: [], L5: [] };
+  const progress: StudentProgress = { PL1: [], L1: [], L2: [], L3: [], L4: [], L5: [], "L5 GRAD": [] };
   forEach(student.academicRecords, (ar) => {
     let level: GenderedLevel;
     if (!ar.level && !ar.levelAudited) return;
@@ -107,7 +109,8 @@ export const getProgress = (student: Student, sessionOptions: string[]): Student
       session: ar.session,
     });
   });
-  return progress;
+  progress.L5 = concat(progress.L5 || [], progress["L5 GRAD"] || []);
+  return omit(progress, "L5 GRAD");
 };
 
 export const getPage = <T>(list: T[], page: number, rowsPerPage: number): T[] => {

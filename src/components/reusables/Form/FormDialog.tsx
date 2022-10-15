@@ -71,7 +71,7 @@ export const FormDialog = <T extends FieldValues>({
         <FormProvider {...methods}>
           <form>
             {children}
-            <Box sx={stickySubmit ? { bottom: 10, position: "fixed" } : undefined}>
+            <Box sx={stickySubmit ? { bottom: 10, position: "fixed", zIndex: 1 } : undefined}>
               <Button
                 className="update-button"
                 onClick={methods.handleSubmit(onSubmit)}
