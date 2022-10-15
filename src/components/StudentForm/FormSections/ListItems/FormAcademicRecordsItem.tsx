@@ -46,6 +46,7 @@ export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem,
         />
         <GridItemTextField label="Attendance Percentage" name={name ? `${name}.attendance` : "attendance"} />
         <GridItemAutocomplete
+          autoSelect={false}
           freeSolo
           label="Level Audited"
           name={name ? `${name}.levelAudited` : "levelAudited"}
