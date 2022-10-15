@@ -198,7 +198,9 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
                     ? FinalResult.P
                     : (ar.finalResult?.percentage || 0) > 0
                     ? FinalResult.F
-                    : FinalResult.WD
+                    : ar.finalResult?.percentage !== undefined
+                    ? FinalResult.WD
+                    : undefined
                   : undefined,
               }}
               label="Class Grade"
