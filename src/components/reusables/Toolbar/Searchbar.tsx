@@ -100,9 +100,9 @@ export const Searchbar: React.FC<SearchbarProps> = ({
             transition: theme.transitions.create("width"),
             [theme.breakpoints.up("sm")]: {
               "&:focus": {
-                width: noExpand ? width || "30vw" : "35vw",
+                width: noExpand ? width || "35vw" : "40vw",
               },
-              width: width || "30vw",
+              width: width || "35vw",
             },
           },
           color: "inherit",

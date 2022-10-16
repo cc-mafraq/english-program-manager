@@ -46,11 +46,7 @@ export const StudentDatabasePage = () => {
   studentsRef.current = students;
   const {
     filteredList: filteredStudents,
-    handleChangePage,
-    handleChangeRowsPerPage,
     handleSearchStringChange,
-    page,
-    rowsPerPage,
     searchString,
     setShowActions,
     showActions,
@@ -74,7 +70,6 @@ export const StudentDatabasePage = () => {
 
   const onInputChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      handleChangePage(null, 0);
       setSpreadsheetIsLoading(true);
       const file: File | null = e.target.files && e.target.files[0];
       const reader = new FileReader();
@@ -89,7 +84,7 @@ export const StudentDatabasePage = () => {
         setSpreadsheetIsLoading(false);
       };
     },
-    [appDispatch, handleChangePage, students],
+    [appDispatch, students],
   );
 
   const handleGenerateFGRClick = useCallback(() => {
@@ -141,12 +136,8 @@ export const StudentDatabasePage = () => {
       <Box position="sticky" top={0} zIndex={5}>
         <CustomToolbar
           filterComponent={<StudentFilter />}
-          handleChangePage={handleChangePage}
-          handleChangeRowsPerPage={handleChangeRowsPerPage}
           handleSearchStringChange={handleSearchStringChange}
           list={searchString || filter.length ? filteredStudents : students}
-          page={page}
-          rowsPerPage={rowsPerPage}
           searchString={searchString}
           setShowActions={setShowActions}
           showActions={showActions}

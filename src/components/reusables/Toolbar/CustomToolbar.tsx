@@ -1,5 +1,5 @@
 import { FilterAlt, MoreHoriz } from "@mui/icons-material";
-import { AppBar, Box, IconButton, TablePagination, Toolbar, Tooltip } from "@mui/material";
+import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography } from "@mui/material";
 import React, { Attributes, Dispatch, SetStateAction, useContext } from "react";
 import { saveLocal, useColors } from "../../../hooks";
 import { AppContext } from "../../../interfaces";
@@ -19,12 +19,8 @@ const handlePopoverClose = (setFn: React.Dispatch<React.SetStateAction<HTMLButto
 
 interface CustomToolbarProps<T> {
   filterComponent: React.ReactNode;
-  handleChangePage: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
-  handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   handleSearchStringChange: (value: string) => void;
   list: T[];
-  page: number;
-  rowsPerPage: number;
   searchString: string;
   setShowActions: Dispatch<SetStateAction<boolean>>;
   showActions: boolean;
@@ -33,10 +29,6 @@ interface CustomToolbarProps<T> {
 
 export const CustomToolbar = <T,>({
   list,
-  page,
-  rowsPerPage,
-  handleChangePage,
-  handleChangeRowsPerPage,
   handleSearchStringChange,
   showActions,
   setShowActions,
@@ -90,16 +82,8 @@ export const CustomToolbar = <T,>({
               tooltipObjectName,
             } as Partial<unknown> & Attributes)}
         </Box>
-        <Box width="40vw">
-          <TablePagination
-            component="div"
-            count={list.length}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            rowsPerPageOptions={[10, 50, 100, 200, { label: "All", value: -1 }]}
-          />
+        <Box paddingRight="5vw" textAlign="right" width="15vw">
+          <Typography>{list.length} results</Typography>
         </Box>
       </Toolbar>
     </AppBar>

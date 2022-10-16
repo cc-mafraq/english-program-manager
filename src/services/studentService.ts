@@ -19,7 +19,6 @@ import {
   replace,
   reverse,
   set,
-  slice,
   some,
   sortBy,
   sum,
@@ -111,11 +110,6 @@ export const getProgress = (student: Student, sessionOptions: string[]): Student
   });
   progress.L5 = concat(progress.L5 || [], progress["L5 GRAD"] || []);
   return omit(progress, "L5 GRAD");
-};
-
-export const getPage = <T>(list: T[], page: number, rowsPerPage: number): T[] => {
-  const newRowsPerPage = rowsPerPage > list.length || rowsPerPage < 0 ? list.length : rowsPerPage;
-  return slice(list, page * newRowsPerPage, (page + 1) * newRowsPerPage);
 };
 
 export const filterBySession = (students: Student[], session: Student["initialSession"]): Student[] => {

@@ -5,8 +5,8 @@ import { useCollection } from "react-firebase-hooks/firestore";
 import { useNavigate } from "react-router-dom";
 import useState from "react-usestateref";
 import { AppContext, AppState, FilterValue } from "../interfaces";
-import { db, getPage, logout } from "../services";
-import { loadLocal, saveLocal } from "./useLocal";
+import { db, logout } from "../services";
+import { loadLocal } from "./useLocal";
 
 interface UsePageStateParams<T> {
   collectionName: string;
@@ -40,10 +40,6 @@ export const usePageState = <T>({
 
   const [filteredList, setFilteredList, filteredListRef] = useState<T[]>([]);
   const [listPage, setListPage] = useState<T[]>([]);
-  const [page, setPage, pageRef] = useState(0);
-  const [rowsPerPage, setRowsPerPage, rowsPerPageRef] = useState(
-    parseInt(loadLocal("rowsPerPage") as string) || -1,
-  );
   const [searchString, setSearchString, searchStringRef] = useState<string>("");
   const [showActions, setShowActions] = useState(loadLocal("showActions") !== false);
   const navigate = useNavigate();
@@ -62,7 +58,7 @@ export const usePageState = <T>({
   );
 
   const setState = useCallback(
-    ({ newRowsPerPage, newPage, newSearchString, newList }: SetStateOptions<T>) => {
+    ({ newSearchString, newList }: SetStateOptions<T>) => {
       const newSearchedList =
         !isUndefined(newSearchString) || newList
           ? searchFn(
@@ -76,16 +72,8 @@ export const usePageState = <T>({
       const newPayload: Partial<AppState> = {};
       set(newPayload, payloadPath, newList);
       newList && appDispatch({ payload: newPayload });
-      !isUndefined(newPage) && setPage(newPage);
-      newRowsPerPage && setRowsPerPage(newRowsPerPage);
       !isUndefined(newSearchString) && setSearchString(newSearchString);
-      setListPage(
-        getPage(
-          newFilteredList,
-          !isUndefined(newPage) ? newPage : pageRef.current,
-          newRowsPerPage || rowsPerPageRef.current,
-        ),
-      );
+      setListPage(newFilteredList);
     },
     [
       searchFn,
@@ -97,11 +85,7 @@ export const usePageState = <T>({
       setFilteredList,
       payloadPath,
       appDispatch,
-      setPage,
-      setRowsPerPage,
       setSearchString,
-      pageRef,
-      rowsPerPageRef,
     ],
   );
 
@@ -134,22 +118,6 @@ export const usePageState = <T>({
     setState({});
   }, [filter, setState]);
 
-  const handleChangePage = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-      setState({ newPage });
-    },
-    [setState],
-  );
-
-  const handleChangeRowsPerPage = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const newRowsPerPage = parseInt(event.target.value, 10);
-      saveLocal("rowsPerPage", newRowsPerPage);
-      setState({ newPage: 0, newRowsPerPage });
-    },
-    [setState],
-  );
-
   const handleSearchStringChange = useCallback(
     (value: string) => {
       setState({ newPage: 0, newSearchString: value });
@@ -159,12 +127,8 @@ export const usePageState = <T>({
 
   return {
     filteredList,
-    handleChangePage,
-    handleChangeRowsPerPage,
     handleSearchStringChange,
     listPage,
-    page,
-    rowsPerPage,
     searchString,
     setShowActions,
     showActions,

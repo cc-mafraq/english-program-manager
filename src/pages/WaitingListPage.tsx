@@ -41,12 +41,8 @@ export const WaitingListPage = () => {
   const [spreadsheetIsLoading, setSpreadsheetIsLoading] = useState(false);
   const {
     filteredList: filteredWaitingList,
-    handleChangePage,
-    handleChangeRowsPerPage,
     handleSearchStringChange,
     listPage: waitingListPage,
-    page,
-    rowsPerPage,
     searchString,
     setShowActions,
     showActions,
@@ -77,7 +73,6 @@ export const WaitingListPage = () => {
   const [scrollToIndex, setScrollToIndex] = useState<undefined | number>(undefined);
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    handleChangePage(null, 0);
     setSpreadsheetIsLoading(true);
     const file: File | null = e.target.files && e.target.files[0];
     const reader = new FileReader();
@@ -134,12 +129,8 @@ export const WaitingListPage = () => {
       <Box position="sticky" top={0} zIndex={5}>
         <CustomToolbar
           filterComponent={<WaitingListFilter />}
-          handleChangePage={handleChangePage}
-          handleChangeRowsPerPage={handleChangeRowsPerPage}
           handleSearchStringChange={handleSearchStringChange}
           list={searchString || filter.length ? filteredWaitingList : waitingList}
-          page={page}
-          rowsPerPage={rowsPerPage}
           searchString={searchString}
           setShowActions={setShowActions}
           showActions={showActions}
