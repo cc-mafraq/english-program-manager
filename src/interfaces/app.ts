@@ -46,6 +46,7 @@ export const getDesignTokens = (mode: PaletteMode): ThemeOptions => {
             },
           }),
     },
+    typography: { h5: { fontSize: 28 } },
   };
 };
 

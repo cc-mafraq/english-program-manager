@@ -179,7 +179,7 @@ export const StudentDatabasePage = () => {
         <CustomCard
           data={emptyStudent}
           header={<StudentCardHeader data={emptyStudent} handleEditStudentClick={handleStudentDialogOpen} />}
-          image={<StudentCardImage data={emptyStudent} />}
+          image={<StudentCardImage data={emptyStudent} imageWidth={175} smallBreakpointScaleDown={1.5} />}
           noTabs={role !== "admin" && role !== "faculty"}
           tabContents={[
             { component: <StudentInfo data={emptyStudent} />, label: "Student Information" },
