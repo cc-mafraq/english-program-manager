@@ -1,6 +1,13 @@
 import { countBy, find, get, values } from "lodash";
 import React, { useCallback, useContext, useMemo } from "react";
-import { AppContext, HighPriority, WaitingListEntry, WaitlistOutcome, WaitlistStatus } from "../../interfaces";
+import {
+  AppContext,
+  CovidStatus,
+  HighPriority,
+  WaitingListEntry,
+  WaitlistOutcome,
+  WaitlistStatus,
+} from "../../interfaces";
 import { FilterField } from "../../services";
 import { FilterDrawer } from "../reusables";
 
@@ -44,6 +51,10 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({
     [waitingList, waitingListPhoneCounts],
   );
 
+  const outcomeFn = useCallback((wlEntry: WaitingListEntry) => {
+    return wlEntry.outcome ? wlEntry.outcome : "None";
+  }, []);
+
   const filterFields: FilterField<WaitingListEntry>[] = useMemo(() => {
     return [
       { condition: isAdminOrFaculty, name: "Waiting", path: "waiting", values: booleanCheckboxOptions },
@@ -75,9 +86,16 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({
       },
       {
         condition: isAdminOrFaculty,
+        fn: outcomeFn,
         name: "Outcome",
         path: "outcome",
-        values: values(WaitlistOutcome),
+        values: ["None", ...values(WaitlistOutcome)],
+      },
+      {
+        condition: isAdminOrFaculty,
+        name: "COVID Status",
+        path: "covidStatus",
+        values: values(CovidStatus),
       },
       {
         condition: isAdminOrFaculty,
@@ -92,7 +110,8 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({
         values: booleanCheckboxOptions,
       },
     ];
-  }, [isAdminOrFaculty, removeDuplicates]);
+  }, [isAdminOrFaculty, outcomeFn, removeDuplicates]);
+
   return (
     <FilterDrawer
       anchorEl={anchorEl}

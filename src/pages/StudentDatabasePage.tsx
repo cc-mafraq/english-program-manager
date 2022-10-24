@@ -136,6 +136,7 @@ export const StudentDatabasePage = () => {
       <Box position="sticky" top={0} zIndex={5}>
         <CustomToolbar
           filterComponent={<StudentFilter />}
+          filterName="studentFilter"
           handleSearchStringChange={handleSearchStringChange}
           list={searchString || filter.length ? filteredStudents : students}
           searchString={searchString}
@@ -179,7 +180,7 @@ export const StudentDatabasePage = () => {
         <CustomCard
           data={emptyStudent}
           header={<StudentCardHeader data={emptyStudent} handleEditStudentClick={handleStudentDialogOpen} />}
-          image={<StudentCardImage data={emptyStudent} />}
+          image={<StudentCardImage data={emptyStudent} imageWidth={175} smallBreakpointScaleDown={1.5} />}
           noTabs={role !== "admin" && role !== "faculty"}
           tabContents={[
             { component: <StudentInfo data={emptyStudent} />, label: "Student Information" },

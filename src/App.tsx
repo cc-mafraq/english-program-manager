@@ -1,4 +1,4 @@
-import { createTheme, PaletteMode, ThemeProvider, useMediaQuery } from "@mui/material";
+import { createTheme, PaletteMode, responsiveFontSizes, ThemeProvider, useMediaQuery } from "@mui/material";
 import React, { useEffect, useReducer } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Authorization, MenuBar } from "./components";
@@ -34,7 +34,7 @@ export const App = () => {
   }, [isDarkPreference, localColorMode]);
 
   const theme = React.useMemo(() => {
-    return createTheme(getDesignTokens(mode));
+    return responsiveFontSizes(createTheme(getDesignTokens(mode)));
   }, [mode]);
 
   const contextValue = React.useMemo(() => {

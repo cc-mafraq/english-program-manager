@@ -1,5 +1,5 @@
 import { Box, Card, CardContent, Tab, Tabs, useTheme } from "@mui/material";
-import { map } from "lodash";
+import { get, map } from "lodash";
 import React, { Attributes, CSSProperties, useCallback, useEffect, useRef, useState } from "react";
 import { darkBlueBackground } from "../../../interfaces";
 
@@ -71,12 +71,18 @@ export const CustomCard = <T,>({
       >
         <Box ref={rowRef} display="flex">
           {React.isValidElement(image) && React.cloneElement(image, { data } as Partial<unknown> & Attributes)}
-          <Box width="100%">
+          <Box
+            sx={{
+              width: `calc(100% - ${
+                (get(image, "props.imageWidth") || 0) / (get(image, "props.smallBreakpointScaleDown") || 1)
+              }px)`,
+            }}
+          >
             <CardContent>
               {React.isValidElement(header) &&
                 React.cloneElement(header, { data } as Partial<unknown> & Attributes)}
               {!noTabs && (
-                <Tabs onChange={handleChange} sx={{ display: "inline" }} value={localTabValue}>
+                <Tabs onChange={handleChange} scrollButtons={false} value={localTabValue} variant="scrollable">
                   {map(tabContents, (content, i) => {
                     return <Tab key={`card-tabpanel-${i}`} id={`card-tabpanel-${i}`} label={content.label} />;
                   })}

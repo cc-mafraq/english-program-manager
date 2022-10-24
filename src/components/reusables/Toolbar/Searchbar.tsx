@@ -63,10 +63,11 @@ export const Searchbar: React.FC<SearchbarProps> = ({
         borderRadius: theme.shape.borderRadius,
         display: "inline",
         marginLeft: 0,
-        padding: theme.spacing(1.5, 0, 1.5, 0),
+        padding: theme.spacing(1, 0, 1, 0),
         position: "relative",
         [theme.breakpoints.up("sm")]: {
           marginLeft: theme.spacing(1),
+          padding: theme.spacing(1.5, 0, 1.5, 0),
           width: "auto",
         },
         width: "100%",
@@ -103,6 +104,9 @@ export const Searchbar: React.FC<SearchbarProps> = ({
                 width: noExpand ? width || "35vw" : "40vw",
               },
               width: width || "35vw",
+            },
+            [theme.breakpoints.down("sm")]: {
+              height: "15px",
             },
           },
           color: "inherit",
