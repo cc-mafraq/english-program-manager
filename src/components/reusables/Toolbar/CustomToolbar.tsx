@@ -71,37 +71,39 @@ export const CustomToolbar = <T,>({
           </Box>
         )}
         <Box margin="auto">
-          <Searchbar
-            handleSearchStringChange={handleSearchStringChange}
-            placeholder={`Search ${tooltipObjectName.toLowerCase()}`}
-            searchString={searchString}
-          />
-          <Tooltip arrow title={`Filter ${tooltipObjectName}`}>
-            <IconButton
-              onClick={handlePopoverClick(setFilterAnchorEl)}
-              size="small"
-              sx={{
-                "&:hover": {
-                  backgroundColor: filter?.length
-                    ? theme.palette.mode === "dark"
-                      ? theme.palette.primary.light
-                      : theme.palette.primary.dark
-                    : undefined,
-                },
-                backgroundColor: filter?.length ? theme.palette.primary.main : undefined,
-                marginBottom: "5px",
-                marginLeft: "10px",
-              }}
-            >
-              <FilterList sx={{ color: filter?.length ? theme.palette.common.white : iconColor }} />
-            </IconButton>
-          </Tooltip>
-          {React.isValidElement(filterComponent) &&
-            React.cloneElement(filterComponent, {
-              anchorEl: filterAnchorEl,
-              handleClose: handlePopoverClose(setFilterAnchorEl),
-              tooltipObjectName,
-            } as Partial<unknown> & Attributes)}
+          <Box sx={{ whiteSpace: "nowrap" }}>
+            <Searchbar
+              handleSearchStringChange={handleSearchStringChange}
+              placeholder={`Search ${tooltipObjectName.toLowerCase()}`}
+              searchString={searchString}
+            />
+            <Tooltip arrow title={`Filter ${tooltipObjectName}`}>
+              <IconButton
+                onClick={handlePopoverClick(setFilterAnchorEl)}
+                size="small"
+                sx={{
+                  "&:hover": {
+                    backgroundColor: filter?.length
+                      ? theme.palette.mode === "dark"
+                        ? theme.palette.primary.light
+                        : theme.palette.primary.dark
+                      : undefined,
+                  },
+                  backgroundColor: filter?.length ? theme.palette.primary.main : undefined,
+                  marginBottom: "5px",
+                  marginLeft: "10px",
+                }}
+              >
+                <FilterList sx={{ color: filter?.length ? theme.palette.common.white : iconColor }} />
+              </IconButton>
+            </Tooltip>
+            {React.isValidElement(filterComponent) &&
+              React.cloneElement(filterComponent, {
+                anchorEl: filterAnchorEl,
+                handleClose: handlePopoverClose(setFilterAnchorEl),
+                tooltipObjectName,
+              } as Partial<unknown> & Attributes)}
+          </Box>
         </Box>
         <Box paddingRight="5vw" textAlign="right" width="15vw">
           <Typography>{list.length} results</Typography>
