@@ -129,6 +129,7 @@ export const WaitingListPage = () => {
       <Box position="sticky" top={0} zIndex={5}>
         <CustomToolbar
           filterComponent={<WaitingListFilter />}
+          filterName="waitingListFilter"
           handleSearchStringChange={handleSearchStringChange}
           list={searchString || filter.length ? filteredWaitingList : waitingList}
           searchString={searchString}

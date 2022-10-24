@@ -1,5 +1,6 @@
-import { FilterAlt, MoreHoriz } from "@mui/icons-material";
-import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography } from "@mui/material";
+import { FilterList, MoreHoriz } from "@mui/icons-material";
+import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography, useTheme } from "@mui/material";
+import { get } from "lodash";
 import React, { Attributes, Dispatch, SetStateAction, useContext } from "react";
 import { saveLocal, useColors } from "../../../hooks";
 import { AppContext } from "../../../interfaces";
@@ -19,6 +20,7 @@ const handlePopoverClose = (setFn: React.Dispatch<React.SetStateAction<HTMLButto
 
 interface CustomToolbarProps<T> {
   filterComponent: React.ReactNode;
+  filterName: string;
   handleSearchStringChange: (value: string) => void;
   list: T[];
   searchString: string;
@@ -35,12 +37,16 @@ export const CustomToolbar = <T,>({
   searchString,
   tooltipObjectName,
   filterComponent,
+  filterName,
 }: CustomToolbarProps<T>) => {
   const {
     appState: { role },
   } = useContext(AppContext);
   const [filterAnchorEl, setFilterAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const { iconColor } = useColors();
+  const { appState } = useContext(AppContext);
+  const filter = get(appState, filterName);
+  const theme = useTheme();
 
   return (
     <AppBar color="default" elevation={1} position="sticky">
@@ -71,8 +77,23 @@ export const CustomToolbar = <T,>({
             searchString={searchString}
           />
           <Tooltip arrow title={`Filter ${tooltipObjectName}`}>
-            <IconButton onClick={handlePopoverClick(setFilterAnchorEl)}>
-              <FilterAlt sx={{ color: iconColor }} />
+            <IconButton
+              onClick={handlePopoverClick(setFilterAnchorEl)}
+              size="small"
+              sx={{
+                "&:hover": {
+                  backgroundColor: filter?.length
+                    ? theme.palette.mode === "dark"
+                      ? theme.palette.primary.light
+                      : theme.palette.primary.dark
+                    : undefined,
+                },
+                backgroundColor: filter?.length ? theme.palette.primary.main : undefined,
+                marginBottom: "5px",
+                marginLeft: "10px",
+              }}
+            >
+              <FilterList sx={{ color: filter?.length ? theme.palette.common.white : iconColor }} />
             </IconButton>
           </Tooltip>
           {React.isValidElement(filterComponent) &&

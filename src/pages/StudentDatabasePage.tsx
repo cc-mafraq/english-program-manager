@@ -136,6 +136,7 @@ export const StudentDatabasePage = () => {
       <Box position="sticky" top={0} zIndex={5}>
         <CustomToolbar
           filterComponent={<StudentFilter />}
+          filterName="studentFilter"
           handleSearchStringChange={handleSearchStringChange}
           list={searchString || filter.length ? filteredStudents : students}
           searchString={searchString}
