@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box } from "@mui/material";
 import { get, includes, map, nth } from "lodash";
-import React, { ChangeEvent, useCallback, useContext, useRef, useState } from "react";
+import React, { useCallback, useContext, useRef, useState } from "react";
 import { v4 } from "uuid";
 import {
   ActionsMenu,
@@ -28,17 +28,14 @@ import {
   setPrimaryNumberBooleanArray,
   sortWaitingList,
   waitingListFormSchema,
-  waitingListToList,
 } from "../services";
 
 export const WaitingListPage = () => {
   const {
     appState: { waitingList, role, waitingListFilter: filter, selectedWaitingListEntry },
-    appDispatch,
   } = useContext(AppContext);
   const waitingListRef = useRef(waitingList);
   waitingListRef.current = waitingList;
-  const [spreadsheetIsLoading, setSpreadsheetIsLoading] = useState(false);
   const {
     filteredList: filteredWaitingList,
     handleSearchStringChange,
@@ -54,7 +51,6 @@ export const WaitingListPage = () => {
     payloadPath: "waitingList",
     searchFn: searchWaitingList,
     sortFn: sortWaitingList,
-    spreadsheetIsLoading,
   });
 
   const {
@@ -71,22 +67,6 @@ export const WaitingListPage = () => {
 
   const [submitData, setSubmitData] = useState(emptyWaitingListEntry);
   const [scrollToIndex, setScrollToIndex] = useState<undefined | number>(undefined);
-
-  const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSpreadsheetIsLoading(true);
-    const file: File | null = e.target.files && e.target.files[0];
-    const reader = new FileReader();
-
-    file && appDispatch({ payload: { loading: true } });
-    file && reader.readAsText(file);
-
-    reader.onloadend = async () => {
-      const waitingListString = String(reader.result);
-      const newWaitingList = await waitingListToList(waitingListString);
-      appDispatch({ payload: { loading: false, waitingList: newWaitingList } });
-      setSpreadsheetIsLoading(false);
-    };
-  };
 
   const wlEntryFormOnSubmit = useCallback(
     (data: WaitingListEntry) => {
@@ -140,7 +120,6 @@ export const WaitingListPage = () => {
         <ActionsMenu
           handleDialogOpen={handleWLEntryDialogOpen}
           noEditButton
-          onInputChange={onInputChange}
           otherActions={
             <WaitingListActions filteredWaitingList={filteredWaitingList} setScrollToIndex={setScrollToIndex} />
           }

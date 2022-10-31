@@ -21,7 +21,7 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ data: stud
   return (
     <>
       <Typography component="div" display="inline" gutterBottom variant="h5">
-        {student.name.english} {student.name.arabic}
+        {student.name.english} {student.name.arabic === "N/A" ? "" : student.name.arabic}
       </Typography>
       <Box sx={{ flexDirection: "row", flexGrow: 1, float: "right" }}>
         {student.phone.primaryPhone > 700000000 ? (

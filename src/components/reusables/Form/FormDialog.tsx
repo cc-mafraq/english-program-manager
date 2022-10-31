@@ -31,6 +31,7 @@ export const FormDialog = <T extends FieldValues>({
   const { popoverColor } = useColors();
   const theme = useTheme();
   const methods = useForm<T>({ criteriaMode: "all", ...useFormProps });
+  const { reset } = methods;
 
   const [openErrorDialog, setOpenErrorDialog] = useState(false);
 
@@ -43,10 +44,8 @@ export const FormDialog = <T extends FieldValues>({
   };
 
   useEffect(() => {
-    useFormProps.defaultValues
-      ? methods.reset(useFormProps.defaultValues)
-      : methods.reset({} as T | DeepPartial<T> | undefined);
-  }, [methods, useFormProps]);
+    useFormProps.defaultValues ? reset(useFormProps.defaultValues) : reset({} as T | DeepPartial<T> | undefined);
+  }, [reset, useFormProps.defaultValues, open]);
 
   return (
     <Dialog
@@ -74,7 +73,10 @@ export const FormDialog = <T extends FieldValues>({
             <Box sx={stickySubmit ? { bottom: 10, position: "fixed", zIndex: 1 } : undefined}>
               <Button
                 className="update-button"
-                onClick={methods.handleSubmit(onSubmit)}
+                onClick={methods.handleSubmit((data, e) => {
+                  onSubmit(data, e);
+                  reset({} as T | DeepPartial<T> | undefined);
+                })}
                 sx={{
                   "&:hover": {
                     backgroundColor: green[900],
