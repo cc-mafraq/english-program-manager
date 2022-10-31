@@ -38,15 +38,15 @@ export const StudentForm: React.FC = () => {
       <Divider />
       <FormDemographics />
       <Divider />
-      <FormCorrespondence selectedStudentPath="selectedStudent" />
+      <FormPhoneNumbers phonePath="phone.phoneNumbers" selectedStudentPath="selectedStudent" />
       <Divider />
       <FormCovidVaccine />
-      <Divider />
-      <FormPhoneNumbers phonePath="phone.phoneNumbers" selectedStudentPath="selectedStudent" />
       <Divider />
       <FormOriginalPlacement />
       <Divider />
       <FormLiteracyAndZoom />
+      <Divider />
+      <FormCorrespondence selectedStudentPath="selectedStudent" />
       <Divider />
       <FormPlacement />
       <Divider />

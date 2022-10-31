@@ -85,11 +85,11 @@ export const CustomToolbar = <T,>({
                   "&:hover": {
                     backgroundColor: filter?.length
                       ? theme.palette.mode === "dark"
-                        ? theme.palette.primary.light
-                        : theme.palette.primary.dark
+                        ? theme.palette.secondary.light
+                        : theme.palette.secondary.dark
                       : undefined,
                   },
-                  backgroundColor: filter?.length ? theme.palette.primary.main : undefined,
+                  backgroundColor: filter?.length ? theme.palette.secondary.main : undefined,
                   marginBottom: "5px",
                   marginLeft: "10px",
                 }}
