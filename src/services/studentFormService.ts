@@ -251,7 +251,7 @@ export const placementSchema = object().shape({
   classScheduleSentDate: array().of(dateSchema.nullable().optional()).transform(dateStringToArray).required(),
   noAnswerClassScheduleWPM: bool().optional(),
   pending: bool().optional(),
-  photoContact: string().transform(emptyToNull).nullable().optional(),
+  photoContact: dateSchema,
   placement: array().of(sectionPlacementSchema).default([]).required(),
   sectionsOffered: string().transform(emptyToNull).nullable().optional(),
 });

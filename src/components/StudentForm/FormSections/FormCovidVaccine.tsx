@@ -30,7 +30,7 @@ export const FormCovidVaccine: React.FC = () => {
           xs={2}
         />
         <GridItemAutocomplete
-          defaultValue={CovidStatus.FULL}
+          defaultValue={CovidStatus.NORPT}
           label="Vaccine Status"
           name="covidVaccine.status"
           options={covidStatuses}

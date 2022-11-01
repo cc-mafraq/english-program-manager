@@ -2,7 +2,8 @@ import React, { useContext } from "react";
 import { useFormContext } from "react-hook-form";
 import { useFormList } from "../../../hooks";
 import { AppContext, Student } from "../../../interfaces";
-import { FormList, GridContainer } from "../../reusables";
+import { SPACING } from "../../../services";
+import { FormLabel, FormList, GridContainer } from "../../reusables";
 import { FormAcademicRecordsItem } from "./ListItems";
 
 export const FormAcademicRecords: React.FC = () => {
@@ -18,17 +19,20 @@ export const FormAcademicRecords: React.FC = () => {
   );
 
   return (
-    <GridContainer marginBottom={0}>
-      <FormList
-        addItem={addAcademicRecord}
-        buttonLabel="Add Academic Record"
-        list={academicRecords}
-        listName="academicRecords"
-        removeItem={removeAcademicRecord}
-        reverseList
-      >
-        <FormAcademicRecordsItem />
-      </FormList>
-    </GridContainer>
+    <>
+      <FormLabel textProps={{ marginTop: SPACING }}>Academic Records</FormLabel>
+      <GridContainer marginBottom={0}>
+        <FormList
+          addItem={addAcademicRecord}
+          buttonLabel="Add Academic Record"
+          list={academicRecords}
+          listName="academicRecords"
+          removeItem={removeAcademicRecord}
+          reverseList
+        >
+          <FormAcademicRecordsItem />
+        </FormList>
+      </GridContainer>
+    </>
   );
 };

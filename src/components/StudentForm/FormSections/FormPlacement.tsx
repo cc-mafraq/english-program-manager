@@ -61,7 +61,7 @@ export const FormPlacement = <T extends FieldValues>({ standAlone }: FormPlaceme
         <Grid item xs={4}>
           <LabeledCheckbox label="No Answer CS WPM" name={`${namePrefix}noAnswerClassScheduleWpm`} />
         </Grid>
-        <GridItemTextField gridProps={{ xs: 5 }} label="Photo Contact" name={`${namePrefix}photoContact`} />
+        <GridItemDatePicker gridProps={{ xs: 5 }} label="Photo Contact" name={`${namePrefix}photoContact`} />
       </GridContainer>
       <GridContainer marginBottom={standAlone ? 0 : SPACING * 2}>
         <FormList
