@@ -72,7 +72,6 @@ export const WaitingListEntryInfo: React.FC<WaitingListEntryInfoProps> = ({ data
           {wlEntry.enteredInPhone ? "Yes" : "No"}
         </LabeledText>
         <LabeledText label="Referral">{wlEntry.referral}</LabeledText>
-        <LabeledText label="Status">{wlEntry.status}</LabeledText>
         <LabeledText label="Probable PL1">{wlEntry.probPL1 ? "Yes" : undefined}</LabeledText>
         <LabeledText label="Probable L3+">{wlEntry.probL3Plus ? "Yes" : undefined}</LabeledText>
         <LabeledText label="Transferral DB">{wlEntry.transferralAndDate?.transferral}</LabeledText>
@@ -96,7 +95,6 @@ export const WaitingListEntryInfo: React.FC<WaitingListEntryInfoProps> = ({ data
     wlEntry.probL3Plus,
     wlEntry.probPL1,
     wlEntry.referral,
-    wlEntry.status,
     wlEntry.transferralAndDate?.date,
     wlEntry.transferralAndDate?.transferral,
     wlEntry.waiting,

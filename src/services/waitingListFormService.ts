@@ -1,5 +1,5 @@
 import { array, bool, mixed, number, object, string } from "yup";
-import { HighPriority, WaitlistOutcome, WaitlistStatus } from "../interfaces";
+import { HighPriority, WaitlistOutcome } from "../interfaces";
 import {
   correspondenceSchema,
   covidStatusSchema,
@@ -18,10 +18,6 @@ const stringToHighPriority = (value: string, originalValue: string) => {
 
 const stringToWaitlistOutcome = (value: string, originalValue: string) => {
   return originalValue !== undefined ? (originalValue as WaitlistOutcome) : null;
-};
-
-const stringToWaitlistStatus = (value: string, originalValue: string) => {
-  return WaitlistStatus[originalValue as keyof typeof WaitlistStatus] || (originalValue as WaitlistStatus);
 };
 
 export const waitingListFormSchema = object().shape({
@@ -47,10 +43,6 @@ export const waitingListFormSchema = object().shape({
   probL3Plus: bool().optional(),
   probPL1: bool().optional(),
   referral: optionalStringSchema,
-  status: mixed<WaitlistStatus>()
-    .oneOf(Object.values(WaitlistStatus) as WaitlistStatus[])
-    .transform(stringToWaitlistStatus)
-    .required("Status is required"),
   transferralAndDate: object().shape({
     date: dateSchema.nullable(),
     transferral: optionalStringSchema,
