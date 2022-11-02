@@ -1,14 +1,8 @@
-import { countBy, find, get, values } from "lodash";
+import { countBy, filter, find, first, get, last, map, orderBy, take, uniq, values } from "lodash";
+import moment from "moment";
 import React, { useCallback, useContext, useMemo } from "react";
-import {
-  AppContext,
-  CovidStatus,
-  HighPriority,
-  WaitingListEntry,
-  WaitlistOutcome,
-  WaitlistStatus,
-} from "../../interfaces";
-import { FilterField } from "../../services";
+import { AppContext, HighPriority, WaitingListEntry, WaitlistOutcome, WaitlistStatus } from "../../interfaces";
+import { FilterField, MOMENT_FORMAT } from "../../services";
 import { FilterDrawer } from "../reusables";
 
 interface WaitingListFilterProps {
@@ -55,6 +49,36 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({
     return wlEntry.outcome ? wlEntry.outcome : "None";
   }, []);
 
+  const placementExamFn = useCallback((wlEntry: WaitingListEntry) => {
+    const value = last(wlEntry.placementExam);
+    const upperVal = value?.toUpperCase();
+    const placementVals = ["RESCHED", "NO RESPONSE", "NS", "NO SHOW"];
+    const dateMatch = upperVal?.match(/\d+\W\d+\W\d+/);
+    if (dateMatch) {
+      return moment(first(dateMatch)).format(MOMENT_FORMAT);
+    }
+    const valueMatches = filter(placementVals, (placementVal) => {
+      return !!upperVal?.includes(placementVal);
+    });
+    const valueMatch = first(valueMatches);
+    return valueMatches.length ? (valueMatch === "NS" ? "NO SHOW" : valueMatch) : "NONE";
+  }, []);
+
+  const placementExamValues = useMemo(() => {
+    return take(
+      uniq(
+        orderBy(
+          map(waitingList, placementExamFn),
+          (value) => {
+            return moment(value).format("YYYYMMDD");
+          },
+          ["desc"],
+        ),
+      ),
+      15,
+    );
+  }, [placementExamFn, waitingList]);
+
   const filterFields: FilterField<WaitingListEntry>[] = useMemo(() => {
     return [
       { condition: isAdminOrFaculty, name: "Waiting", path: "waiting", values: booleanCheckboxOptions },
@@ -80,6 +104,13 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({
       },
       {
         condition: isAdminOrFaculty,
+        fn: placementExamFn,
+        name: "Placement Exam",
+        path: "placementExam",
+        values: placementExamValues,
+      },
+      {
+        condition: isAdminOrFaculty,
         name: "Status",
         path: "status",
         values: values(WaitlistStatus),
@@ -90,12 +121,6 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({
         name: "Outcome",
         path: "outcome",
         values: ["None", ...values(WaitlistOutcome)],
-      },
-      {
-        condition: isAdminOrFaculty,
-        name: "COVID Status",
-        path: "covidStatus",
-        values: values(CovidStatus),
       },
       {
         condition: isAdminOrFaculty,
@@ -110,7 +135,7 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({
         values: booleanCheckboxOptions,
       },
     ];
-  }, [isAdminOrFaculty, outcomeFn, removeDuplicates]);
+  }, [isAdminOrFaculty, outcomeFn, placementExamFn, placementExamValues, removeDuplicates]);
 
   return (
     <FilterDrawer
