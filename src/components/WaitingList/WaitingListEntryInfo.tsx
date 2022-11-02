@@ -103,19 +103,7 @@ export const WaitingListEntryInfo: React.FC<WaitingListEntryInfoProps> = ({ data
   const CovidVaccine = useMemo(() => {
     return (
       <LabeledContainer condition={role === "admin"} label="COVID Vaccine">
-        <LabeledText
-          containerProps={{
-            sx: {
-              backgroundColor:
-                wlEntry.covidStatus === CovidStatus.FULL ||
-                wlEntry.covidStatus === CovidStatus.BOOST ||
-                wlEntry.covidStatus === CovidStatus.EXEMPT
-                  ? green
-                  : red,
-            },
-          }}
-          label="Vaccine Certificate in WA"
-        >
+        <LabeledText label="Certificate in WA">
           {wlEntry.covidStatus === CovidStatus.FULL || wlEntry.covidStatus === CovidStatus.BOOST
             ? "Yes"
             : wlEntry.covidStatus === CovidStatus.EXEMPT
@@ -125,7 +113,7 @@ export const WaitingListEntryInfo: React.FC<WaitingListEntryInfoProps> = ({ data
         <LabeledText label="Vaccine Notes">{wlEntry.covidVaccineNotes}</LabeledText>
       </LabeledContainer>
     );
-  }, [green, red, role, wlEntry.covidStatus, wlEntry.covidVaccineNotes]);
+  }, [role, wlEntry.covidStatus, wlEntry.covidVaccineNotes]);
 
   const PlacementExam = useMemo(() => {
     return (
@@ -159,9 +147,9 @@ export const WaitingListEntryInfo: React.FC<WaitingListEntryInfoProps> = ({ data
   return (
     <Box sx={{ display: "flex", flexWrap: "wrap" }}>
       {EntryInformation}
-      {CovidVaccine}
-      {PlacementExam}
       {PhoneNumbers}
+      {PlacementExam}
+      {CovidVaccine}
     </Box>
   );
 };
