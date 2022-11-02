@@ -220,7 +220,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
 
   return (
     <>
-      <LabeledContainer label="Progress" parentContainerProps={{ width: "100%" }} showWhenEmpty>
+      <LabeledContainer label="Progress" parentContainerProps={{ height: "100px", width: "100%" }} showWhenEmpty>
         {PB}
       </LabeledContainer>
       <LabeledContainer label="Academic Records" showWhenEmpty>

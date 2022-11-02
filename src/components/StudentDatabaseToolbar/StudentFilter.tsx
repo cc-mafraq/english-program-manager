@@ -1,4 +1,4 @@
-import { first, includes, range } from "lodash";
+import { first, includes, last, range } from "lodash";
 import React, { useCallback, useContext, useMemo } from "react";
 import {
   AppContext,
@@ -44,6 +44,11 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
     [sessionsWithResults],
   );
 
+  const pendingAcademicRecordFn = useCallback((student: Student) => {
+    const lastAcademicRecord = last(student.academicRecords);
+    return lastAcademicRecord && lastAcademicRecord.finalResult?.result === undefined;
+  }, []);
+
   const whatsAppGroupFn = useCallback((student: Student) => {
     const includesRemove = includes(student.phone.waBroadcastSAR?.toLowerCase(), "remove");
     if (includes(student.phone.waBroadcastSAR?.toLowerCase(), "group") && !includesRemove) {
@@ -74,7 +79,13 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
       },
       { name: "Current Level", path: "currentLevel", values: [...genderedLevels, "L5 GRAD"] },
       { name: "Current Status", path: "status.currentStatus", values: statuses },
-      { condition: isAdmin, name: "COVID Vaccine Status", path: "covidVaccine.status", values: covidStatuses },
+      {
+        condition: isAdminOrFaculty,
+        fn: pendingAcademicRecordFn,
+        name: "Pending Academic Record",
+        path: "academicRecords",
+        values: ["Yes"],
+      },
       { condition: isAdmin, name: "NCL", path: "status.noContactList", values: booleanCheckboxOptions },
       { condition: isAdminOrFaculty, name: "Teacher", path: "work.isTeacher", values: ["Yes"] },
       { condition: isAdminOrFaculty, name: "English Teacher", path: "work.isEnglishTeacher", values: ["Yes"] },
@@ -88,6 +99,7 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
         path: "phone.waBroadcastSAR",
         values: ["None", "SAR Group 1", "SAR Group 2", "SAR Group 3", "SAR Group 4", "SAR Group 5", "SAR Group 6"],
       },
+      { condition: isAdmin, name: "COVID Vaccine Status", path: "covidVaccine.status", values: covidStatuses },
       {
         condition: isAdminOrFaculty,
         fn: statusDetailsFn,
@@ -98,7 +110,15 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
       { condition: isAdminOrFaculty, name: "Withdraw Reason", path: "status.droppedOutReason" },
       { fn: sessionsAttendedFn, name: "Sessions Attended", path: "sessionsAttended", values: range(11) },
     ];
-  }, [isAdmin, isAdminOrFaculty, sessionsAttendedFn, statusDetailsFn, students, whatsAppGroupFn]);
+  }, [
+    pendingAcademicRecordFn,
+    isAdmin,
+    isAdminOrFaculty,
+    sessionsAttendedFn,
+    statusDetailsFn,
+    students,
+    whatsAppGroupFn,
+  ]);
   return (
     <FilterDrawer
       anchorEl={anchorEl}
