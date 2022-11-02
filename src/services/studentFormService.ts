@@ -156,6 +156,7 @@ export const academicRecordsSchema = object().shape({
   comments: string().transform(emptyToNull).nullable().optional(),
   exitSpeakingExam: gradeSchema,
   exitWritingExam: gradeSchema,
+  finalGradeSentDate: dateSchema.nullable().optional(),
   finalResult: gradeSchema,
   level: mixed<GenderedLevel>().transform(emptyToNull).nullable().optional(),
   levelAudited: mixed<GenderedLevel>().transform(emptyToNull).nullable().optional(),
@@ -257,7 +258,6 @@ export const placementSchema = object().shape({
 });
 
 const statusSchema = object().shape({
-  audit: string().transform(emptyToNull).nullable().optional(),
   cheatingSessions: array()
     .of(
       string()
@@ -276,7 +276,6 @@ const statusSchema = object().shape({
     .transform(emptyToNull)
     .nullable()
     .optional(),
-  finalGradeSentDate: dateSchema.nullable().optional(),
   inviteTag: bool().required(),
   levelReevalDate: dateSchema.nullable().optional(),
   noContactList: bool().required(),

@@ -34,6 +34,7 @@ export interface AcademicRecord {
   comments?: string;
   exitSpeakingExam?: Grade;
   exitWritingExam?: Grade;
+  finalGradeSentDate?: string;
   finalResult?: Grade;
   level?: GenderedLevel;
   levelAudited?: GenderedLevel;
@@ -93,11 +94,9 @@ export interface WhatsappInfo {
 }
 
 export interface StudentStatus {
-  audit?: string;
   cheatingSessions?: string[];
   currentStatus: Status;
   droppedOutReason?: DroppedOutReason;
-  finalGradeSentDate?: string;
   inviteTag: boolean;
   levelReevalDate?: string;
   noContactList: boolean;

@@ -1,7 +1,14 @@
 import { Close } from "@mui/icons-material";
 import { Grid, IconButton, Tooltip } from "@mui/material";
 import React, { useContext } from "react";
-import { FormGrade, FormLabel, GridContainer, GridItemAutocomplete, GridItemTextField } from "../../..";
+import {
+  FormGrade,
+  FormLabel,
+  GridContainer,
+  GridItemAutocomplete,
+  GridItemDatePicker,
+  GridItemTextField,
+} from "../../..";
 import { useColors } from "../../../../hooks";
 import { AppContext, genderedLevels } from "../../../../interfaces";
 import { FormItem, getAllSessions, SPACING } from "../../../../services";
@@ -61,6 +68,13 @@ export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem,
           label="Teacher Comments"
           name={name ? `${name}.comments` : "comments"}
           textFieldProps={{ multiline: true, rows: 4 }}
+        />
+      </GridContainer>
+      <GridContainer marginBottom={0} marginLeft={0}>
+        <GridItemDatePicker
+          gridProps={{ xs: 3 }}
+          label="Final Grade Report Sent"
+          name={name ? `${name}.finalGradeSentDate` : "finalGradeSentDate"}
         />
       </GridContainer>
     </>

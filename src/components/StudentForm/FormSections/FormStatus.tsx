@@ -3,14 +3,7 @@ import { useFormContext } from "react-hook-form";
 import { useDateInitialState, useFormList } from "../../../hooks";
 import { AppContext, Student, withdrawReasons } from "../../../interfaces";
 import { SPACING } from "../../../services";
-import {
-  FormLabel,
-  FormList,
-  GridContainer,
-  GridItemAutocomplete,
-  GridItemDatePicker,
-  GridItemTextField,
-} from "../../reusables";
+import { FormLabel, FormList, GridContainer, GridItemAutocomplete, GridItemDatePicker } from "../../reusables";
 import { FormCheatingSessionItem, FormDateItem } from "./ListItems";
 
 export const FormStatus: React.FC = () => {
@@ -68,14 +61,14 @@ export const FormStatus: React.FC = () => {
           </FormDateItem>
         </FormList>
       </GridContainer>
-      <GridContainer marginBottom={0}>
+      <GridContainer>
         <GridItemAutocomplete
           autoSelect={false}
-          gridProps={{ xs: 6 }}
           label="Withdraw Reason"
           name="status.droppedOutReason"
           options={withdrawReasons}
         />
+        <GridItemDatePicker label="Level Reeval Date" name="status.levelReevalDate" />
         <FormList
           addItem={addCheatingSession}
           buttonLabel="Add Cheating Session"
@@ -85,11 +78,6 @@ export const FormStatus: React.FC = () => {
         >
           <FormCheatingSessionItem />
         </FormList>
-      </GridContainer>
-      <GridContainer>
-        <GridItemDatePicker label="Final Grade Report Sent" name="status.finalGradeSentDate" />
-        <GridItemTextField label="Audit" name="status.audit" />
-        <GridItemDatePicker label="Level Reeval Date" name="status.levelReevalDate" />
       </GridContainer>
     </>
   );

@@ -212,6 +212,9 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
                 {ar.comments}
               </LabeledText>
             </LabeledContainer>
+            <LabeledContainer label="Final Grade Report Sent" labelProps={labelProps}>
+              <LabeledText label="">{ar.finalGradeSentDate}</LabeledText>
+            </LabeledContainer>
           </LabeledContainer>
         );
       }),

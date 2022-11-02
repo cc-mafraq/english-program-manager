@@ -109,9 +109,6 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ data: student }) => {
         <LabeledText label="Sessions Attended">
           {statusDetailsAndNumSessions[1]} session{statusDetailsAndNumSessions[1] === 1 ? "" : "s"}
         </LabeledText>
-        <LabeledText condition={isAdminOrFaculty} label="Audit">
-          {student.status.audit}
-        </LabeledText>
         <LabeledText
           containerProps={{
             sx: {
@@ -121,9 +118,6 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ data: student }) => {
           label="Cheating Sessions"
         >
           {join(student.status.cheatingSessions, JOIN_STR)}
-        </LabeledText>
-        <LabeledText condition={isAdminOrFaculty} label="Final GR Sent">
-          {student.status.finalGradeSentDate}
         </LabeledText>
         <LabeledText condition={isAdminOrFaculty} label="Level Reeval Date">
           {student.status.levelReevalDate}
@@ -148,10 +142,8 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ data: student }) => {
     red,
     repeatNum,
     statusDetailsAndNumSessions,
-    student.status.audit,
     student.status.cheatingSessions,
     student.status.droppedOutReason,
-    student.status.finalGradeSentDate,
     student.status.levelReevalDate,
     student.status.reactivatedDate,
     student.status.withdrawDate,
