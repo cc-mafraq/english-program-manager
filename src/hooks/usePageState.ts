@@ -67,7 +67,7 @@ export const usePageState = <T>({
             )
           : filteredListRef.current;
       const newFilteredList =
-        filter && filter.length > 0 ? (filterFn(newSearchedList, filterList) as T[]) : newSearchedList;
+        filter && filter.length > 0 ? sortFn(filterFn(newSearchedList, filterList) as T[]) : newSearchedList;
       setFilteredList(newFilteredList);
       const newPayload: Partial<AppState> = {};
       set(newPayload, payloadPath, newList);
@@ -81,6 +81,7 @@ export const usePageState = <T>({
       searchStringRef,
       filteredListRef,
       filter,
+      sortFn,
       filterList,
       setFilteredList,
       payloadPath,
