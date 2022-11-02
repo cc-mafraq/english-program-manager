@@ -19,7 +19,6 @@ export interface WaitingListEntry {
   probL3Plus?: boolean;
   probPL1?: boolean;
   referral?: string;
-  status: WaitlistStatus;
   timestamp?: string;
   transferralAndDate?: TransferralAndDate;
   waiting: boolean;
@@ -34,16 +33,6 @@ export enum HighPriority {
   YES = "Yes",
   NO = "No",
   PAST = "Past",
-}
-
-export enum WaitlistStatus {
-  POT = "POT",
-  NEW = "NEW",
-  WD = "WD",
-  UNC = "UNCLEAR",
-  BLOCKED = "BLOCKED",
-  NA = "N/A",
-  ALREADEST = "Already Student",
 }
 
 export enum WaitlistOutcome {
@@ -63,6 +52,5 @@ export const emptyWaitingListEntry: WaitingListEntry = {
   phoneNumbers: [],
   placementExam: [],
   primaryPhone: -1,
-  status: WaitlistStatus.POT,
   waiting: false,
 };

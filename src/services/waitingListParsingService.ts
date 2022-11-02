@@ -1,12 +1,5 @@
 import { filter, first, isEmpty, join, pullAll, replace, trim } from "lodash";
-import {
-  CovidStatus,
-  HighPriority,
-  TransferralAndDate,
-  WaitingListEntry,
-  WaitlistOutcome,
-  WaitlistStatus,
-} from "../interfaces";
+import { CovidStatus, HighPriority, TransferralAndDate, WaitingListEntry, WaitlistOutcome } from "../interfaces";
 import {
   dateRegex,
   parseDateField,
@@ -70,21 +63,6 @@ export const parseWLHighPriority = (key: string, value: string, wlEntry: Waiting
     wlEntry.highPriority = HighPriority.PAST;
   } else {
     wlEntry.highPriority = HighPriority.NO;
-  }
-};
-
-export const parseWLStatus = (key: string, value: string, wlEntry: WaitingListEntry) => {
-  if (isEmpty(value)) return;
-  const valueNoSpace = replace(value, /\s/g, "");
-  if (valueNoSpace === "N/A") {
-    wlEntry.status = WaitlistStatus.NA;
-  } else if (valueNoSpace.includes("NEW")) {
-    wlEntry.status = WaitlistStatus.NEW;
-  } else {
-    const status = WaitlistStatus[valueNoSpace as keyof typeof WaitlistStatus];
-    if (status !== undefined) {
-      wlEntry.status = status;
-    }
   }
 };
 

@@ -181,7 +181,6 @@ const waitlistFieldsUnexpanded: ValidFields<WaitingListEntry> = {
   ProbL3: wlps.parseWLProbL3Plus,
   ProbPL1: wlps.parseWLProbPL1,
   ReferralOptional: wlps.parseWLReferral,
-  STATUSPOTWDNEWUNCBLOCKED: wlps.parseWLStatus,
   TransferralToDate: wlps.parseWLTransferralAndDate,
   VCCode: wlps.parseWLCovidVaccineStatus,
   VCinWA: wlps.parseWLCovidVaccineNotes,

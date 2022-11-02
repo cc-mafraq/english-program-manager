@@ -1,7 +1,7 @@
 import { countBy, filter, find, first, get, last, map, orderBy, take, uniq, values } from "lodash";
 import moment from "moment";
 import React, { useCallback, useContext, useMemo } from "react";
-import { AppContext, HighPriority, WaitingListEntry, WaitlistOutcome, WaitlistStatus } from "../../interfaces";
+import { AppContext, HighPriority, WaitingListEntry, WaitlistOutcome } from "../../interfaces";
 import { FilterField, MOMENT_FORMAT } from "../../services";
 import { FilterDrawer } from "../reusables";
 
@@ -108,12 +108,6 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({
         name: "Placement Exam",
         path: "placementExam",
         values: placementExamValues,
-      },
-      {
-        condition: isAdminOrFaculty,
-        name: "Status",
-        path: "status",
-        values: values(WaitlistStatus),
       },
       {
         condition: isAdminOrFaculty,
