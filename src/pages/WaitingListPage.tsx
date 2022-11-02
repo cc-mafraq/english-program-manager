@@ -1,6 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box } from "@mui/material";
 import { get, includes, map, nth } from "lodash";
+import moment from "moment";
 import React, { useCallback, useContext, useRef, useState } from "react";
 import { v4 } from "uuid";
 import {
@@ -71,6 +72,7 @@ export const WaitingListPage = () => {
   const wlEntryFormOnSubmit = useCallback(
     (data: WaitingListEntry) => {
       if (!data.id) data.id = v4();
+      data.timestamp = moment().format();
       const dataNoNull = removeNullFromObject(data) as WaitingListEntry;
       setData(dataNoNull, "waitingList", "id");
       !selectedWaitingListEntry && handleSearchStringChange(dataNoNull.primaryPhone.toString());

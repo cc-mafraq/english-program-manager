@@ -20,6 +20,7 @@ export interface WaitingListEntry {
   probPL1?: boolean;
   referral?: string;
   status: WaitlistStatus;
+  timestamp?: string;
   transferralAndDate?: TransferralAndDate;
   waiting: boolean;
 }
