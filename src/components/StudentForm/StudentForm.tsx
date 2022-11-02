@@ -34,9 +34,9 @@ export const StudentForm: React.FC = () => {
       <Divider />
       <FormProgramInformation />
       <Divider />
-      <FormDemographics />
-      <Divider />
       <FormPhoneNumbers phonePath="phone.phoneNumbers" selectedStudentPath="selectedStudent" />
+      <Divider />
+      <FormDemographics />
       <Divider />
       <FormOriginalPlacement />
       <Divider />
