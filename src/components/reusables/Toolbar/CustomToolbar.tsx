@@ -57,7 +57,7 @@ export const CustomToolbar = <T,>({
         }}
       >
         {(role === "admin" || role === "faculty") && (
-          <Box width="10vw">
+          <Box>
             <Tooltip arrow placement="right" title={`${showActions ? "Hide" : "Show"} Actions`}>
               <IconButton
                 onClick={() => {
@@ -105,7 +105,7 @@ export const CustomToolbar = <T,>({
               } as Partial<unknown> & Attributes)}
           </Box>
         </Box>
-        <Box paddingRight="5vw" textAlign="right" width="15vw">
+        <Box textAlign="right">
           <Typography>{list.length} results</Typography>
         </Box>
       </Toolbar>
