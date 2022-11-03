@@ -6,6 +6,8 @@ import { WaitingListEntry } from "../../interfaces";
 interface WaitingListDupPhoneDialogProps {
   data: WaitingListEntry;
   handleDialogClose: () => void;
+  handleSearchStringChange: (newString: string) => void;
+  handleWaitingListEntryDialogClose: () => void;
   onSubmit: (data: WaitingListEntry) => void;
   open: boolean;
 }
@@ -13,6 +15,8 @@ interface WaitingListDupPhoneDialogProps {
 export const WaitingListDupPhoneDialog: React.FC<WaitingListDupPhoneDialogProps> = ({
   open,
   handleDialogClose,
+  handleWaitingListEntryDialogClose,
+  handleSearchStringChange,
   onSubmit,
   data,
 }) => {
@@ -46,7 +50,14 @@ export const WaitingListDupPhoneDialog: React.FC<WaitingListDupPhoneDialogProps>
         >
           Yes
         </Button>
-        <Button autoFocus onClick={handleDialogClose}>
+        <Button
+          autoFocus
+          onClick={() => {
+            handleDialogClose();
+            handleWaitingListEntryDialogClose();
+            handleSearchStringChange(data.primaryPhone.toString());
+          }}
+        >
           No
         </Button>
       </DialogActions>

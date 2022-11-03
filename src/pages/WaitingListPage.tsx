@@ -84,17 +84,13 @@ export const WaitingListPage = () => {
   const checkDuplicatePhone = useCallback(
     (data: WaitingListEntry) => {
       const primaryPhone = get(nth(data?.phoneNumbers, data.primaryPhone as number), "number");
-      primaryPhone && setSubmitData(data);
-      if (primaryPhone) {
-        data.primaryPhone = primaryPhone;
-      } else {
-        data.primaryPhone = submitData.primaryPhone;
-      }
+      data.primaryPhone = primaryPhone || submitData.primaryPhone;
       if (includes(map(waitingList, "primaryPhone"), data.primaryPhone) && !selectedWaitingListEntry) {
+        primaryPhone && setSubmitData(data);
         handleDupPhoneDialogOpen();
-        return;
+      } else {
+        wlEntryFormOnSubmit(data);
       }
-      wlEntryFormOnSubmit(data);
     },
     [
       handleDupPhoneDialogOpen,
@@ -177,6 +173,8 @@ export const WaitingListPage = () => {
       <WaitingListDupPhoneDialog
         data={submitData}
         handleDialogClose={handleDupPhoneDialogClose}
+        handleSearchStringChange={handleSearchStringChange}
+        handleWaitingListEntryDialogClose={handleWLEntryDialogClose}
         onSubmit={wlEntryFormOnSubmit}
         open={openDupPhoneDialog}
       />
