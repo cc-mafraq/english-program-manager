@@ -72,9 +72,7 @@ export const WaitingListPage = () => {
   const wlEntryFormOnSubmit = useCallback(
     (data: WaitingListEntry) => {
       if (!data.id) data.id = v4();
-      if (!selectedWaitingListEntry) {
-        data.timestamp = moment().format();
-      }
+      if (!selectedWaitingListEntry) data.timestamp = moment().format();
       const dataNoNull = removeNullFromObject(data) as WaitingListEntry;
       setData(dataNoNull, "waitingList", "id");
       !selectedWaitingListEntry && handleSearchStringChange(dataNoNull.primaryPhone.toString());
