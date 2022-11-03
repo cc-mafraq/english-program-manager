@@ -29,12 +29,12 @@ export const FGRHeader: React.FC<FGRHeaderProps> = ({ borderSize, smallBorderSiz
         <img alt="EP Logo" src="./assets/ep-logo-full.png" width={logoSize} />
       </Grid>
       <Grid item xs={7}>
-        <Typography color="black" fontSize={englishFontSize} fontWeight="bold" textAlign="center" variant="h5">
+        <Typography color="black" fontSize={englishFontSize} fontWeight="bold" textAlign="center">
           CCM English Program: Final Grade Report
         </Typography>
       </Grid>
       <Grid item xs={4}>
-        <Typography color="black" fontSize={arabicFontSize} textAlign="right" variant="h5">
+        <Typography color="black" fontSize={arabicFontSize} textAlign="right">
           برنامج الانجليزي: تقرير العلامات في الصف
         </Typography>
       </Grid>
