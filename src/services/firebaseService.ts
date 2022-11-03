@@ -29,7 +29,7 @@ export const isProd =
   window.location.hostname.includes("ccm-english.firebaseapp.com");
 
 // Initialize Firebase
-export const app = initializeApp(isProd ? firebaseProdConfig : firebaseDevConfig);
+export const app = initializeApp(firebaseProdConfig);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 enableIndexedDbPersistence(db);
