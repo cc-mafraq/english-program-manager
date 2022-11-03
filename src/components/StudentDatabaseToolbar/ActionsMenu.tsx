@@ -1,6 +1,6 @@
-import { Add, Cached, Edit, Upload } from "@mui/icons-material";
-import { Box, Grow, Input, InputLabel } from "@mui/material";
-import React, { ChangeEvent, useContext, useState } from "react";
+import { Add, Cached, Edit } from "@mui/icons-material";
+import { Box, Grow } from "@mui/material";
+import React, { useContext, useState } from "react";
 import { AppContext } from "../../interfaces";
 import { ActionFAB } from "../reusables/Toolbar/ActionFAB";
 import { SelectStudentDialog } from "./SelectStudentDialog";
@@ -9,7 +9,7 @@ interface ActionsMenuProps {
   handleDialogOpen?: () => void;
   handleGenerateFGRClick?: () => void;
   noEditButton?: boolean;
-  onInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  // onInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
   otherActions?: React.ReactNode;
   showActions: boolean;
   tooltipObjectName?: string;
@@ -18,7 +18,7 @@ interface ActionsMenuProps {
 export const ActionsMenu: React.FC<ActionsMenuProps> = ({
   handleGenerateFGRClick,
   handleDialogOpen,
-  onInputChange,
+  // onInputChange,
   showActions,
   tooltipObjectName,
   noEditButton,
@@ -58,7 +58,7 @@ export const ActionsMenu: React.FC<ActionsMenuProps> = ({
             <Edit />
           </ActionFAB>
         )}
-        {role === "admin" && (
+        {/* {role === "admin" && (
           <InputLabel htmlFor="import-spreadsheet">
             <Input
               id="import-spreadsheet"
@@ -71,7 +71,7 @@ export const ActionsMenu: React.FC<ActionsMenuProps> = ({
               <Upload />
             </ActionFAB>
           </InputLabel>
-        )}
+        )} */}
         {(role === "admin" || role === "faculty") && handleGenerateFGRClick && (
           <ActionFAB onClick={handleGenerateFGRClick} tooltipTitle="Generate Final Grade Reports">
             <Cached />

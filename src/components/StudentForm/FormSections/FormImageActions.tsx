@@ -38,7 +38,6 @@ export const FormImageActions: React.FC<FormImageActionsProps> = ({
         <IconButton
           color="primary"
           onClick={() => {
-            if (!selectedStudent) return;
             setValue(imagePath, undefined);
             setImg(undefined);
           }}

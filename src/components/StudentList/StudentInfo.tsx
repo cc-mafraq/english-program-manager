@@ -1,10 +1,9 @@
-import { Box, useTheme } from "@mui/material";
-import { grey } from "@mui/material/colors";
+import { Box } from "@mui/material";
 import { join, map } from "lodash";
 import React, { useContext, useMemo } from "react";
 import { Image, LabeledContainer, LabeledText } from "..";
 import { useColors } from "../../hooks";
-import { AppContext, CovidStatus, Status, Student } from "../../interfaces";
+import { AppContext, Status, Student } from "../../interfaces";
 import { covidVaccineImageFolder, getRepeatNum, getStatusDetails, isActive, JOIN_STR } from "../../services";
 
 interface StudentInfoProps {
@@ -15,8 +14,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ data: student }) => {
   const {
     appState: { students, role },
   } = useContext(AppContext);
-  const theme = useTheme();
-  const { defaultBackgroundColor, green, red, yellow } = useColors();
+  const { defaultBackgroundColor, green, red } = useColors();
   const statusDetailsAndNumSessions = useMemo(() => {
     return getStatusDetails({ student, students });
   }, [student, students]);
@@ -80,45 +78,10 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ data: student }) => {
     return (
       <Box hidden={role !== "admin"}>
         <LabeledContainer label="COVID Vaccine" parentContainerProps={{ marginRight: "2vh" }}>
-          <LabeledText
-            containerProps={{
-              sx: {
-                backgroundColor:
-                  student.covidVaccine?.status === CovidStatus.FULL ||
-                  student.covidVaccine?.status === CovidStatus.EXEMPT ||
-                  student.covidVaccine?.status === CovidStatus.BOOST
-                    ? green
-                    : student.covidVaccine?.status === CovidStatus.PART
-                    ? yellow
-                    : red,
-              },
-            }}
-            label="Status"
-            labelProps={{
-              color:
-                theme.palette.mode === "dark" && student.covidVaccine?.status === CovidStatus.PART
-                  ? grey[800]
-                  : theme.palette.text.secondary,
-            }}
-            textProps={{
-              color:
-                theme.palette.mode === "dark" && student.covidVaccine?.status === CovidStatus.PART
-                  ? grey[900]
-                  : theme.palette.text.primary,
-            }}
-          >
-            {student.covidVaccine?.status}
-          </LabeledText>
+          <LabeledText label="Status">{student.covidVaccine?.status}</LabeledText>
           <LabeledText label="Date">{student.covidVaccine?.date}</LabeledText>
           <LabeledText label="Reason">{student.covidVaccine?.reason}</LabeledText>
-          <LabeledText
-            containerProps={{
-              sx: {
-                backgroundColor: student.covidVaccine?.suspectedFraud ? red : undefined,
-              },
-            }}
-            label="Suspected Fraud"
-          >
+          <LabeledText label="Suspected Fraud">
             {student.covidVaccine?.suspectedFraud ? "Yes" : undefined}
           </LabeledText>
           <LabeledText label="Suspected Fraud Reason">{student.covidVaccine?.suspectedFraudReason}</LabeledText>
@@ -135,16 +98,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ data: student }) => {
         />
       </Box>
     );
-  }, [
-    green,
-    red,
-    role,
-    student,
-    theme.palette.mode,
-    theme.palette.text.primary,
-    theme.palette.text.secondary,
-    yellow,
-  ]);
+  }, [role, student]);
 
   const StatusBox = useMemo(() => {
     return (
@@ -155,9 +109,6 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ data: student }) => {
         <LabeledText label="Sessions Attended">
           {statusDetailsAndNumSessions[1]} session{statusDetailsAndNumSessions[1] === 1 ? "" : "s"}
         </LabeledText>
-        <LabeledText condition={isAdminOrFaculty} label="Audit">
-          {student.status.audit}
-        </LabeledText>
         <LabeledText
           containerProps={{
             sx: {
@@ -167,9 +118,6 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ data: student }) => {
           label="Cheating Sessions"
         >
           {join(student.status.cheatingSessions, JOIN_STR)}
-        </LabeledText>
-        <LabeledText condition={isAdminOrFaculty} label="Final GR Sent">
-          {student.status.finalGradeSentDate}
         </LabeledText>
         <LabeledText condition={isAdminOrFaculty} label="Level Reeval Date">
           {student.status.levelReevalDate}
@@ -194,10 +142,8 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ data: student }) => {
     red,
     repeatNum,
     statusDetailsAndNumSessions,
-    student.status.audit,
     student.status.cheatingSessions,
     student.status.droppedOutReason,
-    student.status.finalGradeSentDate,
     student.status.levelReevalDate,
     student.status.reactivatedDate,
     student.status.withdrawDate,
@@ -306,11 +252,11 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ data: student }) => {
   return (
     <Box sx={{ display: "flex", flexWrap: "wrap" }}>
       {ProgramInformation}
-      {CovidVaccine}
+      {PhoneNumbers}
       {StatusBox}
       {Demographics}
-      {PhoneNumbers}
       {PlacementData}
+      {CovidVaccine}
       {LiteracyAndZoom}
     </Box>
   );

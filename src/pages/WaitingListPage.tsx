@@ -1,7 +1,8 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box } from "@mui/material";
 import { get, includes, map, nth } from "lodash";
-import React, { ChangeEvent, useCallback, useContext, useRef, useState } from "react";
+import moment from "moment";
+import React, { useCallback, useContext, useRef, useState } from "react";
 import { v4 } from "uuid";
 import {
   ActionsMenu,
@@ -28,25 +29,18 @@ import {
   setPrimaryNumberBooleanArray,
   sortWaitingList,
   waitingListFormSchema,
-  waitingListToList,
 } from "../services";
 
 export const WaitingListPage = () => {
   const {
     appState: { waitingList, role, waitingListFilter: filter, selectedWaitingListEntry },
-    appDispatch,
   } = useContext(AppContext);
   const waitingListRef = useRef(waitingList);
   waitingListRef.current = waitingList;
-  const [spreadsheetIsLoading, setSpreadsheetIsLoading] = useState(false);
   const {
     filteredList: filteredWaitingList,
-    handleChangePage,
-    handleChangeRowsPerPage,
     handleSearchStringChange,
     listPage: waitingListPage,
-    page,
-    rowsPerPage,
     searchString,
     setShowActions,
     showActions,
@@ -58,7 +52,6 @@ export const WaitingListPage = () => {
     payloadPath: "waitingList",
     searchFn: searchWaitingList,
     sortFn: sortWaitingList,
-    spreadsheetIsLoading,
   });
 
   const {
@@ -76,26 +69,10 @@ export const WaitingListPage = () => {
   const [submitData, setSubmitData] = useState(emptyWaitingListEntry);
   const [scrollToIndex, setScrollToIndex] = useState<undefined | number>(undefined);
 
-  const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    handleChangePage(null, 0);
-    setSpreadsheetIsLoading(true);
-    const file: File | null = e.target.files && e.target.files[0];
-    const reader = new FileReader();
-
-    file && appDispatch({ payload: { loading: true } });
-    file && reader.readAsText(file);
-
-    reader.onloadend = async () => {
-      const waitingListString = String(reader.result);
-      const newWaitingList = await waitingListToList(waitingListString);
-      appDispatch({ payload: { loading: false, waitingList: newWaitingList } });
-      setSpreadsheetIsLoading(false);
-    };
-  };
-
   const wlEntryFormOnSubmit = useCallback(
     (data: WaitingListEntry) => {
       if (!data.id) data.id = v4();
+      data.timestamp = moment().format();
       const dataNoNull = removeNullFromObject(data) as WaitingListEntry;
       setData(dataNoNull, "waitingList", "id");
       !selectedWaitingListEntry && handleSearchStringChange(dataNoNull.primaryPhone.toString());
@@ -107,17 +84,13 @@ export const WaitingListPage = () => {
   const checkDuplicatePhone = useCallback(
     (data: WaitingListEntry) => {
       const primaryPhone = get(nth(data?.phoneNumbers, data.primaryPhone as number), "number");
-      primaryPhone && setSubmitData(data);
-      if (primaryPhone) {
-        data.primaryPhone = primaryPhone;
-      } else {
-        data.primaryPhone = submitData.primaryPhone;
-      }
+      data.primaryPhone = primaryPhone || submitData.primaryPhone;
       if (includes(map(waitingList, "primaryPhone"), data.primaryPhone) && !selectedWaitingListEntry) {
+        primaryPhone && setSubmitData(data);
         handleDupPhoneDialogOpen();
-        return;
+      } else {
+        wlEntryFormOnSubmit(data);
       }
-      wlEntryFormOnSubmit(data);
     },
     [
       handleDupPhoneDialogOpen,
@@ -134,12 +107,9 @@ export const WaitingListPage = () => {
       <Box position="sticky" top={0} zIndex={5}>
         <CustomToolbar
           filterComponent={<WaitingListFilter />}
-          handleChangePage={handleChangePage}
-          handleChangeRowsPerPage={handleChangeRowsPerPage}
+          filterName="waitingListFilter"
           handleSearchStringChange={handleSearchStringChange}
           list={searchString || filter.length ? filteredWaitingList : waitingList}
-          page={page}
-          rowsPerPage={rowsPerPage}
           searchString={searchString}
           setShowActions={setShowActions}
           showActions={showActions}
@@ -148,7 +118,6 @@ export const WaitingListPage = () => {
         <ActionsMenu
           handleDialogOpen={handleWLEntryDialogOpen}
           noEditButton
-          onInputChange={onInputChange}
           otherActions={
             <WaitingListActions filteredWaitingList={filteredWaitingList} setScrollToIndex={setScrollToIndex} />
           }
@@ -204,6 +173,8 @@ export const WaitingListPage = () => {
       <WaitingListDupPhoneDialog
         data={submitData}
         handleDialogClose={handleDupPhoneDialogClose}
+        handleSearchStringChange={handleSearchStringChange}
+        handleWaitingListEntryDialogClose={handleWLEntryDialogClose}
         onSubmit={wlEntryFormOnSubmit}
         open={openDupPhoneDialog}
       />

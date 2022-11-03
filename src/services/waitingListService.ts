@@ -14,8 +14,9 @@ export const sortWaitingList = (waitingList: WaitingListEntry[], shouldFilter?: 
       (wle) => {
         return moment(wle.entryDate, MOMENT_FORMAT);
       },
+      "timestamp",
     ],
-    ["desc", "desc", "asc"],
+    ["desc", "desc", "asc", "asc"],
   );
 
   // Move duplicate entries next to most current entry

@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box } from "@mui/material";
 import { isEmpty, omit } from "lodash";
-import React, { ChangeEvent, useCallback, useContext, useRef } from "react";
+import React, { useCallback, useContext, useRef } from "react";
 import useState from "react-usestateref";
 import {
   AcademicRecords,
@@ -30,27 +30,21 @@ import {
   setData,
   setPrimaryNumberBooleanArray,
   sortStudents,
-  spreadsheetToStudentList,
   studentFormSchema,
 } from "../services";
 
 export const StudentDatabasePage = () => {
   const {
     appState: { students, selectedStudent, studentFilter: filter, role },
-    appDispatch,
   } = useContext(AppContext);
   const studentsRef = useRef(students);
   const [openFGRDialog, setOpenFGRDialog] = useState(false);
-  const [spreadsheetIsLoading, setSpreadsheetIsLoading] = useState(false);
+  // const [spreadsheetIsLoading, setSpreadsheetIsLoading] = useState(false);
   const isAdminOrFaculty = role === "admin" || role === "faculty";
   studentsRef.current = students;
   const {
     filteredList: filteredStudents,
-    handleChangePage,
-    handleChangeRowsPerPage,
     handleSearchStringChange,
-    page,
-    rowsPerPage,
     searchString,
     setShowActions,
     showActions,
@@ -63,7 +57,7 @@ export const StudentDatabasePage = () => {
     payloadPath: "students",
     searchFn: searchStudents,
     sortFn: sortStudents,
-    spreadsheetIsLoading,
+    // spreadsheetIsLoading,
   });
 
   const {
@@ -72,25 +66,24 @@ export const StudentDatabasePage = () => {
     openDialog: openStudentDialog,
   } = useFormDialog({ selectedDataPath: "selectedStudent" });
 
-  const onInputChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      handleChangePage(null, 0);
-      setSpreadsheetIsLoading(true);
-      const file: File | null = e.target.files && e.target.files[0];
-      const reader = new FileReader();
+  // const onInputChange = useCallback(
+  //   (e: ChangeEvent<HTMLInputElement>) => {
+  //     setSpreadsheetIsLoading(true);
+  //     const file: File | null = e.target.files && e.target.files[0];
+  //     const reader = new FileReader();
 
-      file && appDispatch({ payload: { loading: true } });
-      file && reader.readAsText(file);
+  //     file && appDispatch({ payload: { loading: true } });
+  //     file && reader.readAsText(file);
 
-      reader.onloadend = async () => {
-        const studentListString = String(reader.result);
-        await spreadsheetToStudentList(studentListString, students);
-        appDispatch({ payload: { loading: false } });
-        setSpreadsheetIsLoading(false);
-      };
-    },
-    [appDispatch, handleChangePage, students],
-  );
+  //     reader.onloadend = async () => {
+  //       const studentListString = String(reader.result);
+  //       await spreadsheetToStudentList(studentListString, students);
+  //       appDispatch({ payload: { loading: false } });
+  //       setSpreadsheetIsLoading(false);
+  //     };
+  //   },
+  //   [appDispatch, students],
+  // );
 
   const handleGenerateFGRClick = useCallback(() => {
     setOpenFGRDialog(true);
@@ -141,12 +134,9 @@ export const StudentDatabasePage = () => {
       <Box position="sticky" top={0} zIndex={5}>
         <CustomToolbar
           filterComponent={<StudentFilter />}
-          handleChangePage={handleChangePage}
-          handleChangeRowsPerPage={handleChangeRowsPerPage}
+          filterName="studentFilter"
           handleSearchStringChange={handleSearchStringChange}
           list={searchString || filter.length ? filteredStudents : students}
-          page={page}
-          rowsPerPage={rowsPerPage}
           searchString={searchString}
           setShowActions={setShowActions}
           showActions={showActions}
@@ -155,7 +145,7 @@ export const StudentDatabasePage = () => {
         <ActionsMenu
           handleDialogOpen={handleStudentDialogOpen}
           handleGenerateFGRClick={handleGenerateFGRClick}
-          onInputChange={onInputChange}
+          // onInputChange={onInputChange}
           showActions={showActions}
           tooltipObjectName="Student"
         />
@@ -188,7 +178,7 @@ export const StudentDatabasePage = () => {
         <CustomCard
           data={emptyStudent}
           header={<StudentCardHeader data={emptyStudent} handleEditStudentClick={handleStudentDialogOpen} />}
-          image={<StudentCardImage data={emptyStudent} />}
+          image={<StudentCardImage data={emptyStudent} imageWidth={175} smallBreakpointScaleDown={1.5} />}
           noTabs={role !== "admin" && role !== "faculty"}
           tabContents={[
             { component: <StudentInfo data={emptyStudent} />, label: "Student Information" },

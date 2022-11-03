@@ -139,15 +139,17 @@ export const dateSchema = string()
   )
   .transform(dateToString);
 
+const finalResultSchema = mixed<FinalResult>()
+  .oneOf([...(Object.values(FinalResult) as FinalResult[]), null])
+  .transform(stringToResult)
+  .nullable()
+  .optional();
+
 const gradeSchema = object()
   .shape({
     notes: string().transform(emptyToNull).nullable().optional(),
     percentage: percentageSchema,
-    result: mixed<FinalResult>()
-      .oneOf([...(Object.values(FinalResult) as FinalResult[]), null])
-      .transform(stringToResult)
-      .nullable()
-      .optional(),
+    result: finalResultSchema,
   })
   .optional();
 
@@ -156,9 +158,12 @@ export const academicRecordsSchema = object().shape({
   comments: string().transform(emptyToNull).nullable().optional(),
   exitSpeakingExam: gradeSchema,
   exitWritingExam: gradeSchema,
-  finalResult: gradeSchema,
+  finalGrade: gradeSchema,
+  finalGradeReportNotes: string().transform(emptyToNull).nullable().optional(),
+  finalGradeSentDate: dateSchema.nullable().optional(),
   level: mixed<GenderedLevel>().transform(emptyToNull).nullable().optional(),
   levelAudited: mixed<GenderedLevel>().transform(emptyToNull).nullable().optional(),
+  overallResult: finalResultSchema,
   session: string().typeError("Session is required").required("Session is required"),
 });
 
@@ -251,13 +256,12 @@ export const placementSchema = object().shape({
   classScheduleSentDate: array().of(dateSchema.nullable().optional()).transform(dateStringToArray).required(),
   noAnswerClassScheduleWPM: bool().optional(),
   pending: bool().optional(),
-  photoContact: string().transform(emptyToNull).nullable().optional(),
+  photoContact: dateSchema.nullable().optional(),
   placement: array().of(sectionPlacementSchema).default([]).required(),
   sectionsOffered: string().transform(emptyToNull).nullable().optional(),
 });
 
 const statusSchema = object().shape({
-  audit: string().transform(emptyToNull).nullable().optional(),
   cheatingSessions: array()
     .of(
       string()
@@ -276,7 +280,6 @@ const statusSchema = object().shape({
     .transform(emptyToNull)
     .nullable()
     .optional(),
-  finalGradeSentDate: dateSchema.nullable().optional(),
   inviteTag: bool().required(),
   levelReevalDate: dateSchema.nullable().optional(),
   noContactList: bool().required(),

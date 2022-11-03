@@ -1,7 +1,14 @@
 import { Close } from "@mui/icons-material";
 import { Grid, IconButton, Tooltip } from "@mui/material";
 import React, { useContext } from "react";
-import { FormGrade, FormLabel, GridContainer, GridItemAutocomplete, GridItemTextField } from "../../..";
+import {
+  FormGrade,
+  FormLabel,
+  GridContainer,
+  GridItemAutocomplete,
+  GridItemDatePicker,
+  GridItemTextField,
+} from "../../..";
 import { useColors } from "../../../../hooks";
 import { AppContext, genderedLevels } from "../../../../interfaces";
 import { FormItem, getAllSessions, SPACING } from "../../../../services";
@@ -53,7 +60,21 @@ export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem,
           options={genderedLevels}
         />
       </GridContainer>
-      <FormGrade gradePath={name ? `${name}.finalResult` : "finalResult"} label="Final Grade" />
+      <FormGrade
+        directGradePath
+        gradePath={name ? `${name}.overallResult` : "overallResult"}
+        label="Overall Result"
+        notesLabel="FGR Notes"
+        notesPath={name ? `${name}.finalGradeReportNotes` : "finalGradeReportNotes"}
+        percentageComponent={
+          <GridItemDatePicker
+            gridProps={{ xs: 3 }}
+            label="Final Grade Report Sent"
+            name={name ? `${name}.finalGradeSentDate` : "finalGradeSentDate"}
+          />
+        }
+      />
+      <FormGrade gradePath={name ? `${name}.finalGrade` : "finalGrade"} label="Class Grade" />
       <FormGrade gradePath={name ? `${name}.exitWritingExam` : "exitWritingExam"} label="Exit Writing Exam" />
       <FormGrade gradePath={name ? `${name}.exitSpeakingExam` : "exitSpeakingExam"} label="Exit Speaking Exam" />
       <GridContainer marginBottom={0} marginLeft={0}>

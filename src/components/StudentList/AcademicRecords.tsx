@@ -138,7 +138,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
               width: "100%",
             }}
           >
-            {ar.finalResult?.result && (
+            {ar.overallResult && (
               <Box
                 sx={{
                   left: "35%",
@@ -151,7 +151,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
                 </Typography>
                 <Typography
                   color={
-                    ar.finalResult.result === FinalResult.P
+                    ar.overallResult === FinalResult.P
                       ? theme.palette.mode === "light"
                         ? materialGreen[600]
                         : green
@@ -163,7 +163,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
                   fontSize={20}
                   fontWeight="bold"
                 >
-                  {ar.finalResult.result}
+                  {ar.overallResult}
                 </Typography>
               </Box>
             )}
@@ -190,27 +190,19 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
                 {ar.attendance !== undefined ? `${ar.attendance}%` : undefined}
               </LabeledText>
             </LabeledContainer>
-            <GradeInfo
-              grade={{
-                ...ar.finalResult,
-                result: ar.finalResult
-                  ? (ar.finalResult?.percentage || 0) >= 80
-                    ? FinalResult.P
-                    : (ar.finalResult?.percentage || 0) > 0
-                    ? FinalResult.F
-                    : ar.finalResult?.percentage !== undefined
-                    ? FinalResult.WD
-                    : undefined
-                  : undefined,
-              }}
-              label="Class Grade"
-            />
+            <GradeInfo grade={ar.finalGrade} label="Class Grade" />
             <GradeInfo grade={ar.exitWritingExam} label="Exit Writing Exam" />
             <GradeInfo grade={ar.exitSpeakingExam} label="Exit Speaking Exam" />
             <LabeledContainer label="Teacher Comments" labelProps={labelProps}>
               <LabeledText label="" textProps={{ fontSize: "11pt" }}>
                 {ar.comments}
               </LabeledText>
+            </LabeledContainer>
+            <LabeledContainer label="Final Grade Report Sent" labelProps={labelProps}>
+              <LabeledText label="">{ar.finalGradeSentDate}</LabeledText>
+            </LabeledContainer>
+            <LabeledContainer label="Final Grade Report Notes" labelProps={labelProps}>
+              <LabeledText label="">{ar.finalGradeReportNotes}</LabeledText>
             </LabeledContainer>
           </LabeledContainer>
         );
@@ -220,7 +212,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
 
   return (
     <>
-      <LabeledContainer label="Progress" parentContainerProps={{ width: "100%" }} showWhenEmpty>
+      <LabeledContainer label="Progress" parentContainerProps={{ height: "100px", width: "100%" }} showWhenEmpty>
         {PB}
       </LabeledContainer>
       <LabeledContainer label="Academic Records" showWhenEmpty>

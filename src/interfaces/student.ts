@@ -34,9 +34,12 @@ export interface AcademicRecord {
   comments?: string;
   exitSpeakingExam?: Grade;
   exitWritingExam?: Grade;
-  finalResult?: Grade;
+  finalGrade?: Grade;
+  finalGradeReportNotes?: string;
+  finalGradeSentDate?: string;
   level?: GenderedLevel;
   levelAudited?: GenderedLevel;
+  overallResult?: FinalResult;
   session: string;
 }
 
@@ -93,11 +96,9 @@ export interface WhatsappInfo {
 }
 
 export interface StudentStatus {
-  audit?: string;
   cheatingSessions?: string[];
   currentStatus: Status;
   droppedOutReason?: DroppedOutReason;
-  finalGradeSentDate?: string;
   inviteTag: boolean;
   levelReevalDate?: string;
   noContactList: boolean;
@@ -133,14 +134,14 @@ export type GenderedLevel = Level | ("PL1-M" | "PL1-W" | "L1-M" | "L1-W" | "L2-M
 export type LevelPlus = Level | ("PL1+" | "L1-" | "L1+" | "L2-" | "L2+" | "L3-" | "L3+" | "L4-" | "L4+" | "L5-");
 
 export enum CovidStatus {
-  UNV = "Unvaccinated",
-  PART = "Partially Vaccinated",
+  NORPT = "Not Reported",
   FULL = "Fully Vaccinated",
+  PART = "Partially Vaccinated",
+  UNV = "Unvaccinated",
   BOOST = "Boosted (Three Doses)",
   EXEMPT = "Exempt from Vaccine",
   DECL = "Declined to Provide Vaccine Info",
   UNCL = "Answered but Answer Unclear",
-  NORPT = "Not Reported",
 }
 
 export enum Nationality {

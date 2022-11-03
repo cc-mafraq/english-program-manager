@@ -20,13 +20,13 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ data: stud
 
   return (
     <>
-      <Typography component="div" display="inline" fontSize={28} gutterBottom>
-        {student.name.english} {student.name.arabic}
+      <Typography display="inline" variant="h5">
+        {student.name.english} {student.name.arabic === "N/A" ? "" : student.name.arabic}
       </Typography>
       <Box sx={{ flexDirection: "row", flexGrow: 1, float: "right" }}>
         {student.phone.primaryPhone > 700000000 ? (
           <>
-            <Typography display="inline" marginRight="5px" variant="h5">
+            <Typography display="inline-flex" marginRight="5px" variant="h5">
               {student.phone.primaryPhone}
             </Typography>
             <Tooltip arrow title="Contact on WhatsApp">

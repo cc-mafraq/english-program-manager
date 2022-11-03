@@ -1,5 +1,6 @@
-import { FilterAlt, MoreHoriz } from "@mui/icons-material";
-import { AppBar, Box, IconButton, TablePagination, Toolbar, Tooltip } from "@mui/material";
+import { FilterList, MoreHoriz } from "@mui/icons-material";
+import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography, useTheme } from "@mui/material";
+import { get } from "lodash";
 import React, { Attributes, Dispatch, SetStateAction, useContext } from "react";
 import { saveLocal, useColors } from "../../../hooks";
 import { AppContext } from "../../../interfaces";
@@ -19,12 +20,9 @@ const handlePopoverClose = (setFn: React.Dispatch<React.SetStateAction<HTMLButto
 
 interface CustomToolbarProps<T> {
   filterComponent: React.ReactNode;
-  handleChangePage: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
-  handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  filterName: string;
   handleSearchStringChange: (value: string) => void;
   list: T[];
-  page: number;
-  rowsPerPage: number;
   searchString: string;
   setShowActions: Dispatch<SetStateAction<boolean>>;
   showActions: boolean;
@@ -33,22 +31,22 @@ interface CustomToolbarProps<T> {
 
 export const CustomToolbar = <T,>({
   list,
-  page,
-  rowsPerPage,
-  handleChangePage,
-  handleChangeRowsPerPage,
   handleSearchStringChange,
   showActions,
   setShowActions,
   searchString,
   tooltipObjectName,
   filterComponent,
+  filterName,
 }: CustomToolbarProps<T>) => {
   const {
     appState: { role },
   } = useContext(AppContext);
   const [filterAnchorEl, setFilterAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const { iconColor } = useColors();
+  const { appState } = useContext(AppContext);
+  const filter = get(appState, filterName);
+  const theme = useTheme();
 
   return (
     <AppBar color="default" elevation={1} position="sticky">
@@ -59,7 +57,7 @@ export const CustomToolbar = <T,>({
         }}
       >
         {(role === "admin" || role === "faculty") && (
-          <Box width="10vw">
+          <Box>
             <Tooltip arrow placement="right" title={`${showActions ? "Hide" : "Show"} Actions`}>
               <IconButton
                 onClick={() => {
@@ -73,33 +71,42 @@ export const CustomToolbar = <T,>({
           </Box>
         )}
         <Box margin="auto">
-          <Searchbar
-            handleSearchStringChange={handleSearchStringChange}
-            placeholder={`Search ${tooltipObjectName.toLowerCase()}`}
-            searchString={searchString}
-          />
-          <Tooltip arrow title={`Filter ${tooltipObjectName}`}>
-            <IconButton onClick={handlePopoverClick(setFilterAnchorEl)}>
-              <FilterAlt sx={{ color: iconColor }} />
-            </IconButton>
-          </Tooltip>
-          {React.isValidElement(filterComponent) &&
-            React.cloneElement(filterComponent, {
-              anchorEl: filterAnchorEl,
-              handleClose: handlePopoverClose(setFilterAnchorEl),
-              tooltipObjectName,
-            } as Partial<unknown> & Attributes)}
+          <Box sx={{ whiteSpace: "nowrap" }}>
+            <Searchbar
+              handleSearchStringChange={handleSearchStringChange}
+              placeholder={`Search ${tooltipObjectName.toLowerCase()}`}
+              searchString={searchString}
+            />
+            <Tooltip arrow title={`Filter ${tooltipObjectName}`}>
+              <IconButton
+                onClick={handlePopoverClick(setFilterAnchorEl)}
+                size="small"
+                sx={{
+                  "&:hover": {
+                    backgroundColor: filter?.length
+                      ? theme.palette.mode === "dark"
+                        ? theme.palette.secondary.light
+                        : theme.palette.secondary.dark
+                      : undefined,
+                  },
+                  backgroundColor: filter?.length ? theme.palette.secondary.main : undefined,
+                  marginBottom: "5px",
+                  marginLeft: "10px",
+                }}
+              >
+                <FilterList sx={{ color: filter?.length ? theme.palette.common.white : iconColor }} />
+              </IconButton>
+            </Tooltip>
+            {React.isValidElement(filterComponent) &&
+              React.cloneElement(filterComponent, {
+                anchorEl: filterAnchorEl,
+                handleClose: handlePopoverClose(setFilterAnchorEl),
+                tooltipObjectName,
+              } as Partial<unknown> & Attributes)}
+          </Box>
         </Box>
-        <Box width="40vw">
-          <TablePagination
-            component="div"
-            count={list.length}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            rowsPerPageOptions={[10, 50, 100, 200, { label: "All", value: -1 }]}
-          />
+        <Box textAlign="right">
+          <Typography>{list.length} results</Typography>
         </Box>
       </Toolbar>
     </AppBar>

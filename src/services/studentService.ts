@@ -19,7 +19,6 @@ import {
   replace,
   reverse,
   set,
-  slice,
   some,
   sortBy,
   sum,
@@ -53,7 +52,7 @@ export interface FilterField<T> {
 export const getRepeatNum = (student: Student): string | undefined => {
   const levelsTaken = map(student.academicRecords, "level");
   const levelCounts = countBy(levelsTaken);
-  const lastResult = last(student.academicRecords)?.finalResult?.result;
+  const lastResult = last(student.academicRecords)?.overallResult;
   const repeatNum = levelCounts[student.currentLevel] - 1; // - 1 to not include initial session (not repeated)
   return lastResult === FinalResult.P || !repeatNum ? undefined : `${repeatNum}x`;
 };
@@ -102,20 +101,14 @@ export const getProgress = (student: Student, sessionOptions: string[]): Student
       level: isCoreClass ? undefined : level,
       result:
         isCoreClass ||
-        (!isCoreClass &&
-          (ar.finalResult?.result === "F" || ar.finalResult?.result === "WD" || !ar.finalResult?.percentage))
-          ? ar.finalResult?.result
+        (!isCoreClass && (ar.overallResult === "F" || ar.overallResult === "WD" || !ar.finalGrade?.percentage))
+          ? ar.overallResult
           : FinalResult.P,
       session: ar.session,
     });
   });
   progress.L5 = concat(progress.L5 || [], progress["L5 GRAD"] || []);
   return omit(progress, "L5 GRAD");
-};
-
-export const getPage = <T>(list: T[], page: number, rowsPerPage: number): T[] => {
-  const newRowsPerPage = rowsPerPage > list.length || rowsPerPage < 0 ? list.length : rowsPerPage;
-  return slice(list, page * newRowsPerPage, (page + 1) * newRowsPerPage);
 };
 
 export const filterBySession = (students: Student[], session: Student["initialSession"]): Student[] => {
@@ -177,7 +170,7 @@ export const getSessionsWithResults = (students: Student[]) => {
         filter(flatten(map(students, "academicRecords")), (ar) => {
           return ar.session === session;
         }),
-        "finalResult.result",
+        "overallResult",
       ),
     );
   });
@@ -197,7 +190,7 @@ export const getStatusDetails = ({
     return false;
   });
   forEach(student.academicRecords, (ar) => {
-    if (ar.finalResult?.result !== FinalResult.WD && includes(sessionsWithResults, ar.session)) {
+    if (ar.overallResult !== FinalResult.WD && includes(sessionsWithResults, ar.session)) {
       set(sessionsAttended, ar.session, true);
     }
   });
