@@ -129,6 +129,30 @@ export const StudentDatabasePage = () => {
     [handleSearchStringChange, handleStudentDialogClose, selectedStudent],
   );
 
+  // useEffect(() => {
+  //   forEach(students, (student) => {
+  //     forEach(student.academicRecords, (ar, i) => {
+  //       if (ar.overallResult) return;
+  //       const finalResult = get(ar, "finalResult");
+  //       const newAR: AcademicRecord = omit(ar, "finalResult");
+  //       newAR.finalGrade = finalResult;
+  //       newAR.overallResult = newAR.finalGrade?.result;
+  //       if (newAR.finalGrade) {
+  //         newAR.finalGrade.result =
+  //           (newAR.finalGrade?.percentage || 0) >= 80
+  //             ? FinalResult.P
+  //             : (newAR.finalGrade?.percentage || 0) > 0
+  //             ? FinalResult.F
+  //             : newAR.finalGrade?.percentage !== undefined
+  //             ? FinalResult.WD
+  //             : undefined;
+  //       }
+  //       student.academicRecords[i] = newAR;
+  //     });
+  // setData(removeNullFromObject(student), "students", "epId");
+  //   });
+  // }, [students]);
+
   return (
     <>
       <Box position="sticky" top={0} zIndex={5}>
