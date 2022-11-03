@@ -34,10 +34,12 @@ export interface AcademicRecord {
   comments?: string;
   exitSpeakingExam?: Grade;
   exitWritingExam?: Grade;
+  finalGrade?: Grade;
+  finalGradeReportNotes?: string;
   finalGradeSentDate?: string;
-  finalResult?: Grade;
   level?: GenderedLevel;
   levelAudited?: GenderedLevel;
+  overallResult?: FinalResult;
   session: string;
 }
 

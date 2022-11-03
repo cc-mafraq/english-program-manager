@@ -46,7 +46,7 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
 
   const pendingAcademicRecordFn = useCallback((student: Student) => {
     const lastAcademicRecord = last(student.academicRecords);
-    return lastAcademicRecord && lastAcademicRecord.finalResult?.result === undefined;
+    return lastAcademicRecord && lastAcademicRecord.overallResult === undefined;
   }, []);
 
   const whatsAppGroupFn = useCallback((student: Student) => {

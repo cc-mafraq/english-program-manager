@@ -31,11 +31,11 @@ export const WithdrawButton: React.FC<WithdrawButtonProps> = ({ student }) => {
         student.status.droppedOutReason = data.droppedOutReason;
       }
       student.status.currentStatus = Status.WD;
-      const sessionResult = student.academicRecords[student.academicRecords.length - 1].finalResult;
+      const sessionResult = student.academicRecords[student.academicRecords.length - 1].finalGrade;
       if (sessionResult) {
         sessionResult.result = FinalResult.WD;
       } else {
-        student.academicRecords[student.academicRecords.length - 1].finalResult = { result: FinalResult.WD };
+        student.academicRecords[student.academicRecords.length - 1].finalGrade = { result: FinalResult.WD };
       }
       setData(student, "students", "epId");
       handleDialogClose();

@@ -60,7 +60,21 @@ export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem,
           options={genderedLevels}
         />
       </GridContainer>
-      <FormGrade gradePath={name ? `${name}.finalResult` : "finalResult"} label="Final Grade" />
+      <FormGrade
+        directGradePath
+        gradePath={name ? `${name}.overallResult` : "overallResult"}
+        label="Overall Result"
+        notesLabel="FGR Notes"
+        notesPath={name ? `${name}.finalGradeReportNotes` : "finalGradeReportNotes"}
+        percentageComponent={
+          <GridItemDatePicker
+            gridProps={{ xs: 3 }}
+            label="Final Grade Report Sent"
+            name={name ? `${name}.finalGradeSentDate` : "finalGradeSentDate"}
+          />
+        }
+      />
+      <FormGrade gradePath={name ? `${name}.finalGrade` : "finalGrade"} label="Class Grade" />
       <FormGrade gradePath={name ? `${name}.exitWritingExam` : "exitWritingExam"} label="Exit Writing Exam" />
       <FormGrade gradePath={name ? `${name}.exitSpeakingExam` : "exitSpeakingExam"} label="Exit Speaking Exam" />
       <GridContainer marginBottom={0} marginLeft={0}>
@@ -68,13 +82,6 @@ export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem,
           label="Teacher Comments"
           name={name ? `${name}.comments` : "comments"}
           textFieldProps={{ multiline: true, rows: 4 }}
-        />
-      </GridContainer>
-      <GridContainer marginBottom={0} marginLeft={0}>
-        <GridItemDatePicker
-          gridProps={{ xs: 3 }}
-          label="Final Grade Report Sent"
-          name={name ? `${name}.finalGradeSentDate` : "finalGradeSentDate"}
         />
       </GridContainer>
     </>

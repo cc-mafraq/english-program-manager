@@ -50,7 +50,7 @@ export const getLevelAtSession = (
     map(student.academicRecords, (ar) => {
       return {
         level: ar.levelAudited || ar.level,
-        result: ar.finalResult?.result,
+        result: ar.overallResult,
         session: ar.session,
       };
     }),
@@ -94,7 +94,7 @@ export const getLevelForNextSession = ({
     const levelIndex = isCoreClass
       ? indexOf(levelsWithGrad, recordLevel)
       : indexOf(levelsWithGrad, getLevelAtSession(academicRecord.session, student, sessionOptions, noIncrement));
-    const hasPassed = academicRecord.finalResult?.result === "P";
+    const hasPassed = academicRecord.overallResult === "P";
     if (!noIncrement && isCoreClass && hasPassed) {
       return getFullLevelName(levelsWithGrad[levelIndex + 1]);
     }
@@ -113,8 +113,8 @@ export const getFGRStudents = (
       // conditions for creating an FGR
       if (
         lowerCase(ar.session) === lowerCase(session) &&
-        ar.finalResult?.result !== FinalResult.WD &&
-        !(ar.finalResult?.result === undefined && ar.attendance === undefined) &&
+        ar.overallResult !== FinalResult.WD &&
+        !(ar.overallResult === undefined && ar.attendance === undefined) &&
         (ar.level || ar.levelAudited)
       ) {
         fgrStudents.push({ academicRecordIndex: i, student });

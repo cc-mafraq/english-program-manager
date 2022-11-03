@@ -375,7 +375,7 @@ export const parseAcademicRecordResult = (key: string, value: string, student: S
   const keyGrade = key.match(resultRegex);
   const lastAcademicRecord = last(student.academicRecords);
   if (lastAcademicRecord && Number(value) === 1 && keyGrade) {
-    lastAcademicRecord.finalResult = {
+    lastAcademicRecord.finalGrade = {
       result: FinalResult[keyGrade[0] as keyof typeof FinalResult],
     };
   }
@@ -402,16 +402,16 @@ export const parseAcademicRecordFinalGrade = (key: string, value: string, studen
   const percentGradeIsNumber = !Number.isNaN(Number(percentGrade));
   if (lastAcademicRecord) {
     if (percentGradeIsNumber) {
-      if (!lastAcademicRecord.finalResult) {
-        lastAcademicRecord.finalResult = {};
+      if (!lastAcademicRecord.finalGrade) {
+        lastAcademicRecord.finalGrade = {};
       }
-      lastAcademicRecord.finalResult.percentage = Number(percentGrade);
+      lastAcademicRecord.finalGrade.percentage = Number(percentGrade);
     }
     if (!isEmpty(gradeNotes)) {
-      if (!lastAcademicRecord.finalResult) {
-        lastAcademicRecord.finalResult = {};
+      if (!lastAcademicRecord.finalGrade) {
+        lastAcademicRecord.finalGrade = {};
       }
-      lastAcademicRecord.finalResult.notes = gradeNotes;
+      lastAcademicRecord.finalGrade.notes = gradeNotes;
     }
   }
 };

@@ -139,15 +139,17 @@ export const dateSchema = string()
   )
   .transform(dateToString);
 
+const finalResultSchema = mixed<FinalResult>()
+  .oneOf([...(Object.values(FinalResult) as FinalResult[]), null])
+  .transform(stringToResult)
+  .nullable()
+  .optional();
+
 const gradeSchema = object()
   .shape({
     notes: string().transform(emptyToNull).nullable().optional(),
     percentage: percentageSchema,
-    result: mixed<FinalResult>()
-      .oneOf([...(Object.values(FinalResult) as FinalResult[]), null])
-      .transform(stringToResult)
-      .nullable()
-      .optional(),
+    result: finalResultSchema,
   })
   .optional();
 
@@ -156,10 +158,12 @@ export const academicRecordsSchema = object().shape({
   comments: string().transform(emptyToNull).nullable().optional(),
   exitSpeakingExam: gradeSchema,
   exitWritingExam: gradeSchema,
+  finalGrade: gradeSchema,
+  finalGradeReportNotes: string().transform(emptyToNull).nullable().optional(),
   finalGradeSentDate: dateSchema.nullable().optional(),
-  finalResult: gradeSchema,
   level: mixed<GenderedLevel>().transform(emptyToNull).nullable().optional(),
   levelAudited: mixed<GenderedLevel>().transform(emptyToNull).nullable().optional(),
+  overallResult: finalResultSchema,
   session: string().typeError("Session is required").required("Session is required"),
 });
 

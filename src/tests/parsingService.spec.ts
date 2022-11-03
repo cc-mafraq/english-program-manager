@@ -58,10 +58,10 @@ import {
   parseOrigPlacementSpeaking,
   parseOrigPlacementWriting,
   parsePendingPlacement,
-  parseStudentPhone,
   parsePhotoContact,
   parseReactivatedDate,
   parseSectionsOffered,
+  parseStudentPhone,
   parseTeacher,
   parseTeachingSubjectAreas,
   parseWABroadcasts,
@@ -727,7 +727,7 @@ describe("parses academic record", () => {
       percentage: 88,
       result: FinalResult.P,
     },
-    finalResult: {
+    finalGrade: {
       percentage: 85,
       result: FinalResult.P,
     },
@@ -749,7 +749,7 @@ describe("parses academic record", () => {
   ];
   const withdrawnRecord: AcademicRecord = {
     attendance: 10,
-    finalResult: {
+    finalGrade: {
       notes: "No FGR",
       result: FinalResult.WD,
     },
@@ -762,7 +762,7 @@ describe("parses academic record", () => {
     exitWritingExam: {
       result: FinalResult.F,
     },
-    finalResult: {
+    finalGrade: {
       notes: "R4 Fa I 17",
       percentage: 76,
       result: FinalResult.F,
@@ -783,7 +783,7 @@ describe("parses academic record", () => {
       percentage: 71,
       result: FinalResult.F,
     },
-    finalResult: {
+    finalGrade: {
       percentage: 90,
       result: FinalResult.F,
     },

@@ -106,8 +106,8 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
   const [fgrValues, setFgrValues] = useState<FinalGradeReportFormValues>({
     attendance: academicRecord?.attendance !== undefined ? `${academicRecord.attendance}%` : "Not Applicable",
     classGrade:
-      academicRecord?.finalResult?.percentage !== undefined
-        ? `${academicRecord.finalResult.percentage}%`
+      academicRecord?.finalGrade?.percentage !== undefined
+        ? `${academicRecord.finalGrade.percentage}%`
         : "Not Applicable",
     className:
       academicRecord?.levelAudited || academicRecord?.level
@@ -137,7 +137,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
     name: getStudentShortName(student),
     nextSessionLevel: academicRecord ? getLevelForNextSession({ academicRecord, sessionOptions, student }) : "",
     passOrRepeat:
-      academicRecord?.finalResult?.result && FinalResult[academicRecord.finalResult.result] === "P"
+      academicRecord?.overallResult && FinalResult[academicRecord.overallResult] === "P"
         ? "Pass"
         : "Repeat",
     session: getSessionFullName(session),
