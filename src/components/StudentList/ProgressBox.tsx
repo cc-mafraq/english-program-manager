@@ -43,6 +43,7 @@ export const ProgressBox = ({
               : red,
 
           marginRight: "0.5vw",
+          minHeight: "45px",
           minWidth: "3vw",
           padding: "0.3vw",
         },
