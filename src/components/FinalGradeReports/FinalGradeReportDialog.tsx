@@ -43,7 +43,7 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({ 
 
   const handleDownloadAllClick = useCallback(() => {
     setLoading(true);
-    // setShouldDownload(true);
+    setShouldDownload(true);
   }, []);
 
   const handleDownloadAllComplete = useCallback(() => {
