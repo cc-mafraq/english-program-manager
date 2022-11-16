@@ -1,19 +1,11 @@
 import { Box, Dialog, SelectChangeEvent, useTheme } from "@mui/material";
-import download from "downloadjs";
-import JSZip from "jszip";
-import { filter, includes, isEqual, map, nth, pull, replace } from "lodash";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import { nth, pull } from "lodash";
+import React, { useCallback, useContext, useState } from "react";
 import ReactLoading from "react-loading";
 import { FGRDialogHeader, FinalGradeReportList } from ".";
 import { useColors } from "../../hooks";
 import { AppContext } from "../../interfaces";
-import {
-  getAllSessions,
-  getFGRStudents,
-  getSortedSARIndexArray,
-  searchStudents,
-  StudentAcademicRecordIndex,
-} from "../../services";
+import { getAllSessions, getFGRStudents, StudentAcademicRecordIndex } from "../../services";
 
 interface FinalGradeReportDialogProps {
   handleDialogClose: () => void;
@@ -31,46 +23,15 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({ 
   const dialogWidth = `${fgrWidth * 3 + 80 * scale + 42}px`;
 
   const sessionOptions = getAllSessions(students);
-  let zippedStudentAcademicRecords: StudentAcademicRecordIndex[] = [];
-  let zip = new JSZip();
 
-  const [fgrSession, setFGRSession] = useState(nth(sessionOptions, 1) || "SP I 21");
+  const [fgrSession, setFGRSession] = useState(nth(sessionOptions, 1) || "Sp I 21");
   const [fgrStudents, setFGRStudents] = useState<StudentAcademicRecordIndex[]>(
     getFGRStudents(students, fgrSession),
   );
   const [shouldDownload, setShouldDownload] = useState(false);
   const [loading, setLoading] = useState(false);
   const [searchString, setSearchString] = useState("");
-  const [filteredFgrStudents, setFilteredFgrStudents] = useState(fgrStudents);
   const theme = useTheme();
-
-  useEffect(() => {
-    const filteredStudentsIds = map(searchStudents(map(fgrStudents, "student"), searchString), "epId");
-    setFilteredFgrStudents(
-      filter(fgrStudents, (aris) => {
-        return includes(filteredStudentsIds, aris.student.epId);
-      }),
-    );
-  }, [fgrStudents, searchString]);
-
-  useEffect(() => {
-    const newFgrStudents = getFGRStudents(students, fgrSession);
-    setFGRStudents(newFgrStudents);
-  }, [fgrSession, students]);
-
-  const handleDownloadAllFinished = async (studentAcademicRecord: StudentAcademicRecordIndex) => {
-    zippedStudentAcademicRecords.push(studentAcademicRecord);
-    if (
-      isEqual(getSortedSARIndexArray(zippedStudentAcademicRecords), getSortedSARIndexArray(filteredFgrStudents))
-    ) {
-      setShouldDownload(false);
-      setLoading(false);
-      const content = await zip.generateAsync({ type: "blob" });
-      await download(content, `${replace(fgrSession, /\s/g, "-")}-FGRs`);
-      zippedStudentAcademicRecords = [];
-      zip = new JSZip();
-    }
-  };
 
   const handleRemoveFGR = useCallback(
     (studentAcademicRecord: StudentAcademicRecordIndex) => {
@@ -82,7 +43,12 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({ 
 
   const handleDownloadAllClick = useCallback(() => {
     setLoading(true);
-    setShouldDownload(true);
+    // setShouldDownload(true);
+  }, []);
+
+  const handleDownloadAllComplete = useCallback(() => {
+    setLoading(false);
+    setShouldDownload(false);
   }, []);
 
   const handleSessionChange = useCallback(
@@ -127,14 +93,14 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({ 
           </Box>
         )}
         <FinalGradeReportList
-          fgrStudents={filteredFgrStudents}
-          handleDownloadFinished={handleDownloadAllFinished}
+          fgrStudents={fgrStudents}
+          handleDownloadComplete={handleDownloadAllComplete}
           handleRemoveFGR={handleRemoveFGR}
           scale={scale}
+          searchString={searchString}
           session={fgrSession}
           shouldDownload={shouldDownload}
           width={fgrWidth}
-          zip={zip}
         />
       </Box>
     </Dialog>
