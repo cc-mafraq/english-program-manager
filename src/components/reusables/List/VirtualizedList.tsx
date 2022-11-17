@@ -9,13 +9,13 @@ interface VirtualizedListProps<T> {
   defaultSize: number;
   deps: unknown[];
   idPath: string;
-  page: T[];
+  listData: T[];
   scrollToIndex?: number;
   setScrollToIndex?: Dispatch<SetStateAction<number | undefined>>;
 }
 
 export const VirtualizedList = <T,>({
-  page,
+  listData,
   idPath,
   defaultSize,
   scrollToIndex,
@@ -61,6 +61,7 @@ export const VirtualizedList = <T,>({
               data: data[index],
               id,
               index,
+              key: id,
               setSize,
               setTabValue,
               style,
@@ -85,8 +86,8 @@ export const VirtualizedList = <T,>({
             ref={listRef}
             // subtract menu bar and toolbar height
             height={height - (2 * 64 + height / 100)}
-            itemCount={page?.length}
-            itemData={page}
+            itemCount={listData?.length}
+            itemData={listData}
             itemSize={getSize}
             style={{ overflowX: "hidden" }}
             width={width}

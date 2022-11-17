@@ -1,16 +1,15 @@
 import { Checkbox, FormControlLabel } from "@mui/material";
-import { cloneDeep, find, get, includes, isEmpty, remove, startCase, toString } from "lodash";
-import React, { useContext, useEffect, useState } from "react";
-import { useStore } from "zustand";
-import { AppContext } from "../../../../App";
+import { cloneDeep, find, get, includes, isEmpty, remove, toString } from "lodash";
+import React, { useEffect, useState } from "react";
 import { FilterValue } from "../../../../interfaces";
 import { FilterField } from "../../../../services";
 
 interface FilterCheckBoxProps<T> {
+  filter: FilterValue<T>[];
   filterField: FilterField<T>;
-  filterStatePath: string;
   ignoreValueMappings?: boolean;
   label: unknown;
+  setFilter: (filter: FilterValue<T>[]) => void;
 }
 
 interface Mapping {
@@ -22,17 +21,10 @@ const valueMappings: Mapping = { Female: "F", Male: "M", No: false, Yes: true };
 export const FilterCheckbox = <T,>({
   label,
   filterField,
-  filterStatePath,
   ignoreValueMappings,
+  filter,
+  setFilter,
 }: FilterCheckBoxProps<T>) => {
-  const store = useContext(AppContext);
-  const filter: FilterValue<T>[] = useStore(store, (state) => {
-    return get(state, filterStatePath);
-  });
-  const setFilter = useStore(store, (state) => {
-    return get(state, `set${startCase(filterStatePath)}`.replace(/ /g, ""));
-  });
-
   const value =
     !ignoreValueMappings && includes(Object.keys(valueMappings), label) ? valueMappings[label as string] : label;
   const [checked, setChecked] = useState(

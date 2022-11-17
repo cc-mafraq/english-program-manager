@@ -1,6 +1,5 @@
 import { PaletteMode, ThemeOptions } from "@mui/material";
 import { grey } from "@mui/material/colors";
-import { Student, WaitingListEntry } from ".";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const voidFn = () => {};
@@ -49,31 +48,8 @@ export const getDesignTokens = (mode: PaletteMode): ThemeOptions => {
   };
 };
 
-export interface AppAction {
-  payload: Partial<AppState>;
-}
-
 export interface FilterValue<T> {
   fieldFunction?: (object: T) => unknown;
   fieldPath: string;
   values: unknown[];
-}
-
-export interface AppState {
-  loading: boolean;
-  role: "admin" | "faculty" | "staff";
-  selectedStudent: Student | null;
-  selectedWaitingListEntry: WaitingListEntry | null;
-  setLoading: (loading: AppState["loading"]) => void;
-  setRole: (role: AppState["role"]) => void;
-  setSelectedStudent: (selectedStudent: AppState["selectedStudent"]) => void;
-  setSelectedWaitingListEntry: (selectedWaitingListEntry: AppState["selectedWaitingListEntry"]) => void;
-  setStudentFilter: (studentFilter: AppState["studentFilter"]) => void;
-  setStudents: (students: AppState["students"]) => void;
-  setWaitingList: (waitingList: AppState["waitingList"]) => void;
-  setWaitingListFilter: (waitingListFilter: AppState["waitingListFilter"]) => void;
-  studentFilter: FilterValue<Student>[];
-  students: Student[];
-  waitingList: WaitingListEntry[];
-  waitingListFilter: FilterValue<WaitingListEntry>[];
 }

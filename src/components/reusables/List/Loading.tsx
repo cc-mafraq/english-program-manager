@@ -1,13 +1,11 @@
 import { Box, useTheme } from "@mui/material";
-import React, { useContext } from "react";
+import React from "react";
 import ReactLoading from "react-loading";
-import { useStore } from "zustand";
-import { AppContext } from "../../../App";
+import { useAppStore } from "../../../hooks";
 
 export const Loading: React.FC = () => {
   const theme = useTheme();
-  const store = useContext(AppContext);
-  const loading = useStore(store, (state) => {
+  const loading = useAppStore((state) => {
     return state.loading;
   });
 

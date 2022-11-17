@@ -1,13 +1,11 @@
-import React, { useContext } from "react";
-import { useStore } from "zustand";
-import { AppContext } from "../../../App";
+import React from "react";
+import { useStudentStore } from "../../../hooks";
 import { genderedLevels, Status, statuses } from "../../../interfaces";
 import { generateId, getAllSessions, SPACING } from "../../../services";
 import { FormLabel, GridContainer, GridItemAutocomplete, GridItemTextField } from "../../reusables";
 
 export const FormProgramInformation: React.FC = () => {
-  const store = useContext(AppContext);
-  const students = useStore(store, (state) => {
+  const students = useStudentStore((state) => {
     return state.students;
   });
 

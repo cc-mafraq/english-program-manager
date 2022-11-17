@@ -1,10 +1,8 @@
 import { FilterList, MoreHoriz } from "@mui/icons-material";
 import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography, useTheme } from "@mui/material";
-import { get } from "lodash";
-import React, { Attributes, Dispatch, SetStateAction, useContext } from "react";
-import { useStore } from "zustand";
-import { AppContext } from "../../../App";
-import { saveLocal, useColors } from "../../../hooks";
+import React, { Attributes, Dispatch, SetStateAction } from "react";
+import { saveLocal, useAppStore, useColors } from "../../../hooks";
+import { FilterValue } from "../../../interfaces";
 import { Searchbar } from "./Searchbar";
 
 const handlePopoverClick = (setFn: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>) => {
@@ -20,8 +18,8 @@ const handlePopoverClose = (setFn: React.Dispatch<React.SetStateAction<HTMLButto
 };
 
 interface CustomToolbarProps<T> {
+  filter: FilterValue<T>[];
   filterComponent: React.ReactNode;
-  filterName: string;
   handleSearchStringChange: (value: string) => void;
   list: T[];
   searchString: string;
@@ -38,16 +36,12 @@ export const CustomToolbar = <T,>({
   searchString,
   tooltipObjectName,
   filterComponent,
-  filterName,
+  filter,
 }: CustomToolbarProps<T>) => {
   const [filterAnchorEl, setFilterAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const { iconColor } = useColors();
-  const store = useContext(AppContext);
-  const role = useStore(store, (state) => {
+  const role = useAppStore((state) => {
     return state.role;
-  });
-  const filter = useStore(store, (state) => {
-    return get(state, filterName);
   });
   const theme = useTheme();
 

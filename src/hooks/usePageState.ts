@@ -1,29 +1,28 @@
 import { collection } from "firebase/firestore";
-import { every, filter as filterFn, forEach, get, includes, isUndefined, startCase } from "lodash";
-import { useCallback, useContext, useEffect } from "react";
+import { every, filter as filterFn, forEach, get, includes, isUndefined } from "lodash";
+import { useCallback, useEffect } from "react";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useNavigate } from "react-router-dom";
 import useState from "react-usestateref";
-import { useStore } from "zustand";
-import { AppContext } from "../App";
 import { FilterValue } from "../interfaces";
 import { db, logout } from "../services";
 import { loadLocal } from "./useLocal";
+import { useAppStore } from "./useStores";
 
 interface UsePageStateParams<T> {
   collectionName: string;
-  conditionToAddPath?: string;
-  filter?: FilterValue<T>[];
+  filter: FilterValue<T>[];
   payloadPath: string;
+  // a doc won't be added to the list unless it has a value at this path
+  requiredValuePath?: string;
   searchFn: (list: T[], searchString: string) => T[];
+  setData: (data: T[]) => void;
   sortFn: (list: T[]) => T[];
   spreadsheetIsLoading?: boolean;
 }
 
 interface SetStateOptions<T> {
   newList?: T[];
-  newPage?: number;
-  newRowsPerPage?: number;
   newSearchString?: string;
 }
 
@@ -31,21 +30,17 @@ export const usePageState = <T>({
   searchFn,
   sortFn,
   filter,
-  payloadPath,
+  setData,
   collectionName,
   spreadsheetIsLoading,
-  conditionToAddPath,
+  requiredValuePath,
 }: UsePageStateParams<T>) => {
-  const store = useContext(AppContext);
-  const setData = useStore(store, (state) => {
-    return get(state, `set${startCase(payloadPath)}`.replace(/ /g, ""));
-  });
-  const setLoading = useStore(store, (state) => {
+  const setLoading = useAppStore((state) => {
     return state.setLoading;
   });
 
+  const [list, setList, listRef] = useState<T[]>([]);
   const [filteredList, setFilteredList, filteredListRef] = useState<T[]>([]);
-  const [listPage, setListPage] = useState<T[]>([]);
   const [searchString, setSearchString, searchStringRef] = useState<string>("");
   const [showActions, setShowActions] = useState(loadLocal("showActions") !== false);
   const navigate = useNavigate();
@@ -65,10 +60,11 @@ export const usePageState = <T>({
 
   const setState = useCallback(
     ({ newSearchString, newList }: SetStateOptions<T>) => {
+      newList && setList(newList);
       const newSearchedList =
         !isUndefined(newSearchString) || newList
           ? searchFn(
-              !isUndefined(newList) ? newList : filteredListRef.current,
+              !isUndefined(newList) ? newList : listRef.current,
               !isUndefined(newSearchString) ? newSearchString : searchStringRef.current,
             )
           : filteredListRef.current;
@@ -77,10 +73,10 @@ export const usePageState = <T>({
       setFilteredList(newFilteredList);
       newList && setData(newList);
       !isUndefined(newSearchString) && setSearchString(newSearchString);
-      setListPage(newFilteredList);
     },
     [
       searchFn,
+      listRef,
       searchStringRef,
       filteredListRef,
       filter,
@@ -89,6 +85,7 @@ export const usePageState = <T>({
       setFilteredList,
       setData,
       setSearchString,
+      setList,
     ],
   );
 
@@ -97,14 +94,14 @@ export const usePageState = <T>({
       const newDataList: T[] = [];
       forEach(docs?.docs, (d) => {
         const data = d.data();
-        if (!conditionToAddPath || get(data, conditionToAddPath)) newDataList.push(data as T);
+        if (!requiredValuePath || get(data, requiredValuePath)) newDataList.push(data as T);
       });
       const sortedData = sortFn(newDataList);
       setState({
         newList: sortedData,
       });
     }
-  }, [setState, docs, sortFn, spreadsheetIsLoading, conditionToAddPath]);
+  }, [setState, docs, sortFn, spreadsheetIsLoading, requiredValuePath]);
 
   useEffect(() => {
     setLoading(docsLoading);
@@ -123,7 +120,7 @@ export const usePageState = <T>({
 
   const handleSearchStringChange = useCallback(
     (value: string) => {
-      setState({ newPage: 0, newSearchString: value });
+      setState({ newSearchString: value });
     },
     [setState],
   );
@@ -131,7 +128,7 @@ export const usePageState = <T>({
   return {
     filteredList,
     handleSearchStringChange,
-    listPage,
+    list,
     searchString,
     setShowActions,
     showActions,

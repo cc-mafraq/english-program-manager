@@ -1,6 +1,5 @@
 import { Box, Divider, Grid, Typography } from "@mui/material";
-import React, { useContext } from "react";
-import { useStore } from "zustand";
+import React from "react";
 import {
   FormCorrespondence,
   FormEntryInformation,
@@ -10,12 +9,11 @@ import {
   FormWaitingListVaccine,
   GridContainer,
 } from "..";
-import { AppContext } from "../../App";
+import { useWaitingListStore } from "../../hooks";
 import { SPACING } from "../../services";
 
 export const WaitingListForm: React.FC = () => {
-  const store = useContext(AppContext);
-  const selectedWaitingListEntry = useStore(store, (state) => {
+  const selectedWaitingListEntry = useWaitingListStore((state) => {
     return state.selectedWaitingListEntry;
   });
 
@@ -29,7 +27,7 @@ export const WaitingListForm: React.FC = () => {
         </Typography>
       </Box>
       <Divider />
-      <FormPhoneNumbers noWhatsapp phonePath="phoneNumbers" selectedStudentPath="selectedWaitingListEntry" />
+      <FormPhoneNumbers noWhatsapp phonePath="phoneNumbers" selectedData={selectedWaitingListEntry} />
       <Divider />
       <FormEntryInformation />
       <Divider />
@@ -44,7 +42,7 @@ export const WaitingListForm: React.FC = () => {
       <Divider />
       <FormPlacementExam />
       <Divider />
-      <FormCorrespondence selectedStudentPath="selectedWaitingListEntry" />
+      <FormCorrespondence selectedData={selectedWaitingListEntry} />
     </>
   );
 };

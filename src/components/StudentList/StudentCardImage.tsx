@@ -1,8 +1,7 @@
 import { Box, useMediaQuery, useTheme } from "@mui/material";
-import React, { useContext } from "react";
-import { useStore } from "zustand";
+import React from "react";
 import { Image, WithdrawButton } from "..";
-import { AppContext } from "../../App";
+import { useAppStore } from "../../hooks";
 import { Nationality, Status, Student } from "../../interfaces";
 import { studentImageFolder } from "../../services";
 
@@ -17,8 +16,7 @@ export const StudentCardImage: React.FC<StudentCardImageProps> = ({
   imageWidth,
   smallBreakpointScaleDown,
 }) => {
-  const store = useContext(AppContext);
-  const role = useStore(store, (state) => {
+  const role = useAppStore((state) => {
     return state.role;
   });
   const theme = useTheme();

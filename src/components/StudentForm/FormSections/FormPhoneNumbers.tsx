@@ -1,29 +1,22 @@
 import { Grid } from "@mui/material";
-import React, { useContext } from "react";
+import React from "react";
 import { get, useFormContext } from "react-hook-form";
-import { useStore } from "zustand";
-import { AppContext } from "../../../App";
 import { useFormList } from "../../../hooks";
 import { SPACING } from "../../../services";
 import { FormLabel, FormList, GridContainer, GridItemTextField } from "../../reusables";
 import { FormPhoneItem } from "./ListItems";
 
-interface FormPhoneNumbersProps {
+interface FormPhoneNumbersProps<T> {
   noWhatsapp?: boolean;
   phonePath: string;
-  selectedStudentPath: string;
+  selectedData: T | null;
 }
 
 export const FormPhoneNumbers = <T extends object>({
-  selectedStudentPath,
+  selectedData,
   phonePath,
   noWhatsapp,
-}: FormPhoneNumbersProps) => {
-  const store = useContext(AppContext);
-  const selectedData = useStore(store, (state) => {
-    return get(state, selectedStudentPath);
-  });
-
+}: FormPhoneNumbersProps<T>) => {
   const methods = useFormContext<T>();
   const [phoneNumbers, addPhone, removePhone] = useFormList(
     selectedData ? get(selectedData, phonePath) : [{ number: null }],

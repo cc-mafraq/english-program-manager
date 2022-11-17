@@ -2,10 +2,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Box } from "@mui/material";
 import { get, includes, map, nth } from "lodash";
 import moment from "moment";
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { v4 } from "uuid";
-import { useStore } from "zustand";
-import { AppContext } from "../App";
 import {
   ActionsMenu,
   CorrespondenceList,
@@ -22,7 +20,7 @@ import {
   WaitingListFilter,
   WaitingListForm,
 } from "../components";
-import { useFormDialog, usePageState } from "../hooks";
+import { useAppStore, useFormDialog, usePageState, useWaitingListStore } from "../hooks";
 import { emptyWaitingListEntry, WaitingListEntry } from "../interfaces";
 import {
   removeNullFromObject,
@@ -34,33 +32,38 @@ import {
 } from "../services";
 
 export const WaitingListPage = () => {
-  const store = useContext(AppContext);
-  const waitingList = useStore(store, (state) => {
+  const waitingList = useWaitingListStore((state) => {
     return state.waitingList;
   });
-  const selectedWaitingListEntry = useStore(store, (state) => {
+  const setWaitingList = useWaitingListStore((state) => {
+    return state.setWaitingList;
+  });
+  const selectedWaitingListEntry = useWaitingListStore((state) => {
     return state.selectedWaitingListEntry;
   });
-  const role = useStore(store, (state) => {
-    return state.role;
+  const setSelectedWaitingListEntry = useWaitingListStore((state) => {
+    return state.setSelectedWaitingListEntry;
   });
-  const filter = useStore(store, (state) => {
-    return state.waitingListFilter;
+  const filter = useWaitingListStore((state) => {
+    return state.filter;
+  });
+  const role = useAppStore((state) => {
+    return state.role;
   });
 
   const {
     filteredList: filteredWaitingList,
     handleSearchStringChange,
-    listPage: waitingListPage,
     searchString,
     setShowActions,
     showActions,
-  } = usePageState({
+  } = usePageState<WaitingListEntry>({
     collectionName: "waitingList",
-    conditionToAddPath: "primaryPhone",
     filter,
     payloadPath: "waitingList",
+    requiredValuePath: "primaryPhone",
     searchFn: searchWaitingList,
+    setData: setWaitingList,
     sortFn: sortWaitingList,
   });
 
@@ -68,7 +71,7 @@ export const WaitingListPage = () => {
     handleDialogClose: handleWLEntryDialogClose,
     handleDialogOpen: handleWLEntryDialogOpen,
     openDialog: openWLEntryDialog,
-  } = useFormDialog({ selectedDataPath: "selectedWaitingListEntry" });
+  } = useFormDialog({ setSelectedData: setSelectedWaitingListEntry });
 
   const {
     handleDialogClose: handleDupPhoneDialogClose,
@@ -116,8 +119,8 @@ export const WaitingListPage = () => {
       <WaitingListCounter />
       <Box position="sticky" top={0} zIndex={5}>
         <CustomToolbar
+          filter={filter}
           filterComponent={<WaitingListFilter />}
-          filterName="waitingListFilter"
           handleSearchStringChange={handleSearchStringChange}
           list={filteredWaitingList}
           searchString={searchString}
@@ -140,7 +143,7 @@ export const WaitingListPage = () => {
         defaultSize={275}
         deps={[role]}
         idPath="id"
-        page={waitingListPage}
+        listData={filteredWaitingList}
         scrollToIndex={scrollToIndex}
         setScrollToIndex={setScrollToIndex}
       >

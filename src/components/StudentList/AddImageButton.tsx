@@ -1,12 +1,10 @@
 import { AddPhotoAlternate } from "@mui/icons-material";
 import { IconButton, Tooltip, useTheme } from "@mui/material";
 import { get } from "lodash";
-import React, { ChangeEvent, useCallback, useContext, useMemo } from "react";
+import React, { ChangeEvent, useCallback, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
-import { useStore } from "zustand";
-import { AppContext } from "../../App";
-import { useColors } from "../../hooks";
+import { useColors, useStudentStore } from "../../hooks";
 import { Student } from "../../interfaces";
 import { setImage, uploadImage } from "../../services";
 
@@ -31,8 +29,7 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({
   setImg,
   isForm,
 }) => {
-  const store = useContext(AppContext);
-  const setSelectedStudent = useStore(store, (state) => {
+  const setSelectedStudent = useStudentStore((state) => {
     return state.setSelectedStudent;
   });
   const theme = useTheme();

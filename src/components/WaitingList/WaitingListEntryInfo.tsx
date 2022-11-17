@@ -1,11 +1,9 @@
 import { Box, useTheme } from "@mui/material";
 import { grey, red as materialRed } from "@mui/material/colors";
 import { map } from "lodash";
-import React, { useContext, useMemo } from "react";
-import { useStore } from "zustand";
+import React, { useMemo } from "react";
 import { LabeledContainer, LabeledText } from "..";
-import { AppContext } from "../../App";
-import { useColors } from "../../hooks";
+import { useAppStore, useColors } from "../../hooks";
 import { CovidStatus, HighPriority, WaitingListEntry } from "../../interfaces";
 
 interface WaitingListEntryInfoProps {
@@ -13,8 +11,7 @@ interface WaitingListEntryInfoProps {
 }
 
 export const WaitingListEntryInfo: React.FC<WaitingListEntryInfoProps> = ({ data: wlEntry }) => {
-  const store = useContext(AppContext);
-  const role = useStore(store, (state) => {
+  const role = useAppStore((state) => {
     return state.role;
   });
   const { green, red, defaultBackgroundColor } = useColors();

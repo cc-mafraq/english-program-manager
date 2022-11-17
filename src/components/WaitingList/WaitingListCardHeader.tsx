@@ -1,9 +1,7 @@
 import { Edit, WhatsApp } from "@mui/icons-material";
 import { Box, Divider, IconButton, Tooltip, Typography, useTheme } from "@mui/material";
-import React, { useContext } from "react";
-import { useStore } from "zustand";
-import { AppContext } from "../../App";
-import { useColors } from "../../hooks";
+import React from "react";
+import { useAppStore, useColors, useWaitingListStore } from "../../hooks";
 import { WaitingListEntry } from "../../interfaces";
 import { getPosition } from "../../services";
 
@@ -16,14 +14,13 @@ export const WaitingListCardHeader: React.FC<WaitingListHeaderProps> = ({
   data: wlEntry,
   handleEditEntryClick,
 }) => {
-  const store = useContext(AppContext);
-  const role = useStore(store, (state) => {
+  const role = useAppStore((state) => {
     return state.role;
   });
-  const waitingList = useStore(store, (state) => {
+  const waitingList = useWaitingListStore((state) => {
     return state.waitingList;
   });
-  const setSelectedWaitingListEntry = useStore(store, (state) => {
+  const setSelectedWaitingListEntry = useWaitingListStore((state) => {
     return state.setSelectedWaitingListEntry;
   });
 

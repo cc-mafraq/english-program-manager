@@ -1,16 +1,13 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useFormContext } from "react-hook-form";
-import { useStore } from "zustand";
 import { FormPlacementExamItem } from "..";
-import { AppContext } from "../../App";
-import { useFormList } from "../../hooks";
-import {  WaitingListEntry } from "../../interfaces";
+import { useFormList, useWaitingListStore } from "../../hooks";
+import { WaitingListEntry } from "../../interfaces";
 import { SPACING } from "../../services";
 import { FormLabel, FormList, GridContainer } from "../reusables";
 
 export const FormPlacementExam = () => {
-  const store = useContext(AppContext);
-  const selectedWaitingListEntry = useStore(store, (state) => {
+  const selectedWaitingListEntry = useWaitingListStore((state) => {
     return state.selectedWaitingListEntry;
   });
   const methods = useFormContext<WaitingListEntry>();

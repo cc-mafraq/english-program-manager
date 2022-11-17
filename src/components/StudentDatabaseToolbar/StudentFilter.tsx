@@ -1,7 +1,6 @@
 import { first, includes, last, range } from "lodash";
-import React, { useCallback, useContext, useMemo } from "react";
-import { useStore } from "zustand";
-import { AppContext } from "../../App";
+import React, { useCallback, useMemo } from "react";
+import { useAppStore, useStudentStore } from "../../hooks";
 import { covidStatuses, genderedLevels, nationalities, statusDetails, statuses, Student } from "../../interfaces";
 import { FilterField, getAllSessions, getSessionsWithResults, getStatusDetails } from "../../services";
 import { FilterDrawer } from "../reusables";
@@ -15,15 +14,17 @@ interface StudentFilterProps {
 const booleanCheckboxOptions = ["Yes", "No"];
 
 export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleClose, tooltipObjectName }) => {
-  const store = useContext(AppContext);
-  const students = useStore(store, (state) => {
+  const students = useStudentStore((state) => {
     return state.students;
   });
-  const role = useStore(store, (state) => {
+  const role = useAppStore((state) => {
     return state.role;
   });
-  const setStudentFilter = useStore(store, (state) => {
-    return state.setStudentFilter;
+  const filter = useStudentStore((state) => {
+    return state.filter;
+  });
+  const setFilter = useStudentStore((state) => {
+    return state.setFilter;
   });
 
   const sessionsWithResults = getSessionsWithResults(students);
@@ -64,8 +65,8 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
   }, []);
 
   const handleClearFilters = useCallback(() => {
-    setStudentFilter([]);
-  }, [setStudentFilter]);
+    setFilter([]);
+  }, [setFilter]);
 
   const filterFields: FilterField<Student>[] = useMemo(() => {
     return [
@@ -123,10 +124,11 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
     <FilterDrawer
       anchorEl={anchorEl}
       data={students}
+      filter={filter}
       filterFields={filterFields}
-      filterStatePath="studentFilter"
       handleClearFilters={handleClearFilters}
       handleClose={handleClose}
+      setFilter={setFilter}
       tooltipObjectName={tooltipObjectName}
     />
   );

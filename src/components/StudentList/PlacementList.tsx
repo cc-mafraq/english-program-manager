@@ -2,11 +2,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Edit } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
 import { join, map } from "lodash";
-import React, { useCallback, useContext, useState } from "react";
-import { useStore } from "zustand";
+import React, { useCallback, useState } from "react";
 import { FormDialog, FormPlacement, LabeledContainer, LabeledText } from "..";
-import { AppContext } from "../../App";
-import { useColors } from "../../hooks";
+import { useAppStore, useColors, useStudentStore } from "../../hooks";
 import { Placement, Student } from "../../interfaces";
 import { JOIN_STR, placementSchema, removeNullFromObject, setData } from "../../services";
 
@@ -15,11 +13,10 @@ interface PlacementProps {
 }
 
 export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
-  const store = useContext(AppContext);
-  const role = useStore(store, (state) => {
+  const role = useAppStore((state) => {
     return state.role;
   });
-  const setSelectedStudent = useStore(store, (state) => {
+  const setSelectedStudent = useStudentStore((state) => {
     return state.setSelectedStudent;
   });
 

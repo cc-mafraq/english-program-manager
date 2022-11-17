@@ -1,11 +1,10 @@
 import { Box, BoxProps, CardMedia, Grid, SxProps, useTheme } from "@mui/material";
 import { get, omit } from "lodash";
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ReactLoading from "react-loading";
-import { useStore } from "zustand";
 import { AddImageButton } from ".";
 import { FormImageActions } from "..";
-import { AppContext } from "../../App";
+import { useAppStore } from "../../hooks";
 import { Student } from "../../interfaces";
 import { setData } from "../../services";
 
@@ -42,8 +41,7 @@ export const Image: React.FC<ImageProps> = ({
   const [loading, setLoading] = useState(false);
   const imageName = get(student, imagePath);
   const theme = useTheme();
-  const store = useContext(AppContext);
-  const role = useStore(store, (state) => {
+  const role = useAppStore((state) => {
     return state.role;
   });
 

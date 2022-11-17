@@ -41,6 +41,7 @@ export const CustomCard = <T,>({
   const theme = useTheme();
 
   const rowRef = useRef<HTMLDivElement>(null);
+  // use local tab value because updating tabValue prop in parent is slow
   const [localTabValue, setLocalTabValue] = useState(tabValue || 0);
 
   useEffect(() => {
@@ -56,10 +57,6 @@ export const CustomCard = <T,>({
     },
     [setTabValue, id],
   );
-
-  useEffect(() => {
-    setLocalTabValue(tabValue || 0);
-  }, [tabValue]);
 
   return (
     <div style={style ? { ...style, paddingLeft: "10px", paddingTop: "16px" } : undefined}>

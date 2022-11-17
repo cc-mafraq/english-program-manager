@@ -1,16 +1,13 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useFormContext } from "react-hook-form";
-import { useStore } from "zustand";
-import { AppContext } from "../../../App";
-import { useFormList } from "../../../hooks";
+import { useFormList, useStudentStore } from "../../../hooks";
 import { Student } from "../../../interfaces";
 import { SPACING } from "../../../services";
 import { FormLabel, FormList, GridContainer } from "../../reusables";
 import { FormAcademicRecordsItem } from "./ListItems";
 
 export const FormAcademicRecords: React.FC = () => {
-  const store = useContext(AppContext);
-  const selectedStudent = useStore(store, (state) => {
+  const selectedStudent = useStudentStore((state) => {
     return state.selectedStudent;
   });
 

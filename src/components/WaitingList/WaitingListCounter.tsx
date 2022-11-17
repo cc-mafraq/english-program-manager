@@ -1,13 +1,10 @@
 import { Box, Typography, useTheme } from "@mui/material";
 import { countBy, get } from "lodash";
-import React, { useContext, useMemo } from "react";
-import { useStore } from "zustand";
-import { AppContext } from "../../App";
-import { useColors } from "../../hooks";
+import React, { useMemo } from "react";
+import { useColors, useWaitingListStore } from "../../hooks";
 
 export const WaitingListCounter: React.FC = () => {
-  const store = useContext(AppContext);
-  const waitingList = useStore(store, (state) => {
+  const waitingList = useWaitingListStore((state) => {
     return state.waitingList;
   });
   const { iconColor } = useColors();

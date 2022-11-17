@@ -3,26 +3,29 @@ import { map, sortBy, uniq } from "lodash";
 import React from "react";
 import { FilterCheckbox } from ".";
 import { useColors } from "../../../../hooks";
+import { FilterValue } from "../../../../interfaces";
 import { FilterField } from "../../../../services";
 
 interface FilterDrawerProps<T> {
   anchorEl?: HTMLButtonElement | null;
   data: T[];
+  filter: FilterValue<T>[];
   filterFields: FilterField<T>[];
-  filterStatePath: string;
   handleClearFilters: () => void;
   handleClose?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  setFilter: (filter: FilterValue<T>[]) => void;
   tooltipObjectName?: string;
 }
 
 export const FilterDrawer = <T,>({
   data,
+  filter,
   filterFields,
-  filterStatePath,
   anchorEl,
   handleClose,
   handleClearFilters,
   tooltipObjectName,
+  setFilter,
 }: FilterDrawerProps<T>) => {
   const open = Boolean(anchorEl);
   const { popoverColor } = useColors();
@@ -74,10 +77,11 @@ export const FilterDrawer = <T,>({
                 return (
                   <FilterCheckbox
                     key={`filter-field-${field.name}-${val}`}
+                    filter={filter}
                     filterField={field}
-                    filterStatePath={filterStatePath}
                     ignoreValueMappings={field.ignoreValueMappings}
                     label={val}
+                    setFilter={setFilter}
                   />
                 );
               })}

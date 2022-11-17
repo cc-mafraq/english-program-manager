@@ -2,10 +2,9 @@ import { Box } from "@mui/material";
 import download from "downloadjs";
 import JSZip from "jszip";
 import { filter, includes, isEqual, map, replace } from "lodash";
-import React, { useContext, useMemo } from "react";
-import { useStore } from "zustand";
+import React, { useMemo } from "react";
 import { FinalGradeReport } from ".";
-import { AppContext } from "../../App";
+import { useStudentStore } from "../../hooks";
 import { Student } from "../../interfaces";
 import {
   getAllSessions,
@@ -35,8 +34,7 @@ export const FinalGradeReportList: React.FC<FinalGradeReportListProps> = ({
   shouldDownload,
   width,
 }) => {
-  const store = useContext(AppContext);
-  const students = useStore(store, (state) => {
+  const students = useStudentStore((state) => {
     return state.students;
   });
 

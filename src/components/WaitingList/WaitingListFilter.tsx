@@ -1,8 +1,7 @@
 import { countBy, filter, find, first, get, last, map, orderBy, take, uniq, values } from "lodash";
 import moment from "moment";
-import React, { useCallback, useContext, useMemo } from "react";
-import { useStore } from "zustand";
-import { AppContext } from "../../App";
+import React, { useCallback, useMemo } from "react";
+import { useAppStore, useWaitingListStore } from "../../hooks";
 import { HighPriority, WaitingListEntry, WaitlistOutcome } from "../../interfaces";
 import { FilterField, MOMENT_FORMAT } from "../../services";
 import { FilterDrawer } from "../reusables";
@@ -20,15 +19,17 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({
   handleClose,
   tooltipObjectName,
 }) => {
-  const store = useContext(AppContext);
-  const role = useStore(store, (state) => {
+  const role = useAppStore((state) => {
     return state.role;
   });
-  const waitingList = useStore(store, (state) => {
+  const waitingList = useWaitingListStore((state) => {
     return state.waitingList;
   });
-  const setWaitingListFilter = useStore(store, (state) => {
-    return state.setWaitingListFilter;
+  const waitingListFilter = useWaitingListStore((state) => {
+    return state.filter;
+  });
+  const setFilter = useWaitingListStore((state) => {
+    return state.setFilter;
   });
   const waitingListPhoneCounts = useMemo(() => {
     return countBy(waitingList, "primaryPhone");
@@ -38,8 +39,8 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({
   const isAdminOrFaculty = isAdmin || role === "faculty";
 
   const handleClearFilters = useCallback(() => {
-    setWaitingListFilter([]);
-  }, [setWaitingListFilter]);
+    setFilter([]);
+  }, [setFilter]);
 
   const removeDuplicates = useCallback(
     (wlEntry: WaitingListEntry) => {
@@ -143,10 +144,11 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({
     <FilterDrawer
       anchorEl={anchorEl}
       data={waitingList}
+      filter={waitingListFilter}
       filterFields={filterFields}
-      filterStatePath="waitingListFilter"
       handleClearFilters={handleClearFilters}
       handleClose={handleClose}
+      setFilter={setFilter}
       tooltipObjectName={tooltipObjectName}
     />
   );

@@ -1,10 +1,8 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box } from "@mui/material";
 import { isEmpty, omit } from "lodash";
-import React, { useCallback, useContext } from "react";
+import React, { useCallback } from "react";
 import useState from "react-usestateref";
-import { useStore } from "zustand";
-import { AppContext } from "../App";
 import {
   AcademicRecords,
   ActionsMenu,
@@ -22,7 +20,7 @@ import {
   VirtualizedList,
 } from "../components";
 import { StudentCardImage } from "../components/StudentList/StudentCardImage";
-import { useFormDialog, usePageState } from "../hooks";
+import { useAppStore, useFormDialog, usePageState, useStudentStore } from "../hooks";
 import { emptyStudent, Status, Student } from "../interfaces";
 import {
   deleteImage,
@@ -36,18 +34,22 @@ import {
 } from "../services";
 
 export const StudentDatabasePage = () => {
-  const store = useContext(AppContext);
-  const selectedStudent = useStore(store, (state) => {
+  const setStudents = useStudentStore((state) => {
+    return state.setStudents;
+  });
+  const selectedStudent = useStudentStore((state) => {
     return state.selectedStudent;
   });
-  const role = useStore(store, (state) => {
+  const setSelectedStudent = useStudentStore((state) => {
+    return state.setSelectedStudent;
+  });
+  const filter = useStudentStore((state) => {
+    return state.filter;
+  });
+  const role = useAppStore((state) => {
     return state.role;
   });
-  const filter = useStore(store, (state) => {
-    return state.studentFilter;
-  });
   const [openFGRDialog, setOpenFGRDialog] = useState(false);
-  // const [spreadsheetIsLoading, setSpreadsheetIsLoading] = useState(false);
   const isAdminOrFaculty = role === "admin" || role === "faculty";
   const {
     filteredList: filteredStudents,
@@ -55,41 +57,21 @@ export const StudentDatabasePage = () => {
     searchString,
     setShowActions,
     showActions,
-    listPage: studentsPage,
-  } = usePageState({
+  } = usePageState<Student>({
     collectionName: "students",
-    conditionToAddPath: "name.english",
     filter,
     payloadPath: "students",
+    requiredValuePath: "name.english",
     searchFn: searchStudents,
+    setData: setStudents,
     sortFn: sortStudents,
-    // spreadsheetIsLoading,
   });
 
   const {
     handleDialogClose: handleStudentDialogClose,
     handleDialogOpen: handleStudentDialogOpen,
     openDialog: openStudentDialog,
-  } = useFormDialog({ selectedDataPath: "selectedStudent" });
-
-  // const onInputChange = useCallback(
-  //   (e: ChangeEvent<HTMLInputElement>) => {
-  //     setSpreadsheetIsLoading(true);
-  //     const file: File | null = e.target.files && e.target.files[0];
-  //     const reader = new FileReader();
-
-  //     file && appDispatch({ payload: { loading: true } });
-  //     file && reader.readAsText(file);
-
-  //     reader.onloadend = async () => {
-  //       const studentListString = String(reader.result);
-  //       await spreadsheetToStudentList(studentListString, students);
-  //       appDispatch({ payload: { loading: false } });
-  //       setSpreadsheetIsLoading(false);
-  //     };
-  //   },
-  //   [appDispatch, students],
-  // );
+  } = useFormDialog({ setSelectedData: setSelectedStudent });
 
   const handleGenerateFGRClick = useCallback(() => {
     setOpenFGRDialog(true);
@@ -139,8 +121,8 @@ export const StudentDatabasePage = () => {
     <>
       <Box position="sticky" top={0} zIndex={5}>
         <CustomToolbar
+          filter={filter}
           filterComponent={<StudentFilter />}
-          filterName="studentFilter"
           handleSearchStringChange={handleSearchStringChange}
           list={filteredStudents}
           searchString={searchString}
@@ -151,7 +133,6 @@ export const StudentDatabasePage = () => {
         <ActionsMenu
           handleDialogOpen={handleStudentDialogOpen}
           handleGenerateFGRClick={handleGenerateFGRClick}
-          // onInputChange={onInputChange}
           showActions={showActions}
           tooltipObjectName="Student"
         />
@@ -180,7 +161,7 @@ export const StudentDatabasePage = () => {
       >
         <StudentForm />
       </FormDialog>
-      <VirtualizedList defaultSize={600} deps={[role]} idPath="epId" page={studentsPage}>
+      <VirtualizedList defaultSize={600} deps={[role]} idPath="epId" listData={filteredStudents}>
         <CustomCard
           data={emptyStudent}
           header={<StudentCardHeader data={emptyStudent} handleEditStudentClick={handleStudentDialogOpen} />}

@@ -1,16 +1,13 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useFormContext } from "react-hook-form";
-import { useStore } from "zustand";
-import { AppContext } from "../../../App";
-import { useDateInitialState, useFormList } from "../../../hooks";
+import { useDateInitialState, useFormList, useStudentStore } from "../../../hooks";
 import { Student, withdrawReasons } from "../../../interfaces";
 import { SPACING } from "../../../services";
 import { FormLabel, FormList, GridContainer, GridItemAutocomplete, GridItemDatePicker } from "../../reusables";
 import { FormCheatingSessionItem, FormDateItem } from "./ListItems";
 
 export const FormStatus: React.FC = () => {
-  const store = useContext(AppContext);
-  const selectedStudent = useStore(store, (state) => {
+  const selectedStudent = useStudentStore((state) => {
     return state.selectedStudent;
   });
   const methods = useFormContext<Student>();

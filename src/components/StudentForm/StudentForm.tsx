@@ -1,6 +1,5 @@
 import { Box, Divider, Typography } from "@mui/material";
-import React, { useContext } from "react";
-import { useStore } from "zustand";
+import React from "react";
 import {
   FormAcademicRecords,
   FormCertRequests,
@@ -15,11 +14,10 @@ import {
   FormProgramInformation,
   FormStatus,
 } from "..";
-import { AppContext } from "../../App";
+import { useStudentStore } from "../../hooks";
 
 export const StudentForm: React.FC = () => {
-  const store = useContext(AppContext);
-  const selectedStudent = useStore(store, (state) => {
+  const selectedStudent = useStudentStore((state) => {
     return state.selectedStudent;
   });
 
@@ -36,7 +34,7 @@ export const StudentForm: React.FC = () => {
       <Divider />
       <FormProgramInformation />
       <Divider />
-      <FormPhoneNumbers phonePath="phone.phoneNumbers" selectedStudentPath="selectedStudent" />
+      <FormPhoneNumbers phonePath="phone.phoneNumbers" selectedData={selectedStudent} />
       <Divider />
       <FormDemographics />
       <Divider />
@@ -46,7 +44,7 @@ export const StudentForm: React.FC = () => {
       <Divider />
       <FormLiteracyAndZoom />
       <Divider />
-      <FormCorrespondence selectedStudentPath="selectedStudent" />
+      <FormCorrespondence selectedData={selectedStudent} />
       <Divider />
       <FormPlacement />
       <Divider />

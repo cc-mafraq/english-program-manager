@@ -3,11 +3,9 @@ import { Edit } from "@mui/icons-material";
 import { Box, Button, IconButton, Tooltip, Typography, TypographyProps, useTheme } from "@mui/material";
 import { green as materialGreen, red as materialRed } from "@mui/material/colors";
 import { findIndex, forOwn, map, reverse } from "lodash";
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { useStore } from "zustand";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FormAcademicRecordsItem, FormDialog, LabeledContainer, LabeledText, ProgressBox } from "..";
-import { AppContext } from "../../App";
-import { useColors } from "../../hooks";
+import { useAppStore, useColors, useStudentStore } from "../../hooks";
 import { AcademicRecord, emptyAcademicRecord, FinalResult, GenderedLevel, Grade, Student } from "../../interfaces";
 import {
   academicRecordsSchema,
@@ -59,11 +57,10 @@ GradeInfo.defaultProps = {
 };
 
 export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student }) => {
-  const store = useContext(AppContext);
-  const students = useStore(store, (state) => {
+  const students = useStudentStore((state) => {
     return state.students;
   });
-  const role = useStore(store, (state) => {
+  const role = useAppStore((state) => {
     return state.role;
   });
   const [progress, setProgress] = useState<StudentProgress>({});
