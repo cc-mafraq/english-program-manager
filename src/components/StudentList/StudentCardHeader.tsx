@@ -1,8 +1,10 @@
 import { Edit, WhatsApp } from "@mui/icons-material";
 import { Box, Divider, IconButton, Tooltip, Typography, useTheme } from "@mui/material";
 import React, { useContext } from "react";
+import { useStore } from "zustand";
+import { AppContext } from "../../App";
 import { useColors } from "../../hooks";
-import { AppContext, Student } from "../../interfaces";
+import { Student } from "../../interfaces";
 
 interface StudentCardHeaderProps {
   data: Student;
@@ -10,10 +12,13 @@ interface StudentCardHeaderProps {
 }
 
 export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ data: student, handleEditStudentClick }) => {
-  const {
-    appState: { role },
-    appDispatch,
-  } = useContext(AppContext);
+  const store = useContext(AppContext);
+  const role = useStore(store, (state) => {
+    return state.role;
+  });
+  const setSelectedStudent = useStore(store, (state) => {
+    return state.setSelectedStudent;
+  });
 
   const theme = useTheme();
   const { iconColor } = useColors();
@@ -44,7 +49,7 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ data: stud
           <Tooltip arrow title="Edit Student">
             <IconButton
               onClick={() => {
-                appDispatch({ payload: { selectedStudent: student } });
+                setSelectedStudent(student);
                 handleEditStudentClick();
               }}
             >

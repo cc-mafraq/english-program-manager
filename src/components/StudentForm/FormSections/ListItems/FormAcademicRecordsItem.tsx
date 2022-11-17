@@ -1,6 +1,7 @@
 import { Close } from "@mui/icons-material";
 import { Grid, IconButton, Tooltip } from "@mui/material";
 import React, { useContext } from "react";
+import { useStore } from "zustand";
 import {
   FormGrade,
   FormLabel,
@@ -9,14 +10,16 @@ import {
   GridItemDatePicker,
   GridItemTextField,
 } from "../../..";
+import { AppContext } from "../../../../App";
 import { useColors } from "../../../../hooks";
-import { AppContext, genderedLevels } from "../../../../interfaces";
+import { genderedLevels } from "../../../../interfaces";
 import { FormItem, getAllSessions, SPACING } from "../../../../services";
 
 export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem, name }) => {
-  const {
-    appState: { students },
-  } = useContext(AppContext);
+  const store = useContext(AppContext);
+  const students = useStore(store, (state) => {
+    return state.students;
+  });
 
   const { iconColor } = useColors();
 

@@ -1,7 +1,8 @@
 import { Add, Cached, Edit } from "@mui/icons-material";
 import { Box, Grow } from "@mui/material";
 import React, { useContext, useState } from "react";
-import { AppContext } from "../../interfaces";
+import { useStore } from "zustand";
+import { AppContext } from "../../App";
 import { ActionFAB } from "../reusables/Toolbar/ActionFAB";
 import { SelectStudentDialog } from "./SelectStudentDialog";
 
@@ -26,9 +27,10 @@ export const ActionsMenu: React.FC<ActionsMenuProps> = ({
 }) => {
   const [openSelectDialog, setOpenSelectDialog] = useState(false);
   const [selectValue, setSelectValue] = useState<string | null>(null);
-  const {
-    appState: { role },
-  } = useContext(AppContext);
+  const store = useContext(AppContext);
+  const role = useStore(store, (state) => {
+    return state.role;
+  });
 
   const handleSelectDialogOpen = () => {
     setOpenSelectDialog(true);

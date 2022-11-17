@@ -1,8 +1,9 @@
 import { Autocomplete, Button, Dialog, Paper, TextField, Typography, useTheme } from "@mui/material";
 import { green, grey } from "@mui/material/colors";
 import React, { Dispatch, SetStateAction, useContext } from "react";
+import { useStore } from "zustand";
+import { AppContext } from "../../App";
 import { useColors } from "../../hooks";
-import { AppContext } from "../../interfaces";
 import { getStudentById, getStudentOptions } from "../../services";
 
 interface SelectStudentDialogProps {
@@ -22,16 +23,17 @@ export const SelectStudentDialog: React.FC<SelectStudentDialogProps> = ({
 }) => {
   const { popoverColor } = useColors();
   const theme = useTheme();
-  const {
-    appState: { students },
-    appDispatch,
-  } = useContext(AppContext);
+  const store = useContext(AppContext);
+  const students = useStore(store, (state) => {
+    return state.students;
+  });
+  const setSelectedStudent = useStore(store, (state) => {
+    return state.setSelectedStudent;
+  });
 
   const onSubmit = () => {
     if (!value) return;
-    appDispatch({
-      payload: { selectedStudent: getStudentById(Number(value.slice(0, 5)), students) },
-    });
+    setSelectedStudent(getStudentById(Number(value.slice(0, 5)), students));
     handleDialogClose();
     handleStudentDialogOpen();
   };

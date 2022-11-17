@@ -2,8 +2,9 @@ import { getAuth } from "firebase/auth";
 import React, { useContext, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
+import { useStore } from "zustand";
+import { AppContext } from "../App";
 import { useRole } from "../hooks";
-import { AppContext } from "../interfaces";
 import { app } from "../services";
 
 interface AuthorizationProps {
@@ -11,23 +12,27 @@ interface AuthorizationProps {
 }
 
 export const Authorization: React.FC<AuthorizationProps> = ({ children }) => {
-  const {
-    appState: { role },
-    appDispatch,
-  } = useContext(AppContext);
+  const store = useContext(AppContext);
+  const role = useStore(store, (state) => {
+    return state.role;
+  });
+  const setRole = useStore(store, (state) => {
+    return state.setRole;
+  });
   const navigate = useNavigate();
   const auth = getAuth(app);
   const [user, authLoading] = useAuthState(auth);
   const globalRole = useRole();
 
+  // TODO: subscribe with role selector
   useEffect(() => {
     if (authLoading) return;
     if (!user) {
       navigate("/", { replace: true });
     } else if (role !== globalRole) {
-      appDispatch({ payload: { role: globalRole } });
+      setRole(globalRole);
     }
-  }, [user, authLoading, navigate, globalRole, appDispatch, role]);
+  }, [user, authLoading, navigate, globalRole, role, setRole]);
 
   return <>{children}</>;
 };

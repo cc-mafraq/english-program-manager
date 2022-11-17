@@ -2,8 +2,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Box } from "@mui/material";
 import { get, includes, map, nth } from "lodash";
 import moment from "moment";
-import React, { useCallback, useContext, useRef, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { v4 } from "uuid";
+import { useStore } from "zustand";
+import { AppContext } from "../App";
 import {
   ActionsMenu,
   CorrespondenceList,
@@ -21,7 +23,7 @@ import {
   WaitingListForm,
 } from "../components";
 import { useFormDialog, usePageState } from "../hooks";
-import { AppContext, emptyWaitingListEntry, WaitingListEntry } from "../interfaces";
+import { emptyWaitingListEntry, WaitingListEntry } from "../interfaces";
 import {
   removeNullFromObject,
   searchWaitingList,
@@ -32,11 +34,20 @@ import {
 } from "../services";
 
 export const WaitingListPage = () => {
-  const {
-    appState: { waitingList, role, waitingListFilter: filter, selectedWaitingListEntry },
-  } = useContext(AppContext);
-  const waitingListRef = useRef(waitingList);
-  waitingListRef.current = waitingList;
+  const store = useContext(AppContext);
+  const waitingList = useStore(store, (state) => {
+    return state.waitingList;
+  });
+  const selectedWaitingListEntry = useStore(store, (state) => {
+    return state.selectedWaitingListEntry;
+  });
+  const role = useStore(store, (state) => {
+    return state.role;
+  });
+  const filter = useStore(store, (state) => {
+    return state.waitingListFilter;
+  });
+
   const {
     filteredList: filteredWaitingList,
     handleSearchStringChange,
@@ -48,7 +59,6 @@ export const WaitingListPage = () => {
     collectionName: "waitingList",
     conditionToAddPath: "primaryPhone",
     filter,
-    listRef: waitingListRef,
     payloadPath: "waitingList",
     searchFn: searchWaitingList,
     sortFn: sortWaitingList,
@@ -109,7 +119,7 @@ export const WaitingListPage = () => {
           filterComponent={<WaitingListFilter />}
           filterName="waitingListFilter"
           handleSearchStringChange={handleSearchStringChange}
-          list={searchString || filter.length ? filteredWaitingList : waitingList}
+          list={filteredWaitingList}
           searchString={searchString}
           setShowActions={setShowActions}
           showActions={showActions}

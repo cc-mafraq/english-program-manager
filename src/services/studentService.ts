@@ -158,8 +158,8 @@ export const getStudentOptions = (students: Student[]): string[] => {
   });
 };
 
-export const getStudentById = (id: Student["epId"], students: Student[]): Student | undefined => {
-  return find(students, { epId: id });
+export const getStudentById = (id: Student["epId"], students: Student[]): Student | null => {
+  return find(students, { epId: id }) || null;
 };
 
 export const getSessionsWithResults = (students: Student[]) => {

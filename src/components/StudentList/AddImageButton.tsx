@@ -4,8 +4,10 @@ import { get } from "lodash";
 import React, { ChangeEvent, useCallback, useContext, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
+import { useStore } from "zustand";
+import { AppContext } from "../../App";
 import { useColors } from "../../hooks";
-import { AppContext, Student } from "../../interfaces";
+import { Student } from "../../interfaces";
 import { setImage, uploadImage } from "../../services";
 
 interface AddImageButtonProps {
@@ -29,7 +31,10 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({
   setImg,
   isForm,
 }) => {
-  const { appDispatch } = useContext(AppContext);
+  const store = useContext(AppContext);
+  const setSelectedStudent = useStore(store, (state) => {
+    return state.setSelectedStudent;
+  });
   const theme = useTheme();
   const { iconColor } = useColors();
   const methods = useFormContext();
@@ -51,12 +56,12 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({
         } else {
           if (!student) return;
           await setImage(student, file, imagePath, folderName);
-          appDispatch({ payload: { selectedStudent: student } });
+          setSelectedStudent(student);
         }
       };
       onChange(event);
     },
-    [appDispatch, folderName, imagePath, isForm, methods, setImg, setLoading, student],
+    [folderName, imagePath, isForm, methods, setImg, setLoading, setSelectedStudent, student],
   );
 
   return (

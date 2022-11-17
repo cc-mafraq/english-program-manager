@@ -2,8 +2,9 @@ import { FilterList, MoreHoriz } from "@mui/icons-material";
 import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography, useTheme } from "@mui/material";
 import { get } from "lodash";
 import React, { Attributes, Dispatch, SetStateAction, useContext } from "react";
+import { useStore } from "zustand";
+import { AppContext } from "../../../App";
 import { saveLocal, useColors } from "../../../hooks";
-import { AppContext } from "../../../interfaces";
 import { Searchbar } from "./Searchbar";
 
 const handlePopoverClick = (setFn: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>) => {
@@ -39,13 +40,15 @@ export const CustomToolbar = <T,>({
   filterComponent,
   filterName,
 }: CustomToolbarProps<T>) => {
-  const {
-    appState: { role },
-  } = useContext(AppContext);
   const [filterAnchorEl, setFilterAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const { iconColor } = useColors();
-  const { appState } = useContext(AppContext);
-  const filter = get(appState, filterName);
+  const store = useContext(AppContext);
+  const role = useStore(store, (state) => {
+    return state.role;
+  });
+  const filter = useStore(store, (state) => {
+    return get(state, filterName);
+  });
   const theme = useTheme();
 
   return (

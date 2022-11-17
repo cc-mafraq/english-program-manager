@@ -1,7 +1,9 @@
 import { Box, useMediaQuery, useTheme } from "@mui/material";
 import React, { useContext } from "react";
+import { useStore } from "zustand";
 import { Image, WithdrawButton } from "..";
-import { AppContext, Nationality, Status, Student } from "../../interfaces";
+import { AppContext } from "../../App";
+import { Nationality, Status, Student } from "../../interfaces";
 import { studentImageFolder } from "../../services";
 
 interface StudentCardImageProps {
@@ -15,9 +17,10 @@ export const StudentCardImage: React.FC<StudentCardImageProps> = ({
   imageWidth,
   smallBreakpointScaleDown,
 }) => {
-  const {
-    appState: { role },
-  } = useContext(AppContext);
+  const store = useContext(AppContext);
+  const role = useStore(store, (state) => {
+    return state.role;
+  });
   const theme = useTheme();
   const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
   const maxImageHeight = 250;

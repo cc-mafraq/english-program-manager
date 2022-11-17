@@ -1,9 +1,11 @@
 import { Box } from "@mui/material";
 import { join, map } from "lodash";
 import React, { useContext, useMemo } from "react";
+import { useStore } from "zustand";
 import { Image, LabeledContainer, LabeledText } from "..";
+import { AppContext } from "../../App";
 import { useColors } from "../../hooks";
-import { AppContext, Status, Student } from "../../interfaces";
+import { Status, Student } from "../../interfaces";
 import { covidVaccineImageFolder, getRepeatNum, getStatusDetails, isActive, JOIN_STR } from "../../services";
 
 interface StudentInfoProps {
@@ -11,9 +13,13 @@ interface StudentInfoProps {
 }
 
 export const StudentInfo: React.FC<StudentInfoProps> = ({ data: student }) => {
-  const {
-    appState: { students, role },
-  } = useContext(AppContext);
+  const store = useContext(AppContext);
+  const role = useStore(store, (state) => {
+    return state.role;
+  });
+  const students = useStore(store, (state) => {
+    return state.students;
+  });
   const { defaultBackgroundColor, green, red } = useColors();
   const statusDetailsAndNumSessions = useMemo(() => {
     return getStatusDetails({ student, students });

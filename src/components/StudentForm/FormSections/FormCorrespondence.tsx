@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
 import { get, useFormContext } from "react-hook-form";
+import { useStore } from "zustand";
+import { AppContext } from "../../../App";
 import { useFormList } from "../../../hooks";
-import { AppContext } from "../../../interfaces";
 import { SPACING } from "../../../services";
 import { FormLabel, FormList, GridContainer } from "../../reusables";
 import { FormCorrespondenceItem } from "./ListItems";
@@ -11,8 +12,10 @@ interface FormCorrespondenceProps {
 }
 
 export const FormCorrespondence = <T extends object>({ selectedStudentPath }: FormCorrespondenceProps) => {
-  const { appState } = useContext(AppContext);
-  const selectedData = get(appState, selectedStudentPath);
+  const store = useContext(AppContext);
+  const selectedData = useStore(store, (state) => {
+    return get(state, selectedStudentPath);
+  });
 
   const methods = useFormContext<T>();
   const [correspondence, addCorrespondence, removeCorrespondence] = useFormList(

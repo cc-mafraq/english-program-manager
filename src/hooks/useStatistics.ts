@@ -1,7 +1,8 @@
 import { countBy, filter, forEach, get, map, omit, set } from "lodash";
 import { useCallback, useContext } from "react";
+import { useStore } from "zustand";
+import { AppContext } from "../App";
 import {
-  AppContext,
   CovidStatus,
   DroppedOutReason,
   GenderedLevel,
@@ -47,9 +48,10 @@ const getLevelCounts = (statistics: Statistics, path: string) => {
 };
 
 export const useStatistics = (): Statistics => {
-  const {
-    appState: { students },
-  } = useContext(AppContext);
+  const store = useContext(AppContext);
+  const students = useStore(store, (state) => {
+    return state.students;
+  });
 
   const filterIsActive = useCallback(() => {
     return filter(students, (s) => {

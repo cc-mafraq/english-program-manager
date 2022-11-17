@@ -1,14 +1,8 @@
 import { first, includes, last, range } from "lodash";
 import React, { useCallback, useContext, useMemo } from "react";
-import {
-  AppContext,
-  covidStatuses,
-  genderedLevels,
-  nationalities,
-  statusDetails,
-  statuses,
-  Student,
-} from "../../interfaces";
+import { useStore } from "zustand";
+import { AppContext } from "../../App";
+import { covidStatuses, genderedLevels, nationalities, statusDetails, statuses, Student } from "../../interfaces";
 import { FilterField, getAllSessions, getSessionsWithResults, getStatusDetails } from "../../services";
 import { FilterDrawer } from "../reusables";
 
@@ -21,10 +15,16 @@ interface StudentFilterProps {
 const booleanCheckboxOptions = ["Yes", "No"];
 
 export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleClose, tooltipObjectName }) => {
-  const {
-    appState: { students, role },
-    appDispatch,
-  } = useContext(AppContext);
+  const store = useContext(AppContext);
+  const students = useStore(store, (state) => {
+    return state.students;
+  });
+  const role = useStore(store, (state) => {
+    return state.role;
+  });
+  const setStudentFilter = useStore(store, (state) => {
+    return state.setStudentFilter;
+  });
 
   const sessionsWithResults = getSessionsWithResults(students);
   const isAdmin = role === "admin";
@@ -64,8 +64,8 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
   }, []);
 
   const handleClearFilters = useCallback(() => {
-    appDispatch({ payload: { studentFilter: [] } });
-  }, [appDispatch]);
+    setStudentFilter([]);
+  }, [setStudentFilter]);
 
   const filterFields: FilterField<Student>[] = useMemo(() => {
     return [

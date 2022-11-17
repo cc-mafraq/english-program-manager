@@ -1,5 +1,6 @@
 import { Box, Divider, Typography } from "@mui/material";
 import React, { useContext } from "react";
+import { useStore } from "zustand";
 import {
   FormAcademicRecords,
   FormCertRequests,
@@ -14,12 +15,13 @@ import {
   FormProgramInformation,
   FormStatus,
 } from "..";
-import { AppContext } from "../../interfaces";
+import { AppContext } from "../../App";
 
 export const StudentForm: React.FC = () => {
-  const {
-    appState: { selectedStudent },
-  } = useContext(AppContext);
+  const store = useContext(AppContext);
+  const selectedStudent = useStore(store, (state) => {
+    return state.selectedStudent;
+  });
 
   const addOrEdit = selectedStudent ? "Edit" : "Add";
 

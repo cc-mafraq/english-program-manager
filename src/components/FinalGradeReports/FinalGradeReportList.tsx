@@ -3,8 +3,10 @@ import download from "downloadjs";
 import JSZip from "jszip";
 import { filter, includes, isEqual, map, replace } from "lodash";
 import React, { useContext, useMemo } from "react";
+import { useStore } from "zustand";
 import { FinalGradeReport } from ".";
-import { AppContext, Student } from "../../interfaces";
+import { AppContext } from "../../App";
+import { Student } from "../../interfaces";
 import {
   getAllSessions,
   getSortedSARIndexArray,
@@ -33,9 +35,10 @@ export const FinalGradeReportList: React.FC<FinalGradeReportListProps> = ({
   shouldDownload,
   width,
 }) => {
-  const {
-    appState: { students },
-  } = useContext(AppContext);
+  const store = useContext(AppContext);
+  const students = useStore(store, (state) => {
+    return state.students;
+  });
 
   const sessionOptions = useMemo(() => {
     return getAllSessions(students);

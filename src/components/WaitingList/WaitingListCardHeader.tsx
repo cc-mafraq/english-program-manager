@@ -1,8 +1,10 @@
 import { Edit, WhatsApp } from "@mui/icons-material";
 import { Box, Divider, IconButton, Tooltip, Typography, useTheme } from "@mui/material";
 import React, { useContext } from "react";
+import { useStore } from "zustand";
+import { AppContext } from "../../App";
 import { useColors } from "../../hooks";
-import { AppContext, WaitingListEntry } from "../../interfaces";
+import { WaitingListEntry } from "../../interfaces";
 import { getPosition } from "../../services";
 
 interface WaitingListHeaderProps {
@@ -14,10 +16,16 @@ export const WaitingListCardHeader: React.FC<WaitingListHeaderProps> = ({
   data: wlEntry,
   handleEditEntryClick,
 }) => {
-  const {
-    appState: { role, waitingList },
-    appDispatch,
-  } = useContext(AppContext);
+  const store = useContext(AppContext);
+  const role = useStore(store, (state) => {
+    return state.role;
+  });
+  const waitingList = useStore(store, (state) => {
+    return state.waitingList;
+  });
+  const setSelectedWaitingListEntry = useStore(store, (state) => {
+    return state.setSelectedWaitingListEntry;
+  });
 
   const theme = useTheme();
   const { iconColor } = useColors();
@@ -50,7 +58,7 @@ export const WaitingListCardHeader: React.FC<WaitingListHeaderProps> = ({
           <Tooltip arrow title="Edit Waiting List Entry">
             <IconButton
               onClick={() => {
-                appDispatch({ payload: { selectedWaitingListEntry: wlEntry } });
+                setSelectedWaitingListEntry(wlEntry);
                 handleEditEntryClick();
               }}
             >

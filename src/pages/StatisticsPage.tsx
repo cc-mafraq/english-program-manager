@@ -4,16 +4,22 @@ import { get, keys, map, round, sortBy } from "lodash";
 import React, { useContext, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
+import { useStore } from "zustand";
+import { AppContext } from "../App";
 import { useStatistics } from "../hooks";
-import { AppContext, levels } from "../interfaces";
+import { levels } from "../interfaces";
 import { app, getAllSessions, sortObjectByValues } from "../services";
 
 const INDENT = 3;
 
 export const StatisticsPage = () => {
-  const {
-    appState: { students, role },
-  } = useContext(AppContext);
+  const store = useContext(AppContext);
+  const students = useStore(store, (state) => {
+    return state.students;
+  });
+  const role = useStore(store, (state) => {
+    return state.role;
+  });
   const auth = getAuth(app);
   const [user, loading] = useAuthState(auth);
   const navigate = useNavigate();

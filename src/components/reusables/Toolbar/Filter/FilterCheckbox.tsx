@@ -1,7 +1,9 @@
 import { Checkbox, FormControlLabel } from "@mui/material";
-import { cloneDeep, find, get, includes, isEmpty, remove, set, toString } from "lodash";
+import { cloneDeep, find, get, includes, isEmpty, remove, startCase, toString } from "lodash";
 import React, { useContext, useEffect, useState } from "react";
-import { AppContext, FilterValue } from "../../../../interfaces";
+import { useStore } from "zustand";
+import { AppContext } from "../../../../App";
+import { FilterValue } from "../../../../interfaces";
 import { FilterField } from "../../../../services";
 
 interface FilterCheckBoxProps<T> {
@@ -23,8 +25,13 @@ export const FilterCheckbox = <T,>({
   filterStatePath,
   ignoreValueMappings,
 }: FilterCheckBoxProps<T>) => {
-  const { appState, appDispatch } = useContext(AppContext);
-  const filter: FilterValue<T>[] = get(appState, filterStatePath);
+  const store = useContext(AppContext);
+  const filter: FilterValue<T>[] = useStore(store, (state) => {
+    return get(state, filterStatePath);
+  });
+  const setFilter = useStore(store, (state) => {
+    return get(state, `set${startCase(filterStatePath)}`.replace(/ /g, ""));
+  });
 
   const value =
     !ignoreValueMappings && includes(Object.keys(valueMappings), label) ? valueMappings[label as string] : label;
@@ -56,20 +63,17 @@ export const FilterCheckbox = <T,>({
 
     const fieldFilterValues = prevFieldFilter ? [...prevFieldFilter.values, value] : [value];
     if (event.target.checked) {
-      const payload = set({}, filterStatePath, [
+      setFilter([
         ...filterCopy,
         { fieldFunction: filterField.fn, fieldPath: filterField.path, values: fieldFilterValues },
       ]);
-      appDispatch({ payload });
     } else if (prevFieldFilter?.values && prevFieldFilter?.values.length > 1) {
       remove(prevFieldFilter?.values, (val) => {
         return val === value;
       });
-      const payload = set({}, filterStatePath, [...filterCopy, prevFieldFilter]);
-      appDispatch({ payload });
+      setFilter([...filterCopy, prevFieldFilter]);
     } else {
-      const payload = set({}, filterStatePath, [...filterCopy]);
-      appDispatch({ payload });
+      setFilter([...filterCopy]);
     }
   };
 

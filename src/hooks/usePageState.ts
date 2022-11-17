@@ -1,10 +1,12 @@
 import { collection } from "firebase/firestore";
-import { every, filter as filterFn, forEach, get, includes, isUndefined, set } from "lodash";
+import { every, filter as filterFn, forEach, get, includes, isUndefined, startCase } from "lodash";
 import { useCallback, useContext, useEffect } from "react";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useNavigate } from "react-router-dom";
 import useState from "react-usestateref";
-import { AppContext, AppState, FilterValue } from "../interfaces";
+import { useStore } from "zustand";
+import { AppContext } from "../App";
+import { FilterValue } from "../interfaces";
 import { db, logout } from "../services";
 import { loadLocal } from "./useLocal";
 
@@ -12,8 +14,7 @@ interface UsePageStateParams<T> {
   collectionName: string;
   conditionToAddPath?: string;
   filter?: FilterValue<T>[];
-  listRef: React.MutableRefObject<T[]>;
-  payloadPath: keyof AppState;
+  payloadPath: string;
   searchFn: (list: T[], searchString: string) => T[];
   sortFn: (list: T[]) => T[];
   spreadsheetIsLoading?: boolean;
@@ -27,7 +28,6 @@ interface SetStateOptions<T> {
 }
 
 export const usePageState = <T>({
-  listRef,
   searchFn,
   sortFn,
   filter,
@@ -36,7 +36,13 @@ export const usePageState = <T>({
   spreadsheetIsLoading,
   conditionToAddPath,
 }: UsePageStateParams<T>) => {
-  const { appDispatch } = useContext(AppContext);
+  const store = useContext(AppContext);
+  const setData = useStore(store, (state) => {
+    return get(state, `set${startCase(payloadPath)}`.replace(/ /g, ""));
+  });
+  const setLoading = useStore(store, (state) => {
+    return state.setLoading;
+  });
 
   const [filteredList, setFilteredList, filteredListRef] = useState<T[]>([]);
   const [listPage, setListPage] = useState<T[]>([]);
@@ -62,51 +68,47 @@ export const usePageState = <T>({
       const newSearchedList =
         !isUndefined(newSearchString) || newList
           ? searchFn(
-              !isUndefined(newList) ? newList : listRef.current,
+              !isUndefined(newList) ? newList : filteredListRef.current,
               !isUndefined(newSearchString) ? newSearchString : searchStringRef.current,
             )
           : filteredListRef.current;
       const newFilteredList =
         filter && filter.length > 0 ? sortFn(filterFn(newSearchedList, filterList) as T[]) : newSearchedList;
       setFilteredList(newFilteredList);
-      const newPayload: Partial<AppState> = {};
-      set(newPayload, payloadPath, newList);
-      newList && appDispatch({ payload: newPayload });
+      newList && setData(newList);
       !isUndefined(newSearchString) && setSearchString(newSearchString);
       setListPage(newFilteredList);
     },
     [
       searchFn,
-      listRef,
       searchStringRef,
       filteredListRef,
       filter,
       sortFn,
       filterList,
       setFilteredList,
-      payloadPath,
-      appDispatch,
+      setData,
       setSearchString,
     ],
   );
 
   useEffect(() => {
     if (!spreadsheetIsLoading) {
-      const dataList: T[] = [];
+      const newDataList: T[] = [];
       forEach(docs?.docs, (d) => {
         const data = d.data();
-        if (!conditionToAddPath || get(data, conditionToAddPath)) dataList.push(data as T);
+        if (!conditionToAddPath || get(data, conditionToAddPath)) newDataList.push(data as T);
       });
-      const sortedData = sortFn(dataList);
+      const sortedData = sortFn(newDataList);
       setState({
         newList: sortedData,
       });
     }
-  }, [setState, appDispatch, docs, sortFn, spreadsheetIsLoading, conditionToAddPath]);
+  }, [setState, docs, sortFn, spreadsheetIsLoading, conditionToAddPath]);
 
   useEffect(() => {
-    appDispatch({ payload: { loading: docsLoading } });
-  }, [appDispatch, docsLoading]);
+    setLoading(docsLoading);
+  }, [docsLoading, setLoading]);
 
   useEffect(() => {
     if (docsError?.code === "permission-denied") {

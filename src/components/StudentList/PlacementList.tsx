@@ -3,9 +3,11 @@ import { Edit } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
 import { join, map } from "lodash";
 import React, { useCallback, useContext, useState } from "react";
+import { useStore } from "zustand";
 import { FormDialog, FormPlacement, LabeledContainer, LabeledText } from "..";
+import { AppContext } from "../../App";
 import { useColors } from "../../hooks";
-import { AppContext, Placement, Student } from "../../interfaces";
+import { Placement, Student } from "../../interfaces";
 import { JOIN_STR, placementSchema, removeNullFromObject, setData } from "../../services";
 
 interface PlacementProps {
@@ -13,23 +15,26 @@ interface PlacementProps {
 }
 
 export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
-  const {
-    appState: { role },
-    appDispatch,
-  } = useContext(AppContext);
+  const store = useContext(AppContext);
+  const role = useStore(store, (state) => {
+    return state.role;
+  });
+  const setSelectedStudent = useStore(store, (state) => {
+    return state.setSelectedStudent;
+  });
 
   const { iconColor } = useColors();
   const [open, setOpen] = useState(false);
 
   const handleDialogOpen = useCallback(() => {
-    appDispatch({ payload: { selectedStudent: student } });
+    setSelectedStudent(student);
     setOpen(true);
-  }, [appDispatch, student]);
+  }, [setSelectedStudent, student]);
 
   const handleDialogClose = useCallback(() => {
     setOpen(false);
-    appDispatch({ payload: { selectedStudent: null } });
-  }, [appDispatch]);
+    setSelectedStudent(null);
+  }, [setSelectedStudent]);
 
   const onSubmit = useCallback(
     (data: Placement) => {

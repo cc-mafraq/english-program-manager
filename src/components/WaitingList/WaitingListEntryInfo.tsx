@@ -2,18 +2,21 @@ import { Box, useTheme } from "@mui/material";
 import { grey, red as materialRed } from "@mui/material/colors";
 import { map } from "lodash";
 import React, { useContext, useMemo } from "react";
+import { useStore } from "zustand";
 import { LabeledContainer, LabeledText } from "..";
+import { AppContext } from "../../App";
 import { useColors } from "../../hooks";
-import { AppContext, CovidStatus, HighPriority, WaitingListEntry } from "../../interfaces";
+import { CovidStatus, HighPriority, WaitingListEntry } from "../../interfaces";
 
 interface WaitingListEntryInfoProps {
   data: WaitingListEntry;
 }
 
 export const WaitingListEntryInfo: React.FC<WaitingListEntryInfoProps> = ({ data: wlEntry }) => {
-  const {
-    appState: { role },
-  } = useContext(AppContext);
+  const store = useContext(AppContext);
+  const role = useStore(store, (state) => {
+    return state.role;
+  });
   const { green, red, defaultBackgroundColor } = useColors();
   const theme = useTheme();
   const isAdminOrFaculty = role === "admin" || role === "faculty";

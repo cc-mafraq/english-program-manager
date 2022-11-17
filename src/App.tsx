@@ -1,19 +1,71 @@
 import { createTheme, PaletteMode, responsiveFontSizes, ThemeProvider, useMediaQuery } from "@mui/material";
-import React, { useEffect, useReducer } from "react";
+import React, { createContext, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { createStore, StoreApi } from "zustand";
 import { Authorization, MenuBar } from "./components";
 import { loadLocal } from "./hooks";
-import { AppContext, getDesignTokens, initialAppState, voidFn } from "./interfaces";
+import { AppState, getDesignTokens, voidFn } from "./interfaces";
 import { LoginPage, StatisticsPage, StudentDatabasePage, WaitingListPage } from "./pages";
-import { reducer } from "./reducers";
 
 export const ColorModeContext = React.createContext({
   toggleColorMode: voidFn,
 });
 
-export const App = () => {
-  const [appState, appDispatch] = useReducer(reducer, initialAppState);
+export const appStore = createStore<AppState>()((set) => {
+  return {
+    loading: true,
+    role: "staff",
+    selectedStudent: null,
+    selectedWaitingListEntry: null,
+    setLoading: (loading: AppState["loading"]) => {
+      return set(() => {
+        return { loading };
+      });
+    },
+    setRole: (role: AppState["role"]) => {
+      return set(() => {
+        return { role };
+      });
+    },
+    setSelectedStudent: (selectedStudent: AppState["selectedStudent"]) => {
+      return set(() => {
+        return { selectedStudent };
+      });
+    },
+    setSelectedWaitingListEntry: (selectedWaitingListEntry: AppState["selectedWaitingListEntry"]) => {
+      return set(() => {
+        return { selectedWaitingListEntry };
+      });
+    },
+    setStudentFilter: (studentFilter: AppState["studentFilter"]) => {
+      return set(() => {
+        return { studentFilter };
+      });
+    },
+    setStudents: (students: AppState["students"]) => {
+      return set(() => {
+        return { students };
+      });
+    },
+    setWaitingList: (waitingList: AppState["waitingList"]) => {
+      return set(() => {
+        return { waitingList };
+      });
+    },
+    setWaitingListFilter: (waitingListFilter: AppState["waitingListFilter"]) => {
+      return set(() => {
+        return { waitingListFilter };
+      });
+    },
+    studentFilter: [],
+    students: [],
+    waitingList: [],
+    waitingListFilter: [],
+  };
+});
+export const AppContext = createContext<StoreApi<AppState>>(appStore);
 
+export const App = () => {
   const isDarkPreference = useMediaQuery("(prefers-color-scheme: dark)");
   const localColorMode = loadLocal("colorMode");
   const [mode, setMode] = React.useState<PaletteMode>(
@@ -37,15 +89,11 @@ export const App = () => {
     return responsiveFontSizes(createTheme(getDesignTokens(mode)));
   }, [mode]);
 
-  const contextValue = React.useMemo(() => {
-    return { appDispatch, appState };
-  }, [appDispatch, appState]);
-
   return (
     <div style={{ background: theme.palette.background.default, overflowY: "clip" }}>
       <ColorModeContext.Provider value={colorMode}>
         <ThemeProvider theme={theme}>
-          <AppContext.Provider value={contextValue}>
+          <AppContext.Provider value={appStore}>
             <BrowserRouter>
               <Authorization>
                 <Routes>

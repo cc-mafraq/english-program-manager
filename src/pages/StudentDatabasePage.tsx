@@ -1,8 +1,10 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box } from "@mui/material";
 import { isEmpty, omit } from "lodash";
-import React, { useCallback, useContext, useRef } from "react";
+import React, { useCallback, useContext } from "react";
 import useState from "react-usestateref";
+import { useStore } from "zustand";
+import { AppContext } from "../App";
 import {
   AcademicRecords,
   ActionsMenu,
@@ -21,7 +23,7 @@ import {
 } from "../components";
 import { StudentCardImage } from "../components/StudentList/StudentCardImage";
 import { useFormDialog, usePageState } from "../hooks";
-import { AppContext, emptyStudent, Status, Student } from "../interfaces";
+import { emptyStudent, Status, Student } from "../interfaces";
 import {
   deleteImage,
   deleteStudentData,
@@ -34,14 +36,19 @@ import {
 } from "../services";
 
 export const StudentDatabasePage = () => {
-  const {
-    appState: { students, selectedStudent, studentFilter: filter, role },
-  } = useContext(AppContext);
-  const studentsRef = useRef(students);
+  const store = useContext(AppContext);
+  const selectedStudent = useStore(store, (state) => {
+    return state.selectedStudent;
+  });
+  const role = useStore(store, (state) => {
+    return state.role;
+  });
+  const filter = useStore(store, (state) => {
+    return state.studentFilter;
+  });
   const [openFGRDialog, setOpenFGRDialog] = useState(false);
   // const [spreadsheetIsLoading, setSpreadsheetIsLoading] = useState(false);
   const isAdminOrFaculty = role === "admin" || role === "faculty";
-  studentsRef.current = students;
   const {
     filteredList: filteredStudents,
     handleSearchStringChange,
@@ -53,7 +60,6 @@ export const StudentDatabasePage = () => {
     collectionName: "students",
     conditionToAddPath: "name.english",
     filter,
-    listRef: studentsRef,
     payloadPath: "students",
     searchFn: searchStudents,
     sortFn: sortStudents,
@@ -136,7 +142,7 @@ export const StudentDatabasePage = () => {
           filterComponent={<StudentFilter />}
           filterName="studentFilter"
           handleSearchStringChange={handleSearchStringChange}
-          list={searchString || filter.length ? filteredStudents : students}
+          list={filteredStudents}
           searchString={searchString}
           setShowActions={setShowActions}
           showActions={showActions}
@@ -150,7 +156,7 @@ export const StudentDatabasePage = () => {
           tooltipObjectName="Student"
         />
       </Box>
-      {students.length > 0 ? (
+      {openFGRDialog ? (
         <FinalGradeReportDialog handleDialogClose={handleFGRDialogClose} open={openFGRDialog} />
       ) : (
         <></>

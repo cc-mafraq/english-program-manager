@@ -1,8 +1,9 @@
 import { Grid } from "@mui/material";
 import React, { useContext } from "react";
 import { FieldValues, useFormContext } from "react-hook-form";
+import { useStore } from "zustand";
+import { AppContext } from "../../../App";
 import { useDateInitialState, useFormList } from "../../../hooks";
-import { AppContext } from "../../../interfaces";
 import { SPACING } from "../../../services";
 import {
   FormLabel,
@@ -19,9 +20,10 @@ interface FormPlacementProps {
 }
 
 export const FormPlacement = <T extends FieldValues>({ standAlone }: FormPlacementProps) => {
-  const {
-    appState: { selectedStudent },
-  } = useContext(AppContext);
+  const store = useContext(AppContext);
+  const selectedStudent = useStore(store, (state) => {
+    return state.selectedStudent;
+  });
   const methods = useFormContext<T>();
   const namePrefix = standAlone ? "" : "placement.";
 

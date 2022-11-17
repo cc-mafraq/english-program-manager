@@ -1,6 +1,5 @@
 import { PaletteMode, ThemeOptions } from "@mui/material";
 import { grey } from "@mui/material/colors";
-import { createContext, Dispatch } from "react";
 import { Student, WaitingListEntry } from ".";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -65,30 +64,16 @@ export interface AppState {
   role: "admin" | "faculty" | "staff";
   selectedStudent: Student | null;
   selectedWaitingListEntry: WaitingListEntry | null;
+  setLoading: (loading: AppState["loading"]) => void;
+  setRole: (role: AppState["role"]) => void;
+  setSelectedStudent: (selectedStudent: AppState["selectedStudent"]) => void;
+  setSelectedWaitingListEntry: (selectedWaitingListEntry: AppState["selectedWaitingListEntry"]) => void;
+  setStudentFilter: (studentFilter: AppState["studentFilter"]) => void;
+  setStudents: (students: AppState["students"]) => void;
+  setWaitingList: (waitingList: AppState["waitingList"]) => void;
+  setWaitingListFilter: (waitingListFilter: AppState["waitingListFilter"]) => void;
   studentFilter: FilterValue<Student>[];
   students: Student[];
   waitingList: WaitingListEntry[];
   waitingListFilter: FilterValue<WaitingListEntry>[];
 }
-
-export const initialAppState: AppState = {
-  loading: true,
-  role: "staff",
-  selectedStudent: null,
-  selectedWaitingListEntry: null,
-  studentFilter: [],
-  students: [],
-  waitingList: [],
-  waitingListFilter: [],
-};
-
-export interface IAppContext {
-  appDispatch: Dispatch<AppAction> | (() => void);
-  appState: AppState;
-}
-
-export const AppContext = createContext<IAppContext>({
-  appDispatch: voidFn,
-  appState: initialAppState,
-});
-AppContext.displayName = "AppContext";

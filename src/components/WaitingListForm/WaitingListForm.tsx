@@ -1,5 +1,6 @@
 import { Box, Divider, Grid, Typography } from "@mui/material";
 import React, { useContext } from "react";
+import { useStore } from "zustand";
 import {
   FormCorrespondence,
   FormEntryInformation,
@@ -9,13 +10,14 @@ import {
   FormWaitingListVaccine,
   GridContainer,
 } from "..";
-import { AppContext } from "../../interfaces";
+import { AppContext } from "../../App";
 import { SPACING } from "../../services";
 
 export const WaitingListForm: React.FC = () => {
-  const {
-    appState: { selectedWaitingListEntry },
-  } = useContext(AppContext);
+  const store = useContext(AppContext);
+  const selectedWaitingListEntry = useStore(store, (state) => {
+    return state.selectedWaitingListEntry;
+  });
 
   const addOrEdit = selectedWaitingListEntry ? "Edit" : "Add";
 

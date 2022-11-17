@@ -1,13 +1,15 @@
 import { Box, Typography, useTheme } from "@mui/material";
 import { countBy, get } from "lodash";
 import React, { useContext, useMemo } from "react";
+import { useStore } from "zustand";
+import { AppContext } from "../../App";
 import { useColors } from "../../hooks";
-import { AppContext } from "../../interfaces";
 
 export const WaitingListCounter: React.FC = () => {
-  const {
-    appState: { waitingList },
-  } = useContext(AppContext);
+  const store = useContext(AppContext);
+  const waitingList = useStore(store, (state) => {
+    return state.waitingList;
+  });
   const { iconColor } = useColors();
   const theme = useTheme();
   const numWaiting = useMemo(() => {

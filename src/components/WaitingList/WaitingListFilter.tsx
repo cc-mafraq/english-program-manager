@@ -1,7 +1,9 @@
 import { countBy, filter, find, first, get, last, map, orderBy, take, uniq, values } from "lodash";
 import moment from "moment";
 import React, { useCallback, useContext, useMemo } from "react";
-import { AppContext, HighPriority, WaitingListEntry, WaitlistOutcome } from "../../interfaces";
+import { useStore } from "zustand";
+import { AppContext } from "../../App";
+import { HighPriority, WaitingListEntry, WaitlistOutcome } from "../../interfaces";
 import { FilterField, MOMENT_FORMAT } from "../../services";
 import { FilterDrawer } from "../reusables";
 
@@ -18,10 +20,16 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({
   handleClose,
   tooltipObjectName,
 }) => {
-  const {
-    appState: { role, waitingList },
-    appDispatch,
-  } = useContext(AppContext);
+  const store = useContext(AppContext);
+  const role = useStore(store, (state) => {
+    return state.role;
+  });
+  const waitingList = useStore(store, (state) => {
+    return state.waitingList;
+  });
+  const setWaitingListFilter = useStore(store, (state) => {
+    return state.setWaitingListFilter;
+  });
   const waitingListPhoneCounts = useMemo(() => {
     return countBy(waitingList, "primaryPhone");
   }, [waitingList]);
@@ -30,8 +38,8 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({
   const isAdminOrFaculty = isAdmin || role === "faculty";
 
   const handleClearFilters = useCallback(() => {
-    appDispatch({ payload: { waitingListFilter: [] } });
-  }, [appDispatch]);
+    setWaitingListFilter([]);
+  }, [setWaitingListFilter]);
 
   const removeDuplicates = useCallback(
     (wlEntry: WaitingListEntry) => {

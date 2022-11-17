@@ -1,7 +1,8 @@
 import { BoxProps, SxProps } from "@mui/material";
 import React, { useContext } from "react";
+import { useStore } from "zustand";
 import { Image } from "../../..";
-import { AppContext } from "../../../../interfaces";
+import { AppContext } from "../../../../App";
 
 interface FormImageProps {
   folderName: string;
@@ -20,9 +21,10 @@ export const FormImage: React.FC<FormImageProps> = ({
   outerContainerProps,
   xs,
 }) => {
-  const {
-    appState: { selectedStudent },
-  } = useContext(AppContext);
+  const store = useContext(AppContext);
+  const selectedStudent = useStore(store, (state) => {
+    return state.selectedStudent;
+  });
 
   return (
     <Image

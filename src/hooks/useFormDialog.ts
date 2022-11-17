@@ -1,13 +1,17 @@
-import { set } from "lodash";
+import { get, startCase } from "lodash";
 import { useCallback, useContext, useState } from "react";
-import { AppContext } from "../interfaces";
+import { useStore } from "zustand";
+import { AppContext } from "../App";
 
 interface UseFormDialogProps {
   selectedDataPath?: string;
 }
 
 export const useFormDialog = ({ selectedDataPath }: UseFormDialogProps) => {
-  const { appDispatch } = useContext(AppContext);
+  const store = useContext(AppContext);
+  const setSelectedData = useStore(store, (state) => {
+    return get(state, `set${startCase(selectedDataPath)}`.replace(/ /g, ""));
+  });
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleDialogOpen = useCallback(() => {
@@ -17,10 +21,9 @@ export const useFormDialog = ({ selectedDataPath }: UseFormDialogProps) => {
   const handleDialogClose = useCallback(() => {
     setOpenDialog(false);
     if (selectedDataPath) {
-      const payload = set({}, selectedDataPath, null);
-      appDispatch({ payload });
+      setSelectedData(null);
     }
-  }, [appDispatch, selectedDataPath]);
+  }, [selectedDataPath, setSelectedData]);
 
   return { handleDialogClose, handleDialogOpen, openDialog };
 };
