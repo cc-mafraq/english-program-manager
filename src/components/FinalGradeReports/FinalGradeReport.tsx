@@ -66,39 +66,35 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const componentRef = useRef(null);
 
-  const downloadFGR = useCallback(
-    (dl: boolean) => {
-      return async () => {
-        if (componentRef.current) {
-          const imgData = await toPng(componentRef.current, {
-            backgroundColor: lightPrimaryColor,
-            canvasHeight: fgrHeight,
-            canvasWidth: width / scale,
-            skipAutoScale: true,
-          });
-          if (dl) {
-            await download(imgData, fileName);
-            setIsDownloaded(true);
-          }
-          return imgData;
-        }
-        return null;
-      };
-    },
-    [fileName, scale, width],
-  );
+  const downloadFGR = useCallback(async () => {
+    if (componentRef.current) {
+      const imgData = await toPng(componentRef.current, {
+        backgroundColor: lightPrimaryColor,
+        canvasHeight: fgrHeight,
+        canvasWidth: width / scale,
+        skipAutoScale: true,
+      });
+      return imgData;
+    }
+    return null;
+  }, [scale, width]);
+
+  const handleDownload = useCallback(async () => {
+    const imgData = await downloadFGR();
+    if (!imgData) return;
+    await download(imgData, fileName);
+    setIsDownloaded(true);
+  }, [downloadFGR, fileName]);
 
   useEffect(() => {
     const downloadAllCalled = async () => {
-      if (shouldDownload) {
-        const img = await downloadFGR(false)();
-        if (img) {
-          const imgClean = replace(img, "data:image/png;base64,", "");
-          await zip.file(fileName, imgClean, { base64: true });
-          await handleDownloadFinished(studentAcademicRecord);
-          setIsDownloaded(true);
-        }
-      }
+      if (!shouldDownload) return;
+      const img = await downloadFGR();
+      if (!img) return;
+      const imgClean = replace(img, "data:image/png;base64,", "");
+      await zip.file(fileName, imgClean, { base64: true });
+      await handleDownloadFinished(studentAcademicRecord);
+      setIsDownloaded(true);
     };
     downloadAllCalled();
   }, [downloadFGR, fileName, handleDownloadFinished, shouldDownload, studentAcademicRecord, zip]);
@@ -137,9 +133,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
     name: getStudentShortName(student),
     nextSessionLevel: academicRecord ? getLevelForNextSession({ academicRecord, sessionOptions, student }) : "",
     passOrRepeat:
-      academicRecord?.overallResult && FinalResult[academicRecord.overallResult] === "P"
-        ? "Pass"
-        : "Repeat",
+      academicRecord?.overallResult && FinalResult[academicRecord.overallResult] === "P" ? "Pass" : "Repeat",
     session: getSessionFullName(session),
     studentId: student.epId.toString(),
   });
@@ -230,7 +224,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
           </IconButton>
         </Tooltip>
         <Tooltip arrow title={isDownloaded ? "Download Complete" : "Download"}>
-          <IconButton color="primary" onClick={downloadFGR(true)}>
+          <IconButton color="primary" onClick={handleDownload}>
             {isDownloaded ? <DownloadDone /> : <Download />}
           </IconButton>
         </Tooltip>
