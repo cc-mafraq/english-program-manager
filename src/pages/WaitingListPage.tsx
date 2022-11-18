@@ -5,7 +5,6 @@ import moment from "moment";
 import React, { useCallback, useState } from "react";
 import { v4 } from "uuid";
 import {
-  ActionsMenu,
   CorrespondenceList,
   CustomCard,
   CustomToolbar,
@@ -54,7 +53,6 @@ export const WaitingListPage = () => {
   const {
     filteredList: filteredWaitingList,
     handleSearchStringChange,
-    searchString,
     setShowActions,
     showActions,
   } = usePageState<WaitingListEntry>({
@@ -119,23 +117,18 @@ export const WaitingListPage = () => {
       <WaitingListCounter />
       <Box position="sticky" top={0} zIndex={5}>
         <CustomToolbar
+          addButtonTooltip="Add Waiting List Entry"
           filter={filter}
           filterComponent={<WaitingListFilter />}
+          handleDialogOpen={handleWLEntryDialogOpen}
           handleSearchStringChange={handleSearchStringChange}
           list={filteredWaitingList}
-          searchString={searchString}
-          setShowActions={setShowActions}
-          showActions={showActions}
-          tooltipObjectName="Waiting List"
-        />
-        <ActionsMenu
-          handleDialogOpen={handleWLEntryDialogOpen}
-          noEditButton
           otherActions={
             <WaitingListActions filteredWaitingList={filteredWaitingList} setScrollToIndex={setScrollToIndex} />
           }
+          setShowActions={setShowActions}
           showActions={showActions}
-          tooltipObjectName="Waiting List Entry"
+          tooltipObjectName="Waiting List"
         />
       </Box>
       <Loading />

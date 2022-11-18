@@ -22,7 +22,6 @@ interface FGRDialogHeaderProps {
   handleDownloadAllClick: () => void;
   handleSearchStringChange: (value: string) => void;
   handleSessionChange: (event: SelectChangeEvent) => void;
-  searchString: string;
   sessionOptions: string[];
 }
 
@@ -33,7 +32,6 @@ export const FGRDialogHeader: React.FC<FGRDialogHeaderProps> = ({
   handleSessionChange,
   sessionOptions,
   handleSearchStringChange,
-  searchString,
 }) => {
   return (
     <>
@@ -56,7 +54,6 @@ export const FGRDialogHeader: React.FC<FGRDialogHeaderProps> = ({
             handleSearchStringChange={handleSearchStringChange}
             noExpand
             placeholder="Search FGRs"
-            searchString={searchString}
             width="100%"
           />
         </Box>

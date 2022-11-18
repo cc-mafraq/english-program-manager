@@ -85,7 +85,6 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({ 
           handleDownloadAllClick={handleDownloadAllClick}
           handleSearchStringChange={handleSearchStringChange}
           handleSessionChange={handleSessionChange}
-          searchString={searchString}
           sessionOptions={sessionOptions}
         />
         {loading && (

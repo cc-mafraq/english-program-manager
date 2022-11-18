@@ -5,7 +5,6 @@ import React, { useCallback } from "react";
 import useState from "react-usestateref";
 import {
   AcademicRecords,
-  ActionsMenu,
   CorrespondenceList,
   CustomCard,
   CustomToolbar,
@@ -14,6 +13,7 @@ import {
   Loading,
   PlacementList,
   StudentCardHeader,
+  StudentDatabaseActions,
   StudentFilter,
   StudentForm,
   StudentInfo,
@@ -54,7 +54,6 @@ export const StudentDatabasePage = () => {
   const {
     filteredList: filteredStudents,
     handleSearchStringChange,
-    searchString,
     setShowActions,
     showActions,
   } = usePageState<Student>({
@@ -123,18 +122,18 @@ export const StudentDatabasePage = () => {
         <CustomToolbar
           filter={filter}
           filterComponent={<StudentFilter />}
+          handleDialogOpen={handleStudentDialogOpen}
           handleSearchStringChange={handleSearchStringChange}
           list={filteredStudents}
-          searchString={searchString}
+          otherActions={
+            <StudentDatabaseActions
+              handleDialogOpen={handleStudentDialogOpen}
+              handleGenerateFGRClick={handleGenerateFGRClick}
+            />
+          }
           setShowActions={setShowActions}
           showActions={showActions}
           tooltipObjectName="Students"
-        />
-        <ActionsMenu
-          handleDialogOpen={handleStudentDialogOpen}
-          handleGenerateFGRClick={handleGenerateFGRClick}
-          showActions={showActions}
-          tooltipObjectName="Student"
         />
       </Box>
       <Loading />

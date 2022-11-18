@@ -2,7 +2,7 @@ import { Close } from "@mui/icons-material";
 import { Box, Button, Dialog, DialogProps, Grid, IconButton, Tooltip, Typography, useTheme } from "@mui/material";
 import { green, grey } from "@mui/material/colors";
 import React, { CSSProperties, PropsWithChildren, useEffect, useState } from "react";
-import { DeepPartial, FieldValues, FormProvider, SubmitHandler, useForm, UseFormProps } from "react-hook-form";
+import { FieldValues, FormProvider, SubmitHandler, useForm, UseFormProps } from "react-hook-form";
 import { useColors } from "../../../hooks";
 import { SPACING } from "../../../services";
 import { FormErrorDialog } from "./FormErrorDialog";
@@ -38,8 +38,9 @@ export const FormDialog = <T extends FieldValues>({
     setOpenErrorDialog(false);
   };
 
+  // useEffect appears to be the best approach here since the defaultValues are initially undefined: https://stackoverflow.com/questions/64306943/defaultvalues-of-react-hook-form-is-not-setting-the-values-to-the-input-fields-i
   useEffect(() => {
-    useFormProps.defaultValues ? reset(useFormProps.defaultValues) : reset({} as T | DeepPartial<T> | undefined);
+    useFormProps.defaultValues ? reset(useFormProps.defaultValues) : reset({} as T);
   }, [reset, useFormProps.defaultValues, open]);
 
   return (
@@ -68,15 +69,9 @@ export const FormDialog = <T extends FieldValues>({
             <Box sx={stickySubmit ? { bottom: 10, position: "fixed", zIndex: 1 } : undefined}>
               <Button
                 className="update-button"
-                onClick={methods.handleSubmit(
-                  (data, e) => {
-                    onSubmit(data, e);
-                    reset({} as T | DeepPartial<T> | undefined);
-                  },
-                  () => {
-                    setOpenErrorDialog(true);
-                  },
-                )}
+                onClick={methods.handleSubmit(onSubmit, () => {
+                  setOpenErrorDialog(true);
+                })}
                 sx={{
                   "&:hover": {
                     backgroundColor: green[900],

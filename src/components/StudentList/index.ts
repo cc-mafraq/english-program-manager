@@ -4,5 +4,6 @@ export * from "./Image";
 export * from "./PlacementList";
 export * from "./ProgressBox";
 export * from "./StudentCardHeader";
+export * from "./StudentDatabaseActions";
 export * from "./StudentInfo";
 export * from "./WithdrawButton";
