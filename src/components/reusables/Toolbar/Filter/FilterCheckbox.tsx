@@ -1,49 +1,27 @@
 import { Checkbox, FormControlLabel } from "@mui/material";
-import { cloneDeep, find, get, includes, isEmpty, remove, toString } from "lodash";
-import React, { useEffect, useState } from "react";
+import { cloneDeep, find, get, isEmpty, remove, toString } from "lodash";
+import React from "react";
 import { FilterValue } from "../../../../interfaces";
 import { FilterField } from "../../../../services";
 
 interface FilterCheckBoxProps<T> {
+  checked: boolean;
   filter: FilterValue<T>[];
   filterField: FilterField<T>;
-  ignoreValueMappings?: boolean;
   label: unknown;
   setFilter: (filter: FilterValue<T>[]) => void;
+  value: string | boolean;
 }
-
-interface Mapping {
-  [key: string]: unknown;
-}
-
-const valueMappings: Mapping = { Female: "F", Male: "M", No: false, Yes: true };
 
 export const FilterCheckbox = <T,>({
+  checked,
   label,
   filterField,
-  ignoreValueMappings,
   filter,
   setFilter,
+  value,
 }: FilterCheckBoxProps<T>) => {
-  const value =
-    !ignoreValueMappings && includes(Object.keys(valueMappings), label) ? valueMappings[label as string] : label;
-  const [checked, setChecked] = useState(
-    includes(
-      find(filter, (fieldFilter) => {
-        return fieldFilter.fieldPath === filterField.path;
-      })?.values,
-      value,
-    ),
-  );
-
-  useEffect(() => {
-    if (checked && !filter?.length) {
-      setChecked(false);
-    }
-  }, [checked, filter]);
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
     const filterCopy = cloneDeep(filter);
     const prevFieldFilter = find(filterCopy, (fieldFilter) => {
       return fieldFilter.fieldPath === filterField.path;
@@ -78,8 +56,4 @@ export const FilterCheckbox = <T,>({
       sx={{ display: "flex", marginTop: -0.5 }}
     />
   );
-};
-
-FilterCheckbox.defaultProps = {
-  ignoreValueMappings: false,
 };

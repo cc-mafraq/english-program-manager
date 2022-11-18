@@ -1,10 +1,16 @@
 import { Box, Button, Drawer, Typography, useTheme } from "@mui/material";
-import { map, sortBy, uniq } from "lodash";
+import { find, includes, map, sortBy, uniq } from "lodash";
 import React from "react";
 import { FilterCheckbox } from ".";
 import { useColors } from "../../../../hooks";
 import { FilterValue } from "../../../../interfaces";
 import { FilterField } from "../../../../services";
+
+interface Mapping {
+  [key: string]: unknown;
+}
+
+const valueMappings: Mapping = { Female: "F", Male: "M", No: false, Yes: true };
 
 interface FilterDrawerProps<T> {
   anchorEl?: HTMLButtonElement | null;
@@ -74,14 +80,25 @@ export const FilterDrawer = <T,>({
                 {field.name}
               </Typography>
               {map(field.values ? field.values : sortBy(uniq(map(data, field.path))), (val) => {
+                const value =
+                  !field.ignoreValueMappings && includes(Object.keys(valueMappings), val)
+                    ? valueMappings[val as string]
+                    : val;
+                const checked = includes(
+                  find(filter, (fieldFilter) => {
+                    return fieldFilter.fieldPath === field.path;
+                  })?.values,
+                  value,
+                );
                 return (
                   <FilterCheckbox
                     key={`filter-field-${field.name}-${val}`}
+                    checked={checked}
                     filter={filter}
                     filterField={field}
-                    ignoreValueMappings={field.ignoreValueMappings}
                     label={val}
                     setFilter={setFilter}
+                    value={value}
                   />
                 );
               })}
