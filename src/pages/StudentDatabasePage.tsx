@@ -137,30 +137,7 @@ export const StudentDatabasePage = () => {
           tooltipObjectName="Student"
         />
       </Box>
-      {openFGRDialog ? (
-        <FinalGradeReportDialog handleDialogClose={handleFGRDialogClose} open={openFGRDialog} />
-      ) : (
-        <></>
-      )}
       <Loading />
-      <FormDialog
-        dialogProps={{
-          fullScreen: true,
-          sx: {
-            width: "100%",
-          },
-        }}
-        handleDialogClose={handleStudentDialogClose}
-        onSubmit={studentFormOnSubmit}
-        open={openStudentDialog}
-        stickySubmit
-        useFormProps={{
-          defaultValues: setPrimaryNumberBooleanArray(selectedStudent, "phone.phoneNumbers"),
-          resolver: yupResolver(studentFormSchema),
-        }}
-      >
-        <StudentForm />
-      </FormDialog>
       <VirtualizedList defaultSize={600} deps={[role]} idPath="epId" listData={filteredStudents}>
         <CustomCard
           data={emptyStudent}
@@ -183,6 +160,25 @@ export const StudentDatabasePage = () => {
           ]}
         />
       </VirtualizedList>
+      <FormDialog
+        dialogProps={{
+          fullScreen: true,
+          sx: {
+            width: "100%",
+          },
+        }}
+        handleDialogClose={handleStudentDialogClose}
+        onSubmit={studentFormOnSubmit}
+        open={openStudentDialog}
+        stickySubmit
+        useFormProps={{
+          defaultValues: setPrimaryNumberBooleanArray(selectedStudent, "phone.phoneNumbers"),
+          resolver: yupResolver(studentFormSchema),
+        }}
+      >
+        <StudentForm />
+      </FormDialog>
+      <FinalGradeReportDialog handleDialogClose={handleFGRDialogClose} open={openFGRDialog} />
     </>
   );
 };
