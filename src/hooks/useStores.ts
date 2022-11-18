@@ -96,3 +96,21 @@ export const useAppStore = create<AppState>()(
     };
   }),
 );
+
+interface FinalGradeReportState {
+  setShouldDownload: (shouldDownload: FinalGradeReportState["shouldDownload"]) => void;
+  shouldDownload: boolean;
+}
+
+export const useFinalGradeReportStore = create<FinalGradeReportState>()(
+  subscribeWithSelector((set) => {
+    return {
+      setShouldDownload: (shouldDownload: FinalGradeReportState["shouldDownload"]) => {
+        return set(() => {
+          return { shouldDownload };
+        });
+      },
+      shouldDownload: false,
+    };
+  }),
+);

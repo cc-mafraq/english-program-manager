@@ -1,7 +1,6 @@
 import { Close } from "@mui/icons-material";
 import { Box, Button, Dialog, DialogProps, Grid, IconButton, Tooltip, Typography, useTheme } from "@mui/material";
 import { green, grey } from "@mui/material/colors";
-import { isEmpty } from "lodash";
 import React, { CSSProperties, PropsWithChildren, useEffect, useState } from "react";
 import { DeepPartial, FieldValues, FormProvider, SubmitHandler, useForm, UseFormProps } from "react-hook-form";
 import { useColors } from "../../../hooks";
@@ -34,10 +33,6 @@ export const FormDialog = <T extends FieldValues>({
   const { reset } = methods;
 
   const [openErrorDialog, setOpenErrorDialog] = useState(false);
-
-  useEffect(() => {
-    !isEmpty(methods.formState.errors) && methods.formState.isSubmitted && setOpenErrorDialog(true);
-  }, [methods.formState.errors, methods.formState.isSubmitted]);
 
   const closeErrorDialog = () => {
     setOpenErrorDialog(false);
@@ -73,10 +68,15 @@ export const FormDialog = <T extends FieldValues>({
             <Box sx={stickySubmit ? { bottom: 10, position: "fixed", zIndex: 1 } : undefined}>
               <Button
                 className="update-button"
-                onClick={methods.handleSubmit((data, e) => {
-                  onSubmit(data, e);
-                  reset({} as T | DeepPartial<T> | undefined);
-                })}
+                onClick={methods.handleSubmit(
+                  (data, e) => {
+                    onSubmit(data, e);
+                    reset({} as T | DeepPartial<T> | undefined);
+                  },
+                  () => {
+                    setOpenErrorDialog(true);
+                  },
+                )}
                 sx={{
                   "&:hover": {
                     backgroundColor: green[900],

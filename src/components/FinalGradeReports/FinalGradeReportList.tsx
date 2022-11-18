@@ -20,7 +20,6 @@ interface FinalGradeReportListProps {
   scale: number;
   searchString: string;
   session: Student["initialSession"];
-  shouldDownload: boolean;
   width: number;
 }
 
@@ -31,7 +30,6 @@ export const FinalGradeReportList: React.FC<FinalGradeReportListProps> = ({
   scale,
   searchString,
   session,
-  shouldDownload,
   width,
 }) => {
   const students = useStudentStore((state) => {
@@ -72,7 +70,6 @@ export const FinalGradeReportList: React.FC<FinalGradeReportListProps> = ({
               scale={scale}
               session={session}
               sessionOptions={sessionOptions}
-              shouldDownload={shouldDownload}
               studentAcademicRecord={fgrStudent}
               width={width}
               zip={zip}

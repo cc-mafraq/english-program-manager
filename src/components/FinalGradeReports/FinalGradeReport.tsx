@@ -6,6 +6,7 @@ import JSZip from "jszip";
 import { countBy, isUndefined, map, nth, replace } from "lodash";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FGRGridRow, FGRGridRowProps, FGRHeader } from ".";
+import { useFinalGradeReportStore } from "../../hooks";
 import { FinalResult, lightPrimaryColor, Student } from "../../interfaces";
 import {
   FinalGradeReportFormValues,
@@ -24,7 +25,6 @@ interface FinalGradeReportProps {
   scale: number;
   session: Student["initialSession"];
   sessionOptions: Student["initialSession"][];
-  shouldDownload: boolean;
   studentAcademicRecord: StudentAcademicRecordIndex;
   width: number;
   zip: JSZip;
@@ -40,7 +40,6 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
   session,
   sessionOptions,
   studentAcademicRecord,
-  shouldDownload,
   scale,
   width,
   zip,
@@ -86,8 +85,8 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
     setIsDownloaded(true);
   }, [downloadFGR, fileName]);
 
-  useEffect(() => {
-    const downloadAllCalled = async () => {
+  const downloadAllCalled = useCallback(
+    async (shouldDownload: boolean) => {
       if (!shouldDownload) return;
       const img = await downloadFGR();
       if (!img) return;
@@ -95,9 +94,18 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
       await zip.file(fileName, imgClean, { base64: true });
       await handleDownloadFinished(studentAcademicRecord);
       setIsDownloaded(true);
+    },
+    [downloadFGR, fileName, handleDownloadFinished, studentAcademicRecord, zip],
+  );
+
+  useEffect(() => {
+    const unsub = useFinalGradeReportStore.subscribe((state) => {
+      return state.shouldDownload;
+    }, downloadAllCalled);
+    return () => {
+      unsub();
     };
-    downloadAllCalled();
-  }, [downloadFGR, fileName, handleDownloadFinished, shouldDownload, studentAcademicRecord, zip]);
+  }, [downloadAllCalled]);
 
   const [fgrValues, setFgrValues] = useState<FinalGradeReportFormValues>({
     attendance: academicRecord?.attendance !== undefined ? `${academicRecord.attendance}%` : "Not Applicable",

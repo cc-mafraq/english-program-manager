@@ -3,7 +3,7 @@ import { nth, pull } from "lodash";
 import React, { useCallback, useState } from "react";
 import ReactLoading from "react-loading";
 import { FGRDialogHeader, FinalGradeReportList } from ".";
-import { useColors, useStudentStore } from "../../hooks";
+import { useColors, useFinalGradeReportStore, useStudentStore } from "../../hooks";
 import { getAllSessions, getFGRStudents, StudentAcademicRecordIndex } from "../../services";
 
 interface FinalGradeReportDialogProps {
@@ -14,6 +14,9 @@ interface FinalGradeReportDialogProps {
 export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({ handleDialogClose, open }) => {
   const students = useStudentStore((state) => {
     return state.students;
+  });
+  const setShouldDownload = useFinalGradeReportStore((state) => {
+    return state.setShouldDownload;
   });
 
   const { popoverColor } = useColors();
@@ -27,7 +30,6 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({ 
   const [fgrStudents, setFGRStudents] = useState<StudentAcademicRecordIndex[]>(
     getFGRStudents(students, fgrSession),
   );
-  const [shouldDownload, setShouldDownload] = useState(false);
   const [loading, setLoading] = useState(false);
   const [searchString, setSearchString] = useState("");
   const theme = useTheme();
@@ -43,12 +45,12 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({ 
   const handleDownloadAllClick = useCallback(() => {
     setLoading(true);
     setShouldDownload(true);
-  }, []);
+  }, [setShouldDownload]);
 
   const handleDownloadAllComplete = useCallback(() => {
     setLoading(false);
     setShouldDownload(false);
-  }, []);
+  }, [setShouldDownload]);
 
   const handleSessionChange = useCallback(
     (event: SelectChangeEvent) => {
@@ -98,7 +100,6 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({ 
           scale={scale}
           searchString={searchString}
           session={fgrSession}
-          shouldDownload={shouldDownload}
           width={fgrWidth}
         />
       </Box>
