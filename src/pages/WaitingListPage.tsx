@@ -134,7 +134,6 @@ export const WaitingListPage = () => {
       <Loading />
       <VirtualizedList
         defaultSize={275}
-        deps={[role]}
         idPath="id"
         listData={filteredWaitingList}
         scrollToIndex={scrollToIndex}

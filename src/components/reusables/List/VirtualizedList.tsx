@@ -7,7 +7,6 @@ import { useWindowResize } from "../../../hooks";
 interface VirtualizedListProps<T> {
   children: React.ReactNode;
   defaultSize: number;
-  deps: unknown[];
   idPath: string;
   listData: T[];
   scrollToIndex?: number;
@@ -20,7 +19,6 @@ export const VirtualizedList = <T,>({
   defaultSize,
   scrollToIndex,
   setScrollToIndex,
-  deps,
   children,
 }: VirtualizedListProps<T>) => {
   const listRef = useRef<VariableSizeList>(null);
@@ -50,33 +48,27 @@ export const VirtualizedList = <T,>({
     setScrollToIndex && setScrollToIndex(undefined);
   }, [scrollToIndex, setScrollToIndex]);
 
-  const Row = useCallback(
-    // eslint-disable-next-line react/no-unused-prop-types
-    ({ data, index, style }: { data: T[]; index: number; style: React.CSSProperties | undefined }) => {
-      const id = get(data[index], idPath);
-      return first(
-        React.Children.map(children, (child) => {
-          if (React.isValidElement(child)) {
-            return React.cloneElement(child, {
-              data: data[index],
-              id,
-              index,
-              key: id,
-              setSize,
-              setTabValue,
-              style,
-              tabValue: get(tabValues.current, id) || 0,
-              windowWidth,
-            } as Partial<unknown> & Attributes);
-          }
-          return child;
-        }),
-      );
-    },
-    // disable exhaustive deps because handleEditStudentClick causes StudentCard to unmount and lose tabValue state
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [idPath, setSize, windowWidth, tabValues, ...deps],
-  );
+  const Row = ({ data, index, style }: { data: T[]; index: number; style: React.CSSProperties | undefined }) => {
+    const id = get(data[index], idPath);
+    return first(
+      React.Children.map(children, (child) => {
+        if (React.isValidElement(child)) {
+          return React.cloneElement(child, {
+            data: data[index],
+            id,
+            index,
+            key: id,
+            setSize,
+            setTabValue,
+            style,
+            tabValue: get(tabValues.current, id) || 0,
+            windowWidth,
+          } as Partial<unknown> & Attributes);
+        }
+        return child;
+      }),
+    );
+  };
 
   return (
     <AutoSizer>
