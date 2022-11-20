@@ -26,7 +26,7 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({ 
 
   const sessionOptions = getAllSessions(students);
 
-  const [fgrSession, setFGRSession] = useState(nth(sessionOptions, 1) || "Sp I 21");
+  const [fgrSession, setFGRSession] = useState(nth(sessionOptions, 1) || "Fa I 22");
   const [fgrStudents, setFGRStudents] = useState<StudentAcademicRecordIndex[]>(
     getFGRStudents(students, fgrSession),
   );
