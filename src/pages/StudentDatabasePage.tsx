@@ -1,6 +1,4 @@
-import { yupResolver } from "@hookform/resolvers/yup";
 import { Box } from "@mui/material";
-import { isEmpty, omit } from "lodash";
 import React, { useCallback } from "react";
 import useState from "react-usestateref";
 import {
@@ -9,39 +7,23 @@ import {
   CustomCard,
   CustomToolbar,
   FinalGradeReportDialog,
-  FormDialog,
   Loading,
   PlacementList,
   StudentCardHeader,
   StudentDatabaseActions,
   StudentFilter,
-  StudentForm,
+  StudentFormDialog,
   StudentInfo,
   VirtualizedList,
 } from "../components";
 import { StudentCardImage } from "../components/StudentList/StudentCardImage";
-import { useAppStore, useFormDialog, usePageState, useStudentStore } from "../hooks";
-import { emptyStudent, Status, Student } from "../interfaces";
-import {
-  deleteImage,
-  deleteStudentData,
-  removeNullFromObject,
-  searchStudents,
-  setData,
-  setPrimaryNumberBooleanArray,
-  sortStudents,
-  studentFormSchema,
-} from "../services";
+import { useAppStore, usePageState, useStudentFormStore, useStudentStore } from "../hooks";
+import { emptyStudent, Student } from "../interfaces";
+import { searchStudents, sortStudents } from "../services";
 
 export const StudentDatabasePage = () => {
   const setStudents = useStudentStore((state) => {
     return state.setStudents;
-  });
-  const selectedStudent = useStudentStore((state) => {
-    return state.selectedStudent;
-  });
-  const setSelectedStudent = useStudentStore((state) => {
-    return state.setSelectedStudent;
   });
   const filter = useStudentStore((state) => {
     return state.filter;
@@ -49,6 +31,14 @@ export const StudentDatabasePage = () => {
   const role = useAppStore((state) => {
     return state.role;
   });
+  const setOpen = useStudentFormStore((state) => {
+    return state.setOpen;
+  });
+
+  const handleStudentDialogOpen = useCallback(() => {
+    setOpen(true);
+  }, [setOpen]);
+
   const [openFGRDialog, setOpenFGRDialog] = useState(false);
   const isAdminOrFaculty = role === "admin" || role === "faculty";
   const {
@@ -66,12 +56,6 @@ export const StudentDatabasePage = () => {
     sortFn: sortStudents,
   });
 
-  const {
-    handleDialogClose: handleStudentDialogClose,
-    handleDialogOpen: handleStudentDialogOpen,
-    openDialog: openStudentDialog,
-  } = useFormDialog({ setSelectedData: setSelectedStudent });
-
   const handleGenerateFGRClick = useCallback(() => {
     setOpenFGRDialog(true);
   }, []);
@@ -79,42 +63,6 @@ export const StudentDatabasePage = () => {
   const handleFGRDialogClose = useCallback(() => {
     setOpenFGRDialog(false);
   }, []);
-
-  const studentFormOnSubmit = useCallback(
-    (data: Student) => {
-      const primaryPhone = data.phone.phoneNumbers[data.phone.primaryPhone as number]?.number;
-      if (primaryPhone) {
-        data.phone.primaryPhone = primaryPhone;
-      } else {
-        // eslint-disable-next-line no-alert
-        alert("You must choose a primary phone number.");
-        return;
-      }
-      if (isEmpty(data.academicRecords) && data.status.currentStatus === Status.NEW) {
-        data.academicRecords = [
-          {
-            level: data.currentLevel,
-            session: data.initialSession,
-          },
-        ];
-      }
-      if (!data.imageName && selectedStudent?.imageName) {
-        deleteImage(selectedStudent, "imageName", true);
-      }
-      if (!data.covidVaccine.imageName && selectedStudent?.covidVaccine.imageName) {
-        deleteImage(selectedStudent, "covidVaccine.imageName", true);
-      }
-      const dataNoSuspect = data.covidVaccine.suspectedFraud
-        ? data
-        : omit(data, "covidVaccine.suspectedFraudReason");
-      const dataNoNull = removeNullFromObject(dataNoSuspect) as Student;
-      setData(dataNoNull, "students", "epId");
-      dataNoNull.epId !== selectedStudent?.epId && selectedStudent && deleteStudentData(selectedStudent);
-      !selectedStudent && handleSearchStringChange(dataNoNull.epId.toString());
-      handleStudentDialogClose();
-    },
-    [handleSearchStringChange, handleStudentDialogClose, selectedStudent],
-  );
 
   return (
     <>
@@ -159,24 +107,7 @@ export const StudentDatabasePage = () => {
           ]}
         />
       </VirtualizedList>
-      <FormDialog
-        dialogProps={{
-          fullScreen: true,
-          sx: {
-            width: "100%",
-          },
-        }}
-        handleDialogClose={handleStudentDialogClose}
-        onSubmit={studentFormOnSubmit}
-        open={openStudentDialog}
-        stickySubmit
-        useFormProps={{
-          defaultValues: setPrimaryNumberBooleanArray(selectedStudent, "phone.phoneNumbers"),
-          resolver: yupResolver(studentFormSchema),
-        }}
-      >
-        <StudentForm />
-      </FormDialog>
+      <StudentFormDialog handleSearchStringChange={handleSearchStringChange} />
       <FinalGradeReportDialog handleDialogClose={handleFGRDialogClose} open={openFGRDialog} />
     </>
   );

@@ -63,38 +63,40 @@ export const FormDialog = <T extends FieldValues>({
             <Close />
           </IconButton>
         </Tooltip>
-        <FormProvider {...methods}>
-          <form>
-            {children}
-            <Box sx={stickySubmit ? { bottom: 10, position: "fixed", zIndex: 1 } : undefined}>
-              <Button
-                className="update-button"
-                onClick={methods.handleSubmit(onSubmit, () => {
-                  setOpenErrorDialog(true);
-                })}
-                sx={{
-                  "&:hover": {
-                    backgroundColor: green[900],
-                  },
-                  backgroundColor: green[800],
-                  color: theme.palette.mode === "light" ? "white" : grey[200],
-                  marginTop: SPACING,
-                }}
-                type="submit"
-                variant="contained"
-              >
-                Submit
-              </Button>
-            </Box>
-            <Grid item sx={{ float: stickySubmit ? "right" : undefined }}>
-              <Typography variant="caption">
-                Tip: use <b>tab</b> and <b>shift + tab</b> to navigate, <b>space bar</b> to select checkboxes,{" "}
-                <b>arrow keys</b> to select radio buttons, and <b>return</b> to submit and click buttons.
-              </Typography>
-            </Grid>
-          </form>
-          <FormErrorDialog handleDialogClose={closeErrorDialog} open={openErrorDialog} />
-        </FormProvider>
+        {open && (
+          <FormProvider {...methods}>
+            <form>
+              {children}
+              <Box sx={stickySubmit ? { bottom: 10, position: "fixed", zIndex: 1 } : undefined}>
+                <Button
+                  className="update-button"
+                  onClick={methods.handleSubmit(onSubmit, () => {
+                    setOpenErrorDialog(true);
+                  })}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: green[900],
+                    },
+                    backgroundColor: green[800],
+                    color: theme.palette.mode === "light" ? "white" : grey[200],
+                    marginTop: SPACING,
+                  }}
+                  type="submit"
+                  variant="contained"
+                >
+                  Submit
+                </Button>
+              </Box>
+              <Grid item sx={{ float: stickySubmit ? "right" : undefined }}>
+                <Typography variant="caption">
+                  Tip: use <b>tab</b> and <b>shift + tab</b> to navigate, <b>space bar</b> to select checkboxes,{" "}
+                  <b>arrow keys</b> to select radio buttons, and <b>return</b> to submit and click buttons.
+                </Typography>
+              </Grid>
+            </form>
+            <FormErrorDialog handleDialogClose={closeErrorDialog} open={openErrorDialog} />
+          </FormProvider>
+        )}
       </Box>
     </Dialog>
   );

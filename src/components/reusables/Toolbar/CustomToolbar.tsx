@@ -1,22 +1,10 @@
 import { FilterList, MoreHoriz } from "@mui/icons-material";
 import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography, useTheme } from "@mui/material";
-import React, { Attributes, Dispatch, SetStateAction } from "react";
+import React, { Attributes, Dispatch, SetStateAction, useCallback } from "react";
 import { ActionsMenu } from "../..";
 import { saveLocal, useAppStore, useColors } from "../../../hooks";
 import { FilterValue } from "../../../interfaces";
 import { Searchbar } from "./Searchbar";
-
-const handlePopoverClick = (setFn: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>) => {
-  return (event: React.MouseEvent<HTMLButtonElement>) => {
-    setFn(event.currentTarget);
-  };
-};
-
-const handlePopoverClose = (setFn: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>) => {
-  return () => {
-    setFn(null);
-  };
-};
 
 interface CustomToolbarProps<T> {
   addButtonTooltip?: string;
@@ -51,6 +39,14 @@ export const CustomToolbar = <T,>({
   const theme = useTheme();
   const tooltipObjectNameSafe = tooltipObjectName ? ` ${tooltipObjectName}` : "";
 
+  const handlePopoverClick = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
+    setFilterAnchorEl(event.currentTarget);
+  }, []);
+
+  const handlePopoverClose = useCallback(() => {
+    setFilterAnchorEl(null);
+  }, []);
+
   return (
     <>
       <AppBar color="default" position="sticky">
@@ -82,7 +78,7 @@ export const CustomToolbar = <T,>({
               />
               <Tooltip arrow title={`Filter${tooltipObjectNameSafe}`}>
                 <IconButton
-                  onClick={handlePopoverClick(setFilterAnchorEl)}
+                  onClick={handlePopoverClick}
                   size="small"
                   sx={{
                     "&:hover": {
@@ -103,7 +99,7 @@ export const CustomToolbar = <T,>({
               {React.isValidElement(filterComponent) &&
                 React.cloneElement(filterComponent, {
                   anchorEl: filterAnchorEl,
-                  handleClose: handlePopoverClose(setFilterAnchorEl),
+                  handleClose: handlePopoverClose,
                   tooltipObjectName,
                 } as Partial<unknown> & Attributes)}
             </Box>
