@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { green as materialGreen, red as materialRed } from "@mui/material/colors";
 import { findIndex, forOwn, map, reverse } from "lodash";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { FormAcademicRecordsItem, FormDialog, LabeledContainer, LabeledText, ProgressBox } from "..";
 import { useAppStore, useColors, useStudentStore } from "../../hooks";
 import { AcademicRecord, emptyAcademicRecord, FinalResult, GenderedLevel, Grade, Student } from "../../interfaces";
@@ -23,7 +23,6 @@ import {
   removeNullFromObject,
   setData,
   SPACING,
-  StudentProgress,
 } from "../../services";
 
 interface AcademicRecordsProps {
@@ -81,16 +80,14 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
   const role = useAppStore((state) => {
     return state.role;
   });
-  const [progress, setProgress] = useState<StudentProgress>({});
+  const progress = useMemo(() => {
+    return getProgress(student, getAllSessions(students));
+  }, [student, students]);
   const theme = useTheme();
   const { iconColor } = useColors();
   const [open, setOpen] = useState(false);
   const [selectedAcademicRecord, setSelectedAcademicRecord] = useState<AcademicRecord | null>(null);
   const { red, green } = useColors();
-
-  useEffect(() => {
-    setProgress(getProgress(student, getAllSessions(students)));
-  }, [student, students]);
 
   const handleDialogOpen = useCallback(() => {
     setOpen(true);

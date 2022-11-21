@@ -1,12 +1,10 @@
 import { Box, Typography, TypographyProps, useTheme } from "@mui/material";
-import { getAuth } from "firebase/auth";
 import { get, keys, map, round, sortBy } from "lodash";
 import React, { useEffect } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { useAppStore, useStatistics, useStudentStore } from "../hooks";
 import { levels } from "../interfaces";
-import { app, getAllSessions, sortObjectByValues } from "../services";
+import { getAllSessions, sortObjectByValues } from "../services";
 
 const INDENT = 3;
 
@@ -17,8 +15,6 @@ export const StatisticsPage = () => {
   const role = useAppStore((state) => {
     return state.role;
   });
-  const auth = getAuth(app);
-  const [user, loading] = useAuthState(auth);
   const navigate = useNavigate();
 
   const theme = useTheme();
@@ -28,10 +24,8 @@ export const StatisticsPage = () => {
     marginTop: 1,
   };
   useEffect(() => {
-    if (loading) return;
-    if (!user) navigate("/", { replace: true });
     if (!statistics.totalRegistered) navigate("/epd", { replace: true });
-  }, [user, loading, navigate, statistics]);
+  }, [navigate, statistics]);
 
   return statistics.totalRegistered && (role === "admin" || role === "faculty") ? (
     <Box marginLeft="10%" paddingBottom={5}>

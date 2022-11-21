@@ -1,6 +1,6 @@
 import { Box, BoxProps, CardMedia, Grid, SxProps, useTheme } from "@mui/material";
-import { get, omit } from "lodash";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { get, isEmpty, omit } from "lodash";
+import React, { useCallback, useMemo, useState } from "react";
 import ReactLoading from "react-loading";
 import { AddImageButton } from ".";
 import { FormImageActions } from "..";
@@ -37,18 +37,13 @@ export const Image: React.FC<ImageProps> = ({
   isForm,
   xs,
 }) => {
-  const [img, setImg] = useState<string | undefined>("");
-  const [loading, setLoading] = useState(false);
   const imageName = get(student, imagePath);
+  const [img, setImg] = useState<string | undefined>(imageName);
+  const [loading, setLoading] = useState(!isEmpty(imageName));
   const theme = useTheme();
   const role = useAppStore((state) => {
     return state.role;
   });
-
-  useEffect(() => {
-    imageName ? setLoading(true) : setLoading(false);
-    setImg(imageName);
-  }, [imageName]);
 
   const setImageState = useCallback((image: string | undefined) => {
     setImg(image);
