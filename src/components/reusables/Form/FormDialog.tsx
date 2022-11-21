@@ -11,6 +11,7 @@ interface FormDialogProps<T extends FieldValues> {
   dialogProps?: Partial<DialogProps>;
   handleDialogClose: () => void;
   onSubmit: SubmitHandler<T>;
+  onlyLoadWhenOpen?: boolean;
   open: boolean;
   paperStyleProps?: CSSProperties;
   stickySubmit?: boolean;
@@ -26,6 +27,7 @@ export const FormDialog = <T extends FieldValues>({
   paperStyleProps,
   children,
   stickySubmit,
+  onlyLoadWhenOpen,
 }: PropsWithChildren<FormDialogProps<T>>) => {
   const { popoverColor } = useColors();
   const theme = useTheme();
@@ -63,7 +65,7 @@ export const FormDialog = <T extends FieldValues>({
             <Close />
           </IconButton>
         </Tooltip>
-        {open && (
+        {(!onlyLoadWhenOpen || open) && (
           <FormProvider {...methods}>
             <form>
               {children}
@@ -104,6 +106,7 @@ export const FormDialog = <T extends FieldValues>({
 
 FormDialog.defaultProps = {
   dialogProps: undefined,
+  onlyLoadWhenOpen: undefined,
   paperStyleProps: undefined,
   stickySubmit: undefined,
 };

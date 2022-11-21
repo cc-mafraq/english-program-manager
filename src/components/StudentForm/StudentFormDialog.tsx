@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { isEmpty, omit } from "lodash";
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useStudentFormStore, useStudentStore } from "../../hooks";
 import { Status, Student } from "../../interfaces";
 import {
@@ -17,6 +17,11 @@ import { StudentForm } from "./StudentForm";
 interface StudentFormDialogProps {
   handleSearchStringChange: (value: string) => void;
 }
+
+const StudentFormMemo: React.FC = React.memo(() => {
+  return <StudentForm />;
+});
+StudentFormMemo.displayName = "Student Form";
 
 export const StudentFormDialog: React.FC<StudentFormDialogProps> = ({ handleSearchStringChange }) => {
   const selectedStudent = useStudentStore((state) => {
@@ -73,24 +78,33 @@ export const StudentFormDialog: React.FC<StudentFormDialogProps> = ({ handleSear
     [handleSearchStringChange, handleStudentDialogClose, selectedStudent],
   );
 
+  const dialogProps = useMemo(() => {
+    return {
+      fullScreen: true,
+      sx: {
+        width: "100%",
+      },
+    };
+  }, []);
+
+  const useFormProps = useMemo(() => {
+    return {
+      defaultValues: setPrimaryNumberBooleanArray(selectedStudent, "phone.phoneNumbers"),
+      resolver: yupResolver(studentFormSchema),
+    };
+  }, [selectedStudent]);
+
   return (
-    <FormDialog
-      dialogProps={{
-        fullScreen: true,
-        sx: {
-          width: "100%",
-        },
-      }}
+    <FormDialog<Student>
+      dialogProps={dialogProps}
       handleDialogClose={handleStudentDialogClose}
+      onlyLoadWhenOpen
       onSubmit={studentFormOnSubmit}
       open={open}
       stickySubmit
-      useFormProps={{
-        defaultValues: setPrimaryNumberBooleanArray(selectedStudent, "phone.phoneNumbers"),
-        resolver: yupResolver(studentFormSchema),
-      }}
+      useFormProps={useFormProps}
     >
-      <StudentForm />
+      <StudentFormMemo />
     </FormDialog>
   );
 };

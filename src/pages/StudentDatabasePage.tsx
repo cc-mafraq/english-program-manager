@@ -1,6 +1,5 @@
 import { Box } from "@mui/material";
 import React, { useCallback } from "react";
-import useState from "react-usestateref";
 import {
   AcademicRecords,
   CorrespondenceList,
@@ -17,7 +16,13 @@ import {
   VirtualizedList,
 } from "../components";
 import { StudentCardImage } from "../components/StudentList/StudentCardImage";
-import { useAppStore, usePageState, useStudentFormStore, useStudentStore } from "../hooks";
+import {
+  useAppStore,
+  useFinalGradeReportStore,
+  usePageState,
+  useStudentFormStore,
+  useStudentStore,
+} from "../hooks";
 import { emptyStudent, Student } from "../interfaces";
 import { searchStudents, sortStudents } from "../services";
 
@@ -31,15 +36,21 @@ export const StudentDatabasePage = () => {
   const role = useAppStore((state) => {
     return state.role;
   });
-  const setOpen = useStudentFormStore((state) => {
+  const setStudentDialogOpen = useStudentFormStore((state) => {
+    return state.setOpen;
+  });
+  const setFGRDialogOpen = useFinalGradeReportStore((state) => {
     return state.setOpen;
   });
 
   const handleStudentDialogOpen = useCallback(() => {
-    setOpen(true);
-  }, [setOpen]);
+    setStudentDialogOpen(true);
+  }, [setStudentDialogOpen]);
 
-  const [openFGRDialog, setOpenFGRDialog] = useState(false);
+  const handleFGRDialogOpen = useCallback(() => {
+    setFGRDialogOpen(true);
+  }, [setFGRDialogOpen]);
+
   const isAdminOrFaculty = role === "admin" || role === "faculty";
   const {
     filteredList: filteredStudents,
@@ -56,14 +67,6 @@ export const StudentDatabasePage = () => {
     sortFn: sortStudents,
   });
 
-  const handleGenerateFGRClick = useCallback(() => {
-    setOpenFGRDialog(true);
-  }, []);
-
-  const handleFGRDialogClose = useCallback(() => {
-    setOpenFGRDialog(false);
-  }, []);
-
   return (
     <>
       <Box position="sticky" top={0} zIndex={5}>
@@ -76,7 +79,7 @@ export const StudentDatabasePage = () => {
           otherActions={
             <StudentDatabaseActions
               handleDialogOpen={handleStudentDialogOpen}
-              handleGenerateFGRClick={handleGenerateFGRClick}
+              handleGenerateFGRClick={handleFGRDialogOpen}
             />
           }
           setShowActions={setShowActions}
@@ -108,7 +111,7 @@ export const StudentDatabasePage = () => {
         />
       </VirtualizedList>
       <StudentFormDialog handleSearchStringChange={handleSearchStringChange} />
-      <FinalGradeReportDialog handleDialogClose={handleFGRDialogClose} open={openFGRDialog} />
+      <FinalGradeReportDialog />
     </>
   );
 };

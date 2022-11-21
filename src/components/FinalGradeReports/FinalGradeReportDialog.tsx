@@ -6,17 +6,18 @@ import { FGRDialogHeader, FinalGradeReportList } from ".";
 import { useColors, useFinalGradeReportStore, useStudentStore } from "../../hooks";
 import { getAllSessions, getFGRStudents, StudentAcademicRecordIndex } from "../../services";
 
-interface FinalGradeReportDialogProps {
-  handleDialogClose: () => void;
-  open: boolean;
-}
-
-export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({ handleDialogClose, open }) => {
+export const FinalGradeReportDialog: React.FC = () => {
   const students = useStudentStore((state) => {
     return state.students;
   });
   const setShouldDownload = useFinalGradeReportStore((state) => {
     return state.setShouldDownload;
+  });
+  const open = useFinalGradeReportStore((state) => {
+    return state.open;
+  });
+  const setOpen = useFinalGradeReportStore((state) => {
+    return state.setOpen;
   });
 
   const { popoverColor } = useColors();
@@ -33,6 +34,10 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({ 
   const [loading, setLoading] = useState(false);
   const [searchString, setSearchString] = useState("");
   const theme = useTheme();
+
+  const handleDialogClose = useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
 
   const handleRemoveFGR = useCallback(
     (studentAcademicRecord: StudentAcademicRecordIndex) => {
@@ -78,30 +83,32 @@ export const FinalGradeReportDialog: React.FC<FinalGradeReportDialogProps> = ({ 
         width: dialogWidth,
       }}
     >
-      <Box sx={{ padding: "10px" }}>
-        <FGRDialogHeader
-          fgrSession={fgrSession}
-          handleDialogClose={handleDialogClose}
-          handleDownloadAllClick={handleDownloadAllClick}
-          handleSearchStringChange={handleSearchStringChange}
-          handleSessionChange={handleSessionChange}
-          sessionOptions={sessionOptions}
-        />
-        {loading && (
-          <Box margin="auto" marginTop="1%" width="5%">
-            <ReactLoading color={theme.palette.primary.main} type="spin" />
-          </Box>
-        )}
-        <FinalGradeReportList
-          fgrStudents={fgrStudents}
-          handleDownloadComplete={handleDownloadAllComplete}
-          handleRemoveFGR={handleRemoveFGR}
-          scale={scale}
-          searchString={searchString}
-          session={fgrSession}
-          width={fgrWidth}
-        />
-      </Box>
+      {open && (
+        <Box sx={{ padding: "10px" }}>
+          <FGRDialogHeader
+            fgrSession={fgrSession}
+            handleDialogClose={handleDialogClose}
+            handleDownloadAllClick={handleDownloadAllClick}
+            handleSearchStringChange={handleSearchStringChange}
+            handleSessionChange={handleSessionChange}
+            sessionOptions={sessionOptions}
+          />
+          {loading && (
+            <Box margin="auto" marginTop="1%" width="5%">
+              <ReactLoading color={theme.palette.primary.main} type="spin" />
+            </Box>
+          )}
+          <FinalGradeReportList
+            fgrStudents={fgrStudents}
+            handleDownloadComplete={handleDownloadAllComplete}
+            handleRemoveFGR={handleRemoveFGR}
+            scale={scale}
+            searchString={searchString}
+            session={fgrSession}
+            width={fgrWidth}
+          />
+        </Box>
+      )}
     </Dialog>
   );
 };

@@ -92,6 +92,8 @@ export const useAppStore = create<AppState>()((set) => {
 });
 
 interface FinalGradeReportState {
+  open: boolean;
+  setOpen: (open: StudentFormState["open"]) => void;
   setShouldDownload: (shouldDownload: FinalGradeReportState["shouldDownload"]) => void;
   shouldDownload: boolean;
 }
@@ -99,6 +101,12 @@ interface FinalGradeReportState {
 export const useFinalGradeReportStore = create<FinalGradeReportState>()(
   subscribeWithSelector((set) => {
     return {
+      open: false,
+      setOpen: (open: StudentFormState["open"]) => {
+        return set(() => {
+          return { open };
+        });
+      },
       setShouldDownload: (shouldDownload: FinalGradeReportState["shouldDownload"]) => {
         return set(() => {
           return { shouldDownload };

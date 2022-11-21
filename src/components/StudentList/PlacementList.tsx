@@ -1,8 +1,8 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Edit } from "@mui/icons-material";
-import { IconButton, Tooltip } from "@mui/material";
+import { Breakpoint, IconButton, Tooltip } from "@mui/material";
 import { join, map } from "lodash";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { FormDialog, FormPlacement, LabeledContainer, LabeledText } from "..";
 import { useAppStore, useColors, useStudentStore } from "../../hooks";
 import { Placement, Student } from "../../interfaces";
@@ -11,6 +11,11 @@ import { JOIN_STR, placementSchema, removeNullFromObject, setData } from "../../
 interface PlacementProps {
   data: Student;
 }
+
+const FormPlacementMemo = React.memo(() => {
+  return <FormPlacement standAlone />;
+});
+FormPlacementMemo.displayName = "Placement Form";
 
 export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
   const role = useAppStore((state) => {
@@ -42,6 +47,18 @@ export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
     },
     [handleDialogClose, student],
   );
+
+  const dialogProps = useMemo(() => {
+    const breakpoint: Breakpoint = "lg";
+    return { maxWidth: breakpoint };
+  }, []);
+
+  const useFormProps = useMemo(() => {
+    return {
+      defaultValues: student.placement,
+      resolver: yupResolver(placementSchema),
+    };
+  }, [student.placement]);
 
   return (
     <>
@@ -78,17 +95,14 @@ export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
           </Tooltip>
         )}
       </LabeledContainer>
-      <FormDialog
-        dialogProps={{ maxWidth: "lg" }}
+      <FormDialog<Placement>
+        dialogProps={dialogProps}
         handleDialogClose={handleDialogClose}
         onSubmit={onSubmit}
         open={open}
-        useFormProps={{
-          defaultValues: student.placement,
-          resolver: yupResolver(placementSchema),
-        }}
+        useFormProps={useFormProps}
       >
-        <FormPlacement standAlone />
+        <FormPlacementMemo />
       </FormDialog>
     </>
   );

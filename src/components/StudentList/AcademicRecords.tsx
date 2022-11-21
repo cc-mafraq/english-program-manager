@@ -1,6 +1,15 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Edit } from "@mui/icons-material";
-import { Box, Button, IconButton, Tooltip, Typography, TypographyProps, useTheme } from "@mui/material";
+import {
+  Box,
+  Breakpoint,
+  Button,
+  IconButton,
+  Tooltip,
+  Typography,
+  TypographyProps,
+  useTheme,
+} from "@mui/material";
 import { green as materialGreen, red as materialRed } from "@mui/material/colors";
 import { findIndex, forOwn, map, reverse } from "lodash";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -56,6 +65,15 @@ GradeInfo.defaultProps = {
   grade: undefined,
 };
 
+const FormAcademicRecordsMemo = React.memo(() => {
+  return (
+    <Box paddingRight={SPACING * 2}>
+      <FormAcademicRecordsItem />
+    </Box>
+  );
+});
+FormAcademicRecordsMemo.displayName = "Academic Records Form";
+
 export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student }) => {
   const students = useStudentStore((state) => {
     return state.students;
@@ -107,6 +125,18 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
     },
     [handleDialogClose, selectedAcademicRecord, student],
   );
+
+  const dialogProps = useMemo(() => {
+    const breakpoint: Breakpoint = "lg";
+    return { maxWidth: breakpoint };
+  }, []);
+
+  const useFormProps = useMemo(() => {
+    return {
+      defaultValues: selectedAcademicRecord || emptyAcademicRecord,
+      resolver: yupResolver(academicRecordsSchema),
+    };
+  }, [selectedAcademicRecord]);
 
   const PB = useMemo(() => {
     return map(forOwn(progress), (v, k) => {
@@ -225,19 +255,14 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
         {RecordData}
         <LabeledText label="Certificate Requests">{student?.certificateRequests}</LabeledText>
       </LabeledContainer>
-      <FormDialog
-        dialogProps={{ maxWidth: "lg" }}
+      <FormDialog<AcademicRecord>
+        dialogProps={dialogProps}
         handleDialogClose={handleDialogClose}
         onSubmit={onSubmit}
         open={open}
-        useFormProps={{
-          defaultValues: selectedAcademicRecord || emptyAcademicRecord,
-          resolver: yupResolver(academicRecordsSchema),
-        }}
+        useFormProps={useFormProps}
       >
-        <Box paddingRight={SPACING * 2}>
-          <FormAcademicRecordsItem />
-        </Box>
+        <FormAcademicRecordsMemo />
       </FormDialog>
     </>
   );
