@@ -1,5 +1,5 @@
 import { MoveDown } from "@mui/icons-material";
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 import { useAppStore, useFormDialog } from "../../hooks";
 import { WaitingListEntry } from "../../interfaces";
 import { ActionFAB } from "../reusables";
@@ -7,13 +7,9 @@ import { JumpToEntryDialog } from "./JumpToEntryDialog";
 
 interface WaitingListActionsProps {
   filteredWaitingList: WaitingListEntry[];
-  setScrollToIndex: Dispatch<SetStateAction<number | undefined>>;
 }
 
-export const WaitingListActions: React.FC<WaitingListActionsProps> = ({
-  setScrollToIndex,
-  filteredWaitingList,
-}) => {
+export const WaitingListActions: React.FC<WaitingListActionsProps> = ({ filteredWaitingList }) => {
   const role = useAppStore((state) => {
     return state.role;
   });
@@ -35,7 +31,6 @@ export const WaitingListActions: React.FC<WaitingListActionsProps> = ({
         filteredWaitingList={filteredWaitingList}
         handleDialogClose={handleJumpToEntryDialogClose}
         open={openJumpToEntryDialog}
-        submitValue={setScrollToIndex}
       />
     </>
   );

@@ -1,0 +1,34 @@
+import React from "react";
+import { CorrespondenceList, CustomCard, WaitingListCardHeader, WaitingListEntryInfo } from "..";
+import { useAppStore } from "../../hooks";
+import { emptyWaitingListEntry } from "../../interfaces";
+
+interface WaitingListCardProps {
+  handleWLEntryDialogOpen: () => void;
+}
+
+export const WaitingListCard: React.FC<WaitingListCardProps> = (props) => {
+  const role = useAppStore((state) => {
+    return state.role;
+  });
+  const { handleWLEntryDialogOpen } = props;
+
+  return (
+    <CustomCard
+      data={emptyWaitingListEntry}
+      header={
+        <WaitingListCardHeader data={emptyWaitingListEntry} handleEditEntryClick={handleWLEntryDialogOpen} />
+      }
+      noTabs={role !== "admin"}
+      tabContents={[
+        { component: <WaitingListEntryInfo data={emptyWaitingListEntry} />, label: "Entry" },
+        {
+          component: <CorrespondenceList collectionName="waitingList" data={emptyWaitingListEntry} idPath="id" />,
+          hidden: role !== "admin",
+          label: "Correspondence",
+        },
+      ]}
+      {...props}
+    />
+  );
+};

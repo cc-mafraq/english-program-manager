@@ -1,5 +1,5 @@
 import { collection } from "firebase/firestore";
-import { every, filter as filterFn, forEach, get, includes } from "lodash";
+import { every, filter, filter as filterFn, get, includes, map } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +11,6 @@ import { useAppStore } from "./useStores";
 interface UsePageStateParams<T> {
   collectionName: string;
   filter: FilterValue<T>[];
-  payloadPath: string;
   // a doc won't be added to the list unless it has a value at this path
   requiredValuePath?: string;
   searchFn: (list: T[], searchString: string) => T[];
@@ -22,7 +21,7 @@ interface UsePageStateParams<T> {
 export const usePageState = <T>({
   searchFn,
   sortFn,
-  filter,
+  filter: dataFilter,
   setData,
   collectionName,
   requiredValuePath,
@@ -37,13 +36,15 @@ export const usePageState = <T>({
   const [docs, docsLoading, docsError] = useCollection(collection(db, collectionName));
 
   const sortedList = useMemo(() => {
-    const newDataList: T[] = [];
-    forEach(docs?.docs, (d) => {
-      const data = d.data();
-      if (!requiredValuePath || get(data, requiredValuePath)) newDataList.push(data as T);
-    });
-    const newSortedList = sortFn(newDataList);
-    return newSortedList;
+    const newDataList = filter(
+      map(docs?.docs, (d) => {
+        return d.data();
+      }),
+      (data) => {
+        return !requiredValuePath || get(data, requiredValuePath);
+      },
+    );
+    return sortFn(newDataList as T[]);
   }, [docs?.docs, requiredValuePath, sortFn]);
 
   const searchedList = useMemo(() => {
@@ -52,19 +53,19 @@ export const usePageState = <T>({
 
   const filterList = useCallback(
     (object: T) => {
-      return every(filter, (filterValue) => {
+      return every(dataFilter, (filterValue) => {
         const value = filterValue.fieldFunction
           ? filterValue.fieldFunction(object)
           : get(object, filterValue.fieldPath);
         return includes(filterValue.values, value);
       });
     },
-    [filter],
+    [dataFilter],
   );
 
   const filteredList = useMemo(() => {
-    return filter && filter.length > 0 ? sortFn(filterFn(searchedList, filterList) as T[]) : searchedList;
-  }, [filter, filterList, searchedList, sortFn]);
+    return dataFilter && dataFilter.length > 0 ? sortFn(filterFn(searchedList, filterList) as T[]) : searchedList;
+  }, [dataFilter, filterList, searchedList, sortFn]);
 
   useEffect(() => {
     setData(sortedList);

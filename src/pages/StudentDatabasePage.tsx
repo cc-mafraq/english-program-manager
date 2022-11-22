@@ -1,45 +1,23 @@
-import { Box } from "@mui/material";
 import React, { useCallback } from "react";
 import {
-  AcademicRecords,
-  CorrespondenceList,
-  CustomCard,
-  CustomToolbar,
   FinalGradeReportDialog,
   Loading,
-  PlacementList,
-  StudentCardHeader,
-  StudentDatabaseActions,
-  StudentFilter,
+  StudentDatabaseToolbar,
   StudentFormDialog,
-  StudentInfo,
-  VirtualizedList,
+  StudentList,
 } from "../components";
-import { StudentCardImage } from "../components/StudentList/StudentCardImage";
-import {
-  useAppStore,
-  useFinalGradeReportStore,
-  usePageState,
-  useStudentFormStore,
-  useStudentStore,
-} from "../hooks";
-import { emptyStudent, Student } from "../interfaces";
+import { usePageState, useStudentFormStore, useStudentStore } from "../hooks";
+import { Student } from "../interfaces";
 import { searchStudents, sortStudents } from "../services";
 
 export const StudentDatabasePage = () => {
-  const setStudents = useStudentStore((state) => {
-    return state.setStudents;
-  });
   const filter = useStudentStore((state) => {
     return state.filter;
   });
-  const role = useAppStore((state) => {
-    return state.role;
+  const setStudents = useStudentStore((state) => {
+    return state.setStudents;
   });
   const setStudentDialogOpen = useStudentFormStore((state) => {
-    return state.setOpen;
-  });
-  const setFGRDialogOpen = useFinalGradeReportStore((state) => {
     return state.setOpen;
   });
 
@@ -47,20 +25,9 @@ export const StudentDatabasePage = () => {
     setStudentDialogOpen(true);
   }, [setStudentDialogOpen]);
 
-  const handleFGRDialogOpen = useCallback(() => {
-    setFGRDialogOpen(true);
-  }, [setFGRDialogOpen]);
-
-  const isAdminOrFaculty = role === "admin" || role === "faculty";
-  const {
-    filteredList: filteredStudents,
-    handleSearchStringChange,
-    setShowActions,
-    showActions,
-  } = usePageState<Student>({
+  const { filteredList: filteredStudents, handleSearchStringChange } = usePageState<Student>({
     collectionName: "students",
     filter,
-    payloadPath: "students",
     requiredValuePath: "name.english",
     searchFn: searchStudents,
     setData: setStudents,
@@ -69,47 +36,13 @@ export const StudentDatabasePage = () => {
 
   return (
     <>
-      <Box position="sticky" top={0} zIndex={5}>
-        <CustomToolbar
-          filter={filter}
-          filterComponent={<StudentFilter />}
-          handleDialogOpen={handleStudentDialogOpen}
-          handleSearchStringChange={handleSearchStringChange}
-          list={filteredStudents}
-          otherActions={
-            <StudentDatabaseActions
-              handleDialogOpen={handleStudentDialogOpen}
-              handleGenerateFGRClick={handleFGRDialogOpen}
-            />
-          }
-          setShowActions={setShowActions}
-          showActions={showActions}
-          tooltipObjectName="Students"
-        />
-      </Box>
+      <StudentDatabaseToolbar
+        filteredStudents={filteredStudents}
+        handleSearchStringChange={handleSearchStringChange}
+        handleStudentDialogOpen={handleStudentDialogOpen}
+      />
       <Loading />
-      <VirtualizedList defaultSize={600} idPath="epId" listData={filteredStudents}>
-        <CustomCard
-          data={emptyStudent}
-          header={<StudentCardHeader data={emptyStudent} handleEditStudentClick={handleStudentDialogOpen} />}
-          image={<StudentCardImage data={emptyStudent} imageWidth={175} smallBreakpointScaleDown={1.5} />}
-          noTabs={role !== "admin" && role !== "faculty"}
-          tabContents={[
-            { component: <StudentInfo data={emptyStudent} />, label: "Student Information" },
-            {
-              component: <CorrespondenceList collectionName="students" data={emptyStudent} idPath="epId" />,
-              hidden: role !== "admin",
-              label: "Correspondence",
-            },
-            {
-              component: <AcademicRecords data={emptyStudent} />,
-              hidden: !isAdminOrFaculty,
-              label: "Academic Records",
-            },
-            { component: <PlacementList data={emptyStudent} />, hidden: !isAdminOrFaculty, label: "Placement" },
-          ]}
-        />
-      </VirtualizedList>
+      <StudentList filteredStudents={filteredStudents} handleStudentDialogOpen={handleStudentDialogOpen} />
       <StudentFormDialog handleSearchStringChange={handleSearchStringChange} />
       <FinalGradeReportDialog />
     </>

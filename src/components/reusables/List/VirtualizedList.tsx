@@ -1,5 +1,5 @@
 import { first, get } from "lodash";
-import React, { Attributes, ComponentType, Dispatch, SetStateAction, useCallback, useEffect, useRef } from "react";
+import React, { Attributes, ComponentType, useCallback, useEffect, useRef } from "react";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { ListChildComponentProps, VariableSizeList } from "react-window";
 import { useWindowResize } from "../../../hooks";
@@ -10,7 +10,7 @@ interface VirtualizedListProps<T> {
   idPath: string;
   listData: T[];
   scrollToIndex?: number;
-  setScrollToIndex?: Dispatch<SetStateAction<number | undefined>>;
+  setScrollToIndex?: (scrollToIndex: number | undefined) => void;
 }
 
 export const VirtualizedList = <T,>({

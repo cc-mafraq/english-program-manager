@@ -36,8 +36,10 @@ export const useStudentStore = create<StudentState>()((set) => {
 
 interface WaitingListState {
   filter: FilterValue<WaitingListEntry>[];
+  scrollToIndex?: number;
   selectedWaitingListEntry: WaitingListEntry | null;
   setFilter: (filter: WaitingListState["filter"]) => void;
+  setScrollToIndex: (scrollToIndex: WaitingListState["scrollToIndex"]) => void;
   setSelectedWaitingListEntry: (selectedWaitingListEntry: WaitingListState["selectedWaitingListEntry"]) => void;
   setWaitingList: (waitingList: WaitingListState["waitingList"]) => void;
   waitingList: WaitingListEntry[];
@@ -50,6 +52,11 @@ export const useWaitingListStore = create<WaitingListState>()((set) => {
     setFilter: (filter: WaitingListState["filter"]) => {
       return set(() => {
         return { filter };
+      });
+    },
+    setScrollToIndex: (scrollToIndex: WaitingListState["scrollToIndex"]) => {
+      return set(() => {
+        return { scrollToIndex };
       });
     },
     setSelectedWaitingListEntry: (selectedWaitingListEntry: WaitingListState["selectedWaitingListEntry"]) => {
@@ -126,6 +133,22 @@ export const useStudentFormStore = create<StudentFormState>()((set) => {
   return {
     open: false,
     setOpen: (open: StudentFormState["open"]) => {
+      return set(() => {
+        return { open };
+      });
+    },
+  };
+});
+
+interface WaitingListFormState {
+  open: boolean;
+  setOpen: (open: WaitingListFormState["open"]) => void;
+}
+
+export const useWaitingListFormStore = create<WaitingListFormState>()((set) => {
+  return {
+    open: false,
+    setOpen: (open: WaitingListFormState["open"]) => {
       return set(() => {
         return { open };
       });
