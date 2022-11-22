@@ -1,6 +1,6 @@
 import { Box, Dialog, SelectChangeEvent, useTheme } from "@mui/material";
-import { nth, pull } from "lodash";
-import React, { useCallback, useState } from "react";
+import { filter, includes, nth } from "lodash";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ReactLoading from "react-loading";
 import { FGRDialogHeader, FinalGradeReportList } from ".";
 import { useColors, useFinalGradeReportStore, useStudentStore } from "../../hooks";
@@ -25,15 +25,40 @@ export const FinalGradeReportDialog: React.FC = () => {
   const fgrWidth = 640 * scale;
   const dialogWidth = `${fgrWidth * 3 + 80 * scale + 42}px`;
 
-  const sessionOptions = getAllSessions(students);
+  const sessionOptions = useMemo(() => {
+    return getAllSessions(students);
+  }, [students]);
 
-  const [fgrSession, setFGRSession] = useState(nth(sessionOptions, 1) || "Fa I 22");
-  const [fgrStudents, setFGRStudents] = useState<StudentAcademicRecordIndex[]>(
-    getFGRStudents(students, fgrSession),
-  );
+  const [fgrSession, setFGRSession] = useState("");
   const [loading, setLoading] = useState(false);
   const [searchString, setSearchString] = useState("");
+  const [hiddenFgrStudents, setHiddenFgrStudents] = useState<StudentAcademicRecordIndex[]>([]);
   const theme = useTheme();
+  const currentSession = nth(sessionOptions, 1);
+  const fgrOrCurrentSession = fgrSession || currentSession || "";
+
+  const fgrStudents = useMemo(() => {
+    return fgrOrCurrentSession ? getFGRStudents(students, fgrOrCurrentSession) : [];
+  }, [fgrOrCurrentSession, students]);
+
+  const filteredFgrStudents = filter(fgrStudents, (fgrStudent) => {
+    return !includes(hiddenFgrStudents, fgrStudent);
+  });
+
+  // Reset hidden students when the dialog opens
+  useEffect(() => {
+    const unsub = useFinalGradeReportStore.subscribe(
+      (state) => {
+        return state.open;
+      },
+      (newOpen: boolean) => {
+        newOpen && setHiddenFgrStudents([]);
+      },
+    );
+    return () => {
+      unsub();
+    };
+  }, []);
 
   const handleDialogClose = useCallback(() => {
     setOpen(false);
@@ -41,10 +66,9 @@ export const FinalGradeReportDialog: React.FC = () => {
 
   const handleRemoveFGR = useCallback(
     (studentAcademicRecord: StudentAcademicRecordIndex) => {
-      const newFgrStudents = [...pull(fgrStudents, studentAcademicRecord)];
-      setFGRStudents(newFgrStudents);
+      setHiddenFgrStudents([...hiddenFgrStudents, studentAcademicRecord]);
     },
-    [fgrStudents],
+    [hiddenFgrStudents],
   );
 
   const handleDownloadAllClick = useCallback(() => {
@@ -57,14 +81,11 @@ export const FinalGradeReportDialog: React.FC = () => {
     setShouldDownload(false);
   }, [setShouldDownload]);
 
-  const handleSessionChange = useCallback(
-    (event: SelectChangeEvent) => {
-      const session = event.target.value as string;
-      setFGRSession(session);
-      setFGRStudents(getFGRStudents(students, session));
-    },
-    [students],
-  );
+  const handleSessionChange = useCallback((event: SelectChangeEvent) => {
+    const session = event.target.value as string;
+    setFGRSession(session);
+    setHiddenFgrStudents([]);
+  }, []);
 
   const handleSearchStringChange = useCallback((value: string) => {
     setSearchString(value);
@@ -86,7 +107,7 @@ export const FinalGradeReportDialog: React.FC = () => {
       {open && (
         <Box sx={{ padding: "10px" }}>
           <FGRDialogHeader
-            fgrSession={fgrSession}
+            fgrSession={fgrOrCurrentSession}
             handleDialogClose={handleDialogClose}
             handleDownloadAllClick={handleDownloadAllClick}
             handleSearchStringChange={handleSearchStringChange}
@@ -99,12 +120,12 @@ export const FinalGradeReportDialog: React.FC = () => {
             </Box>
           )}
           <FinalGradeReportList
-            fgrStudents={fgrStudents}
+            fgrStudents={filteredFgrStudents}
             handleDownloadComplete={handleDownloadAllComplete}
             handleRemoveFGR={handleRemoveFGR}
             scale={scale}
             searchString={searchString}
-            session={fgrSession}
+            session={fgrOrCurrentSession}
             width={fgrWidth}
           />
         </Box>

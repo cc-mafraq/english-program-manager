@@ -65,7 +65,7 @@ export const FGRDialogHeader: React.FC<FGRDialogHeaderProps> = ({
               label="Session"
               labelId="session-label"
               onChange={handleSessionChange}
-              value={fgrSession}
+              value={sessionOptions?.length ? fgrSession : ""}
             >
               {map(sessionOptions, (so) => {
                 return (
