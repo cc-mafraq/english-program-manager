@@ -35,7 +35,7 @@ export const CustomCard = <T,>({
   const theme = useTheme();
 
   const rowRef = useRef<HTMLDivElement>(null);
-  // use a local tab value because updating tabValue prop in parent is slow
+  // use a local tab value because updating tabValue prop in parent is a ref (i.e. won't trigger re-render)
   const [localTabValue, setLocalTabValue] = useState(tabValue || 0);
 
   const handleChange = useCallback(
