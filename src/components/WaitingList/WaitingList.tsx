@@ -18,7 +18,6 @@ export const WaitingList: React.FC<WaitingListProps> = ({ filteredWaitingList, h
 
   return (
     <VirtualizedList
-      defaultSize={275}
       idPath="id"
       listData={filteredWaitingList}
       scrollToIndex={scrollToIndex}
