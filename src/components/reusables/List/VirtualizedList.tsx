@@ -7,6 +7,7 @@ interface VirtualizedListProps<T> {
   children: React.ReactNode;
   idPath: string;
   listData: T[];
+  overscan?: number;
   scrollToIndex?: number;
   setScrollToIndex?: (scrollToIndex: number | undefined) => void;
 }
@@ -17,6 +18,7 @@ export const VirtualizedList = <T,>({
   scrollToIndex,
   setScrollToIndex,
   children,
+  overscan,
 }: VirtualizedListProps<T>) => {
   const listRef = useRef<VirtuosoHandle>(null);
   const tabValues = useRef({});
@@ -56,7 +58,7 @@ export const VirtualizedList = <T,>({
       ref={listRef}
       data={listData}
       itemContent={Row}
-      overscan={500}
+      overscan={overscan}
       style={{ height: windowHeight - (2 * 64 + windowHeight / 100) }}
     />
   ) : (
@@ -65,6 +67,7 @@ export const VirtualizedList = <T,>({
 };
 
 VirtualizedList.defaultProps = {
+  overscan: undefined,
   scrollToIndex: undefined,
   setScrollToIndex: undefined,
 };
