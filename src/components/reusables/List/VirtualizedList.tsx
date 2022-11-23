@@ -1,12 +1,10 @@
 import { first, get } from "lodash";
-import React, { Attributes, ComponentType, useCallback, useEffect, useRef } from "react";
-import AutoSizer from "react-virtualized-auto-sizer";
-import { ListChildComponentProps, VariableSizeList } from "react-window";
+import React, { Attributes, useEffect, useRef } from "react";
+import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 import { useWindowResize } from "../../../hooks";
 
 interface VirtualizedListProps<T> {
   children: React.ReactNode;
-  defaultSize: number;
   idPath: string;
   listData: T[];
   scrollToIndex?: number;
@@ -16,53 +14,36 @@ interface VirtualizedListProps<T> {
 export const VirtualizedList = <T,>({
   listData,
   idPath,
-  defaultSize,
   scrollToIndex,
   setScrollToIndex,
   children,
 }: VirtualizedListProps<T>) => {
-  const listRef = useRef<VariableSizeList>(null);
-  const sizeMap = useRef({});
-  const [windowWidth] = useWindowResize();
+  const listRef = useRef<VirtuosoHandle>(null);
   const tabValues = useRef({});
+  const [, windowHeight] = useWindowResize();
 
   const setTabValue = (id: string | number, tabValue: number) => {
     tabValues.current = { ...tabValues.current, [id]: tabValue };
   };
 
-  const setSize = useCallback((index: number, size: number) => {
-    listRef.current?.resetAfterIndex(index);
-    sizeMap.current = { ...sizeMap.current, [index]: size };
-  }, []);
-
-  const getSize = useCallback(
-    (index: number): number => {
-      return Number(get(sizeMap.current, index)) + 16 || defaultSize;
-    },
-    [defaultSize],
-  );
-
   useEffect(() => {
     if (scrollToIndex === undefined) return;
-    listRef.current?.scrollToItem(scrollToIndex);
+    listRef.current?.scrollToIndex({ index: scrollToIndex });
     setScrollToIndex && setScrollToIndex(undefined);
   }, [scrollToIndex, setScrollToIndex]);
 
-  const Row = ({ data, index, style }: { data: T[]; index: number; style: React.CSSProperties | undefined }) => {
-    const id = get(data[index], idPath);
+  const Row = (index: number, data: T) => {
+    const id = get(data, idPath);
     return first(
       React.Children.map(children, (child) => {
         if (React.isValidElement(child)) {
           return React.cloneElement(child, {
-            data: data[index],
+            data,
             id,
             index,
             key: id,
-            setSize,
             setTabValue,
-            style,
             tabValue: get(tabValues.current, id) || 0,
-            windowWidth,
           } as Partial<unknown> & Attributes);
         }
         return child;
@@ -70,25 +51,16 @@ export const VirtualizedList = <T,>({
     );
   };
 
-  return (
-    <AutoSizer>
-      {({ height, width }) => {
-        return (
-          <VariableSizeList
-            ref={listRef}
-            // subtract menu bar and toolbar height
-            height={height - (2 * 64 + height / 100)}
-            itemCount={listData?.length}
-            itemData={listData}
-            itemSize={getSize}
-            style={{ overflowX: "hidden" }}
-            width={width}
-          >
-            {Row as unknown as ComponentType<ListChildComponentProps<T>>}
-          </VariableSizeList>
-        );
-      }}
-    </AutoSizer>
+  return listData?.length ? (
+    <Virtuoso
+      ref={listRef}
+      data={listData}
+      itemContent={Row}
+      overscan={500}
+      style={{ height: windowHeight - (2 * 64 + windowHeight / 100) }}
+    />
+  ) : (
+    <></>
   );
 };
 
