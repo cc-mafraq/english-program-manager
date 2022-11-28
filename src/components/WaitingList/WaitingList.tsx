@@ -20,7 +20,7 @@ export const WaitingList: React.FC<WaitingListProps> = ({ filteredWaitingList, h
     <VirtualizedList
       idPath="id"
       listData={filteredWaitingList}
-      overscan={375}
+      overscan={250}
       scrollToIndex={scrollToIndex}
       setScrollToIndex={setScrollToIndex}
     >
