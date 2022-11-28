@@ -10,7 +10,7 @@ interface StudentListProps {
 
 export const StudentList: React.FC<StudentListProps> = ({ filteredStudents, handleStudentDialogOpen }) => {
   return (
-    <VirtualizedList idPath="epId" listData={filteredStudents} overscan={700}>
+    <VirtualizedList idPath="epId" listData={filteredStudents} overscan={500}>
       <StudentCard handleStudentDialogOpen={handleStudentDialogOpen} />
     </VirtualizedList>
   );
