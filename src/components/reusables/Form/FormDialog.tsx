@@ -74,9 +74,15 @@ export const FormDialog = <T extends FieldValues>({
               <Box sx={stickySubmit ? { bottom: 10, position: "fixed", zIndex: 1 } : undefined}>
                 <Button
                   className="update-button"
-                  onClick={methods.handleSubmit(onSubmit, () => {
-                    setOpenErrorDialog(true);
-                  })}
+                  onClick={methods.handleSubmit(
+                    (data, e) => {
+                      onSubmit(data, e);
+                      reset({} as T);
+                    },
+                    () => {
+                      setOpenErrorDialog(true);
+                    },
+                  )}
                   sx={{
                     "&:hover": {
                       backgroundColor: green[900],
