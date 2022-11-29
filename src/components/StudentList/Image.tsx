@@ -1,6 +1,7 @@
+/* eslint-disable react/no-unused-prop-types */
 import { Box, BoxProps, CardMedia, Grid, SxProps, useTheme } from "@mui/material";
-import { get, isEmpty, omit } from "lodash";
-import React, { useCallback, useMemo, useState } from "react";
+import { get, isEmpty, merge, omit } from "lodash";
+import React, { useCallback, useState } from "react";
 import ReactLoading from "react-loading";
 import { AddImageButton } from ".";
 import { FormImageActions } from "..";
@@ -23,11 +24,20 @@ interface ImageProps {
   xs?: number | boolean;
 }
 
-export const Image: React.FC<ImageProps> = ({
+interface ImageBodyProps extends ImageProps {
+  img?: string;
+  loading: boolean;
+  setImageState: (image: string | undefined) => void;
+  setImg: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setLoadingState: (loading: boolean) => void;
+  student: ImageProps["student"];
+}
+
+const ImageBody: React.FC<ImageBodyProps> = ({
   imageStyleProps,
   loadingContainerProps,
   innerContainerProps,
-  outerContainerProps,
   scale,
   student,
   imagePath,
@@ -35,15 +45,79 @@ export const Image: React.FC<ImageProps> = ({
   noButton,
   lightColor,
   isForm,
-  xs,
+  img,
+  loading,
+  setImg,
+  setLoading,
+  setImageState,
+  setLoadingState,
 }) => {
-  const imageName = get(student, imagePath);
-  const [img, setImg] = useState<string | undefined>(imageName);
-  const [loading, setLoading] = useState(!isEmpty(imageName));
   const theme = useTheme();
   const role = useAppStore((state) => {
     return state.role;
   });
+
+  return (
+    <>
+      {loading && (
+        <Box
+          sx={{
+            ...loadingContainerProps,
+          }}
+        >
+          <ReactLoading color={theme.palette.primary.main} type="cylon" />
+        </Box>
+      )}
+      {img ? (
+        <CardMedia
+          component="img"
+          image={img}
+          onError={() => {
+            setImg(undefined);
+            setLoading(false);
+            setData(omit(student, [imagePath]) as Student, "students", "epId");
+          }}
+          onLoad={() => {
+            setLoading(false);
+          }}
+          sx={{ ...imageStyleProps, display: loading ? "none" : undefined }}
+        />
+      ) : (
+        <Box sx={{ ...innerContainerProps, position: "relative" }}>
+          <Box
+            sx={{
+              left: "50%",
+              margin: 0,
+              position: "absolute",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            {!noButton && !img && !loading && role === "admin" && (
+              <AddImageButton
+                folderName={folderName}
+                imagePath={imagePath}
+                isForm={isForm}
+                lightColor={lightColor}
+                scale={scale}
+                setImg={setImageState}
+                setLoading={setLoadingState}
+                student={student}
+              />
+            )}
+          </Box>
+        </Box>
+      )}
+    </>
+  );
+};
+
+export const Image: React.FC<ImageProps> = (props) => {
+  const { outerContainerProps, student, imagePath, folderName, isForm, xs } = props;
+  const imageName = get(student, imagePath);
+  const [img, setImg] = useState<string | undefined>(imageName);
+  const [loading, setLoading] = useState(!isEmpty(imageName));
+  if (!isForm && img !== imageName) setImg(imageName);
 
   const setImageState = useCallback((image: string | undefined) => {
     setImg(image);
@@ -53,83 +127,12 @@ export const Image: React.FC<ImageProps> = ({
     setLoading(ld);
   }, []);
 
-  const ImageBody = useMemo(() => {
-    return (
-      <>
-        {loading && (
-          <Box
-            sx={{
-              ...loadingContainerProps,
-            }}
-          >
-            <ReactLoading color={theme.palette.primary.main} type="cylon" />
-          </Box>
-        )}
-        {img ? (
-          <CardMedia
-            component="img"
-            image={img}
-            onError={() => {
-              setImg(undefined);
-              setLoading(false);
-              setData(omit(student, [imagePath]) as Student, "students", "epId");
-            }}
-            onLoad={() => {
-              setLoading(false);
-            }}
-            sx={{ ...imageStyleProps, display: loading ? "none" : undefined }}
-          />
-        ) : (
-          <Box sx={{ ...innerContainerProps, position: "relative" }}>
-            <Box
-              sx={{
-                left: "50%",
-                margin: 0,
-                position: "absolute",
-                top: "50%",
-                transform: "translate(-50%, -50%)",
-              }}
-            >
-              {!noButton && !img && !loading && role === "admin" && (
-                <AddImageButton
-                  folderName={folderName}
-                  imagePath={imagePath}
-                  isForm={isForm}
-                  lightColor={lightColor}
-                  scale={scale}
-                  setImg={setImageState}
-                  setLoading={setLoadingState}
-                  student={student}
-                />
-              )}
-            </Box>
-          </Box>
-        )}
-      </>
-    );
-  }, [
-    folderName,
-    imagePath,
-    imageStyleProps,
-    img,
-    innerContainerProps,
-    isForm,
-    lightColor,
-    loading,
-    loadingContainerProps,
-    noButton,
-    role,
-    scale,
-    setImageState,
-    setLoadingState,
-    student,
-    theme.palette.primary.main,
-  ]);
+  const imageBodyProps = { img, loading, setImageState, setImg, setLoading, setLoadingState };
 
   return isForm ? (
     <>
       <Grid item xs={xs}>
-        {ImageBody}
+        <ImageBody {...props} {...imageBodyProps} />
       </Grid>
       {isForm && img && !loading && (
         <FormImageActions
@@ -141,11 +144,13 @@ export const Image: React.FC<ImageProps> = ({
       )}
     </>
   ) : (
-    <Box {...outerContainerProps}>{ImageBody}</Box>
+    <Box {...outerContainerProps}>
+      <ImageBody {...props} {...imageBodyProps} />
+    </Box>
   );
 };
 
-Image.defaultProps = {
+const defaultProps: Partial<ImageProps> = {
   imageStyleProps: undefined,
   innerContainerProps: undefined,
   isForm: false,
@@ -156,3 +161,9 @@ Image.defaultProps = {
   scale: 1,
   xs: 1,
 };
+
+Image.defaultProps = defaultProps;
+
+ImageBody.defaultProps = merge(defaultProps, {
+  img: undefined,
+});

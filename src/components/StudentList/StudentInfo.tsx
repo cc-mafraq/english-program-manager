@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { Box } from "@mui/material";
 import { isEqual, join, map } from "lodash";
 import React, { useMemo } from "react";

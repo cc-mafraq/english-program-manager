@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { Box, useTheme } from "@mui/material";
 import { grey, red as materialRed } from "@mui/material/colors";
 import { isEqual, map } from "lodash";

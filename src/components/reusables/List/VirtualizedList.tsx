@@ -57,7 +57,7 @@ export const VirtualizedList = <T,>({
     <Virtuoso
       ref={listRef}
       data={listData}
-      increaseViewportBy={0}
+      increaseViewportBy={overscan}
       itemContent={Row}
       style={{ height: windowHeight - (2 * 64 + windowHeight / 100) }}
     />
