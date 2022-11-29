@@ -1,8 +1,9 @@
 import { Close } from "@mui/icons-material";
 import { Box, Button, Dialog, DialogProps, Grid, IconButton, Tooltip, Typography, useTheme } from "@mui/material";
 import { green, grey } from "@mui/material/colors";
-import React, { CSSProperties, PropsWithChildren, useEffect, useState } from "react";
-import { FieldValues, FormProvider, SubmitHandler, useForm, UseFormProps } from "react-hook-form";
+import { isEqual } from "lodash";
+import React, { CSSProperties, PropsWithChildren, useState } from "react";
+import { DeepPartial, FieldValues, FormProvider, SubmitHandler, useForm, UseFormProps } from "react-hook-form";
 import { useColors } from "../../../hooks";
 import { SPACING } from "../../../services";
 import { FormErrorDialog } from "./FormErrorDialog";
@@ -40,10 +41,11 @@ export const FormDialog = <T extends FieldValues>({
     setOpenErrorDialog(false);
   };
 
-  // useEffect appears to be the best approach here since the defaultValues are initially undefined: https://stackoverflow.com/questions/64306943/defaultvalues-of-react-hook-form-is-not-setting-the-values-to-the-input-fields-i
-  useEffect(() => {
+  const [prevDefaultValues, setPrevDefaultValues] = useState<DeepPartial<T> | undefined>(undefined);
+  if (open && !isEqual(useFormProps.defaultValues, prevDefaultValues)) {
     useFormProps.defaultValues ? reset(useFormProps.defaultValues) : reset({} as T);
-  }, [reset, useFormProps.defaultValues, open]);
+    setPrevDefaultValues(useFormProps.defaultValues);
+  }
 
   return (
     <Dialog
