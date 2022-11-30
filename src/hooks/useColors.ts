@@ -8,7 +8,7 @@ export const useColors = () => {
   const green = theme.palette.mode === "light" ? materialGreen[200] : "#256E29";
   const yellow = theme.palette.mode === "light" ? materialYellow[200] : materialYellow[600];
   const iconColor = theme.palette.mode === "dark" ? grey[200] : undefined;
-  const popoverColor = theme.palette.mode === "light" ? "#f5f5f5" : "#00000b";
+  const popoverColor = theme.palette.mode === "light" ? "#f5f5f5" : "#0b0b15";
   return {
     defaultBackgroundColor,
     green,
