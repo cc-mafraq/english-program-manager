@@ -51,7 +51,7 @@ export const CustomToolbar = <T,>({
 
   return (
     <>
-      <AppBar color="default" elevation={1} position="sticky">
+      <AppBar color="default" elevation={1.5} position="sticky">
         <Toolbar
           sx={{
             justifyContent: "space-between",
