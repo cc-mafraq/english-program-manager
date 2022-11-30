@@ -2,7 +2,6 @@ import { collection } from "firebase/firestore";
 import { every, filter, filter as filterFn, get, includes, map } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useCollection } from "react-firebase-hooks/firestore";
-import { useNavigate } from "react-router-dom";
 import { FilterValue } from "../interfaces";
 import { db, logout } from "../services";
 import { loadLocal } from "./useLocal";
@@ -32,7 +31,6 @@ export const usePageState = <T>({
 
   const [searchString, setSearchString] = useState<string>("");
   const [showActions, setShowActions] = useState(loadLocal("showActions") !== false);
-  const navigate = useNavigate();
   const [docs, docsLoading, docsError] = useCollection(collection(db, collectionName));
 
   const sortedList = useMemo(() => {
@@ -64,8 +62,8 @@ export const usePageState = <T>({
   );
 
   const filteredList = useMemo(() => {
-    return dataFilter && dataFilter.length > 0 ? sortFn(filterFn(searchedList, filterList) as T[]) : searchedList;
-  }, [dataFilter, filterList, searchedList, sortFn]);
+    return dataFilter && dataFilter.length > 0 ? filterFn(searchedList, filterList) : searchedList;
+  }, [dataFilter, filterList, searchedList]);
 
   useEffect(() => {
     setData(sortedList);
@@ -78,9 +76,8 @@ export const usePageState = <T>({
   useEffect(() => {
     if (docsError?.code === "permission-denied") {
       logout();
-      navigate("/");
     }
-  }, [navigate, docsError]);
+  }, [docsError]);
 
   const handleSearchStringChange = useCallback(
     (value: string) => {

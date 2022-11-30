@@ -25,7 +25,11 @@ export const StudentDatabasePage = () => {
     setStudentDialogOpen(true);
   }, [setStudentDialogOpen]);
 
-  const { filteredList: filteredStudents, handleSearchStringChange } = usePageState<Student>({
+  const {
+    filteredList: filteredStudents,
+    handleSearchStringChange,
+    searchString,
+  } = usePageState<Student>({
     collectionName: "students",
     filter,
     requiredValuePath: "name.english",
@@ -40,6 +44,7 @@ export const StudentDatabasePage = () => {
         filteredStudents={filteredStudents}
         handleSearchStringChange={handleSearchStringChange}
         handleStudentDialogOpen={handleStudentDialogOpen}
+        searchString={searchString}
       />
       <Loading />
       <StudentList filteredStudents={filteredStudents} handleStudentDialogOpen={handleStudentDialogOpen} />

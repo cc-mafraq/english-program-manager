@@ -9,12 +9,14 @@ interface WaitingListToolbarProps {
   filteredWaitingList: WaitingListEntry[];
   handleSearchStringChange: (value: string) => void;
   handleWLEntryDialogOpen: () => void;
+  searchString: string;
 }
 
 export const WaitingListToolbar: React.FC<WaitingListToolbarProps> = ({
   handleWLEntryDialogOpen,
   handleSearchStringChange,
   filteredWaitingList,
+  searchString,
 }) => {
   const filter = useWaitingListStore((state) => {
     return state.filter;
@@ -33,6 +35,7 @@ export const WaitingListToolbar: React.FC<WaitingListToolbarProps> = ({
           handleSearchStringChange={handleSearchStringChange}
           list={filteredWaitingList}
           otherActions={<WaitingListActions filteredWaitingList={filteredWaitingList} />}
+          searchString={searchString}
           setShowActions={setShowActions}
           showActions={showActions}
           tooltipObjectName="Waiting List"

@@ -15,7 +15,11 @@ export const WaitingListPage = () => {
     return state.filter;
   });
 
-  const { filteredList: filteredWaitingList, handleSearchStringChange } = usePageState<WaitingListEntry>({
+  const {
+    filteredList: filteredWaitingList,
+    handleSearchStringChange,
+    searchString,
+  } = usePageState<WaitingListEntry>({
     collectionName: "waitingList",
     filter,
     requiredValuePath: "primaryPhone",
@@ -34,6 +38,7 @@ export const WaitingListPage = () => {
         filteredWaitingList={filteredWaitingList}
         handleSearchStringChange={handleSearchStringChange}
         handleWLEntryDialogOpen={handleWLEntryDialogOpen}
+        searchString={searchString}
       />
       <Loading />
       <WaitingList filteredWaitingList={filteredWaitingList} handleWLEntryDialogOpen={handleWLEntryDialogOpen} />

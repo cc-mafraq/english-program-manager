@@ -8,6 +8,7 @@ interface SearchbarProps {
   handleSearchStringChange: (value: string) => void;
   noExpand?: boolean;
   placeholder: string;
+  searchString?: string;
   width?: string;
 }
 
@@ -19,11 +20,18 @@ export const Searchbar: React.FC<SearchbarProps> = ({
   noExpand,
   width,
   placeholder,
+  searchString,
 }) => {
   const theme = useTheme();
   const { iconColor } = useColors();
   const [value, setValue] = useState("");
   const searchbarRef = useRef<HTMLDivElement>();
+
+  const [prevSearchString, setPrevSearchString] = useState(searchString);
+  if (searchString !== undefined && prevSearchString !== searchString) {
+    setValue(searchString);
+    setPrevSearchString(searchString);
+  }
 
   const handleLocalSearchStringChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     setValue(e.target.value);
@@ -129,5 +137,6 @@ export const Searchbar: React.FC<SearchbarProps> = ({
 
 Searchbar.defaultProps = {
   noExpand: false,
+  searchString: undefined,
   width: undefined,
 };

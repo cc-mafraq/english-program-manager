@@ -10,12 +10,14 @@ interface StudentDatabaseToolbarProps {
   filteredStudents: Student[];
   handleSearchStringChange: (value: string) => void;
   handleStudentDialogOpen: () => void;
+  searchString: string;
 }
 
 export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
   filteredStudents,
   handleSearchStringChange,
   handleStudentDialogOpen,
+  searchString,
 }) => {
   const filter = useStudentStore((state) => {
     return state.filter;
@@ -43,6 +45,7 @@ export const StudentDatabaseToolbar: React.FC<StudentDatabaseToolbarProps> = ({
             handleGenerateFGRClick={handleFGRDialogOpen}
           />
         }
+        searchString={searchString}
         setShowActions={setShowActions}
         showActions={showActions}
         tooltipObjectName="Students"

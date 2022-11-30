@@ -14,6 +14,7 @@ interface CustomToolbarProps<T> {
   handleSearchStringChange: (value: string) => void;
   list: T[];
   otherActions?: React.ReactNode;
+  searchString: string;
   setShowActions: Dispatch<SetStateAction<boolean>>;
   showActions: boolean;
   tooltipObjectName?: string;
@@ -30,6 +31,7 @@ export const CustomToolbar = <T,>({
   handleDialogOpen,
   otherActions,
   addButtonTooltip,
+  searchString,
 }: CustomToolbarProps<T>) => {
   const [filterAnchorEl, setFilterAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const { iconColor } = useColors();
@@ -75,6 +77,7 @@ export const CustomToolbar = <T,>({
               <Searchbar
                 handleSearchStringChange={handleSearchStringChange}
                 placeholder={`Search${tooltipObjectNameSafe.toLowerCase()}`}
+                searchString={searchString}
               />
               <Tooltip arrow title={`Filter${tooltipObjectNameSafe}`}>
                 <IconButton
