@@ -60,12 +60,14 @@ const ImageBody: React.FC<ImageBodyProps> = ({
   return (
     <>
       {loading && (
-        <Box
-          sx={{
-            ...loadingContainerProps,
-          }}
-        >
-          <ReactLoading color={theme.palette.primary.main} type="cylon" />
+        <Box sx={{ position: "relative" }}>
+          <Box
+            sx={{
+              ...loadingContainerProps,
+            }}
+          >
+            <ReactLoading color={theme.palette.primary.main} type="cylon" />
+          </Box>
         </Box>
       )}
       {img ? (

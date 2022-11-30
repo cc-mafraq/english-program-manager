@@ -41,7 +41,7 @@ export const StudentCardImage: React.FC<StudentCardImageProps> = ({
           top: greaterThanSmall
             ? `${maxImageHeight / 2}px`
             : `${maxImageHeight / (2 * smallBreakpointScaleDown)}px`,
-          transform: "translate(-30%, -30%)",
+          transform: "translate(-50%, -50%)",
         }}
         outerContainerProps={{
           sx: {
