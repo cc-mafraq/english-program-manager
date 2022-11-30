@@ -1,12 +1,17 @@
 import React from "react";
 import { AcademicRecords, PlacementList, StudentCardHeader, StudentCardImage, StudentInfo } from "..";
 import { useAppStore } from "../../hooks";
-import { emptyStudent } from "../../interfaces";
+import { emptyStudent, Student } from "../../interfaces";
 import { CorrespondenceList, CustomCard } from "../reusables";
 
 interface StudentCardProps {
   handleStudentDialogOpen: () => void;
 }
+
+const StudentInfoMemo: React.FC<{ data: Student }> = React.memo(({ data }) => {
+  return <StudentInfo data={data} />;
+});
+StudentInfoMemo.displayName = "Student Info";
 
 export const StudentCard: React.FC<StudentCardProps> = (props) => {
   const role = useAppStore((state) => {
@@ -22,7 +27,10 @@ export const StudentCard: React.FC<StudentCardProps> = (props) => {
       image={<StudentCardImage data={emptyStudent} imageWidth={175} smallBreakpointScaleDown={1.5} />}
       noTabs={role !== "admin" && role !== "faculty"}
       tabContents={[
-        { component: <StudentInfo data={emptyStudent} />, label: "Student Information" },
+        {
+          component: <StudentInfoMemo data={emptyStudent} />,
+          label: "Student Information",
+        },
         {
           component: <CorrespondenceList collectionName="students" data={emptyStudent} idPath="epId" />,
           hidden: role !== "admin",

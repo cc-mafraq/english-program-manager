@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { isEqual, join, map } from "lodash";
+import { join, map } from "lodash";
 import React, { useMemo } from "react";
 import { Image, LabeledContainer, LabeledText } from "..";
 import { useAppStore, useColors, useStudentStore } from "../../hooks";
@@ -10,11 +10,7 @@ interface StudentInfoProps {
   data: Student;
 }
 
-const equalProps = (prevProps: StudentInfoProps, nextProps: StudentInfoProps) => {
-  return isEqual(prevProps, nextProps);
-};
-
-const ProgramInformation: React.FC<StudentInfoProps> = React.memo(({ data: student }) => {
+const ProgramInformation: React.FC<StudentInfoProps> = ({ data: student }) => {
   const role = useAppStore((state) => {
     return state.role;
   });
@@ -56,10 +52,9 @@ const ProgramInformation: React.FC<StudentInfoProps> = React.memo(({ data: stude
       <LabeledText label="Initial Session">{student.initialSession}</LabeledText>
     </LabeledContainer>
   );
-}, equalProps);
-ProgramInformation.displayName = "Program Information";
+};
 
-const StatusBox: React.FC<StudentInfoProps> = React.memo(({ data: student }) => {
+const StatusBox: React.FC<StudentInfoProps> = ({ data: student }) => {
   const role = useAppStore((state) => {
     return state.role;
   });
@@ -111,10 +106,9 @@ const StatusBox: React.FC<StudentInfoProps> = React.memo(({ data: student }) => 
       </LabeledText>
     </LabeledContainer>
   );
-}, equalProps);
-StatusBox.displayName = "Status Box";
+};
 
-const Demographics: React.FC<StudentInfoProps> = React.memo(({ data: student }) => {
+const Demographics: React.FC<StudentInfoProps> = ({ data: student }) => {
   const role = useAppStore((state) => {
     return state.role;
   });
@@ -139,10 +133,9 @@ const Demographics: React.FC<StudentInfoProps> = React.memo(({ data: student }) 
       </LabeledText>
     </LabeledContainer>
   );
-}, equalProps);
-Demographics.displayName = "Demographics";
+};
 
-const PhoneNumbers: React.FC<StudentInfoProps> = React.memo(({ data: student }) => {
+const PhoneNumbers: React.FC<StudentInfoProps> = ({ data: student }) => {
   const role = useAppStore((state) => {
     return state.role;
   });
@@ -168,10 +161,9 @@ const PhoneNumbers: React.FC<StudentInfoProps> = React.memo(({ data: student }) 
       </Box>
     </LabeledContainer>
   );
-}, equalProps);
-PhoneNumbers.displayName = "Phone Numbers";
+};
 
-const PlacementData: React.FC<StudentInfoProps> = React.memo(({ data: student }) => {
+const PlacementData: React.FC<StudentInfoProps> = ({ data: student }) => {
   const role = useAppStore((state) => {
     return state.role;
   });
@@ -184,10 +176,9 @@ const PlacementData: React.FC<StudentInfoProps> = React.memo(({ data: student })
       <LabeledText label="Adjustment">{student.origPlacementData.adjustment}</LabeledText>
     </LabeledContainer>
   );
-}, equalProps);
-PlacementData.displayName = "Placement Data";
+};
 
-const CovidVaccine: React.FC<StudentInfoProps> = React.memo(({ data: student }) => {
+const CovidVaccine: React.FC<StudentInfoProps> = ({ data: student }) => {
   const role = useAppStore((state) => {
     return state.role;
   });
@@ -215,10 +206,9 @@ const CovidVaccine: React.FC<StudentInfoProps> = React.memo(({ data: student }) 
       />
     </Box>
   );
-}, equalProps);
-CovidVaccine.displayName = "Covid Vaccine";
+};
 
-const LiteracyAndZoom: React.FC<StudentInfoProps> = React.memo(({ data: student }) => {
+const LiteracyAndZoom: React.FC<StudentInfoProps> = ({ data: student }) => {
   return (
     <>
       <LabeledContainer label="Literacy">
@@ -231,8 +221,7 @@ const LiteracyAndZoom: React.FC<StudentInfoProps> = React.memo(({ data: student 
       </LabeledContainer>
     </>
   );
-}, equalProps);
-LiteracyAndZoom.displayName = "Literacy and Zoom";
+};
 
 export const StudentInfo: React.FC<StudentInfoProps> = ({ data: student }) => {
   return (
