@@ -1,7 +1,6 @@
 import { Box, Card, CardContent, Tab, Tabs, useTheme } from "@mui/material";
 import { get, map } from "lodash";
 import React, { Attributes, CSSProperties, useCallback, useRef, useState } from "react";
-import { darkBlueBackground } from "../../../interfaces";
 
 interface TabProps {
   component: React.ReactNode;
@@ -52,7 +51,7 @@ export const CustomCard = <T,>({
     <div style={style ? { ...style, ...padding } : padding}>
       <Card
         sx={{
-          backgroundColor: theme.palette.mode === "dark" ? darkBlueBackground : undefined,
+          backgroundColor: theme.palette.mode === "dark" ? theme.palette.background.default : undefined,
           width: "100%",
         }}
       >
