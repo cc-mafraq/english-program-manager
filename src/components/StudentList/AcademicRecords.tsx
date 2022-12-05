@@ -84,7 +84,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
     return getProgress(student, getAllSessions(students));
   }, [student, students]);
   const theme = useTheme();
-  const { iconColor } = useColors();
+  const { iconColor, defaultBorderColor } = useColors();
   const [open, setOpen] = useState(false);
   const [selectedAcademicRecord, setSelectedAcademicRecord] = useState<AcademicRecord | null>(null);
   const { red, green } = useColors();
@@ -152,7 +152,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
             labelProps={{ fontSize: 20, fontWeight: "normal" }}
             parentContainerProps={{
               border: 1,
-              borderColor: theme.palette.mode === "light" ? "#999999" : "#666666",
+              borderColor: defaultBorderColor,
               marginBottom: 1,
               padding: 2,
               paddingTop: 1,
@@ -230,7 +230,16 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
         );
       }),
     );
-  }, [green, handleEditClick, iconColor, red, role, student.academicRecords, theme.palette.mode]);
+  }, [
+    defaultBorderColor,
+    green,
+    handleEditClick,
+    iconColor,
+    red,
+    role,
+    student.academicRecords,
+    theme.palette.mode,
+  ]);
 
   return (
     <>

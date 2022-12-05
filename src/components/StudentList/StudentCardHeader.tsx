@@ -10,6 +10,8 @@ interface StudentCardHeaderProps {
   handleEditStudentClick: () => void;
 }
 
+const padding = "2px";
+
 export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ data: student, handleEditStudentClick }) => {
   const role = useAppStore((state) => {
     return state.role;
@@ -26,31 +28,31 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ data: stud
     <>
       <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
         <Box sx={{ display: "flex", flexDirection: "column", paddingBottom: 1 }}>
-          <Typography variant="h5">{student.name.english}</Typography>
+          <Typography paddingBottom={padding} variant="h5">
+            {student.name.english}
+          </Typography>
           <Typography variant="h5">{student.name.arabic === "N/A" ? "" : student.name.arabic}</Typography>
         </Box>
         <Box>
-          <Box>
-            {phoneNumberIsValid ? (
-              <Tooltip enterDelay={500} placement="top" title="Primary WhatsApp Number">
-                <Typography marginRight="5px" variant="h5">
-                  {student.phone.primaryPhone}
-                </Typography>
-              </Tooltip>
-            ) : (
-              <Typography marginRight="5px" variant="h5">
-                WA Number Invalid
-              </Typography>
-            )}
-            <Tooltip enterDelay={500} title="English Program ID Number">
-              <Typography
-                color={theme.palette.mode === "light" ? theme.palette.secondary.main : theme.palette.primary.light}
-                variant="h6"
-              >
-                {student.epId ? student.epId : "Invalid"}
+          {phoneNumberIsValid ? (
+            <Tooltip enterDelay={500} placement="top" title="Primary WhatsApp Number">
+              <Typography marginRight="5px" paddingBottom={padding} variant="h5">
+                {student.phone.primaryPhone}
               </Typography>
             </Tooltip>
-          </Box>
+          ) : (
+            <Typography marginRight="5px" variant="h5">
+              WA Number Invalid
+            </Typography>
+          )}
+          <Tooltip enterDelay={500} title="English Program ID Number">
+            <Typography
+              color={theme.palette.mode === "light" ? theme.palette.secondary.main : theme.palette.primary.light}
+              variant="h6"
+            >
+              {student.epId ? student.epId : "Invalid"}
+            </Typography>
+          </Tooltip>
         </Box>
         <Box>
           <Box>
