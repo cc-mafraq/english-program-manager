@@ -6,7 +6,7 @@ import moment from "moment";
 import React, { useCallback, useMemo, useState } from "react";
 import { FormDialog, FormLabel, LabeledContainer } from "..";
 import { useColors } from "../../../hooks";
-import { Correspondence, defaultBorderColor } from "../../../interfaces";
+import { Correspondence } from "../../../interfaces";
 import { correspondenceSchema, MOMENT_FORMAT, setData } from "../../../services";
 import { FormCorrespondenceItem } from "../../StudentForm";
 
@@ -27,7 +27,7 @@ const FormCorrespondenceMemo = React.memo(() => {
 FormCorrespondenceMemo.displayName = "Correspondence Form";
 
 export const CorrespondenceList = <T extends object>({ data, collectionName, idPath }: CorrespondenceProps<T>) => {
-  const { defaultBackgroundColor, iconColor } = useColors();
+  const { defaultBackgroundColor, defaultBorderColor, iconColor } = useColors();
   const [open, setOpen] = useState(false);
   const [selectedCorrespondence, setSelectedCorrespondence] = useState<Correspondence | null>(null);
   const correspondence = get(data, "correspondence");
@@ -102,7 +102,7 @@ export const CorrespondenceList = <T extends object>({ data, collectionName, idP
         );
       }),
     );
-  }, [correspondence, defaultBackgroundColor, handleEditClick, iconColor]);
+  }, [correspondence, defaultBackgroundColor, defaultBorderColor, handleEditClick, iconColor]);
 
   const dialogProps = useMemo(() => {
     const breakpoint: Breakpoint = "lg";

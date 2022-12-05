@@ -9,8 +9,10 @@ export const useColors = () => {
   const yellow = theme.palette.mode === "light" ? materialYellow[200] : materialYellow[600];
   const iconColor = theme.palette.mode === "dark" ? grey[200] : undefined;
   const popoverColor = theme.palette.mode === "light" ? "#f5f5f5" : "#0b0b15";
+  const defaultBorderColor = theme.palette.mode === "light" ? "#808080" : "#111111";
   return {
     defaultBackgroundColor,
+    defaultBorderColor,
     green,
     iconColor,
     popoverColor,

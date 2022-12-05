@@ -4,7 +4,6 @@ import { grey } from "@mui/material/colors";
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const voidFn = () => {};
 
-export const defaultBorderColor = "#808080";
 export const darkBlueBackground = "#12161F";
 export const lightPrimaryColor = "#002060";
 export const lightPrimaryDarkColor = "#000B44";
