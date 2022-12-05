@@ -81,7 +81,7 @@ export const CustomToolbar = <T,>({
               />
               <Tooltip arrow title={`Filter${tooltipObjectNameSafe}`}>
                 <IconButton
-                  onClick={handlePopoverClick}
+                  onMouseDown={handlePopoverClick}
                   size="small"
                   sx={{
                     "&:hover": {
