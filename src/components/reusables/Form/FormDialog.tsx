@@ -1,8 +1,8 @@
 import { Close } from "@mui/icons-material";
 import { Box, Button, Dialog, DialogProps, Grid, IconButton, Tooltip, Typography, useTheme } from "@mui/material";
 import { green, grey } from "@mui/material/colors";
-import { isEmpty } from "lodash";
-import React, { CSSProperties, PropsWithChildren, useEffect, useState } from "react";
+import { isEqual } from "lodash";
+import React, { CSSProperties, PropsWithChildren, useState } from "react";
 import { DeepPartial, FieldValues, FormProvider, SubmitHandler, useForm, UseFormProps } from "react-hook-form";
 import { useColors } from "../../../hooks";
 import { SPACING } from "../../../services";
@@ -12,6 +12,7 @@ interface FormDialogProps<T extends FieldValues> {
   dialogProps?: Partial<DialogProps>;
   handleDialogClose: () => void;
   onSubmit: SubmitHandler<T>;
+  onlyLoadWhenOpen?: boolean;
   open: boolean;
   paperStyleProps?: CSSProperties;
   stickySubmit?: boolean;
@@ -27,6 +28,7 @@ export const FormDialog = <T extends FieldValues>({
   paperStyleProps,
   children,
   stickySubmit,
+  onlyLoadWhenOpen,
 }: PropsWithChildren<FormDialogProps<T>>) => {
   const { popoverColor } = useColors();
   const theme = useTheme();
@@ -35,17 +37,15 @@ export const FormDialog = <T extends FieldValues>({
 
   const [openErrorDialog, setOpenErrorDialog] = useState(false);
 
-  useEffect(() => {
-    !isEmpty(methods.formState.errors) && methods.formState.isSubmitted && setOpenErrorDialog(true);
-  }, [methods.formState.errors, methods.formState.isSubmitted]);
-
   const closeErrorDialog = () => {
     setOpenErrorDialog(false);
   };
 
-  useEffect(() => {
-    useFormProps.defaultValues ? reset(useFormProps.defaultValues) : reset({} as T | DeepPartial<T> | undefined);
-  }, [reset, useFormProps.defaultValues, open]);
+  const [prevDefaultValues, setPrevDefaultValues] = useState<DeepPartial<T> | undefined>(undefined);
+  if (open && !isEqual(useFormProps.defaultValues, prevDefaultValues)) {
+    useFormProps.defaultValues ? reset(useFormProps.defaultValues) : reset({} as T);
+    setPrevDefaultValues(useFormProps.defaultValues);
+  }
 
   return (
     <Dialog
@@ -67,39 +67,46 @@ export const FormDialog = <T extends FieldValues>({
             <Close />
           </IconButton>
         </Tooltip>
-        <FormProvider {...methods}>
-          <form>
-            {children}
-            <Box sx={stickySubmit ? { bottom: 10, position: "fixed", zIndex: 1 } : undefined}>
-              <Button
-                className="update-button"
-                onClick={methods.handleSubmit((data, e) => {
-                  onSubmit(data, e);
-                  reset({} as T | DeepPartial<T> | undefined);
-                })}
-                sx={{
-                  "&:hover": {
-                    backgroundColor: green[900],
-                  },
-                  backgroundColor: green[800],
-                  color: theme.palette.mode === "light" ? "white" : grey[200],
-                  marginTop: SPACING,
-                }}
-                type="submit"
-                variant="contained"
-              >
-                Submit
-              </Button>
-            </Box>
-            <Grid item sx={{ float: stickySubmit ? "right" : undefined }}>
-              <Typography variant="caption">
-                Tip: use <b>tab</b> and <b>shift + tab</b> to navigate, <b>space bar</b> to select checkboxes,{" "}
-                <b>arrow keys</b> to select radio buttons, and <b>return</b> to submit and click buttons.
-              </Typography>
-            </Grid>
-          </form>
-          <FormErrorDialog handleDialogClose={closeErrorDialog} open={openErrorDialog} />
-        </FormProvider>
+        {(!onlyLoadWhenOpen || open) && (
+          <FormProvider {...methods}>
+            <form>
+              {children}
+              <Box sx={stickySubmit ? { bottom: 10, position: "fixed", zIndex: 1 } : undefined}>
+                <Button
+                  className="update-button"
+                  onClick={methods.handleSubmit(
+                    (data, e) => {
+                      onSubmit(data, e);
+                      reset({} as T);
+                    },
+                    () => {
+                      setOpenErrorDialog(true);
+                    },
+                  )}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: green[900],
+                    },
+                    backgroundColor: green[800],
+                    color: theme.palette.mode === "light" ? "white" : grey[200],
+                    marginTop: SPACING,
+                  }}
+                  type="submit"
+                  variant="contained"
+                >
+                  Submit
+                </Button>
+              </Box>
+              <Grid item sx={{ float: stickySubmit ? "right" : undefined }}>
+                <Typography variant="caption">
+                  Tip: use <b>tab</b> and <b>shift + tab</b> to navigate, <b>space bar</b> to select checkboxes,{" "}
+                  <b>arrow keys</b> to select radio buttons, and <b>return</b> to submit and click buttons.
+                </Typography>
+              </Grid>
+            </form>
+            <FormErrorDialog handleDialogClose={closeErrorDialog} open={openErrorDialog} />
+          </FormProvider>
+        )}
       </Box>
     </Dialog>
   );
@@ -107,6 +114,7 @@ export const FormDialog = <T extends FieldValues>({
 
 FormDialog.defaultProps = {
   dialogProps: undefined,
+  onlyLoadWhenOpen: undefined,
   paperStyleProps: undefined,
   stickySubmit: undefined,
 };

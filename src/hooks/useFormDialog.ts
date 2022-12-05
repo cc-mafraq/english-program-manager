@@ -1,13 +1,10 @@
-import { set } from "lodash";
-import { useCallback, useContext, useState } from "react";
-import { AppContext } from "../interfaces";
+import { useCallback, useState } from "react";
 
-interface UseFormDialogProps {
-  selectedDataPath?: string;
+interface UseFormDialogProps<T> {
+  setSelectedData?: (selectedData: T | null) => void;
 }
 
-export const useFormDialog = ({ selectedDataPath }: UseFormDialogProps) => {
-  const { appDispatch } = useContext(AppContext);
+export const useFormDialog = <T extends object>({ setSelectedData }: UseFormDialogProps<T>) => {
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleDialogOpen = useCallback(() => {
@@ -16,11 +13,8 @@ export const useFormDialog = ({ selectedDataPath }: UseFormDialogProps) => {
 
   const handleDialogClose = useCallback(() => {
     setOpenDialog(false);
-    if (selectedDataPath) {
-      const payload = set({}, selectedDataPath, null);
-      appDispatch({ payload });
-    }
-  }, [appDispatch, selectedDataPath]);
+    setSelectedData && setSelectedData(null);
+  }, [setSelectedData]);
 
   return { handleDialogClose, handleDialogOpen, openDialog };
 };

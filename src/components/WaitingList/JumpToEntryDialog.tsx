@@ -1,7 +1,7 @@
 import { Button, Dialog, Paper, TextField, Typography, useTheme } from "@mui/material";
 import { findIndex } from "lodash";
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { loadLocal, saveLocal, useColors } from "../../hooks";
+import React, { useEffect, useRef, useState } from "react";
+import { loadLocal, saveLocal, useColors, useWaitingListStore } from "../../hooks";
 import { WaitingListEntry } from "../../interfaces";
 import { phoneConditionFn } from "../../services";
 
@@ -9,18 +9,19 @@ interface JumpToEntryDialogProps {
   filteredWaitingList: WaitingListEntry[];
   handleDialogClose: () => void;
   open: boolean;
-  submitValue: Dispatch<SetStateAction<number | undefined>>;
 }
 
 export const JumpToEntryDialog: React.FC<JumpToEntryDialogProps> = ({
   handleDialogClose,
   open,
-  submitValue,
   filteredWaitingList,
 }) => {
   const { popoverColor } = useColors();
   const theme = useTheme();
   const [value, setValue] = useState<string | undefined>(loadLocal("jumpPhone"));
+  const submitValue = useWaitingListStore((state) => {
+    return state.setScrollToIndex;
+  });
 
   const onSubmit = () => {
     if (!value) return;

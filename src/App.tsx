@@ -1,19 +1,16 @@
 import { createTheme, PaletteMode, responsiveFontSizes, ThemeProvider, useMediaQuery } from "@mui/material";
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Authorization, MenuBar } from "./components";
 import { loadLocal } from "./hooks";
-import { AppContext, getDesignTokens, initialAppState, voidFn } from "./interfaces";
+import { getDesignTokens, voidFn } from "./interfaces";
 import { LoginPage, StatisticsPage, StudentDatabasePage, WaitingListPage } from "./pages";
-import { reducer } from "./reducers";
 
 export const ColorModeContext = React.createContext({
   toggleColorMode: voidFn,
 });
 
 export const App = () => {
-  const [appState, appDispatch] = useReducer(reducer, initialAppState);
-
   const isDarkPreference = useMediaQuery("(prefers-color-scheme: dark)");
   const localColorMode = loadLocal("colorMode");
   const [mode, setMode] = React.useState<PaletteMode>(
@@ -37,50 +34,44 @@ export const App = () => {
     return responsiveFontSizes(createTheme(getDesignTokens(mode)));
   }, [mode]);
 
-  const contextValue = React.useMemo(() => {
-    return { appDispatch, appState };
-  }, [appDispatch, appState]);
-
   return (
     <div style={{ background: theme.palette.background.default, overflowY: "clip" }}>
       <ColorModeContext.Provider value={colorMode}>
         <ThemeProvider theme={theme}>
-          <AppContext.Provider value={contextValue}>
-            <BrowserRouter>
-              <Authorization>
-                <Routes>
-                  <Route
-                    element={
-                      <>
-                        <MenuBar pageName="Student Database" />
-                        <StudentDatabasePage />
-                      </>
-                    }
-                    path="/epd"
-                  />
-                  <Route
-                    element={
-                      <>
-                        <MenuBar pageName="Waiting List" />
-                        <WaitingListPage />
-                      </>
-                    }
-                    path="/waitlist"
-                  />
-                  <Route
-                    element={
-                      <>
-                        <MenuBar pageName="Statistics" />
-                        <StatisticsPage />
-                      </>
-                    }
-                    path="/stats"
-                  />
-                  <Route element={<LoginPage />} path="/" />
-                </Routes>
-              </Authorization>
-            </BrowserRouter>
-          </AppContext.Provider>
+          <BrowserRouter>
+            <Authorization>
+              <Routes>
+                <Route
+                  element={
+                    <>
+                      <MenuBar pageName="Student Database" />
+                      <StudentDatabasePage />
+                    </>
+                  }
+                  path="/epd"
+                />
+                <Route
+                  element={
+                    <>
+                      <MenuBar pageName="Waiting List" />
+                      <WaitingListPage />
+                    </>
+                  }
+                  path="/waitlist"
+                />
+                <Route
+                  element={
+                    <>
+                      <MenuBar pageName="Statistics" />
+                      <StatisticsPage />
+                    </>
+                  }
+                  path="/stats"
+                />
+                <Route element={<LoginPage />} path="/" />
+              </Routes>
+            </Authorization>
+          </BrowserRouter>
         </ThemeProvider>
       </ColorModeContext.Provider>
     </div>

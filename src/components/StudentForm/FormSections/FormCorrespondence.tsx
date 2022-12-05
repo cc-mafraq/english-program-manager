@@ -1,22 +1,18 @@
-import React, { useContext } from "react";
+import React from "react";
 import { get, useFormContext } from "react-hook-form";
 import { useFormList } from "../../../hooks";
-import { AppContext } from "../../../interfaces";
 import { SPACING } from "../../../services";
 import { FormLabel, FormList, GridContainer } from "../../reusables";
 import { FormCorrespondenceItem } from "./ListItems";
 
-interface FormCorrespondenceProps {
-  selectedStudentPath: string;
+interface FormCorrespondenceProps<T> {
+  selectedData: T | null;
 }
 
-export const FormCorrespondence = <T extends object>({ selectedStudentPath }: FormCorrespondenceProps) => {
-  const { appState } = useContext(AppContext);
-  const selectedData = get(appState, selectedStudentPath);
-
+export const FormCorrespondence = <T extends object>({ selectedData }: FormCorrespondenceProps<T>) => {
   const methods = useFormContext<T>();
   const [correspondence, addCorrespondence, removeCorrespondence] = useFormList(
-    selectedData && selectedData.correspondence ? selectedData?.correspondence : [],
+    selectedData && get(selectedData, "correspondence") ? get(selectedData, "correspondence") : [],
     "correspondence",
     methods,
   );

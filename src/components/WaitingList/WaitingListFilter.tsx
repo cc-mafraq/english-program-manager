@@ -1,7 +1,8 @@
 import { countBy, filter, find, first, get, last, map, orderBy, take, uniq, values } from "lodash";
 import moment from "moment";
-import React, { useCallback, useContext, useMemo } from "react";
-import { AppContext, HighPriority, WaitingListEntry, WaitlistOutcome } from "../../interfaces";
+import React, { useCallback, useMemo } from "react";
+import { useAppStore, useWaitingListStore } from "../../hooks";
+import { HighPriority, WaitingListEntry, WaitlistOutcome } from "../../interfaces";
 import { FilterField, MOMENT_FORMAT } from "../../services";
 import { FilterDrawer } from "../reusables";
 
@@ -18,10 +19,18 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({
   handleClose,
   tooltipObjectName,
 }) => {
-  const {
-    appState: { role, waitingList },
-    appDispatch,
-  } = useContext(AppContext);
+  const role = useAppStore((state) => {
+    return state.role;
+  });
+  const waitingList = useWaitingListStore((state) => {
+    return state.waitingList;
+  });
+  const waitingListFilter = useWaitingListStore((state) => {
+    return state.filter;
+  });
+  const setFilter = useWaitingListStore((state) => {
+    return state.setFilter;
+  });
   const waitingListPhoneCounts = useMemo(() => {
     return countBy(waitingList, "primaryPhone");
   }, [waitingList]);
@@ -30,8 +39,8 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({
   const isAdminOrFaculty = isAdmin || role === "faculty";
 
   const handleClearFilters = useCallback(() => {
-    appDispatch({ payload: { waitingListFilter: [] } });
-  }, [appDispatch]);
+    setFilter([]);
+  }, [setFilter]);
 
   const removeDuplicates = useCallback(
     (wlEntry: WaitingListEntry) => {
@@ -135,10 +144,11 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({
     <FilterDrawer
       anchorEl={anchorEl}
       data={waitingList}
+      filter={waitingListFilter}
       filterFields={filterFields}
-      filterStatePath="waitingListFilter"
       handleClearFilters={handleClearFilters}
       handleClose={handleClose}
+      setFilter={setFilter}
       tooltipObjectName={tooltipObjectName}
     />
   );

@@ -1,8 +1,8 @@
 import { HideImage } from "@mui/icons-material";
 import { Box, IconButton, Tooltip } from "@mui/material";
-import React, { useContext } from "react";
+import React from "react";
 import { useFormContext } from "react-hook-form";
-import { AppContext } from "../../../interfaces";
+import { useStudentStore } from "../../../hooks";
 import { AddImageButton } from "../../StudentList";
 
 interface FormImageActionsProps {
@@ -18,9 +18,9 @@ export const FormImageActions: React.FC<FormImageActionsProps> = ({
   setImg,
   setLoading,
 }) => {
-  const {
-    appState: { selectedStudent },
-  } = useContext(AppContext);
+  const selectedStudent = useStudentStore((state) => {
+    return state.selectedStudent;
+  });
   const { setValue } = useFormContext();
 
   return (

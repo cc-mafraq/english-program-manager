@@ -1,7 +1,6 @@
 import { Box, Card, CardContent, Tab, Tabs, useTheme } from "@mui/material";
 import { get, map } from "lodash";
-import React, { Attributes, CSSProperties, useCallback, useEffect, useRef, useState } from "react";
-import { darkBlueBackground } from "../../../interfaces";
+import React, { Attributes, CSSProperties, useCallback, useRef, useState } from "react";
 
 interface TabProps {
   component: React.ReactNode;
@@ -14,22 +13,16 @@ interface CustomCardProps<T> {
   header?: React.ReactNode;
   id?: string | number;
   image?: React.ReactNode;
-  index?: number;
   noTabs?: boolean;
-  setSize?: (index: number, size: number) => void;
   setTabValue?: (id: string | number, tabValue: number) => void;
   style?: CSSProperties;
   tabContents: TabProps[];
   tabValue?: number;
-  windowWidth?: number;
 }
 
 export const CustomCard = <T,>({
   id,
   data,
-  setSize,
-  windowWidth,
-  index,
   style,
   tabValue,
   setTabValue,
@@ -41,13 +34,8 @@ export const CustomCard = <T,>({
   const theme = useTheme();
 
   const rowRef = useRef<HTMLDivElement>(null);
+  // use a local tab value because updating tabValue prop in parent is a ref (i.e. won't trigger re-render)
   const [localTabValue, setLocalTabValue] = useState(tabValue || 0);
-
-  useEffect(() => {
-    if (rowRef.current && setSize && index !== undefined) {
-      setSize(index, rowRef.current.clientHeight);
-    }
-  }, [index, setSize, windowWidth, localTabValue, rowRef.current?.clientHeight]);
 
   const handleChange = useCallback(
     (event: React.SyntheticEvent, newValue: number) => {
@@ -57,15 +45,13 @@ export const CustomCard = <T,>({
     [setTabValue, id],
   );
 
-  useEffect(() => {
-    setLocalTabValue(tabValue || 0);
-  }, [tabValue]);
+  const padding = { paddingLeft: "10px", paddingTop: "16px" };
 
   return (
-    <div style={style ? { ...style, paddingLeft: "10px", paddingTop: "16px" } : undefined}>
+    <div style={style ? { ...style, ...padding } : padding}>
       <Card
         sx={{
-          backgroundColor: theme.palette.mode === "dark" ? darkBlueBackground : undefined,
+          backgroundColor: theme.palette.mode === "dark" ? theme.palette.background.default : undefined,
           width: "100%",
         }}
       >
@@ -113,11 +99,8 @@ CustomCard.defaultProps = {
   header: undefined,
   id: undefined,
   image: undefined,
-  index: undefined,
   noTabs: false,
-  setSize: undefined,
   setTabValue: undefined,
   style: undefined,
   tabValue: undefined,
-  windowWidth: undefined,
 };

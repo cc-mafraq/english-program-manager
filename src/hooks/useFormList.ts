@@ -1,7 +1,7 @@
 import { cloneDeep, get, includes, indexOf, isUndefined, set } from "lodash";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { DeepPartial, FieldValues, Path, PathValue, UseFormReturn } from "react-hook-form";
-import { AppContext } from "../interfaces";
+import { useStudentStore } from "./useStores";
 
 export const useFormList = <T extends FieldValues>(
   initialState: unknown[],
@@ -37,9 +37,9 @@ export const useFormList = <T extends FieldValues>(
 };
 
 export const useDateInitialState = <T>(datePath: Path<T>) => {
-  const {
-    appState: { selectedStudent },
-  } = useContext(AppContext);
+  const selectedStudent = useStudentStore((state) => {
+    return state.selectedStudent;
+  });
   const dateArr = get(selectedStudent, datePath);
 
   return selectedStudent && dateArr && dateArr?.length > 0 ? dateArr : [""];

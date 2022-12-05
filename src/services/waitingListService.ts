@@ -1,42 +1,46 @@
-import { countBy, filter, findIndex, forEach, get, map, orderBy, slice, sortBy, union } from "lodash";
+import { countBy, findIndex, flatten, get, groupBy, map, orderBy, slice, values } from "lodash";
 import moment from "moment";
 import { WaitingListEntry } from "../interfaces";
 import { MOMENT_FORMAT } from "./studentFormService";
 
-export const sortWaitingList = (waitingList: WaitingListEntry[], shouldFilter?: boolean) => {
-  const orderedList = orderBy(
-    filter(waitingList, (wl) => {
-      return shouldFilter !== true || wl.waiting;
-    }),
-    [
-      "waiting",
-      "highPriority",
-      (wle) => {
-        return moment(wle.entryDate, MOMENT_FORMAT);
-      },
-      "timestamp",
-    ],
-    ["desc", "desc", "asc", "asc"],
+export const sortWaitingList = (waitingList: WaitingListEntry[]) => {
+  const orderedList = flatten(
+    orderBy(
+      values(
+        groupBy(
+          orderBy(
+            waitingList,
+            [
+              "waiting",
+              "highPriority",
+              (wle) => {
+                return moment(wle.entryDate, MOMENT_FORMAT);
+              },
+              "timestamp",
+            ],
+            ["desc", "desc", "asc", "asc"],
+          ),
+          "primaryPhone",
+        ),
+      ),
+      [
+        (wle) => {
+          return wle[0].waiting;
+        },
+        (wle) => {
+          return wle[0].highPriority;
+        },
+        (wle) => {
+          return moment(wle[0].entryDate, MOMENT_FORMAT);
+        },
+        (wle) => {
+          return wle[0].timestamp;
+        },
+      ],
+      ["desc", "desc", "asc", "asc"],
+    ),
   );
-
-  // Move duplicate entries next to most current entry
-  const duplicateIndexes: { dupIndex: number; originalIndex: number }[] = [];
-  forEach(orderedList, (wl, i) => {
-    const indexOfOtherEntry = findIndex(orderedList, (e) => {
-      return e.primaryPhone !== -1 && e.primaryPhone === wl.primaryPhone;
-    });
-    if (indexOfOtherEntry !== -1 && indexOfOtherEntry < i) {
-      duplicateIndexes.push({ dupIndex: i, originalIndex: indexOfOtherEntry });
-    }
-  });
-  forEach(sortBy(duplicateIndexes, "originalIndex"), (di, i) => {
-    orderedList.splice(di.originalIndex + 1 + i, 0, orderedList[di.dupIndex + i]);
-  });
-  return union(
-    filter(orderedList, (e) => {
-      return e !== undefined;
-    }),
-  );
+  return orderedList;
 };
 
 export const getPosition = (waitingList: WaitingListEntry[], wlEntry: WaitingListEntry) => {

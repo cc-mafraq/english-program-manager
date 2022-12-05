@@ -1,137 +1,97 @@
 import { collection } from "firebase/firestore";
-import { every, filter as filterFn, forEach, get, includes, isUndefined, set } from "lodash";
-import { useCallback, useContext, useEffect } from "react";
+import { every, filter, filter as filterFn, get, includes, map } from "lodash";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useCollection } from "react-firebase-hooks/firestore";
-import { useNavigate } from "react-router-dom";
-import useState from "react-usestateref";
-import { AppContext, AppState, FilterValue } from "../interfaces";
+import { FilterValue } from "../interfaces";
 import { db, logout } from "../services";
 import { loadLocal } from "./useLocal";
+import { useAppStore } from "./useStores";
 
 interface UsePageStateParams<T> {
   collectionName: string;
-  conditionToAddPath?: string;
-  filter?: FilterValue<T>[];
-  listRef: React.MutableRefObject<T[]>;
-  payloadPath: keyof AppState;
+  filter: FilterValue<T>[];
+  // a doc won't be added to the list unless it has a value at this path
+  requiredValuePath?: string;
   searchFn: (list: T[], searchString: string) => T[];
+  setData: (data: T[]) => void;
   sortFn: (list: T[]) => T[];
-  spreadsheetIsLoading?: boolean;
-}
-
-interface SetStateOptions<T> {
-  newList?: T[];
-  newPage?: number;
-  newRowsPerPage?: number;
-  newSearchString?: string;
 }
 
 export const usePageState = <T>({
-  listRef,
   searchFn,
   sortFn,
-  filter,
-  payloadPath,
+  filter: dataFilter,
+  setData,
   collectionName,
-  spreadsheetIsLoading,
-  conditionToAddPath,
+  requiredValuePath,
 }: UsePageStateParams<T>) => {
-  const { appDispatch } = useContext(AppContext);
+  const setLoading = useAppStore((state) => {
+    return state.setLoading;
+  });
 
-  const [filteredList, setFilteredList, filteredListRef] = useState<T[]>([]);
-  const [listPage, setListPage] = useState<T[]>([]);
-  const [searchString, setSearchString, searchStringRef] = useState<string>("");
+  const [searchString, setSearchString] = useState<string>("");
   const [showActions, setShowActions] = useState(loadLocal("showActions") !== false);
-  const navigate = useNavigate();
   const [docs, docsLoading, docsError] = useCollection(collection(db, collectionName));
+
+  const sortedList = useMemo(() => {
+    const newDataList = filter(
+      map(docs?.docs, (d) => {
+        return d.data();
+      }),
+      (data) => {
+        return !requiredValuePath || get(data, requiredValuePath);
+      },
+    );
+    return sortFn(newDataList as T[]);
+  }, [docs?.docs, requiredValuePath, sortFn]);
+
+  const searchedList = useMemo(() => {
+    return searchString ? searchFn(sortedList, searchString) : sortedList;
+  }, [searchFn, searchString, sortedList]);
 
   const filterList = useCallback(
     (object: T) => {
-      return every(filter, (filterValue) => {
+      return every(dataFilter, (filterValue) => {
         const value = filterValue.fieldFunction
           ? filterValue.fieldFunction(object)
           : get(object, filterValue.fieldPath);
         return includes(filterValue.values, value);
       });
     },
-    [filter],
+    [dataFilter],
   );
 
-  const setState = useCallback(
-    ({ newSearchString, newList }: SetStateOptions<T>) => {
-      const newSearchedList =
-        !isUndefined(newSearchString) || newList
-          ? searchFn(
-              !isUndefined(newList) ? newList : listRef.current,
-              !isUndefined(newSearchString) ? newSearchString : searchStringRef.current,
-            )
-          : filteredListRef.current;
-      const newFilteredList =
-        filter && filter.length > 0 ? sortFn(filterFn(newSearchedList, filterList) as T[]) : newSearchedList;
-      setFilteredList(newFilteredList);
-      const newPayload: Partial<AppState> = {};
-      set(newPayload, payloadPath, newList);
-      newList && appDispatch({ payload: newPayload });
-      !isUndefined(newSearchString) && setSearchString(newSearchString);
-      setListPage(newFilteredList);
-    },
-    [
-      searchFn,
-      listRef,
-      searchStringRef,
-      filteredListRef,
-      filter,
-      sortFn,
-      filterList,
-      setFilteredList,
-      payloadPath,
-      appDispatch,
-      setSearchString,
-    ],
-  );
+  const filteredList = useMemo(() => {
+    return dataFilter && dataFilter.length > 0 ? filterFn(searchedList, filterList) : searchedList;
+  }, [dataFilter, filterList, searchedList]);
 
   useEffect(() => {
-    if (!spreadsheetIsLoading) {
-      const dataList: T[] = [];
-      forEach(docs?.docs, (d) => {
-        const data = d.data();
-        if (!conditionToAddPath || get(data, conditionToAddPath)) dataList.push(data as T);
-      });
-      const sortedData = sortFn(dataList);
-      setState({
-        newList: sortedData,
-      });
-    }
-  }, [setState, appDispatch, docs, sortFn, spreadsheetIsLoading, conditionToAddPath]);
+    setData(sortedList);
+  }, [setData, sortedList]);
 
   useEffect(() => {
-    appDispatch({ payload: { loading: docsLoading } });
-  }, [appDispatch, docsLoading]);
+    setLoading(docsLoading);
+  }, [docsLoading, setLoading]);
 
   useEffect(() => {
     if (docsError?.code === "permission-denied") {
       logout();
-      navigate("/");
     }
-  }, [navigate, docsError]);
-
-  useEffect(() => {
-    setState({});
-  }, [filter, setState]);
+  }, [docsError]);
 
   const handleSearchStringChange = useCallback(
     (value: string) => {
-      setState({ newPage: 0, newSearchString: value });
+      setSearchString(value);
     },
-    [setState],
+    [setSearchString],
   );
 
   return {
     filteredList,
     handleSearchStringChange,
-    listPage,
     searchString,
     setShowActions,
     showActions,
+    sortedList,
   };
 };

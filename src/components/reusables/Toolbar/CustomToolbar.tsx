@@ -1,32 +1,23 @@
 import { FilterList, MoreHoriz } from "@mui/icons-material";
 import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography, useTheme } from "@mui/material";
-import { get } from "lodash";
-import React, { Attributes, Dispatch, SetStateAction, useContext } from "react";
-import { saveLocal, useColors } from "../../../hooks";
-import { AppContext } from "../../../interfaces";
+import React, { Attributes, Dispatch, SetStateAction, useCallback } from "react";
+import { ActionsMenu } from "../..";
+import { saveLocal, useAppStore, useColors } from "../../../hooks";
+import { FilterValue } from "../../../interfaces";
 import { Searchbar } from "./Searchbar";
 
-const handlePopoverClick = (setFn: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>) => {
-  return (event: React.MouseEvent<HTMLButtonElement>) => {
-    setFn(event.currentTarget);
-  };
-};
-
-const handlePopoverClose = (setFn: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>) => {
-  return () => {
-    setFn(null);
-  };
-};
-
 interface CustomToolbarProps<T> {
+  addButtonTooltip?: string;
+  filter: FilterValue<T>[];
   filterComponent: React.ReactNode;
-  filterName: string;
+  handleDialogOpen?: () => void;
   handleSearchStringChange: (value: string) => void;
   list: T[];
+  otherActions?: React.ReactNode;
   searchString: string;
   setShowActions: Dispatch<SetStateAction<boolean>>;
   showActions: boolean;
-  tooltipObjectName: string;
+  tooltipObjectName?: string;
 }
 
 export const CustomToolbar = <T,>({
@@ -34,81 +25,107 @@ export const CustomToolbar = <T,>({
   handleSearchStringChange,
   showActions,
   setShowActions,
-  searchString,
   tooltipObjectName,
   filterComponent,
-  filterName,
+  filter,
+  handleDialogOpen,
+  otherActions,
+  addButtonTooltip,
+  searchString,
 }: CustomToolbarProps<T>) => {
-  const {
-    appState: { role },
-  } = useContext(AppContext);
   const [filterAnchorEl, setFilterAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const { iconColor } = useColors();
-  const { appState } = useContext(AppContext);
-  const filter = get(appState, filterName);
+  const role = useAppStore((state) => {
+    return state.role;
+  });
   const theme = useTheme();
+  const tooltipObjectNameSafe = tooltipObjectName ? ` ${tooltipObjectName}` : "";
+
+  const handlePopoverClick = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
+    setFilterAnchorEl(event.currentTarget);
+  }, []);
+
+  const handlePopoverClose = useCallback(() => {
+    setFilterAnchorEl(null);
+  }, []);
 
   return (
-    <AppBar color="default" elevation={1} position="sticky">
-      <Toolbar
-        sx={{
-          justifyContent: "space-between",
-          paddingTop: "1vh",
-        }}
-      >
-        {(role === "admin" || role === "faculty") && (
-          <Box>
-            <Tooltip arrow placement="right" title={`${showActions ? "Hide" : "Show"} Actions`}>
-              <IconButton
-                onClick={() => {
-                  saveLocal("showActions", !showActions);
-                  setShowActions(!showActions);
-                }}
-              >
-                <MoreHoriz color="primary" />
-              </IconButton>
-            </Tooltip>
+    <>
+      <AppBar color="default" elevation={1} position="sticky">
+        <Toolbar
+          sx={{
+            justifyContent: "space-between",
+            paddingTop: "1vh",
+          }}
+        >
+          {(role === "admin" || role === "faculty") && (
+            <Box>
+              <Tooltip arrow placement="right" title={`${showActions ? "Hide" : "Show"} Actions`}>
+                <IconButton
+                  onClick={() => {
+                    saveLocal("showActions", !showActions);
+                    setShowActions(!showActions);
+                  }}
+                >
+                  <MoreHoriz color="primary" />
+                </IconButton>
+              </Tooltip>
+            </Box>
+          )}
+          <Box margin="auto">
+            <Box sx={{ whiteSpace: "nowrap" }}>
+              <Searchbar
+                handleSearchStringChange={handleSearchStringChange}
+                placeholder={`Search${tooltipObjectNameSafe.toLowerCase()}`}
+                searchString={searchString}
+              />
+              <Tooltip arrow title={`Filter${tooltipObjectNameSafe}`}>
+                <IconButton
+                  onClick={handlePopoverClick}
+                  size="small"
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: filter?.length
+                        ? theme.palette.mode === "dark"
+                          ? theme.palette.secondary.light
+                          : theme.palette.secondary.dark
+                        : undefined,
+                    },
+                    backgroundColor: filter?.length ? theme.palette.secondary.main : undefined,
+                    marginBottom: "5px",
+                    marginLeft: "10px",
+                  }}
+                >
+                  <FilterList sx={{ color: filter?.length ? theme.palette.common.white : iconColor }} />
+                </IconButton>
+              </Tooltip>
+              {React.isValidElement(filterComponent) &&
+                React.cloneElement(filterComponent, {
+                  anchorEl: filterAnchorEl,
+                  handleClose: handlePopoverClose,
+                  tooltipObjectName,
+                } as Partial<unknown> & Attributes)}
+            </Box>
           </Box>
-        )}
-        <Box margin="auto">
-          <Box sx={{ whiteSpace: "nowrap" }}>
-            <Searchbar
-              handleSearchStringChange={handleSearchStringChange}
-              placeholder={`Search ${tooltipObjectName.toLowerCase()}`}
-              searchString={searchString}
-            />
-            <Tooltip arrow title={`Filter ${tooltipObjectName}`}>
-              <IconButton
-                onClick={handlePopoverClick(setFilterAnchorEl)}
-                size="small"
-                sx={{
-                  "&:hover": {
-                    backgroundColor: filter?.length
-                      ? theme.palette.mode === "dark"
-                        ? theme.palette.secondary.light
-                        : theme.palette.secondary.dark
-                      : undefined,
-                  },
-                  backgroundColor: filter?.length ? theme.palette.secondary.main : undefined,
-                  marginBottom: "5px",
-                  marginLeft: "10px",
-                }}
-              >
-                <FilterList sx={{ color: filter?.length ? theme.palette.common.white : iconColor }} />
-              </IconButton>
-            </Tooltip>
-            {React.isValidElement(filterComponent) &&
-              React.cloneElement(filterComponent, {
-                anchorEl: filterAnchorEl,
-                handleClose: handlePopoverClose(setFilterAnchorEl),
-                tooltipObjectName,
-              } as Partial<unknown> & Attributes)}
+          <Box textAlign="right">
+            <Typography>{list.length} results</Typography>
           </Box>
-        </Box>
-        <Box textAlign="right">
-          <Typography>{list.length} results</Typography>
-        </Box>
-      </Toolbar>
-    </AppBar>
+        </Toolbar>
+      </AppBar>
+      <ActionsMenu
+        addButtonTooltip={addButtonTooltip}
+        handleDialogOpen={handleDialogOpen}
+        otherActions={otherActions}
+        showActions={showActions}
+        tooltipObjectName={tooltipObjectName}
+      />
+    </>
   );
+};
+
+CustomToolbar.defaultProps = {
+  addButtonTooltip: undefined,
+  handleDialogOpen: undefined,
+  otherActions: undefined,
+  tooltipObjectName: undefined,
 };

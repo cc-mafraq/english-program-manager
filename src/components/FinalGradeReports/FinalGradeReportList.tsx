@@ -2,9 +2,10 @@ import { Box } from "@mui/material";
 import download from "downloadjs";
 import JSZip from "jszip";
 import { filter, includes, isEqual, map, replace } from "lodash";
-import React, { useContext, useMemo } from "react";
+import React, { useMemo } from "react";
 import { FinalGradeReport } from ".";
-import { AppContext, Student } from "../../interfaces";
+import { useStudentStore } from "../../hooks";
+import { Student } from "../../interfaces";
 import {
   getAllSessions,
   getSortedSARIndexArray,
@@ -19,7 +20,6 @@ interface FinalGradeReportListProps {
   scale: number;
   searchString: string;
   session: Student["initialSession"];
-  shouldDownload: boolean;
   width: number;
 }
 
@@ -30,12 +30,11 @@ export const FinalGradeReportList: React.FC<FinalGradeReportListProps> = ({
   scale,
   searchString,
   session,
-  shouldDownload,
   width,
 }) => {
-  const {
-    appState: { students },
-  } = useContext(AppContext);
+  const students = useStudentStore((state) => {
+    return state.students;
+  });
 
   const sessionOptions = useMemo(() => {
     return getAllSessions(students);
@@ -71,7 +70,6 @@ export const FinalGradeReportList: React.FC<FinalGradeReportListProps> = ({
               scale={scale}
               session={session}
               sessionOptions={sessionOptions}
-              shouldDownload={shouldDownload}
               studentAcademicRecord={fgrStudent}
               width={width}
               zip={zip}

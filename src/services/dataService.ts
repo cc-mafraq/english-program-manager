@@ -76,4 +76,5 @@ export const setImage = async (student: Student, file: File | null, imagePath: s
   const imageURL = await uploadImage(student.epId, file, folderName);
   set(student, imagePath, imageURL);
   await setData(student, "students", "epId", { merge: true });
+  return imageURL;
 };
