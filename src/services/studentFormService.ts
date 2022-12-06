@@ -121,6 +121,14 @@ const percentageToInteger = (value: string, originalValue: string) => {
   return isNaN(percentageInt) ? originalValue : percentageInt;
 };
 
+export const isValidPhoneNumber = (value: number | undefined): boolean => {
+  return (
+    value !== undefined &&
+    value > 9999999 &&
+    ((value > 700000000 && value < 800000000) || !startsWith(toString(value), "7"))
+  );
+};
+
 const percentError = "Percentage must be an integer between 0 and 100";
 const percentageSchema = number()
   .min(0, percentError)
@@ -226,11 +234,7 @@ export const phoneNumberSchema = object()
     notes: string().transform(emptyToNull).nullable().optional(),
     number: number()
       .transform(stringToPhoneNumber)
-      .test("valid-phone-number", "The phone number is not valid", (value) => {
-        return (
-          value !== undefined && ((value > 700000000 && value < 800000000) || !startsWith(toString(value), "7"))
-        );
-      })
+      .test("valid-phone-number", "The phone number is not valid", isValidPhoneNumber)
       .required("Phone number is required if added. You can remove the phone number by clicking the ❌ button"),
   })
   .required();

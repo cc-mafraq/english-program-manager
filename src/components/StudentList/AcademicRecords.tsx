@@ -1,20 +1,21 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Edit } from "@mui/icons-material";
-import { Box, Button, IconButton, Tooltip, Typography, TypographyProps, useTheme } from "@mui/material";
+import {
+  Box,
+  Breakpoint,
+  Button,
+  IconButton,
+  Tooltip,
+  Typography,
+  TypographyProps,
+  useTheme,
+} from "@mui/material";
 import { green as materialGreen, red as materialRed } from "@mui/material/colors";
 import { findIndex, forOwn, map, reverse } from "lodash";
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { FormAcademicRecordsItem, FormDialog, LabeledContainer, LabeledText, ProgressBox } from "..";
-import { useColors } from "../../hooks";
-import {
-  AcademicRecord,
-  AppContext,
-  emptyAcademicRecord,
-  FinalResult,
-  GenderedLevel,
-  Grade,
-  Student,
-} from "../../interfaces";
+import { useAppStore, useColors, useStudentStore } from "../../hooks";
+import { AcademicRecord, emptyAcademicRecord, FinalResult, GenderedLevel, Grade, Student } from "../../interfaces";
 import {
   academicRecordsSchema,
   getAllSessions,
@@ -22,7 +23,6 @@ import {
   removeNullFromObject,
   setData,
   SPACING,
-  StudentProgress,
 } from "../../services";
 
 interface AcademicRecordsProps {
@@ -64,20 +64,30 @@ GradeInfo.defaultProps = {
   grade: undefined,
 };
 
+const FormAcademicRecordsMemo = React.memo(() => {
+  return (
+    <Box paddingRight={SPACING * 2}>
+      <FormAcademicRecordsItem />
+    </Box>
+  );
+});
+FormAcademicRecordsMemo.displayName = "Academic Records Form";
+
 export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student }) => {
-  const {
-    appState: { students, role },
-  } = useContext(AppContext);
-  const [progress, setProgress] = useState<StudentProgress>({});
+  const students = useStudentStore((state) => {
+    return state.students;
+  });
+  const role = useAppStore((state) => {
+    return state.role;
+  });
+  const progress = useMemo(() => {
+    return getProgress(student, getAllSessions(students));
+  }, [student, students]);
   const theme = useTheme();
-  const { iconColor } = useColors();
+  const { iconColor, defaultBorderColor } = useColors();
   const [open, setOpen] = useState(false);
   const [selectedAcademicRecord, setSelectedAcademicRecord] = useState<AcademicRecord | null>(null);
   const { red, green } = useColors();
-
-  useEffect(() => {
-    setProgress(getProgress(student, getAllSessions(students)));
-  }, [student, students]);
 
   const handleDialogOpen = useCallback(() => {
     setOpen(true);
@@ -113,6 +123,18 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
     [handleDialogClose, selectedAcademicRecord, student],
   );
 
+  const dialogProps = useMemo(() => {
+    const breakpoint: Breakpoint = "lg";
+    return { maxWidth: breakpoint };
+  }, []);
+
+  const useFormProps = useMemo(() => {
+    return {
+      defaultValues: selectedAcademicRecord || emptyAcademicRecord,
+      resolver: yupResolver(academicRecordsSchema),
+    };
+  }, [selectedAcademicRecord]);
+
   const PB = useMemo(() => {
     return map(forOwn(progress), (v, k) => {
       return <ProgressBox key={k} level={k as GenderedLevel} sessionResults={v} />;
@@ -130,7 +152,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
             labelProps={{ fontSize: 20, fontWeight: "normal" }}
             parentContainerProps={{
               border: 1,
-              borderColor: theme.palette.mode === "light" ? "#999999" : "#666666",
+              borderColor: defaultBorderColor,
               marginBottom: 1,
               padding: 2,
               paddingTop: 1,
@@ -208,7 +230,16 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
         );
       }),
     );
-  }, [green, handleEditClick, iconColor, red, role, student.academicRecords, theme.palette.mode]);
+  }, [
+    defaultBorderColor,
+    green,
+    handleEditClick,
+    iconColor,
+    red,
+    role,
+    student.academicRecords,
+    theme.palette.mode,
+  ]);
 
   return (
     <>
@@ -230,19 +261,14 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
         {RecordData}
         <LabeledText label="Certificate Requests">{student?.certificateRequests}</LabeledText>
       </LabeledContainer>
-      <FormDialog
-        dialogProps={{ maxWidth: "lg" }}
+      <FormDialog<AcademicRecord>
+        dialogProps={dialogProps}
         handleDialogClose={handleDialogClose}
         onSubmit={onSubmit}
         open={open}
-        useFormProps={{
-          defaultValues: selectedAcademicRecord || emptyAcademicRecord,
-          resolver: yupResolver(academicRecordsSchema),
-        }}
+        useFormProps={useFormProps}
       >
-        <Box paddingRight={SPACING * 2}>
-          <FormAcademicRecordsItem />
-        </Box>
+        <FormAcademicRecordsMemo />
       </FormDialog>
     </>
   );

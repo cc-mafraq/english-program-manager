@@ -1,15 +1,15 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useFormContext } from "react-hook-form";
-import { useDateInitialState, useFormList } from "../../../hooks";
-import { AppContext, Student, withdrawReasons } from "../../../interfaces";
+import { useDateInitialState, useFormList, useStudentStore } from "../../../hooks";
+import { Student, withdrawReasons } from "../../../interfaces";
 import { SPACING } from "../../../services";
 import { FormLabel, FormList, GridContainer, GridItemAutocomplete, GridItemDatePicker } from "../../reusables";
 import { FormCheatingSessionItem, FormDateItem } from "./ListItems";
 
 export const FormStatus: React.FC = () => {
-  const {
-    appState: { selectedStudent },
-  } = useContext(AppContext);
+  const selectedStudent = useStudentStore((state) => {
+    return state.selectedStudent;
+  });
   const methods = useFormContext<Student>();
 
   const [cheatingSessions, addCheatingSession, removeCheatingSession] = useFormList(

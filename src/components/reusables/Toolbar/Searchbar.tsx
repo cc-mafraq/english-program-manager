@@ -1,14 +1,14 @@
 import { Close, Search } from "@mui/icons-material";
 import { alpha, Box, IconButton, InputBase, Tooltip, useTheme } from "@mui/material";
 import { isEmpty } from "lodash";
-import React, { MouseEvent, useEffect, useRef, useState } from "react";
+import React, { MouseEvent, useRef, useState } from "react";
 import { useColors } from "../../../hooks";
 
 interface SearchbarProps {
   handleSearchStringChange: (value: string) => void;
   noExpand?: boolean;
   placeholder: string;
-  searchString: string;
+  searchString?: string;
   width?: string;
 }
 
@@ -17,19 +17,21 @@ const searchDelay = 500;
 
 export const Searchbar: React.FC<SearchbarProps> = ({
   handleSearchStringChange,
-  searchString,
   noExpand,
   width,
   placeholder,
+  searchString,
 }) => {
   const theme = useTheme();
   const { iconColor } = useColors();
   const [value, setValue] = useState("");
   const searchbarRef = useRef<HTMLDivElement>();
 
-  useEffect(() => {
+  const [prevSearchString, setPrevSearchString] = useState(searchString);
+  if (searchString !== undefined && prevSearchString !== searchString) {
     setValue(searchString);
-  }, [searchString]);
+    setPrevSearchString(searchString);
+  }
 
   const handleLocalSearchStringChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     setValue(e.target.value);
@@ -135,5 +137,6 @@ export const Searchbar: React.FC<SearchbarProps> = ({
 
 Searchbar.defaultProps = {
   noExpand: false,
+  searchString: undefined,
   width: undefined,
 };

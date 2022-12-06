@@ -127,6 +127,7 @@ module.exports = {
       },
     ],
     "react/jsx-no-useless-fragment": "off",
+    "react/prop-types": "off",
   },
   settings: {
     // Imports with these extensions can be resolved with relative path

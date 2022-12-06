@@ -6,6 +6,7 @@ import JSZip from "jszip";
 import { countBy, isUndefined, map, nth, replace } from "lodash";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FGRGridRow, FGRGridRowProps, FGRHeader } from ".";
+import { useFinalGradeReportStore } from "../../hooks";
 import { FinalResult, lightPrimaryColor, Student } from "../../interfaces";
 import {
   FinalGradeReportFormValues,
@@ -24,7 +25,6 @@ interface FinalGradeReportProps {
   scale: number;
   session: Student["initialSession"];
   sessionOptions: Student["initialSession"][];
-  shouldDownload: boolean;
   studentAcademicRecord: StudentAcademicRecordIndex;
   width: number;
   zip: JSZip;
@@ -40,7 +40,6 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
   session,
   sessionOptions,
   studentAcademicRecord,
-  shouldDownload,
   scale,
   width,
   zip,
@@ -66,42 +65,47 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const componentRef = useRef(null);
 
-  const downloadFGR = useCallback(
-    (dl: boolean) => {
-      return async () => {
-        if (componentRef.current) {
-          const imgData = await toPng(componentRef.current, {
-            backgroundColor: lightPrimaryColor,
-            canvasHeight: fgrHeight,
-            canvasWidth: width / scale,
-            skipAutoScale: true,
-          });
-          if (dl) {
-            await download(imgData, fileName);
-            setIsDownloaded(true);
-          }
-          return imgData;
-        }
-        return null;
-      };
+  const downloadFGR = useCallback(async () => {
+    if (componentRef.current) {
+      const imgData = await toPng(componentRef.current, {
+        backgroundColor: lightPrimaryColor,
+        canvasHeight: fgrHeight,
+        canvasWidth: width / scale,
+        skipAutoScale: true,
+      });
+      return imgData;
+    }
+    return null;
+  }, [scale, width]);
+
+  const handleDownload = useCallback(async () => {
+    const imgData = await downloadFGR();
+    if (!imgData) return;
+    await download(imgData, fileName);
+    setIsDownloaded(true);
+  }, [downloadFGR, fileName]);
+
+  const downloadAllCalled = useCallback(
+    async (shouldDownload: boolean) => {
+      if (!shouldDownload) return;
+      const img = await downloadFGR();
+      if (!img) return;
+      const imgClean = replace(img, "data:image/png;base64,", "");
+      await zip.file(fileName, imgClean, { base64: true });
+      await handleDownloadFinished(studentAcademicRecord);
+      setIsDownloaded(true);
     },
-    [fileName, scale, width],
+    [downloadFGR, fileName, handleDownloadFinished, studentAcademicRecord, zip],
   );
 
   useEffect(() => {
-    const downloadAllCalled = async () => {
-      if (shouldDownload) {
-        const img = await downloadFGR(false)();
-        if (img) {
-          const imgClean = replace(img, "data:image/png;base64,", "");
-          await zip.file(fileName, imgClean, { base64: true });
-          await handleDownloadFinished(studentAcademicRecord);
-          setIsDownloaded(true);
-        }
-      }
+    const unsub = useFinalGradeReportStore.subscribe((state) => {
+      return state.shouldDownload;
+    }, downloadAllCalled);
+    return () => {
+      unsub();
     };
-    downloadAllCalled();
-  }, [downloadFGR, fileName, handleDownloadFinished, shouldDownload, studentAcademicRecord, zip]);
+  }, [downloadAllCalled]);
 
   const [fgrValues, setFgrValues] = useState<FinalGradeReportFormValues>({
     attendance: academicRecord?.attendance !== undefined ? `${academicRecord.attendance}%` : "Not Applicable",
@@ -137,9 +141,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
     name: getStudentShortName(student),
     nextSessionLevel: academicRecord ? getLevelForNextSession({ academicRecord, sessionOptions, student }) : "",
     passOrRepeat:
-      academicRecord?.overallResult && FinalResult[academicRecord.overallResult] === "P"
-        ? "Pass"
-        : "Repeat",
+      academicRecord?.overallResult && FinalResult[academicRecord.overallResult] === "P" ? "Pass" : "Repeat",
     session: getSessionFullName(session),
     studentId: student.epId.toString(),
   });
@@ -230,7 +232,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
           </IconButton>
         </Tooltip>
         <Tooltip arrow title={isDownloaded ? "Download Complete" : "Download"}>
-          <IconButton color="primary" onClick={downloadFGR(true)}>
+          <IconButton color="primary" onClick={handleDownload}>
             {isDownloaded ? <DownloadDone /> : <Download />}
           </IconButton>
         </Tooltip>

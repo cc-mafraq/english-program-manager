@@ -1,11 +1,11 @@
 import { AddPhotoAlternate } from "@mui/icons-material";
 import { IconButton, Tooltip, useTheme } from "@mui/material";
 import { get } from "lodash";
-import React, { ChangeEvent, useCallback, useContext, useMemo } from "react";
+import React, { ChangeEvent, useCallback, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
 import { useColors } from "../../hooks";
-import { AppContext, Student } from "../../interfaces";
+import { Student } from "../../interfaces";
 import { setImage, uploadImage } from "../../services";
 
 interface AddImageButtonProps {
@@ -29,7 +29,6 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({
   setImg,
   isForm,
 }) => {
-  const { appDispatch } = useContext(AppContext);
   const theme = useTheme();
   const { iconColor } = useColors();
   const methods = useFormContext();
@@ -39,24 +38,17 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({
   }, []);
 
   const onInputChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      const onChange = async (e: ChangeEvent<HTMLInputElement>) => {
-        setLoading && setLoading(true);
-        const file = e.target.files && e.target.files[0];
-        if (isForm) {
-          const imageURL = await uploadImage(student?.epId || methods?.getValues("epId"), file, folderName);
-          methods?.setValue && methods.setValue(imagePath, imageURL);
-          setImg && setImg(imageURL);
-          setLoading && setLoading(false);
-        } else {
-          if (!student) return;
-          await setImage(student, file, imagePath, folderName);
-          appDispatch({ payload: { selectedStudent: student } });
-        }
-      };
-      onChange(event);
+    async (e: ChangeEvent<HTMLInputElement>) => {
+      setLoading && setLoading(true);
+      const file = e.target.files && e.target.files[0];
+      const imageURL =
+        (await (isForm
+          ? uploadImage(student?.epId || methods?.getValues("epId"), file, folderName)
+          : student && setImage(student, file, imagePath, folderName))) || undefined;
+      methods?.setValue && methods.setValue(imagePath, imageURL);
+      setImg && setImg(imageURL);
     },
-    [appDispatch, folderName, imagePath, isForm, methods, setImg, setLoading, student],
+    [folderName, imagePath, isForm, methods, setImg, setLoading, student],
   );
 
   return (

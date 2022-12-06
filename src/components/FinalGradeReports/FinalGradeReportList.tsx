@@ -1,43 +1,67 @@
 import { Box } from "@mui/material";
+import download from "downloadjs";
 import JSZip from "jszip";
-import { map } from "lodash";
-import React, { useContext, useEffect, useState } from "react";
+import { filter, includes, isEqual, map, replace } from "lodash";
+import React, { useMemo } from "react";
 import { FinalGradeReport } from ".";
-import { AppContext, Student } from "../../interfaces";
-import { getAllSessions, StudentAcademicRecordIndex } from "../../services";
+import { useStudentStore } from "../../hooks";
+import { Student } from "../../interfaces";
+import {
+  getAllSessions,
+  getSortedSARIndexArray,
+  searchStudents,
+  StudentAcademicRecordIndex,
+} from "../../services";
 
 interface FinalGradeReportListProps {
   fgrStudents: StudentAcademicRecordIndex[];
-  handleDownloadFinished: (studentAcademicRecord: StudentAcademicRecordIndex) => void;
+  handleDownloadComplete: () => void;
   handleRemoveFGR: (studentAcademicRecord: StudentAcademicRecordIndex) => void;
   scale: number;
+  searchString: string;
   session: Student["initialSession"];
-  shouldDownload: boolean;
   width: number;
-  zip: JSZip;
 }
 
 export const FinalGradeReportList: React.FC<FinalGradeReportListProps> = ({
   fgrStudents,
-  handleDownloadFinished,
+  handleDownloadComplete,
   handleRemoveFGR,
   scale,
+  searchString,
   session,
-  shouldDownload,
   width,
-  zip,
 }) => {
-  const {
-    appState: { students },
-  } = useContext(AppContext);
-  const [sessionOptions, setSessionOptions] = useState<Student["initialSession"][]>(getAllSessions(students));
-  useEffect(() => {
-    setSessionOptions(getAllSessions(students));
+  const students = useStudentStore((state) => {
+    return state.students;
+  });
+
+  const sessionOptions = useMemo(() => {
+    return getAllSessions(students);
   }, [students]);
+  const filteredStudentsIds = map(searchStudents(map(fgrStudents, "student"), searchString), "epId");
+  const filteredFgrStudents = filter(fgrStudents, (aris) => {
+    return includes(filteredStudentsIds, aris.student.epId);
+  });
+
+  let zippedStudentAcademicRecords: StudentAcademicRecordIndex[] = [];
+  let zip = new JSZip();
+  const handleDownloadFinished = async (studentAcademicRecord: StudentAcademicRecordIndex) => {
+    zippedStudentAcademicRecords.push(studentAcademicRecord);
+    if (
+      isEqual(getSortedSARIndexArray(zippedStudentAcademicRecords), getSortedSARIndexArray(filteredFgrStudents))
+    ) {
+      handleDownloadComplete();
+      const content = await zip.generateAsync({ type: "blob" });
+      await download(content, `${replace(session, /\s/g, "-")}-FGRs`);
+      zippedStudentAcademicRecords = [];
+      zip = new JSZip();
+    }
+  };
 
   return (
     <Box sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
-      {map(fgrStudents, (fgrStudent, i) => {
+      {map(filteredFgrStudents, (fgrStudent, i) => {
         return (
           <span key={`fgr-${fgrStudent.student.epId}-${fgrStudent.academicRecordIndex}-${i}`}>
             <FinalGradeReport
@@ -46,7 +70,6 @@ export const FinalGradeReportList: React.FC<FinalGradeReportListProps> = ({
               scale={scale}
               session={session}
               sessionOptions={sessionOptions}
-              shouldDownload={shouldDownload}
               studentAcademicRecord={fgrStudent}
               width={width}
               zip={zip}

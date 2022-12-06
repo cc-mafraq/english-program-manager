@@ -23,10 +23,7 @@ export const MenuBar: React.FC<MenuBarProps> = ({ pageName }) => {
   };
 
   return (
-    <AppBar
-      position="static"
-      sx={{ background: theme.palette.mode === "light" ? theme.palette.primary.main : "#1B2027" }}
-    >
+    <AppBar position="static">
       <Toolbar
         sx={{
           justifyContent: "space-between",

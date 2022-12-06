@@ -1,13 +1,13 @@
 import { Box, useTheme } from "@mui/material";
-import React, { useContext } from "react";
+import React from "react";
 import ReactLoading from "react-loading";
-import { AppContext } from "../../../interfaces";
+import { useAppStore } from "../../../hooks";
 
 export const Loading: React.FC = () => {
   const theme = useTheme();
-  const {
-    appState: { loading },
-  } = useContext(AppContext);
+  const loading = useAppStore((state) => {
+    return state.loading;
+  });
 
   return loading ? (
     <Box margin="auto" marginTop="1%" width="5%">

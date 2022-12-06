@@ -1,35 +1,42 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Edit } from "@mui/icons-material";
-import { IconButton, Tooltip } from "@mui/material";
+import { Breakpoint, IconButton, Tooltip } from "@mui/material";
 import { join, map } from "lodash";
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { FormDialog, FormPlacement, LabeledContainer, LabeledText } from "..";
-import { useColors } from "../../hooks";
-import { AppContext, Placement, Student } from "../../interfaces";
+import { useAppStore, useColors, useStudentStore } from "../../hooks";
+import { Placement, Student } from "../../interfaces";
 import { JOIN_STR, placementSchema, removeNullFromObject, setData } from "../../services";
 
 interface PlacementProps {
   data: Student;
 }
 
+const FormPlacementMemo = React.memo(() => {
+  return <FormPlacement standAlone />;
+});
+FormPlacementMemo.displayName = "Placement Form";
+
 export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
-  const {
-    appState: { role },
-    appDispatch,
-  } = useContext(AppContext);
+  const role = useAppStore((state) => {
+    return state.role;
+  });
+  const setSelectedStudent = useStudentStore((state) => {
+    return state.setSelectedStudent;
+  });
 
   const { iconColor } = useColors();
   const [open, setOpen] = useState(false);
 
   const handleDialogOpen = useCallback(() => {
-    appDispatch({ payload: { selectedStudent: student } });
+    setSelectedStudent(student);
     setOpen(true);
-  }, [appDispatch, student]);
+  }, [setSelectedStudent, student]);
 
   const handleDialogClose = useCallback(() => {
     setOpen(false);
-    appDispatch({ payload: { selectedStudent: null } });
-  }, [appDispatch]);
+    setSelectedStudent(null);
+  }, [setSelectedStudent]);
 
   const onSubmit = useCallback(
     (data: Placement) => {
@@ -40,6 +47,18 @@ export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
     },
     [handleDialogClose, student],
   );
+
+  const dialogProps = useMemo(() => {
+    const breakpoint: Breakpoint = "lg";
+    return { maxWidth: breakpoint };
+  }, []);
+
+  const useFormProps = useMemo(() => {
+    return {
+      defaultValues: student.placement,
+      resolver: yupResolver(placementSchema),
+    };
+  }, [student.placement]);
 
   return (
     <>
@@ -76,17 +95,14 @@ export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
           </Tooltip>
         )}
       </LabeledContainer>
-      <FormDialog
-        dialogProps={{ maxWidth: "lg" }}
+      <FormDialog<Placement>
+        dialogProps={dialogProps}
         handleDialogClose={handleDialogClose}
         onSubmit={onSubmit}
         open={open}
-        useFormProps={{
-          defaultValues: student.placement,
-          resolver: yupResolver(placementSchema),
-        }}
+        useFormProps={useFormProps}
       >
-        <FormPlacement standAlone />
+        <FormPlacementMemo />
       </FormDialog>
     </>
   );

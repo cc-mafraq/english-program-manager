@@ -1,12 +1,12 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Edit } from "@mui/icons-material";
-import { Box, Button, IconButton, Tooltip, Typography } from "@mui/material";
+import { Box, Breakpoint, Button, IconButton, Tooltip, Typography } from "@mui/material";
 import { findIndex, get, map, reverse, set } from "lodash";
 import moment from "moment";
 import React, { useCallback, useMemo, useState } from "react";
 import { FormDialog, FormLabel, LabeledContainer } from "..";
 import { useColors } from "../../../hooks";
-import { Correspondence, defaultBorderColor } from "../../../interfaces";
+import { Correspondence } from "../../../interfaces";
 import { correspondenceSchema, MOMENT_FORMAT, setData } from "../../../services";
 import { FormCorrespondenceItem } from "../../StudentForm";
 
@@ -16,8 +16,18 @@ interface CorrespondenceProps<T extends object> {
   idPath: string;
 }
 
+const FormCorrespondenceMemo = React.memo(() => {
+  return (
+    <>
+      <FormLabel>Correspondence</FormLabel>
+      <FormCorrespondenceItem />
+    </>
+  );
+});
+FormCorrespondenceMemo.displayName = "Correspondence Form";
+
 export const CorrespondenceList = <T extends object>({ data, collectionName, idPath }: CorrespondenceProps<T>) => {
-  const { defaultBackgroundColor, iconColor } = useColors();
+  const { defaultBackgroundColor, defaultBorderColor, iconColor } = useColors();
   const [open, setOpen] = useState(false);
   const [selectedCorrespondence, setSelectedCorrespondence] = useState<Correspondence | null>(null);
   const correspondence = get(data, "correspondence");
@@ -92,7 +102,22 @@ export const CorrespondenceList = <T extends object>({ data, collectionName, idP
         );
       }),
     );
-  }, [correspondence, defaultBackgroundColor, handleEditClick, iconColor]);
+  }, [correspondence, defaultBackgroundColor, defaultBorderColor, handleEditClick, iconColor]);
+
+  const dialogProps = useMemo(() => {
+    const breakpoint: Breakpoint = "lg";
+    return { maxWidth: breakpoint };
+  }, []);
+
+  const useFormProps = useMemo(() => {
+    return {
+      defaultValues: selectedCorrespondence || {
+        date: moment().format(MOMENT_FORMAT),
+        notes: "",
+      },
+      resolver: yupResolver(correspondenceSchema),
+    };
+  }, [selectedCorrespondence]);
 
   return (
     <>
@@ -104,21 +129,14 @@ export const CorrespondenceList = <T extends object>({ data, collectionName, idP
         </Box>
         {CorrespondenceData}
       </LabeledContainer>
-      <FormDialog
-        dialogProps={{ maxWidth: "lg" }}
+      <FormDialog<Correspondence>
+        dialogProps={dialogProps}
         handleDialogClose={handleDialogClose}
         onSubmit={onSubmit}
         open={open}
-        useFormProps={{
-          defaultValues: selectedCorrespondence || {
-            date: moment().format(MOMENT_FORMAT),
-            notes: "",
-          },
-          resolver: yupResolver(correspondenceSchema),
-        }}
+        useFormProps={useFormProps}
       >
-        <FormLabel>Correspondence</FormLabel>
-        <FormCorrespondenceItem />
+        <FormCorrespondenceMemo />
       </FormDialog>
     </>
   );

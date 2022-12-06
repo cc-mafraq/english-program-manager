@@ -6,4 +6,5 @@ export * from "./useLocal";
 export * from "./usePageState";
 export * from "./useRole";
 export * from "./useStatistics";
+export * from "./useStores";
 export * from "./useWindowResize";
