@@ -1,7 +1,8 @@
+import { useMediaQuery, useTheme } from "@mui/material";
 import { first, get, isNaN } from "lodash";
 import React, { Attributes, RefObject, useEffect, useRef } from "react";
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
-import { useOnScreen, useWindowResize } from "../../../hooks";
+import { useWindowResize } from "../../../hooks";
 
 interface VirtualizedListProps<T> {
   children: React.ReactNode;
@@ -25,7 +26,8 @@ export const VirtualizedList = <T,>({
   const listRef = useRef<VirtuosoHandle>(null);
   const tabValues = useRef({});
   const [, windowHeight] = useWindowResize();
-  const menuIsVisible = useOnScreen(menuRef);
+  const theme = useTheme();
+  const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
   const menuHeight = menuRef?.current?.clientHeight;
 
   const setTabValue = (id: string | number, tabValue: number) => {
@@ -64,9 +66,7 @@ export const VirtualizedList = <T,>({
       increaseViewportBy={overscan}
       itemContent={Row}
       style={{
-        height:
-          windowHeight -
-          ((menuIsVisible ? 2 : 1) * (isNaN(menuHeight) || !menuHeight ? 64 : menuHeight) + windowHeight / 100),
+        height: windowHeight - (greaterThanSmall ? 2 : 1) * (isNaN(menuHeight) || !menuHeight ? 64 : menuHeight),
       }}
     />
   ) : (
