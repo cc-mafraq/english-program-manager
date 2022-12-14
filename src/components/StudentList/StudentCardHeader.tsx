@@ -1,8 +1,9 @@
 import { Edit, WhatsApp } from "@mui/icons-material";
-import { Box, Divider, IconButton, Tooltip, Typography, useTheme } from "@mui/material";
+import { Box, Divider, IconButton, Tooltip, Typography, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
+import { WithdrawButton } from ".";
 import { useAppStore, useColors, useStudentStore } from "../../hooks";
-import { Student } from "../../interfaces";
+import { Status, Student } from "../../interfaces";
 import { isValidPhoneNumber } from "../../services";
 
 interface StudentCardHeaderProps {
@@ -23,6 +24,7 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ data: stud
   const theme = useTheme();
   const { iconColor } = useColors();
   const phoneNumberIsValid = isValidPhoneNumber(student.phone.primaryPhone as number);
+  const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
 
   return (
     <>
@@ -50,7 +52,7 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ data: stud
               color={theme.palette.mode === "light" ? theme.palette.secondary.main : theme.palette.primary.light}
               variant="h6"
             >
-              {student.epId ? student.epId : "Invalid"}
+              {student.epId ? `ID: ${student.epId}` : "Invalid"}
             </Typography>
           </Tooltip>
         </Box>
@@ -76,6 +78,9 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ data: stud
               </Tooltip>
             )}
           </Box>
+          {student.status.currentStatus !== Status.WD && role === "admin" && !greaterThanSmall && (
+            <WithdrawButton student={student} />
+          )}
         </Box>
       </Box>
       <Divider />
