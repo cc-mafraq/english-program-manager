@@ -41,15 +41,7 @@ export const App = () => {
           <BrowserRouter>
             <Authorization>
               <Routes>
-                <Route
-                  element={
-                    <>
-                      <MenuBar pageName="Student Database" />
-                      <StudentDatabasePage />
-                    </>
-                  }
-                  path="/epd"
-                />
+                <Route element={<StudentDatabasePage />} path="/epd" />
                 <Route
                   element={
                     <>

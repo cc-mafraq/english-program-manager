@@ -38,7 +38,7 @@ export const FormStatus: React.FC = () => {
       <GridContainer marginBottom={0}>
         <FormList
           addItem={addWithdrawDate}
-          buttonGridProps={{ xs: 2 }}
+          buttonGridProps={{ md: 2, sm: 4, xs: 6 }}
           buttonLabel="Add Withdraw Date"
           list={withdrawDate}
           listName="status.withdrawDate"
@@ -52,7 +52,7 @@ export const FormStatus: React.FC = () => {
       <GridContainer marginBottom={0}>
         <FormList
           addItem={addReactivatedDate}
-          buttonGridProps={{ xs: 2 }}
+          buttonGridProps={{ md: 2, sm: 4, xs: 6 }}
           buttonLabel="Add Reactivated Date"
           list={reactivatedDate}
           listName="status.reactivatedDate"
@@ -82,7 +82,7 @@ export const FormStatus: React.FC = () => {
         />
         <FormList
           addItem={addCheatingSession}
-          buttonGridProps={{ xs: 2 }}
+          buttonGridProps={{ md: 2, sm: 4, xs: 6 }}
           buttonLabel="Add Cheating Session"
           list={cheatingSessions}
           listName="status.cheatingSessions"
