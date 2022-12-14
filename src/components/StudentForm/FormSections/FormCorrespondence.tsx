@@ -6,10 +6,11 @@ import { FormLabel, FormList, GridContainer } from "../../reusables";
 import { FormCorrespondenceItem } from "./ListItems";
 
 interface FormCorrespondenceProps<T> {
+  disabled?: boolean;
   selectedData: T | null;
 }
 
-export const FormCorrespondence = <T extends object>({ selectedData }: FormCorrespondenceProps<T>) => {
+export const FormCorrespondence = <T extends object>({ selectedData, disabled }: FormCorrespondenceProps<T>) => {
   const methods = useFormContext<T>();
   const [correspondence, addCorrespondence, removeCorrespondence] = useFormList(
     selectedData && get(selectedData, "correspondence") ? get(selectedData, "correspondence") : [],
@@ -24,6 +25,7 @@ export const FormCorrespondence = <T extends object>({ selectedData }: FormCorre
         <FormList
           addItem={addCorrespondence}
           buttonLabel="Add Correspondence"
+          disabled={disabled}
           list={correspondence}
           listName="correspondence"
           removeItem={removeCorrespondence}
@@ -34,4 +36,8 @@ export const FormCorrespondence = <T extends object>({ selectedData }: FormCorre
       </GridContainer>
     </>
   );
+};
+
+FormCorrespondence.defaultProps = {
+  disabled: undefined,
 };

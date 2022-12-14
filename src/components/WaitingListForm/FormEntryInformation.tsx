@@ -12,15 +12,20 @@ import {
   LabeledCheckbox,
 } from "../reusables";
 
-export const FormEntryInformation: React.FC = () => {
+interface FormEntryInformationProps {
+  disabled: boolean;
+}
+
+export const FormEntryInformation: React.FC<FormEntryInformationProps> = ({ disabled }) => {
   return (
     <>
       <FormLabel textProps={{ marginTop: SPACING }}>Entry Information</FormLabel>
       <GridContainer marginBottom={0}>
         <Grid item xs={2}>
-          <LabeledCheckbox checkboxProps={{ defaultChecked: true }} label="Waiting" name="waiting" />
+          <LabeledCheckbox checkboxProps={{ defaultChecked: true, disabled }} label="Waiting" name="waiting" />
         </Grid>
         <GridItemDatePicker
+          datePickerProps={{ disabled }}
           gridProps={{ xs: 3 }}
           label="Entry Date"
           name="entryDate"
@@ -28,6 +33,7 @@ export const FormEntryInformation: React.FC = () => {
         />
         <GridItemAutocomplete
           defaultValue={HighPriority.NO}
+          disabled={disabled}
           gridProps={{ xs: 3 }}
           label="High Priority"
           name="highPriority"
@@ -38,7 +44,7 @@ export const FormEntryInformation: React.FC = () => {
       </GridContainer>
       <GridContainer>
         <Grid item xs={2}>
-          <LabeledCheckbox label="Entered in Phone" name="enteredInPhone" />
+          <LabeledCheckbox checkboxProps={{ disabled }} label="Entered in Phone" name="enteredInPhone" />
         </Grid>
         <GridItemTextField gridProps={{ xs: 3 }} label="Referral" name="referral" />
         <GridItemTextField gridProps={{ xs: 3 }} label="Number of People" name="numPeople" value="1" />

@@ -9,14 +9,17 @@ import {
   FormWaitingListVaccine,
   GridContainer,
 } from "..";
-import { useWaitingListStore } from "../../hooks";
+import { useAppStore, useWaitingListStore } from "../../hooks";
 import { SPACING } from "../../services";
 
 export const WaitingListForm: React.FC = () => {
   const selectedWaitingListEntry = useWaitingListStore((state) => {
     return state.selectedWaitingListEntry;
   });
-
+  const role = useAppStore((state) => {
+    return state.role;
+  });
+  const disabled = role !== "admin";
   const addOrEdit = selectedWaitingListEntry ? "Edit" : "Add";
 
   return (
@@ -29,20 +32,20 @@ export const WaitingListForm: React.FC = () => {
       <Divider />
       <FormPhoneNumbers noWhatsapp phonePath="phoneNumbers" selectedData={selectedWaitingListEntry} />
       <Divider />
-      <FormEntryInformation />
+      <FormEntryInformation disabled={disabled} />
       <Divider />
       <GridContainer>
         <Grid item xs={5}>
-          <FormWaitingListVaccine />
+          <FormWaitingListVaccine disabled={disabled} />
         </Grid>
-        <Grid item marginLeft={SPACING * 2} xs={6.5}>
-          <FormOutcome />
+        <Grid item marginLeft={SPACING * 2} sm={6.5}>
+          <FormOutcome disabled={disabled} />
         </Grid>
       </GridContainer>
       <Divider />
-      <FormPlacementExam />
+      <FormPlacementExam disabled={disabled} />
       <Divider />
-      <FormCorrespondence selectedData={selectedWaitingListEntry} />
+      <FormCorrespondence disabled={disabled} selectedData={selectedWaitingListEntry} />
     </>
   );
 };

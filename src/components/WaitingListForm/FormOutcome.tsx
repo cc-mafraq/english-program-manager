@@ -10,19 +10,32 @@ import {
   GridItemTextField,
 } from "../reusables";
 
-export const FormOutcome: React.FC = () => {
+interface FormOutcomeProps {
+  disabled: boolean;
+}
+
+export const FormOutcome: React.FC<FormOutcomeProps> = ({ disabled }) => {
   return (
     <>
       <FormLabel textProps={{ marginTop: SPACING }}>Outcome</FormLabel>
       <GridContainer marginBottom={SPACING}>
         <GridItemAutocomplete
           autoSelect={false}
+          disabled={disabled}
           label="Outcome"
           name="outcome"
           options={values(WaitlistOutcome)}
         />
-        <GridItemTextField label="Transferral Database" name="transferralAndDate.transferral" />
-        <GridItemDatePicker label="Transferral Date" name="transferralAndDate.date" />
+        <GridItemTextField
+          label="Transferral Database"
+          name="transferralAndDate.transferral"
+          textFieldProps={{ disabled }}
+        />
+        <GridItemDatePicker
+          datePickerProps={{ disabled }}
+          label="Transferral Date"
+          name="transferralAndDate.date"
+        />
       </GridContainer>
     </>
   );

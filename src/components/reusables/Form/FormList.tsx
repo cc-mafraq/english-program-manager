@@ -10,6 +10,7 @@ interface FormListProps {
   buttonGridProps?: GridProps;
   buttonLabel: string;
   children?: React.ReactNode;
+  disabled?: boolean;
   list: unknown[];
   listName: string;
   removeItem: (index?: number) => () => void;
@@ -25,6 +26,7 @@ export const FormList: React.FC<FormListProps> = ({
   buttonGridProps,
   children,
   reverseList,
+  disabled,
 }) => {
   const theme = useTheme();
   const {
@@ -54,6 +56,7 @@ export const FormList: React.FC<FormListProps> = ({
       <Grid item xs {...buttonGridProps}>
         <Button
           color={theme.palette.mode === "light" ? "secondary" : "primary"}
+          disabled={disabled}
           onClick={addItem}
           sx={
             theme.palette.mode === "dark"
@@ -97,5 +100,6 @@ export const FormList: React.FC<FormListProps> = ({
 FormList.defaultProps = {
   buttonGridProps: undefined,
   children: undefined,
+  disabled: false,
   reverseList: false,
 };
