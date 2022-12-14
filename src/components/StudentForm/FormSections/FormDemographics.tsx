@@ -20,13 +20,18 @@ export const FormDemographics: React.FC = () => {
     <>
       <FormLabel textProps={{ marginTop: SPACING }}>Demographics</FormLabel>
       <GridContainer marginBottom={0}>
-        <GridItemRadioGroup gridProps={{ sm: 2 }} label="Gender *" options={["M", "F"]} />
-        <GridItemAutocomplete label="Nationality" options={nationalities} textFieldProps={{ required: true }} />
-        <GridItemTextField label="Age" textFieldProps={{ required: true }} />
+        <GridItemRadioGroup gridProps={{ sm: 2, xs: 4 }} label="Gender *" options={["M", "F"]} />
+        <GridItemAutocomplete
+          gridProps={{ sm: true, xs: 8 }}
+          label="Nationality"
+          options={nationalities}
+          textFieldProps={{ required: true }}
+        />
+        <GridItemTextField gridProps={{ sm: true, xs: 4 }} label="Age" textFieldProps={{ required: true }} />
         <GridItemTextField label="Occupation" name="work.occupation" textFieldProps={{ required: true }} />
       </GridContainer>
       <GridContainer>
-        <Grid item sm={2}>
+        <Grid item sm={2} xs={4}>
           <LabeledCheckbox containerProps={{ marginTop: -1 }} label="Teacher" name="work.isTeacher" />
           {teacherChecked && (
             <LabeledCheckbox

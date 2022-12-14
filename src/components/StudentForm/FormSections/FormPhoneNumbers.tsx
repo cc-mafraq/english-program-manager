@@ -41,7 +41,7 @@ export const FormPhoneNumbers = <T extends object>({
           <FormPhoneItem />
         </FormList>
         {!noWhatsapp && (
-          <Grid item sm={3}>
+          <Grid item sm={3} xs={12}>
             <GridItemTextField
               gridProps={{ paddingBottom: SPACING, paddingLeft: 0 }}
               label="WhatsApp Broadcast SAR"

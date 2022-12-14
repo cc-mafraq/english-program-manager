@@ -14,12 +14,14 @@ export const FormProgramInformation: React.FC = () => {
       <FormLabel textProps={{ marginTop: SPACING }}>Program Information</FormLabel>
       <GridContainer>
         <GridItemTextField
+          gridProps={{ sm: true, xs: 4 }}
           label="ID"
           name="epId"
           textFieldProps={{ required: true }}
           value={generateId(students).toString()}
         />
         <GridItemAutocomplete
+          gridProps={{ sm: true, xs: 8 }}
           label="Current Level"
           options={[...genderedLevels, "L5 GRAD"]}
           textFieldProps={{ required: true }}

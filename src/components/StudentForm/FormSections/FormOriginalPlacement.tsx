@@ -9,18 +9,21 @@ export const FormOriginalPlacement: React.FC = () => {
       <FormLabel textProps={{ marginTop: SPACING }}>Original Placement</FormLabel>
       <GridContainer>
         <GridItemAutocomplete
+          gridProps={{ sm: true, xs: 6 }}
           label="Writing Placement"
           name="origPlacementData.writing"
           options={levelsPlus}
           textFieldProps={{ required: true }}
         />
         <GridItemAutocomplete
+          gridProps={{ sm: true, xs: 6 }}
           label="Speaking Placement"
           name="origPlacementData.speaking"
           options={levelsPlus}
           textFieldProps={{ required: true }}
         />
         <GridItemAutocomplete
+          gridProps={{ sm: true, xs: 6 }}
           label="Placement Level"
           name="origPlacementData.level"
           options={levels}

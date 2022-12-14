@@ -38,39 +38,51 @@ export const FormStatus: React.FC = () => {
       <GridContainer marginBottom={0}>
         <FormList
           addItem={addWithdrawDate}
+          buttonGridProps={{ xs: 2 }}
           buttonLabel="Add Withdraw Date"
           list={withdrawDate}
           listName="status.withdrawDate"
           removeItem={removeWithdrawDate}
         >
           <FormDateItem>
-            <GridItemDatePicker label="Withdraw Date" />
+            <GridItemDatePicker gridProps={{ sm: 5, xs: 4.5 }} label="Withdraw Date" />
           </FormDateItem>
         </FormList>
       </GridContainer>
       <GridContainer marginBottom={0}>
         <FormList
           addItem={addReactivatedDate}
+          buttonGridProps={{ xs: 2 }}
           buttonLabel="Add Reactivated Date"
           list={reactivatedDate}
           listName="status.reactivatedDate"
           removeItem={removeReactivatedDate}
         >
           <FormDateItem>
-            <GridItemDatePicker label="Reactivated Date" name="status.reactivatedDate" />
+            <GridItemDatePicker
+              gridProps={{ sm: 5, xs: 4.5 }}
+              label="Reactivated Date"
+              name="status.reactivatedDate"
+            />
           </FormDateItem>
         </FormList>
       </GridContainer>
       <GridContainer>
         <GridItemAutocomplete
           autoSelect={false}
+          gridProps={{ sm: 2.5, xs: 6 }}
           label="Withdraw Reason"
           name="status.droppedOutReason"
           options={withdrawReasons}
         />
-        <GridItemDatePicker label="Level Reeval Date" name="status.levelReevalDate" />
+        <GridItemDatePicker
+          gridProps={{ sm: 2.5, xs: 6 }}
+          label="Level Reeval Date"
+          name="status.levelReevalDate"
+        />
         <FormList
           addItem={addCheatingSession}
+          buttonGridProps={{ xs: 2 }}
           buttonLabel="Add Cheating Session"
           list={cheatingSessions}
           listName="status.cheatingSessions"
