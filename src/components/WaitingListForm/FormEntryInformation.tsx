@@ -21,12 +21,12 @@ export const FormEntryInformation: React.FC<FormEntryInformationProps> = ({ disa
     <>
       <FormLabel textProps={{ marginTop: SPACING }}>Entry Information</FormLabel>
       <GridContainer marginBottom={0}>
-        <Grid item xs={2}>
+        <Grid item sm={2} xs={3}>
           <LabeledCheckbox checkboxProps={{ defaultChecked: true, disabled }} label="Waiting" name="waiting" />
         </Grid>
         <GridItemDatePicker
           datePickerProps={{ disabled }}
-          gridProps={{ xs: 3 }}
+          gridProps={{ md: 3, sm: 3, xs: 9 }}
           label="Entry Date"
           name="entryDate"
           value={moment().format(MOMENT_FORMAT)}
@@ -40,15 +40,15 @@ export const FormEntryInformation: React.FC<FormEntryInformationProps> = ({ disa
           options={[HighPriority.NO, HighPriority.YES, HighPriority.PAST]}
           textFieldProps={{ required: true }}
         />
-        <GridItemTextField label="Name (Optional)" name="name" />
+        <GridItemTextField gridProps={{ md: 3, sm: 4, xs: 9 }} label="Name (Optional)" name="name" />
       </GridContainer>
       <GridContainer>
-        <Grid item xs={2}>
+        <Grid item sm={2} xs={3}>
           <LabeledCheckbox checkboxProps={{ disabled }} label="Entered in Phone" name="enteredInPhone" />
         </Grid>
-        <GridItemTextField gridProps={{ xs: 3 }} label="Referral" name="referral" />
+        <GridItemTextField gridProps={{ sm: 3, xs: 9 }} label="Referral" name="referral" />
         <GridItemTextField gridProps={{ xs: 3 }} label="Number of People" name="numPeople" value="1" />
-        <Grid item xs={3}>
+        <Grid item sm={3}>
           <LabeledCheckbox containerProps={{ marginTop: -1 }} label="Probable PL1" name="probPL1" />
           <LabeledCheckbox containerProps={{ marginTop: -1 }} label="Probable L3+" name="probL3Plus" />
         </Grid>

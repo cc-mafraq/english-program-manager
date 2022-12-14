@@ -11,12 +11,12 @@ export const FormPlacementItem: React.FC<FormItem> = ({ index, removeItem, name 
   return (
     <GridContainer marginBottom={0}>
       <GridItemTextField
-        gridProps={{ marginLeft: SPACING, xs: 6 }}
+        gridProps={{ marginLeft: SPACING, sm: 6 }}
         label="Placement and Date"
         name={name ? `${name}.sectionAndDate` : "sectionAndDate"}
         textFieldProps={{ required: true }}
       />
-      <GridItemTextField gridProps={{ xs: 5 }} label="Notes" name={name ? `${name}.notes` : "notes"} />
+      <GridItemTextField gridProps={{ sm: 5 }} label="Notes" name={name ? `${name}.notes` : "notes"} />
       {removeItem && (
         <Grid item>
           <Tooltip arrow title="Remove Placement">

@@ -1,3 +1,4 @@
+import { useMediaQuery, useTheme } from "@mui/material";
 import { values } from "lodash";
 import React from "react";
 import { WaitlistOutcome } from "../../interfaces";
@@ -15,9 +16,12 @@ interface FormOutcomeProps {
 }
 
 export const FormOutcome: React.FC<FormOutcomeProps> = ({ disabled }) => {
+  const theme = useTheme();
+  const greaterThanMedium = useMediaQuery(theme.breakpoints.up("md"));
+
   return (
     <>
-      <FormLabel textProps={{ marginTop: SPACING }}>Outcome</FormLabel>
+      <FormLabel textProps={{ marginTop: greaterThanMedium ? SPACING : 0 }}>Outcome</FormLabel>
       <GridContainer marginBottom={SPACING}>
         <GridItemAutocomplete
           autoSelect={false}

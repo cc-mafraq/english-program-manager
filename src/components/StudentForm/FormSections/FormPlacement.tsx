@@ -40,7 +40,7 @@ export const FormPlacement = <T extends FieldValues>({ standAlone }: FormPlaceme
     <>
       <FormLabel textProps={{ marginTop: SPACING }}>Placement</FormLabel>
       <GridContainer marginBottom={0}>
-        <GridItemTextField gridProps={{ xs: 6 }} label="Sections Offered" name={`${namePrefix}sectionsOffered`} />
+        <GridItemTextField gridProps={{ sm: 6 }} label="Sections Offered" name={`${namePrefix}sectionsOffered`} />
         <FormList
           addItem={addClassScheduleSentDate}
           buttonLabel="Add CS Sent Date"
@@ -54,13 +54,13 @@ export const FormPlacement = <T extends FieldValues>({ standAlone }: FormPlaceme
         </FormList>
       </GridContainer>
       <GridContainer marginBottom={0}>
-        <Grid item xs={2}>
+        <Grid item sm={2}>
           <LabeledCheckbox label="Pending" name={`${namePrefix}pending`} />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item sm={4}>
           <LabeledCheckbox label="No Answer CS WPM" name={`${namePrefix}noAnswerClassScheduleWpm`} />
         </Grid>
-        <GridItemDatePicker gridProps={{ xs: 5 }} label="Photo Contact" name={`${namePrefix}photoContact`} />
+        <GridItemDatePicker gridProps={{ sm: 5 }} label="Photo Contact" name={`${namePrefix}photoContact`} />
       </GridContainer>
       <GridContainer marginBottom={standAlone ? 0 : SPACING * 2}>
         <FormList

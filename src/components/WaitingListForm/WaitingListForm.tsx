@@ -1,4 +1,4 @@
-import { Box, Divider, Grid, Typography } from "@mui/material";
+import { Box, Divider, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
 import {
   FormCorrespondence,
@@ -21,6 +21,8 @@ export const WaitingListForm: React.FC = () => {
   });
   const disabled = role !== "admin";
   const addOrEdit = selectedWaitingListEntry ? "Edit" : "Add";
+  const theme = useTheme();
+  const greaterThanMedium = useMediaQuery(theme.breakpoints.up("md"));
 
   return (
     <>
@@ -35,10 +37,10 @@ export const WaitingListForm: React.FC = () => {
       <FormEntryInformation disabled={disabled} />
       <Divider />
       <GridContainer>
-        <Grid item xs={5}>
+        <Grid item md={5} xs={12}>
           <FormWaitingListVaccine disabled={disabled} />
         </Grid>
-        <Grid item marginLeft={SPACING * 2} sm={6.5}>
+        <Grid item marginLeft={greaterThanMedium ? SPACING * 2 : 0} md={6.5} xs={12}>
           <FormOutcome disabled={disabled} />
         </Grid>
       </GridContainer>

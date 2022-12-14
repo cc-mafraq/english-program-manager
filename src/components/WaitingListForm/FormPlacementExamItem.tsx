@@ -14,7 +14,12 @@ export const FormPlacementExamItem: React.FC<FormItem> = ({ index, removeItem, n
 
   return (
     <>
-      <GridItemTextField gridProps={{ xs: 3 }} label="Placement Exam" name={name} textFieldProps={{ disabled }} />
+      <GridItemTextField
+        gridProps={{ md: 3, sm: 5, xs: 10 }}
+        label="Placement Exam"
+        name={name}
+        textFieldProps={{ disabled }}
+      />
       <Tooltip arrow title="Remove Placement Exam">
         <IconButton onClick={removeItem && removeItem(index)} sx={{ color: iconColor, height: "100%" }}>
           <Close />
