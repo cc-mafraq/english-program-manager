@@ -1,5 +1,5 @@
-import React, { useCallback } from "react";
-import { Loading, WaitingList, WaitingListFormDialog, WaitingListToolbar } from "../components";
+import React, { useCallback, useRef } from "react";
+import { Loading, MenuBar, WaitingList, WaitingListFormDialog, WaitingListToolbar } from "../components";
 import { usePageState, useWaitingListFormStore, useWaitingListStore } from "../hooks";
 import { WaitingListEntry } from "../interfaces";
 import { searchWaitingList, sortWaitingList } from "../services";
@@ -14,6 +14,8 @@ export const WaitingListPage = () => {
   const filter = useWaitingListStore((state) => {
     return state.filter;
   });
+
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const {
     filteredList: filteredWaitingList,
@@ -34,6 +36,7 @@ export const WaitingListPage = () => {
 
   return (
     <>
+      <MenuBar innerRef={menuRef} pageName="Waiting List" />
       <WaitingListToolbar
         filteredWaitingList={filteredWaitingList}
         handleSearchStringChange={handleSearchStringChange}
@@ -41,7 +44,11 @@ export const WaitingListPage = () => {
         searchString={searchString}
       />
       <Loading />
-      <WaitingList filteredWaitingList={filteredWaitingList} handleWLEntryDialogOpen={handleWLEntryDialogOpen} />
+      <WaitingList
+        filteredWaitingList={filteredWaitingList}
+        handleWLEntryDialogOpen={handleWLEntryDialogOpen}
+        menuRef={menuRef}
+      />
       <WaitingListFormDialog handleSearchStringChange={handleSearchStringChange} />
     </>
   );
