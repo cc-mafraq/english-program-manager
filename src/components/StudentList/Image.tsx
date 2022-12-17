@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unused-prop-types */
-import { Box, BoxProps, CardMedia, Grid, SxProps, useTheme } from "@mui/material";
+import { Box, BoxProps, CardMedia, Grid, GridProps, SxProps, useTheme } from "@mui/material";
 import { get, isEmpty, merge, omit } from "lodash";
 import React, { useCallback, useState } from "react";
 import ReactLoading from "react-loading";
@@ -11,6 +11,7 @@ import { setData } from "../../services";
 
 interface ImageProps {
   folderName: string;
+  gridProps?: GridProps;
   imagePath: string;
   imageStyleProps?: SxProps;
   innerContainerProps?: BoxProps;
@@ -21,7 +22,6 @@ interface ImageProps {
   outerContainerProps?: BoxProps;
   scale?: number;
   student: Student | null;
-  xs?: number | boolean;
 }
 
 interface ImageBodyProps extends ImageProps {
@@ -115,7 +115,7 @@ const ImageBody: React.FC<ImageBodyProps> = ({
 };
 
 export const Image: React.FC<ImageProps> = (props) => {
-  const { outerContainerProps, student, imagePath, folderName, isForm, xs } = props;
+  const { outerContainerProps, student, imagePath, folderName, isForm, gridProps } = props;
   const imageName = get(student, imagePath);
   const [img, setImg] = useState<string | undefined>(imageName);
   const [loading, setLoading] = useState(!isEmpty(imageName));
@@ -133,8 +133,8 @@ export const Image: React.FC<ImageProps> = (props) => {
 
   return isForm ? (
     <>
-      <Grid item xs={xs}>
-        <ImageBody {...props} {...imageBodyProps} />
+      <Grid item {...gridProps}>
+        <ImageBody {...omit(props, "gridProps")} {...imageBodyProps} />
       </Grid>
       {isForm && img && !loading && (
         <FormImageActions
@@ -153,6 +153,7 @@ export const Image: React.FC<ImageProps> = (props) => {
 };
 
 const defaultProps: Partial<ImageProps> = {
+  gridProps: undefined,
   imageStyleProps: undefined,
   innerContainerProps: undefined,
   isForm: false,
@@ -161,7 +162,6 @@ const defaultProps: Partial<ImageProps> = {
   noButton: false,
   outerContainerProps: undefined,
   scale: 1,
-  xs: 1,
 };
 
 Image.defaultProps = defaultProps;

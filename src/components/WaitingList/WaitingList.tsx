@@ -1,4 +1,4 @@
-import React from "react";
+import React, { RefObject } from "react";
 import { VirtualizedList, WaitingListCard } from "..";
 import { useWaitingListStore } from "../../hooks";
 import { WaitingListEntry } from "../../interfaces";
@@ -6,9 +6,14 @@ import { WaitingListEntry } from "../../interfaces";
 interface WaitingListProps {
   filteredWaitingList: WaitingListEntry[];
   handleWLEntryDialogOpen: () => void;
+  menuRef: RefObject<HTMLDivElement>;
 }
 
-export const WaitingList: React.FC<WaitingListProps> = ({ filteredWaitingList, handleWLEntryDialogOpen }) => {
+export const WaitingList: React.FC<WaitingListProps> = ({
+  filteredWaitingList,
+  handleWLEntryDialogOpen,
+  menuRef,
+}) => {
   const scrollToIndex = useWaitingListStore((state) => {
     return state.scrollToIndex;
   });
@@ -20,6 +25,7 @@ export const WaitingList: React.FC<WaitingListProps> = ({ filteredWaitingList, h
     <VirtualizedList
       idPath="id"
       listData={filteredWaitingList}
+      menuRef={menuRef}
       overscan={250}
       scrollToIndex={scrollToIndex}
       setScrollToIndex={setScrollToIndex}

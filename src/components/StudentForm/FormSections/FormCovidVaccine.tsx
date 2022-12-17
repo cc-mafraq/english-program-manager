@@ -23,20 +23,21 @@ export const FormCovidVaccine: React.FC = () => {
       <GridContainer>
         <FormImage
           folderName={covidVaccineImageFolder}
+          gridProps={{ sm: 2, xs: 4 }}
           imagePath="covidVaccine.imageName"
           imageStyleProps={{ height: "100%", maxHeight: "100%", maxWidth: "100%" }}
           loadingContainerProps={{ marginLeft: "70px", marginTop: 0, transform: "none" }}
           outerContainerProps={{ height: "100%" }}
-          xs={2}
         />
         <GridItemAutocomplete
           defaultValue={CovidStatus.NORPT}
+          gridProps={{ sm: true, xs: 8 }}
           label="Vaccine Status"
           name="covidVaccine.status"
           options={covidStatuses}
           textFieldProps={{ required: true }}
         />
-        <GridItemDatePicker label="Date" name="covidVaccine.date" />
+        <GridItemDatePicker gridProps={{ sm: true, xs: 4 }} label="Date" name="covidVaccine.date" />
         {(covidStatus === CovidStatus.UNV || covidStatus === CovidStatus.EXEMPT) && (
           <GridItemTextField label="Reason" name="covidVaccine.reason" />
         )}

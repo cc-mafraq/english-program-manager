@@ -13,7 +13,7 @@ export const FormCorrespondenceItem: React.FC<FormItem> = ({ index, removeItem, 
     <>
       <Grid container>
         <GridItemDatePicker
-          gridProps={{ margin: SPACING, xs: 2 }}
+          gridProps={{ margin: SPACING, md: 2, sm: 3, xs: 4 }}
           label="Date"
           name={name ? `${name}.date` : "date"}
           textFieldProps={{ required: true }}

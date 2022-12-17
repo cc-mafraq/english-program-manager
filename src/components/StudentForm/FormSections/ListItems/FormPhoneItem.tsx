@@ -15,7 +15,7 @@ export const FormPhoneItem: React.FC<FormItem> = ({ index, removeItem, name }) =
 
   return (
     <>
-      <Grid item padding={SPACING} xs={3}>
+      <Grid item md={3} padding={SPACING} sm={5} xs={10}>
         <GridItemTextField
           label={`Phone Number ${Number(index) + 1}`}
           name={`${name}.number`}

@@ -8,6 +8,7 @@ import {
   Tooltip,
   Typography,
   TypographyProps,
+  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import { green as materialGreen, red as materialRed } from "@mui/material/colors";
@@ -88,6 +89,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
   const [open, setOpen] = useState(false);
   const [selectedAcademicRecord, setSelectedAcademicRecord] = useState<AcademicRecord | null>(null);
   const { red, green } = useColors();
+  const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
 
   const handleDialogOpen = useCallback(() => {
     setOpen(true);
@@ -242,7 +244,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
   ]);
 
   return (
-    <>
+    <Box sx={greaterThanSmall ? { display: "flex", flexDirection: "column" } : undefined}>
       <LabeledContainer
         label="Progress"
         parentContainerProps={{ minHeight: "100px", width: "100%" }}
@@ -270,6 +272,6 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
       >
         <FormAcademicRecordsMemo />
       </FormDialog>
-    </>
+    </Box>
   );
 };

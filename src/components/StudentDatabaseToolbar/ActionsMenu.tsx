@@ -5,6 +5,7 @@ import { useAppStore } from "../../hooks";
 import { ActionFAB } from "../reusables/Toolbar/ActionFAB";
 
 interface ActionsMenuProps {
+  addButtonCondition?: boolean;
   addButtonTooltip?: string;
   handleDialogOpen?: () => void;
   otherActions?: React.ReactNode;
@@ -18,6 +19,7 @@ export const ActionsMenu: React.FC<ActionsMenuProps> = ({
   tooltipObjectName,
   otherActions,
   addButtonTooltip,
+  addButtonCondition,
 }) => {
   const role = useAppStore((state) => {
     return state.role;
@@ -28,7 +30,7 @@ export const ActionsMenu: React.FC<ActionsMenuProps> = ({
   return (
     <Grow in={showActions} style={{ transformOrigin: "0 0 0" }}>
       <Box display="flex" flexDirection="column" position="absolute">
-        {role === "admin" && handleDialogOpen && (
+        {(role === "admin" || addButtonCondition) && handleDialogOpen && (
           <ActionFAB
             fabStyle={{ marginTop: 0.5 }}
             onClick={handleDialogOpen}
@@ -44,6 +46,7 @@ export const ActionsMenu: React.FC<ActionsMenuProps> = ({
 };
 
 ActionsMenu.defaultProps = {
+  addButtonCondition: undefined,
   addButtonTooltip: undefined,
   handleDialogOpen: undefined,
   otherActions: undefined,

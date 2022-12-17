@@ -59,7 +59,9 @@ export const StudentCardImage: React.FC<StudentCardImageProps> = ({
         scale={greaterThanSmall ? 2 : 1.5}
         student={student}
       />
-      {student.status.currentStatus !== Status.WD && role === "admin" && <WithdrawButton student={student} />}
+      {student.status.currentStatus !== Status.WD && role === "admin" && greaterThanSmall && (
+        <WithdrawButton student={student} />
+      )}
     </Box>
   );
 };
