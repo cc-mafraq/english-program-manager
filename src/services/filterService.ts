@@ -14,7 +14,7 @@ export const searchStudents = (students: Student[], searchString: string) => {
   return filter(students, (s) => {
     return (
       isEmpty(searchString) ||
-      includes(toLower(s.name.english), toLower(searchString)) ||
+      toLower(s.name.english).match(new RegExp(`^${searchString}`)) ||
       includes(s.name.arabic, searchString) ||
       s.epId.toString() === searchString ||
       some(map(s.phone.phoneNumbers, "number"), phoneConditionFn(searchString))
