@@ -164,7 +164,12 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
             key={i}
             expanded={includes(expanded, i)}
             onChange={handleAccordionChange(i)}
-            sx={{ paddingBottom: "15px", width: "100%" }}
+            sx={{
+              "& .MuiCollapse-wrapperInner": {
+                paddingBottom: "10px",
+              },
+              width: "100%",
+            }}
             TransitionProps={{ unmountOnExit: true }}
           >
             <AccordionSummary
@@ -215,7 +220,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
               )}
             </AccordionSummary>
             <Divider />
-            <AccordionDetails>
+            <AccordionDetails sx={{}}>
               <GradeInfo grade={ar.finalGrade} label="Class Grade" />
               <GradeInfo grade={ar.exitWritingExam} label="Exit Writing Exam" />
               <GradeInfo grade={ar.exitSpeakingExam} label="Exit Speaking Exam" />
