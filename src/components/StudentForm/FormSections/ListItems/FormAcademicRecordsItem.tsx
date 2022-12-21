@@ -46,6 +46,7 @@ export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem,
           textFieldProps={{ required: true }}
         />
         <GridItemAutocomplete
+          autoSelect={false}
           freeSolo
           label="Level"
           name={name ? `${name}.level` : "level"}

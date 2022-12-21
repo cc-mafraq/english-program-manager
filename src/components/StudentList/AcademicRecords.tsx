@@ -164,7 +164,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
             key={i}
             expanded={includes(expanded, i)}
             onChange={handleAccordionChange(i)}
-            sx={{ paddingBottom: "20px", width: "100%" }}
+            sx={{ paddingBottom: "15px", width: "100%" }}
             TransitionProps={{ unmountOnExit: true }}
           >
             <AccordionSummary
