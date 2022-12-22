@@ -14,7 +14,15 @@ import {
 import { green as materialGreen, red as materialRed } from "@mui/material/colors";
 import { findIndex, forOwn, map, reverse } from "lodash";
 import React, { useCallback, useMemo, useState } from "react";
-import { FormAcademicRecordsItem, FormDialog, LabeledContainer, LabeledText, ProgressBox } from "..";
+import {
+  AccordionList,
+  editFn,
+  FormAcademicRecordsItem,
+  FormDialog,
+  LabeledContainer,
+  LabeledText,
+  ProgressBox,
+} from "..";
 import { useAppStore, useColors, useStudentStore } from "../../hooks";
 import { AcademicRecord, emptyAcademicRecord, FinalResult, GenderedLevel, Grade, Student } from "../../interfaces";
 import {
@@ -65,6 +73,103 @@ GradeInfo.defaultProps = {
   grade: undefined,
 };
 
+interface AcademicRecordAccordionSummaryProps {
+  data: AcademicRecord;
+  handleEditClick?: editFn;
+  i: number;
+}
+
+const AcademicRecordAccordionSummary: React.FC<AcademicRecordAccordionSummaryProps> = ({
+  data: academicRecord,
+  i,
+  handleEditClick,
+}) => {
+  const role = useAppStore((state) => {
+    return state.role;
+  });
+  const theme = useTheme();
+  const { red, green } = useColors();
+
+  return (
+    <>
+      <Typography sx={{ marginLeft: "10vw", width: "20vw" }} variant="h6">
+        {academicRecord.session}
+      </Typography>
+      <Box sx={{ width: "20vw" }}>
+        {academicRecord.level ? (
+          <Typography sx={{ width: "20vw" }} variant="h6">
+            {academicRecord.level}
+          </Typography>
+        ) : (
+          academicRecord.levelAudited && <Typography variant="h6">{academicRecord.levelAudited} Audit</Typography>
+        )}
+      </Box>
+      <Box sx={{ width: "20vw" }}>
+        {academicRecord.overallResult && (
+          <Typography
+            color={
+              academicRecord.overallResult === FinalResult.P
+                ? theme.palette.mode === "light"
+                  ? materialGreen[600]
+                  : green
+                : theme.palette.mode === "light"
+                ? materialRed[600]
+                : red
+            }
+            sx={{ fontWeight: "bold" }}
+            variant="h6"
+          >
+            {academicRecord.overallResult}
+          </Typography>
+        )}
+      </Box>
+      {role === "admin" && (
+        <Tooltip arrow title="Edit Academic Record">
+          <IconButton onClick={handleEditClick && handleEditClick(i)}>
+            <Edit />
+          </IconButton>
+        </Tooltip>
+      )}
+    </>
+  );
+};
+
+AcademicRecordAccordionSummary.defaultProps = {
+  handleEditClick: undefined,
+};
+
+interface AcademicRecordAccordionDetailsProps {
+  data: AcademicRecord;
+}
+
+const AcademicRecordAccordionDetails: React.FC<AcademicRecordAccordionDetailsProps> = ({
+  data: academicRecord,
+}) => {
+  return (
+    <>
+      <GradeInfo grade={academicRecord.finalGrade} label="Class Grade" />
+      <GradeInfo grade={academicRecord.exitWritingExam} label="Exit Writing Exam" />
+      <GradeInfo grade={academicRecord.exitSpeakingExam} label="Exit Speaking Exam" />
+      <LabeledContainer label="Attendance" labelProps={labelProps}>
+        <LabeledText label="">
+          {academicRecord.attendance !== undefined ? `${academicRecord.attendance}%` : undefined}
+        </LabeledText>
+      </LabeledContainer>
+      <LabeledContainer label="Teacher Comments" labelProps={labelProps}>
+        <LabeledText label="" textProps={{ fontSize: "11pt" }}>
+          {academicRecord.comments}
+        </LabeledText>
+      </LabeledContainer>
+      <LabeledContainer label="Final Grade Report Sent" labelProps={labelProps}>
+        <LabeledText label="">{academicRecord.finalGradeSentDate}</LabeledText>
+      </LabeledContainer>
+      <LabeledContainer label="Final Grade Report Notes" labelProps={labelProps}>
+        <LabeledText label="">{academicRecord.finalGradeReportNotes}</LabeledText>
+      </LabeledContainer>
+    </>
+  );
+};
+
 const FormAcademicRecordsMemo = React.memo(() => {
   return (
     <Box paddingRight={SPACING * 2}>
@@ -85,10 +190,8 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
     return getProgress(student, getAllSessions(students));
   }, [student, students]);
   const theme = useTheme();
-  const { iconColor, defaultBorderColor } = useColors();
   const [open, setOpen] = useState(false);
   const [selectedAcademicRecord, setSelectedAcademicRecord] = useState<AcademicRecord | null>(null);
-  const { red, green } = useColors();
   const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
 
   const handleDialogOpen = useCallback(() => {
@@ -102,9 +205,10 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
 
   const handleEditClick = useCallback(
     (index: number) => {
-      return () => {
-        setSelectedAcademicRecord(student.academicRecords[index]);
+      return (e: React.MouseEvent) => {
+        setSelectedAcademicRecord(reverse([...student.academicRecords])[index]);
         handleDialogOpen();
+        e.stopPropagation();
       };
     },
     [handleDialogOpen, student.academicRecords],
@@ -143,106 +247,6 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
     });
   }, [progress]);
 
-  const RecordData = useMemo(() => {
-    return reverse(
-      map(student.academicRecords, (ar, i) => {
-        return (
-          <LabeledContainer
-            key={i}
-            childContainerProps={{ marginTop: 0.5 }}
-            label={`Session ${Number(i) + 1}`}
-            labelProps={{ fontSize: 20, fontWeight: "normal" }}
-            parentContainerProps={{
-              border: 1,
-              borderColor: defaultBorderColor,
-              marginBottom: 1,
-              padding: 2,
-              paddingTop: 1,
-              position: "relative",
-              width: "100%",
-            }}
-          >
-            {ar.overallResult && (
-              <Box
-                sx={{
-                  left: "35%",
-                  position: "absolute",
-                  top: "1vh",
-                }}
-              >
-                <Typography color="text.secondary" display="inline" fontSize="large">
-                  Level Pass/Fail:{" "}
-                </Typography>
-                <Typography
-                  color={
-                    ar.overallResult === FinalResult.P
-                      ? theme.palette.mode === "light"
-                        ? materialGreen[600]
-                        : green
-                      : theme.palette.mode === "light"
-                      ? materialRed[600]
-                      : red
-                  }
-                  display="inline"
-                  fontSize={20}
-                  fontWeight="bold"
-                >
-                  {ar.overallResult}
-                </Typography>
-              </Box>
-            )}
-            {role === "admin" && (
-              <Tooltip arrow title="Edit Academic Record">
-                <IconButton
-                  onClick={handleEditClick(i)}
-                  sx={{
-                    color: iconColor,
-                    position: "absolute",
-                    right: "1.5vh",
-                    top: "1.5vh",
-                  }}
-                >
-                  <Edit />
-                </IconButton>
-              </Tooltip>
-            )}
-            <LabeledContainer label="Record Information" labelProps={labelProps}>
-              <LabeledText label="Session">{ar.session}</LabeledText>
-              <LabeledText label="Level">{ar.level}</LabeledText>
-              <LabeledText label="Level Audited">{ar.levelAudited}</LabeledText>
-              <LabeledText label="Attendance">
-                {ar.attendance !== undefined ? `${ar.attendance}%` : undefined}
-              </LabeledText>
-            </LabeledContainer>
-            <GradeInfo grade={ar.finalGrade} label="Class Grade" />
-            <GradeInfo grade={ar.exitWritingExam} label="Exit Writing Exam" />
-            <GradeInfo grade={ar.exitSpeakingExam} label="Exit Speaking Exam" />
-            <LabeledContainer label="Teacher Comments" labelProps={labelProps}>
-              <LabeledText label="" textProps={{ fontSize: "11pt" }}>
-                {ar.comments}
-              </LabeledText>
-            </LabeledContainer>
-            <LabeledContainer label="Final Grade Report Sent" labelProps={labelProps}>
-              <LabeledText label="">{ar.finalGradeSentDate}</LabeledText>
-            </LabeledContainer>
-            <LabeledContainer label="Final Grade Report Notes" labelProps={labelProps}>
-              <LabeledText label="">{ar.finalGradeReportNotes}</LabeledText>
-            </LabeledContainer>
-          </LabeledContainer>
-        );
-      }),
-    );
-  }, [
-    defaultBorderColor,
-    green,
-    handleEditClick,
-    iconColor,
-    red,
-    role,
-    student.academicRecords,
-    theme.palette.mode,
-  ]);
-
   return (
     <Box sx={greaterThanSmall ? { display: "flex", flexDirection: "column" } : undefined}>
       <LabeledContainer
@@ -254,13 +258,18 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
       </LabeledContainer>
       <LabeledContainer label="Academic Records" showWhenEmpty>
         {role === "admin" && (
-          <Box marginBottom={1} marginTop={1}>
+          <Box marginBottom={1} marginTop={1} width="100%">
             <Button color="secondary" onClick={handleDialogOpen} variant="contained">
               Add Session
             </Button>
           </Box>
         )}
-        {RecordData}
+        <AccordionList
+          dataList={reverse([...student.academicRecords])}
+          DetailsComponent={AcademicRecordAccordionDetails}
+          handleEditClick={handleEditClick}
+          SummaryComponent={AcademicRecordAccordionSummary}
+        />
         <LabeledText label="Certificate Requests">{student?.certificateRequests}</LabeledText>
       </LabeledContainer>
       <FormDialog<AcademicRecord>
