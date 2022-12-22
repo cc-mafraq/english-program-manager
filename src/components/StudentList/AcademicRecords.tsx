@@ -1,13 +1,9 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { ArrowForwardIos, Edit } from "@mui/icons-material";
+import { Edit } from "@mui/icons-material";
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Box,
   Breakpoint,
   Button,
-  Divider,
   IconButton,
   Tooltip,
   Typography,
@@ -16,9 +12,17 @@ import {
   useTheme,
 } from "@mui/material";
 import { green as materialGreen, red as materialRed } from "@mui/material/colors";
-import { findIndex, forOwn, includes, map, reverse, without } from "lodash";
+import { findIndex, forOwn, map, reverse } from "lodash";
 import React, { useCallback, useMemo, useState } from "react";
-import { FormAcademicRecordsItem, FormDialog, LabeledContainer, LabeledText, ProgressBox } from "..";
+import {
+  AccordionList,
+  editFn,
+  FormAcademicRecordsItem,
+  FormDialog,
+  LabeledContainer,
+  LabeledText,
+  ProgressBox,
+} from "..";
 import { useAppStore, useColors, useStudentStore } from "../../hooks";
 import { AcademicRecord, emptyAcademicRecord, FinalResult, GenderedLevel, Grade, Student } from "../../interfaces";
 import {
@@ -69,6 +73,102 @@ GradeInfo.defaultProps = {
   grade: undefined,
 };
 
+interface AcademicRecordAccordionSummaryProps {
+  data: AcademicRecord;
+  handleEditClick?: editFn;
+  i: number;
+}
+
+const AcademicRecordAccordionSummary: React.FC<AcademicRecordAccordionSummaryProps> = ({
+  data: academicRecord,
+  i,
+  handleEditClick,
+}) => {
+  const role = useAppStore((state) => {
+    return state.role;
+  });
+  const theme = useTheme();
+  const { red, green } = useColors();
+
+  return (
+    <>
+      <Typography sx={{ marginLeft: "10vw", width: "20vw" }} variant="h6">
+        {academicRecord.session}
+      </Typography>
+      {academicRecord.level && (
+        <Typography sx={{ width: "20vw" }} variant="h6">
+          {academicRecord.level}
+        </Typography>
+      )}
+      {academicRecord.levelAudited && (
+        <Typography sx={{ width: "20vw" }} variant="h6">
+          {academicRecord.levelAudited} Audit
+        </Typography>
+      )}
+      {academicRecord.overallResult && (
+        <Typography
+          color={
+            academicRecord.overallResult === FinalResult.P
+              ? theme.palette.mode === "light"
+                ? materialGreen[600]
+                : green
+              : theme.palette.mode === "light"
+              ? materialRed[600]
+              : red
+          }
+          sx={{ fontWeight: "bold", width: "20vw" }}
+          variant="h6"
+        >
+          {academicRecord.overallResult}
+        </Typography>
+      )}
+      {role === "admin" && (
+        <Tooltip arrow title="Edit Academic Record">
+          <IconButton onClick={handleEditClick && handleEditClick(i)}>
+            <Edit />
+          </IconButton>
+        </Tooltip>
+      )}
+    </>
+  );
+};
+
+AcademicRecordAccordionSummary.defaultProps = {
+  handleEditClick: undefined,
+};
+
+interface AcademicRecordAccordionDetailsProps {
+  data: AcademicRecord;
+}
+
+const AcademicRecordAccordionDetails: React.FC<AcademicRecordAccordionDetailsProps> = ({
+  data: academicRecord,
+}) => {
+  return (
+    <>
+      <GradeInfo grade={academicRecord.finalGrade} label="Class Grade" />
+      <GradeInfo grade={academicRecord.exitWritingExam} label="Exit Writing Exam" />
+      <GradeInfo grade={academicRecord.exitSpeakingExam} label="Exit Speaking Exam" />
+      <LabeledContainer label="Attendance" labelProps={labelProps}>
+        <LabeledText label="">
+          {academicRecord.attendance !== undefined ? `${academicRecord.attendance}%` : undefined}
+        </LabeledText>
+      </LabeledContainer>
+      <LabeledContainer label="Teacher Comments" labelProps={labelProps}>
+        <LabeledText label="" textProps={{ fontSize: "11pt" }}>
+          {academicRecord.comments}
+        </LabeledText>
+      </LabeledContainer>
+      <LabeledContainer label="Final Grade Report Sent" labelProps={labelProps}>
+        <LabeledText label="">{academicRecord.finalGradeSentDate}</LabeledText>
+      </LabeledContainer>
+      <LabeledContainer label="Final Grade Report Notes" labelProps={labelProps}>
+        <LabeledText label="">{academicRecord.finalGradeReportNotes}</LabeledText>
+      </LabeledContainer>
+    </>
+  );
+};
+
 const FormAcademicRecordsMemo = React.memo(() => {
   return (
     <Box paddingRight={SPACING * 2}>
@@ -90,9 +190,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
   }, [student, students]);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-  const [expanded, setExpanded] = useState([student.academicRecords.length - 1]);
   const [selectedAcademicRecord, setSelectedAcademicRecord] = useState<AcademicRecord | null>(null);
-  const { red, green } = useColors();
   const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
 
   const handleDialogOpen = useCallback(() => {
@@ -107,7 +205,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
   const handleEditClick = useCallback(
     (index: number) => {
       return () => {
-        setSelectedAcademicRecord(student.academicRecords[index]);
+        setSelectedAcademicRecord(reverse([...student.academicRecords])[index]);
         handleDialogOpen();
       };
     },
@@ -147,113 +245,6 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
     });
   }, [progress]);
 
-  const handleAccordionChange = useCallback(
-    (recordIndex: number) => {
-      return (event: React.SyntheticEvent, newExpanded: boolean) => {
-        newExpanded ? setExpanded([...expanded, recordIndex]) : setExpanded(without(expanded, recordIndex));
-      };
-    },
-    [expanded],
-  );
-
-  const RecordData = useMemo(() => {
-    return reverse(
-      map(student.academicRecords, (ar, i) => {
-        return (
-          <Accordion
-            key={i}
-            expanded={includes(expanded, i)}
-            onChange={handleAccordionChange(i)}
-            sx={{
-              "& .MuiCollapse-wrapperInner": {
-                paddingBottom: "10px",
-              },
-              width: "100%",
-            }}
-            TransitionProps={{ unmountOnExit: true }}
-          >
-            <AccordionSummary
-              expandIcon={<ArrowForwardIos sx={{ fontSize: "0.9rem" }} />}
-              sx={{
-                "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
-                  transform: "rotate(90deg)",
-                },
-                flexDirection: "row-reverse",
-              }}
-            >
-              <Typography sx={{ marginLeft: "10vw", width: "20vw" }} variant="h6">
-                {ar.session}
-              </Typography>
-              {ar.level && (
-                <Typography sx={{ width: "20vw" }} variant="h6">
-                  {ar.level}
-                </Typography>
-              )}
-              {ar.levelAudited && (
-                <Typography sx={{ width: "20vw" }} variant="h6">
-                  {ar.levelAudited} Audit
-                </Typography>
-              )}
-              {ar.overallResult && (
-                <Typography
-                  color={
-                    ar.overallResult === FinalResult.P
-                      ? theme.palette.mode === "light"
-                        ? materialGreen[600]
-                        : green
-                      : theme.palette.mode === "light"
-                      ? materialRed[600]
-                      : red
-                  }
-                  sx={{ fontWeight: "bold", width: "20vw" }}
-                  variant="h6"
-                >
-                  {ar.overallResult}
-                </Typography>
-              )}
-              {role === "admin" && (
-                <Tooltip arrow title="Edit Academic Record">
-                  <IconButton onClick={handleEditClick(i)}>
-                    <Edit />
-                  </IconButton>
-                </Tooltip>
-              )}
-            </AccordionSummary>
-            <Divider />
-            <AccordionDetails sx={{}}>
-              <GradeInfo grade={ar.finalGrade} label="Class Grade" />
-              <GradeInfo grade={ar.exitWritingExam} label="Exit Writing Exam" />
-              <GradeInfo grade={ar.exitSpeakingExam} label="Exit Speaking Exam" />
-              <LabeledContainer label="Attendance" labelProps={labelProps}>
-                <LabeledText label="">{ar.attendance !== undefined ? `${ar.attendance}%` : undefined}</LabeledText>
-              </LabeledContainer>
-              <LabeledContainer label="Teacher Comments" labelProps={labelProps}>
-                <LabeledText label="" textProps={{ fontSize: "11pt" }}>
-                  {ar.comments}
-                </LabeledText>
-              </LabeledContainer>
-              <LabeledContainer label="Final Grade Report Sent" labelProps={labelProps}>
-                <LabeledText label="">{ar.finalGradeSentDate}</LabeledText>
-              </LabeledContainer>
-              <LabeledContainer label="Final Grade Report Notes" labelProps={labelProps}>
-                <LabeledText label="">{ar.finalGradeReportNotes}</LabeledText>
-              </LabeledContainer>
-            </AccordionDetails>
-          </Accordion>
-        );
-      }),
-    );
-  }, [
-    expanded,
-    green,
-    handleAccordionChange,
-    handleEditClick,
-    red,
-    role,
-    student.academicRecords,
-    theme.palette.mode,
-  ]);
-
   return (
     <Box sx={greaterThanSmall ? { display: "flex", flexDirection: "column" } : undefined}>
       <LabeledContainer
@@ -271,7 +262,12 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
             </Button>
           </Box>
         )}
-        {RecordData}
+        <AccordionList
+          dataList={reverse([...student.academicRecords])}
+          DetailsComponent={AcademicRecordAccordionDetails}
+          handleEditClick={handleEditClick}
+          SummaryComponent={AcademicRecordAccordionSummary}
+        />
         <LabeledText label="Certificate Requests">{student?.certificateRequests}</LabeledText>
       </LabeledContainer>
       <FormDialog<AcademicRecord>
