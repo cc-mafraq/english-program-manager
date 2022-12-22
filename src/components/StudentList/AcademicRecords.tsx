@@ -95,16 +95,15 @@ const AcademicRecordAccordionSummary: React.FC<AcademicRecordAccordionSummaryPro
       <Typography sx={{ marginLeft: "10vw", width: "20vw" }} variant="h6">
         {academicRecord.session}
       </Typography>
-      {academicRecord.level && (
-        <Typography sx={{ width: "20vw" }} variant="h6">
-          {academicRecord.level}
-        </Typography>
-      )}
-      {academicRecord.levelAudited && (
-        <Typography sx={{ width: "20vw" }} variant="h6">
-          {academicRecord.levelAudited} Audit
-        </Typography>
-      )}
+      <Box sx={{ width: "20vw" }}>
+        {academicRecord.level ? (
+          <Typography sx={{ width: "20vw" }} variant="h6">
+            {academicRecord.level}
+          </Typography>
+        ) : (
+          academicRecord.levelAudited && <Typography variant="h6">{academicRecord.levelAudited} Audit</Typography>
+        )}
+      </Box>
       <Box sx={{ width: "20vw" }}>
         {academicRecord.overallResult && (
           <Typography
