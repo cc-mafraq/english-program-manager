@@ -3,7 +3,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Divider } from "@mui/mat
 import { includes, map, without } from "lodash";
 import React, { useCallback, useState } from "react";
 
-export type editFn = (i: number) => () => void;
+export type editFn = (i: number) => (e: React.MouseEvent) => void;
 
 interface AccordionListProps<T> {
   DetailsComponent: React.FC<{ data: T }>;

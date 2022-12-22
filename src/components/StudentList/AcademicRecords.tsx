@@ -105,23 +105,25 @@ const AcademicRecordAccordionSummary: React.FC<AcademicRecordAccordionSummaryPro
           {academicRecord.levelAudited} Audit
         </Typography>
       )}
-      {academicRecord.overallResult && (
-        <Typography
-          color={
-            academicRecord.overallResult === FinalResult.P
-              ? theme.palette.mode === "light"
-                ? materialGreen[600]
-                : green
-              : theme.palette.mode === "light"
-              ? materialRed[600]
-              : red
-          }
-          sx={{ fontWeight: "bold", width: "20vw" }}
-          variant="h6"
-        >
-          {academicRecord.overallResult}
-        </Typography>
-      )}
+      <Box sx={{ width: "20vw" }}>
+        {academicRecord.overallResult && (
+          <Typography
+            color={
+              academicRecord.overallResult === FinalResult.P
+                ? theme.palette.mode === "light"
+                  ? materialGreen[600]
+                  : green
+                : theme.palette.mode === "light"
+                ? materialRed[600]
+                : red
+            }
+            sx={{ fontWeight: "bold" }}
+            variant="h6"
+          >
+            {academicRecord.overallResult}
+          </Typography>
+        )}
+      </Box>
       {role === "admin" && (
         <Tooltip arrow title="Edit Academic Record">
           <IconButton onClick={handleEditClick && handleEditClick(i)}>
@@ -204,9 +206,10 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
 
   const handleEditClick = useCallback(
     (index: number) => {
-      return () => {
+      return (e: React.MouseEvent) => {
         setSelectedAcademicRecord(reverse([...student.academicRecords])[index]);
         handleDialogOpen();
+        e.stopPropagation();
       };
     },
     [handleDialogOpen, student.academicRecords],
