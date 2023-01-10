@@ -96,7 +96,7 @@ const stringToResult = (value: string, originalValue: string) => {
 };
 
 export const dateToString = (value: string, originalValue: string) => {
-  if (isEmpty(originalValue)) return null;
+  if (isEmpty(originalValue) || originalValue.toLowerCase() === "y") return null;
   const momentVal = moment(originalValue, MOMENT_FORMAT);
   return momentVal.isValid() ? momentVal.format(MOMENT_FORMAT) : moment(originalValue).format(MOMENT_FORMAT);
 };
