@@ -26,18 +26,13 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
   const shortEnglishName = student.name.english.split(" ").slice(0, 2).join(" ");
 
   const downloadFGR = useCallback(async () => {
-    console.log(cardRef.current);
     if (cardRef.current) {
-      try {
-        const imgData = await toPng(cardRef.current, {
-          canvasHeight: 180,
-          canvasWidth: 320,
-          skipAutoScale: true,
-        });
-        return imgData;
-      } catch (e) {
-        console.log(e);
-      }
+      const imgData = await toPng(cardRef.current, {
+        canvasHeight: 180,
+        canvasWidth: 320,
+        skipAutoScale: true,
+      });
+      return imgData;
     }
     return null;
   }, []);
