@@ -59,7 +59,11 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
             </IconButton>
           </Tooltip>
           <Tooltip arrow title="Close Window">
-            <IconButton color="error" onClick={handleDialogClose} sx={{ transform: "scale(1.25)" }}>
+            <IconButton
+              color={theme.palette.mode === "dark" ? "error" : "default"}
+              onClick={handleDialogClose}
+              sx={{ transform: "scale(1.25)" }}
+            >
               <Close />
             </IconButton>
           </Tooltip>
@@ -153,7 +157,7 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
                 <Box
                   sx={{
                     borderColor: "#000000",
-                    borderLeft: "0px solid white",
+                    borderLeft: "0px none white",
                     borderStyle: "solid",
                     borderWidth: 2,
                     display: "flex",
