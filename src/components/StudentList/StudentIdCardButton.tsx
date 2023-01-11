@@ -43,12 +43,12 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
         </IconButton>
       </Tooltip>
       <Dialog
+        maxWidth="md"
         onClose={handleDialogClose}
         open={open}
         PaperProps={{ style: { backgroundColor: "#ffffff", padding: "10px" } }}
-        maxWidth="md"
       >
-        <Box sx={{ marginBottom: "10px", justifyContent: "space-between", display: "flex" }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
           <Tooltip arrow title="Download ID Card">
             <IconButton
               color={theme.palette.mode === "dark" ? "secondary" : "primary"}
@@ -59,7 +59,7 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
             </IconButton>
           </Tooltip>
           <Tooltip arrow title="Close Window">
-            <IconButton onClick={handleDialogClose} sx={{ transform: "scale(1.25)" }} color="error">
+            <IconButton color="error" onClick={handleDialogClose} sx={{ transform: "scale(1.25)" }}>
               <Close />
             </IconButton>
           </Tooltip>
@@ -140,8 +140,7 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
                   height: "72px",
                   paddingLeft: "6px",
                   paddingRight: "6px",
-                  width: "280px",
-                  borderRight: 0,
+                  width: student.name.arabic === "N/A" ? "620px" : "280px",
                 }}
               >
                 <Box sx={{ margin: "auto" }}>
@@ -150,21 +149,24 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
                   </Typography>
                 </Box>
               </Box>
-              <Box
-                sx={{
-                  borderColor: "#000000",
-                  borderStyle: "solid",
-                  borderWidth: 2,
-                  display: "flex",
-                  width: "340px",
-                }}
-              >
-                <Box sx={{ margin: "auto" }}>
-                  <Typography color="#000000" fontSize={26} fontWeight="bold">
-                    {student.name.arabic}
-                  </Typography>
+              {student.name.arabic !== "N/A" && (
+                <Box
+                  sx={{
+                    borderColor: "#000000",
+                    borderLeft: "0px solid white",
+                    borderStyle: "solid",
+                    borderWidth: 2,
+                    display: "flex",
+                    width: "340px",
+                  }}
+                >
+                  <Box sx={{ margin: "auto" }}>
+                    <Typography color="#000000" fontSize={26} fontWeight="bold">
+                      {student.name.arabic}
+                    </Typography>
+                  </Box>
                 </Box>
-              </Box>
+              )}
             </Box>
           </Box>
         </div>
