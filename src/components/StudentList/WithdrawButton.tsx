@@ -79,11 +79,7 @@ export const WithdrawButton: React.FC<WithdrawButtonProps> = ({ student }) => {
       <Tooltip arrow title="Withdraw Student">
         <IconButton
           onClick={handleDialogOpen}
-          sx={
-            greaterThanSmall
-              ? { marginLeft: "50%", marginTop: "30px", transform: "scale(1.25) translate(-50%)" }
-              : undefined
-          }
+          sx={greaterThanSmall ? { marginLeft: "50%", transform: "scale(1.25) translate(-50%)" } : undefined}
         >
           <Logout />
         </IconButton>

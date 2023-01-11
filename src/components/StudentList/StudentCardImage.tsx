@@ -1,6 +1,6 @@
 import { Box, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
-import { Image, WithdrawButton } from "..";
+import { Image, StudentIdCardButton, WithdrawButton } from "..";
 import { useAppStore } from "../../hooks";
 import { Nationality, Status, Student } from "../../interfaces";
 import { studentImageFolder } from "../../services";
@@ -59,9 +59,12 @@ export const StudentCardImage: React.FC<StudentCardImageProps> = ({
         scale={greaterThanSmall ? 2 : 1.5}
         student={student}
       />
-      {student.status.currentStatus !== Status.WD && role === "admin" && greaterThanSmall && (
-        <WithdrawButton student={student} />
-      )}
+      <Box display="flex" flexDirection="row" justifyContent="space-evenly" marginTop="30px">
+        {student.status.currentStatus !== Status.WD && role === "admin" && greaterThanSmall && (
+          <WithdrawButton student={student} />
+        )}
+        {student.imageName && greaterThanSmall && role === "admin" && <StudentIdCardButton student={student} />}
+      </Box>
     </Box>
   );
 };
