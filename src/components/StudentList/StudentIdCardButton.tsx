@@ -1,4 +1,4 @@
-import { Badge, Download } from "@mui/icons-material";
+import { Badge, Close, Download } from "@mui/icons-material";
 import { Box, Dialog, IconButton, Tooltip, Typography, useMediaQuery, useTheme } from "@mui/material";
 import download from "downloadjs";
 import { toPng } from "html-to-image";
@@ -26,14 +26,7 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
   const shortEnglishName = student.name.english.split(" ").slice(0, 2).join(" ");
 
   const downloadFGR = useCallback(async () => {
-    if (cardRef.current) {
-      const imgData = await toPng(cardRef.current, {
-        canvasHeight: 200,
-        canvasWidth: 320,
-      });
-      return imgData;
-    }
-    return null;
+    return cardRef.current ? toPng(cardRef.current) : null;
   }, []);
 
   const handleDownload = useCallback(async () => {
@@ -49,11 +42,25 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
           <Badge />
         </IconButton>
       </Tooltip>
-      <Dialog onClose={handleDialogClose} open={open} PaperProps={{ style: { backgroundColor: "#ffffff" } }}>
-        <Box sx={{ marginTop: "3px", marginLeft: "3px" }}>
+      <Dialog
+        onClose={handleDialogClose}
+        open={open}
+        PaperProps={{ style: { backgroundColor: "#ffffff", padding: "10px" } }}
+        maxWidth="md"
+      >
+        <Box sx={{ marginBottom: "10px", justifyContent: "space-between", display: "flex" }}>
           <Tooltip arrow title="Download ID Card">
-            <IconButton color={theme.palette.mode === "dark" ? "secondary" : "primary"} onClick={handleDownload}>
+            <IconButton
+              color={theme.palette.mode === "dark" ? "secondary" : "primary"}
+              onClick={handleDownload}
+              sx={{ transform: "scale(1.25)" }}
+            >
               <Download />
+            </IconButton>
+          </Tooltip>
+          <Tooltip arrow title="Close Window">
+            <IconButton onClick={handleDialogClose} sx={{ transform: "scale(1.25)" }} color="error">
+              <Close />
             </IconButton>
           </Tooltip>
         </Box>
@@ -63,11 +70,10 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
               backgroundColor: "#ffffff",
               borderColor: "#000000",
               borderStyle: "solid",
-              borderWidth: 1.5,
-              height: "180px",
-              margin: "5px",
-              padding: "18px",
-              width: "320px",
+              borderWidth: 3,
+              height: "360px",
+              padding: "36px",
+              width: "640px",
             }}
           >
             <Box display="flex" flexDirection="row">
@@ -76,29 +82,29 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
                   alignItems: "center",
                   borderColor: "#000000",
                   borderStyle: "solid",
-                  borderWidth: 1.5,
-                  height: "115px",
-                  width: "140px",
+                  borderWidth: 3,
+                  height: "230px",
+                  width: "280px",
                 }}
               >
                 <img
                   alt={`${student.name.english}`}
-                  height="115px"
+                  height="230px"
                   src={student.imageName}
                   style={{ display: "block", marginLeft: "auto", marginRight: "auto" }}
                 />
               </Box>
-              <Box sx={{ marginLeft: "10px", textAlign: "center" }}>
-                <Typography color="#000000" fontSize={13} fontWeight="bold" marginTop="2px">
+              <Box sx={{ marginLeft: "20px", textAlign: "center" }}>
+                <Typography color="#000000" fontSize={26} fontWeight="bold" marginTop="4px">
                   Community Center Mafraq
                 </Typography>
-                <Typography color="#000000" fontSize={11} marginTop="2px">
+                <Typography color="#000000" fontSize={22} marginTop="4px">
                   ENGLISH PROGRAM
                 </Typography>
-                <Typography color="#000000" fontSize={11} marginTop="2px">
+                <Typography color="#000000" fontSize={22} marginTop="4px">
                   12 Mafraq 25110
                 </Typography>
-                <Typography color="#000000" fontSize={10} marginTop="2px">
+                <Typography color="#000000" fontSize={20} marginTop="4px">
                   Email: ccmafraqenglish@gmail.com
                 </Typography>
                 <Box
@@ -106,12 +112,12 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
                     backgroundColor: "#FFD966",
                     borderColor: "#000000",
                     borderStyle: "solid",
-                    borderWidth: 1,
-                    marginTop: "20px",
+                    borderWidth: 2,
+                    marginTop: "40px",
                     width: "100%",
                   }}
                 >
-                  <Typography color="#000000" fontSize={13} fontWeight="bold">
+                  <Typography color="#000000" fontSize={26} fontWeight="bold">
                     {student.epId}
                   </Typography>
                 </Box>
@@ -121,7 +127,7 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
               sx={{
                 display: "flex",
                 flexDirection: "row",
-                marginTop: "18px",
+                marginTop: "36px",
                 textAlign: "center",
               }}
             >
@@ -129,17 +135,17 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
                 sx={{
                   borderColor: "#000000",
                   borderStyle: "solid",
-                  borderWidth: 1,
+                  borderWidth: 2,
                   display: "flex",
-                  height: "36px",
-                  paddingLeft: "3px",
-                  paddingRight: "3px",
-                  width: "140px",
+                  height: "72px",
+                  paddingLeft: "6px",
+                  paddingRight: "6px",
+                  width: "280px",
                   borderRight: 0,
                 }}
               >
                 <Box sx={{ margin: "auto" }}>
-                  <Typography color="#000000" fontSize={13} fontWeight="bold">
+                  <Typography color="#000000" fontSize={26} fontWeight="bold">
                     {shortEnglishName}
                   </Typography>
                 </Box>
@@ -148,13 +154,13 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
                 sx={{
                   borderColor: "#000000",
                   borderStyle: "solid",
-                  borderWidth: 1,
+                  borderWidth: 2,
                   display: "flex",
-                  width: "170px",
+                  width: "340px",
                 }}
               >
                 <Box sx={{ margin: "auto" }}>
-                  <Typography color="#000000" fontSize={13} fontWeight="bold">
+                  <Typography color="#000000" fontSize={26} fontWeight="bold">
                     {student.name.arabic}
                   </Typography>
                 </Box>
