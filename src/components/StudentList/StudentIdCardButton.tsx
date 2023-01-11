@@ -28,9 +28,8 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
   const downloadFGR = useCallback(async () => {
     if (cardRef.current) {
       const imgData = await toPng(cardRef.current, {
-        canvasHeight: 180,
+        canvasHeight: 200,
         canvasWidth: 320,
-        skipAutoScale: true,
       });
       return imgData;
     }
@@ -51,7 +50,7 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
         </IconButton>
       </Tooltip>
       <Dialog onClose={handleDialogClose} open={open} PaperProps={{ style: { backgroundColor: "#ffffff" } }}>
-        <Box sx={{ justifyContent: "center" }}>
+        <Box sx={{ marginTop: "3px", marginLeft: "3px" }}>
           <Tooltip arrow title="Download ID Card">
             <IconButton color={theme.palette.mode === "dark" ? "secondary" : "primary"} onClick={handleDownload}>
               <Download />
@@ -136,6 +135,7 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
                   paddingLeft: "3px",
                   paddingRight: "3px",
                   width: "140px",
+                  borderRight: 0,
                 }}
               >
                 <Box sx={{ margin: "auto" }}>
@@ -147,7 +147,6 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
               <Box
                 sx={{
                   borderColor: "#000000",
-                  borderLeft: 0,
                   borderStyle: "solid",
                   borderWidth: 1,
                   display: "flex",
