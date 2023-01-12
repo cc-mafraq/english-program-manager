@@ -30,7 +30,7 @@ export const CorrespondenceList = <T extends object>({ data, collectionName, idP
   const { defaultBackgroundColor, defaultBorderColor, iconColor } = useColors();
   const [open, setOpen] = useState(false);
   const [selectedCorrespondence, setSelectedCorrespondence] = useState<Correspondence | null>(null);
-  const correspondence = get(data, "correspondence");
+  const correspondence = get(data, "correspondence") as unknown as Correspondence[];
   const theme = useTheme();
   const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
 

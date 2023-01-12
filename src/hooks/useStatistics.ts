@@ -38,9 +38,13 @@ interface Statistics {
 }
 
 const getLevelCounts = (statistics: Statistics, path: string) => {
-  set(statistics, `${path}.PL1`, get(statistics, `${path}.PL1-M`) + get(statistics, `${path}.PL1-W`));
-  set(statistics, `${path}.L1`, get(statistics, `${path}.L1-M`) + get(statistics, `${path}.L1-W`));
-  set(statistics, `${path}.L2`, get(statistics, `${path}.L2-M`) + get(statistics, `${path}.L2-W`));
+  set(
+    statistics,
+    `${path}.PL1`,
+    (get(statistics, `${path}.PL1-M`) || 0) + (get(statistics, `${path}.PL1-W`) || 0),
+  );
+  set(statistics, `${path}.L1`, (get(statistics, `${path}.L1-M`) || 0) + (get(statistics, `${path}.L1-W`) || 0));
+  set(statistics, `${path}.L2`, (get(statistics, `${path}.L2-M`) || 0) + (get(statistics, `${path}.L2-W`) || 0));
   return omit(get(statistics, path), ["PL1-M", "PL1-W", "L1-M", "L1-W", "L2-M", "L2-W", ""]) as {
     [key in Level]: number;
   };

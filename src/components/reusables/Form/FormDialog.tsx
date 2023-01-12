@@ -43,8 +43,8 @@ export const FormDialog = <T extends FieldValues>({
 
   const [prevDefaultValues, setPrevDefaultValues] = useState<DeepPartial<T> | undefined>(undefined);
   if (open && !isEqual(useFormProps.defaultValues, prevDefaultValues)) {
-    useFormProps.defaultValues ? reset(useFormProps.defaultValues) : reset({} as T);
-    setPrevDefaultValues(useFormProps.defaultValues);
+    useFormProps.defaultValues ? reset(useFormProps.defaultValues as unknown as DeepPartial<T>) : reset({} as T);
+    setPrevDefaultValues(useFormProps.defaultValues as unknown as DeepPartial<T>);
   }
 
   return (

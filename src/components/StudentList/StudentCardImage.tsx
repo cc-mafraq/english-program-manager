@@ -1,6 +1,6 @@
 import { Box, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
-import { Image, WithdrawButton } from "..";
+import { Image, StudentIdCardButton, WithdrawButton } from "..";
 import { useAppStore } from "../../hooks";
 import { Nationality, Status, Student } from "../../interfaces";
 import { studentImageFolder } from "../../services";
@@ -21,6 +21,7 @@ export const StudentCardImage: React.FC<StudentCardImageProps> = ({
   });
   const theme = useTheme();
   const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
+  const greaterThanMedium = useMediaQuery(theme.breakpoints.up("md"));
   const maxImageHeight = 250;
 
   return (
@@ -59,9 +60,12 @@ export const StudentCardImage: React.FC<StudentCardImageProps> = ({
         scale={greaterThanSmall ? 2 : 1.5}
         student={student}
       />
-      {student.status.currentStatus !== Status.WD && role === "admin" && greaterThanSmall && (
-        <WithdrawButton student={student} />
-      )}
+      <Box display="flex" flexDirection="row" justifyContent="space-evenly" marginTop="30px">
+        {student.status.currentStatus !== Status.WD && role === "admin" && greaterThanSmall && (
+          <WithdrawButton student={student} />
+        )}
+        {student.imageName && greaterThanMedium && role === "admin" && <StudentIdCardButton student={student} />}
+      </Box>
     </Box>
   );
 };
