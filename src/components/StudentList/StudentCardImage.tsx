@@ -21,6 +21,7 @@ export const StudentCardImage: React.FC<StudentCardImageProps> = ({
   });
   const theme = useTheme();
   const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
+  const greaterThanMedium = useMediaQuery(theme.breakpoints.up("md"));
   const maxImageHeight = 250;
 
   return (
@@ -63,7 +64,7 @@ export const StudentCardImage: React.FC<StudentCardImageProps> = ({
         {student.status.currentStatus !== Status.WD && role === "admin" && greaterThanSmall && (
           <WithdrawButton student={student} />
         )}
-        {student.imageName && greaterThanSmall && role === "admin" && <StudentIdCardButton student={student} />}
+        {student.imageName && greaterThanMedium && role === "admin" && <StudentIdCardButton student={student} />}
       </Box>
     </Box>
   );

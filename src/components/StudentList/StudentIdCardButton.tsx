@@ -23,17 +23,20 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
     setOpen(true);
   };
 
-  const shortEnglishName = student.name.english.split(" ").slice(0, 2).join(" ");
-
-  const downloadFGR = useCallback(async () => {
-    return cardRef.current ? toPng(cardRef.current) : null;
-  }, []);
+  const splitEnglishName = student.name.english.split(" ");
+  const idWordNum = splitEnglishName.length < 2 ? 1 : splitEnglishName[1] === "Al" ? 3 : 2;
+  const shortEnglishName = splitEnglishName.slice(0, idWordNum).join(" ");
+  const padding = "36px";
+  const black = "#000000";
+  const blackBorder = { borderColor: black, borderStyle: "solid" };
+  const textMarginTop = "4px";
+  const imageHeight = "230px";
+  const buttonScale = "1.25";
 
   const handleDownload = useCallback(async () => {
-    const imgData = await downloadFGR();
-    if (!imgData) return;
-    await download(imgData, `${student.epId}.jpeg`);
-  }, [downloadFGR, student.epId]);
+    const imgData = cardRef.current ? await toPng(cardRef.current) : null;
+    imgData && (await download(imgData, `${student.epId}.jpeg`));
+  }, [student.epId]);
 
   return (
     <Box>
@@ -46,24 +49,16 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
         maxWidth="md"
         onClose={handleDialogClose}
         open={open}
-        PaperProps={{ style: { backgroundColor: "#ffffff", padding: "10px" } }}
+        PaperProps={{ style: { overflowX: "hidden", padding: "10px" } }}
       >
         <Box sx={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
           <Tooltip arrow title="Download ID Card">
-            <IconButton
-              color={theme.palette.mode === "dark" ? "secondary" : "primary"}
-              onClick={handleDownload}
-              sx={{ transform: "scale(1.25)" }}
-            >
+            <IconButton color="primary" onClick={handleDownload} sx={{ transform: `scale(${buttonScale})` }}>
               <Download />
             </IconButton>
           </Tooltip>
           <Tooltip arrow title="Close Window">
-            <IconButton
-              color={theme.palette.mode === "dark" ? "error" : "default"}
-              onClick={handleDialogClose}
-              sx={{ transform: "scale(1.25)" }}
-            >
+            <IconButton color="default" onClick={handleDialogClose} sx={{ transform: `scale(${buttonScale})` }}>
               <Close />
             </IconButton>
           </Tooltip>
@@ -71,57 +66,54 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
         <div ref={cardRef}>
           <Box
             sx={{
+              ...blackBorder,
               backgroundColor: "#ffffff",
-              borderColor: "#000000",
-              borderStyle: "solid",
               borderWidth: 3,
               height: "360px",
-              padding: "36px",
+              padding,
               width: "640px",
             }}
           >
             <Box display="flex" flexDirection="row">
               <Box
                 sx={{
+                  ...blackBorder,
                   alignItems: "center",
-                  borderColor: "#000000",
-                  borderStyle: "solid",
                   borderWidth: 3,
-                  height: "230px",
+                  height: imageHeight,
                   width: "280px",
                 }}
               >
                 <img
                   alt={`${student.name.english}`}
-                  height="230px"
+                  height={imageHeight}
                   src={student.imageName}
                   style={{ display: "block", marginLeft: "auto", marginRight: "auto" }}
                 />
               </Box>
               <Box sx={{ marginLeft: "20px", textAlign: "center" }}>
-                <Typography color="#000000" fontSize={26} fontWeight="bold" marginTop="4px">
+                <Typography color={black} fontSize={26} fontWeight="bold" marginTop={textMarginTop}>
                   Community Center Mafraq
                 </Typography>
-                <Typography color="#000000" fontSize={22} marginTop="4px">
+                <Typography color={black} fontSize={22} marginTop={textMarginTop}>
                   ENGLISH PROGRAM
                 </Typography>
-                <Typography color="#000000" fontSize={22} marginTop="4px">
+                <Typography color={black} fontSize={22} marginTop={textMarginTop}>
                   12 Mafraq 25110
                 </Typography>
-                <Typography color="#000000" fontSize={20} marginTop="4px">
+                <Typography color={black} fontSize={20} marginTop={textMarginTop}>
                   Email: ccmafraqenglish@gmail.com
                 </Typography>
                 <Box
                   sx={{
+                    ...blackBorder,
                     backgroundColor: "#FFD966",
-                    borderColor: "#000000",
-                    borderStyle: "solid",
                     borderWidth: 2,
                     marginTop: "40px",
                     width: "100%",
                   }}
                 >
-                  <Typography color="#000000" fontSize={26} fontWeight="bold">
+                  <Typography color={black} fontSize={26} fontWeight="bold">
                     {student.epId}
                   </Typography>
                 </Box>
@@ -131,14 +123,13 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
               sx={{
                 display: "flex",
                 flexDirection: "row",
-                marginTop: "36px",
+                marginTop: padding,
                 textAlign: "center",
               }}
             >
               <Box
                 sx={{
-                  borderColor: "#000000",
-                  borderStyle: "solid",
+                  ...blackBorder,
                   borderWidth: 2,
                   display: "flex",
                   height: "72px",
@@ -148,7 +139,7 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
                 }}
               >
                 <Box sx={{ margin: "auto" }}>
-                  <Typography color="#000000" fontSize={26} fontWeight="bold">
+                  <Typography color={black} fontSize={26} fontWeight="bold">
                     {shortEnglishName}
                   </Typography>
                 </Box>
@@ -156,16 +147,15 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
               {student.name.arabic !== "N/A" && (
                 <Box
                   sx={{
-                    borderColor: "#000000",
+                    ...blackBorder,
                     borderLeft: "0px none white",
-                    borderStyle: "solid",
                     borderWidth: 2,
                     display: "flex",
                     width: "340px",
                   }}
                 >
                   <Box sx={{ margin: "auto" }}>
-                    <Typography color="#000000" fontSize={26} fontWeight="bold">
+                    <Typography color={black} fontSize={26} fontWeight="bold">
                       {student.name.arabic}
                     </Typography>
                   </Box>
