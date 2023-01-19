@@ -1,3 +1,4 @@
+import { filter as _filter, isArray } from "lodash";
 import React, { useCallback, useRef } from "react";
 import {
   FinalGradeReportDialog,
@@ -105,7 +106,9 @@ export const StudentDatabasePage = () => {
       />
       <Loading />
       <StudentList
-        filteredStudents={filteredStudents}
+        filteredStudents={_filter(filteredStudents, (student) => {
+          return isArray(student.placement);
+        })}
         handleStudentDialogOpen={handleStudentDialogOpen}
         menuRef={menuRef}
       />
