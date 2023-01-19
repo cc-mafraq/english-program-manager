@@ -45,7 +45,7 @@ import {
 
 export const SPACING = 2;
 export const MOMENT_FORMAT = "l";
-const sessionRegex = /(Fa|Sp) (I|II) \d{2}/;
+const sessionRegex = /(Fa|Sp|Su) (I|II) \d{2}/;
 
 export interface FormItem {
   children?: React.ReactNode;
@@ -161,7 +161,7 @@ const gradeSchema = object()
   })
   .optional();
 
-const sessionSchema = string().matches(sessionRegex, "Session must be Fa/Sp I/II year (e.g. Sp I 22)");
+const sessionSchema = string().matches(sessionRegex, "Session must be Fa/Sp/Su I/II year (e.g. Sp I 22)");
 
 export const academicRecordsSchema = object().shape({
   attendance: percentageSchema,
