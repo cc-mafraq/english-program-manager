@@ -30,12 +30,12 @@ export const FormGrade: React.FC<FormGradeProps> = ({
       </FormLabel>
       <GridContainer marginBottom={0} marginLeft={0.5}>
         <GridItemRadioGroup
-          gridProps={{ xs: 3 }}
+          gridProps={{ sm: 3 }}
           name={directGradePath ? gradePath : `${gradePath}.result`}
           options={results}
         />
         {percentageComponent || (
-          <GridItemTextField gridProps={{ xs: 3 }} label="Percentage" name={`${gradePath}.percentage`} />
+          <GridItemTextField gridProps={{ sm: 3 }} label="Percentage" name={`${gradePath}.percentage`} />
         )}
         <GridItemTextField label={notesLabel || "Notes"} name={notesPath || `${gradePath}.notes`} />
       </GridContainer>

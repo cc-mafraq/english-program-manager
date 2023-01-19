@@ -16,6 +16,7 @@ import {
   mapValues,
   nth,
   omit,
+  orderBy,
   replace,
   reverse,
   set,
@@ -84,7 +85,10 @@ export const getProgress = (student: Student, sessionOptions: string[]): Student
         level = (ar.levelAudited as Level) || ar.level;
     }
     if (!level) return;
-    const isCoreClass = includes(levels, level);
+    const isCoreClass =
+      find(levels, (l) => {
+        return level.includes(l);
+      }) !== undefined;
     const electiveOrAuditLevel = first(
       filter(levels, (l) => {
         return (
@@ -147,9 +151,7 @@ export const generateId = (students: Student[]): number => {
 };
 
 export const sortStudents = (students: Student[]) => {
-  return sortBy(students, (student) => {
-    return student.name.english;
-  });
+  return orderBy(students, ["status.inviteTag", "name.english"], ["desc", "asc"]);
 };
 
 export const getStudentOptions = (students: Student[]): string[] => {

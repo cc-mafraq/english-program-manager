@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Edit } from "@mui/icons-material";
-import { Box, Breakpoint, Button, IconButton, Tooltip, Typography } from "@mui/material";
+import { Box, Breakpoint, Button, IconButton, Tooltip, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { findIndex, get, map, reverse, set } from "lodash";
 import moment from "moment";
 import React, { useCallback, useMemo, useState } from "react";
@@ -30,7 +30,9 @@ export const CorrespondenceList = <T extends object>({ data, collectionName, idP
   const { defaultBackgroundColor, defaultBorderColor, iconColor } = useColors();
   const [open, setOpen] = useState(false);
   const [selectedCorrespondence, setSelectedCorrespondence] = useState<Correspondence | null>(null);
-  const correspondence = get(data, "correspondence");
+  const correspondence = get(data, "correspondence") as unknown as Correspondence[];
+  const theme = useTheme();
+  const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
 
   const handleDialogOpen = useCallback(() => {
     setOpen(true);
@@ -120,7 +122,7 @@ export const CorrespondenceList = <T extends object>({ data, collectionName, idP
   }, [selectedCorrespondence]);
 
   return (
-    <>
+    <Box display={greaterThanSmall ? "flex" : undefined}>
       <LabeledContainer label="Correspondence" parentContainerProps={{ marginBottom: 2 }}>
         <Box marginBottom={1} marginTop={1} width="100%">
           <Button color="secondary" onClick={handleDialogOpen} variant="contained">
@@ -138,6 +140,6 @@ export const CorrespondenceList = <T extends object>({ data, collectionName, idP
       >
         <FormCorrespondenceMemo />
       </FormDialog>
-    </>
+    </Box>
   );
 };

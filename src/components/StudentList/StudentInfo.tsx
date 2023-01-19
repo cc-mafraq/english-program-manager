@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 import { join, map } from "lodash";
 import React, { useMemo } from "react";
 import { Image, LabeledContainer, LabeledText } from "..";
@@ -224,8 +224,11 @@ const LiteracyAndZoom: React.FC<StudentInfoProps> = ({ data: student }) => {
 };
 
 export const StudentInfo: React.FC<StudentInfoProps> = ({ data: student }) => {
+  const theme = useTheme();
+  const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
+
   return (
-    <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+    <Box sx={greaterThanSmall ? { display: "flex", flexWrap: "wrap" } : undefined}>
       <ProgramInformation data={student} />
       <PhoneNumbers data={student} />
       <StatusBox data={student} />

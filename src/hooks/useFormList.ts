@@ -40,7 +40,7 @@ export const useDateInitialState = <T>(datePath: Path<T>) => {
   const selectedStudent = useStudentStore((state) => {
     return state.selectedStudent;
   });
-  const dateArr = get(selectedStudent, datePath);
+  const dateArr = get(selectedStudent, datePath) as unknown as string[];
 
   return selectedStudent && dateArr && dateArr?.length > 0 ? dateArr : [""];
 };

@@ -12,37 +12,43 @@ import {
   LabeledCheckbox,
 } from "../reusables";
 
-export const FormEntryInformation: React.FC = () => {
+interface FormEntryInformationProps {
+  disabled: boolean;
+}
+
+export const FormEntryInformation: React.FC<FormEntryInformationProps> = ({ disabled }) => {
   return (
     <>
       <FormLabel textProps={{ marginTop: SPACING }}>Entry Information</FormLabel>
       <GridContainer marginBottom={0}>
-        <Grid item xs={2}>
-          <LabeledCheckbox checkboxProps={{ defaultChecked: true }} label="Waiting" name="waiting" />
+        <Grid item sm={2} xs={3}>
+          <LabeledCheckbox checkboxProps={{ defaultChecked: true, disabled }} label="Waiting" name="waiting" />
         </Grid>
         <GridItemDatePicker
-          gridProps={{ xs: 3 }}
+          datePickerProps={{ disabled }}
+          gridProps={{ md: 3, sm: 3, xs: 9 }}
           label="Entry Date"
           name="entryDate"
           value={moment().format(MOMENT_FORMAT)}
         />
         <GridItemAutocomplete
           defaultValue={HighPriority.NO}
+          disabled={disabled}
           gridProps={{ xs: 3 }}
           label="High Priority"
           name="highPriority"
           options={[HighPriority.NO, HighPriority.YES, HighPriority.PAST]}
           textFieldProps={{ required: true }}
         />
-        <GridItemTextField label="Name (Optional)" name="name" />
+        <GridItemTextField gridProps={{ md: 3, sm: 4, xs: 9 }} label="Name (Optional)" name="name" />
       </GridContainer>
       <GridContainer>
-        <Grid item xs={2}>
-          <LabeledCheckbox label="Entered in Phone" name="enteredInPhone" />
+        <Grid item sm={2} xs={3}>
+          <LabeledCheckbox checkboxProps={{ disabled }} label="Entered in Phone" name="enteredInPhone" />
         </Grid>
-        <GridItemTextField gridProps={{ xs: 3 }} label="Referral" name="referral" />
+        <GridItemTextField gridProps={{ sm: 3, xs: 9 }} label="Referral" name="referral" />
         <GridItemTextField gridProps={{ xs: 3 }} label="Number of People" name="numPeople" value="1" />
-        <Grid item xs={3}>
+        <Grid item sm={3}>
           <LabeledCheckbox containerProps={{ marginTop: -1 }} label="Probable PL1" name="probPL1" />
           <LabeledCheckbox containerProps={{ marginTop: -1 }} label="Probable L3+" name="probL3Plus" />
         </Grid>

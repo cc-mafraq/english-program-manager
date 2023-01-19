@@ -1,7 +1,9 @@
-import React, { useCallback } from "react";
+import { filter as _filter, isArray } from "lodash";
+import React, { useCallback, useRef } from "react";
 import {
   FinalGradeReportDialog,
   Loading,
+  MenuBar,
   StudentDatabaseToolbar,
   StudentFormDialog,
   StudentList,
@@ -20,6 +22,8 @@ export const StudentDatabasePage = () => {
   const setStudentDialogOpen = useStudentFormStore((state) => {
     return state.setOpen;
   });
+
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const handleStudentDialogOpen = useCallback(() => {
     setStudentDialogOpen(true);
@@ -40,6 +44,7 @@ export const StudentDatabasePage = () => {
 
   return (
     <>
+      <MenuBar innerRef={menuRef} pageName="Student Database" />
       <StudentDatabaseToolbar
         filteredStudents={filteredStudents}
         handleSearchStringChange={handleSearchStringChange}
@@ -47,7 +52,13 @@ export const StudentDatabasePage = () => {
         searchString={searchString}
       />
       <Loading />
-      <StudentList filteredStudents={filteredStudents} handleStudentDialogOpen={handleStudentDialogOpen} />
+      <StudentList
+        filteredStudents={_filter(filteredStudents, (student) => {
+          return isArray(student.placement);
+        })}
+        handleStudentDialogOpen={handleStudentDialogOpen}
+        menuRef={menuRef}
+      />
       <StudentFormDialog handleSearchStringChange={handleSearchStringChange} />
       <FinalGradeReportDialog />
     </>

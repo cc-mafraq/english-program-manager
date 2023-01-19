@@ -6,7 +6,11 @@ import { WaitingListEntry } from "../../interfaces";
 import { SPACING } from "../../services";
 import { FormLabel, FormList, GridContainer } from "../reusables";
 
-export const FormPlacementExam = () => {
+interface FormPlacementExamProps {
+  disabled: boolean;
+}
+
+export const FormPlacementExam: React.FC<FormPlacementExamProps> = ({ disabled }) => {
   const selectedWaitingListEntry = useWaitingListStore((state) => {
     return state.selectedWaitingListEntry;
   });
@@ -28,6 +32,7 @@ export const FormPlacementExam = () => {
         <FormList
           addItem={addPlacementExam}
           buttonLabel="Add Placement Exam"
+          disabled={disabled}
           list={placementExams}
           listName="placementExam"
           removeItem={removePlacementExam}

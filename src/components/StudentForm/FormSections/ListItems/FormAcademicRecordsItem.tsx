@@ -46,6 +46,7 @@ export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem,
           textFieldProps={{ required: true }}
         />
         <GridItemAutocomplete
+          autoHighlight={false}
           freeSolo
           label="Level"
           name={name ? `${name}.level` : "level"}
@@ -53,7 +54,7 @@ export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem,
         />
         <GridItemTextField label="Attendance Percentage" name={name ? `${name}.attendance` : "attendance"} />
         <GridItemAutocomplete
-          autoSelect={false}
+          autoHighlight={false}
           freeSolo
           label="Level Audited"
           name={name ? `${name}.levelAudited` : "levelAudited"}
@@ -68,7 +69,7 @@ export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem,
         notesPath={name ? `${name}.finalGradeReportNotes` : "finalGradeReportNotes"}
         percentageComponent={
           <GridItemDatePicker
-            gridProps={{ xs: 3 }}
+            gridProps={{ sm: 3 }}
             label="Final Grade Report Sent"
             name={name ? `${name}.finalGradeSentDate` : "finalGradeSentDate"}
           />

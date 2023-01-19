@@ -41,24 +41,8 @@ export const App = () => {
           <BrowserRouter>
             <Authorization>
               <Routes>
-                <Route
-                  element={
-                    <>
-                      <MenuBar pageName="Student Database" />
-                      <StudentDatabasePage />
-                    </>
-                  }
-                  path="/epd"
-                />
-                <Route
-                  element={
-                    <>
-                      <MenuBar pageName="Waiting List" />
-                      <WaitingListPage />
-                    </>
-                  }
-                  path="/waitlist"
-                />
+                <Route element={<StudentDatabasePage />} path="/epd" />
+                <Route element={<WaitingListPage />} path="/waitlist" />
                 <Route
                   element={
                     <>

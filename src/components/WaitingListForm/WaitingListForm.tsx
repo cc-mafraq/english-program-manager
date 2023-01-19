@@ -1,4 +1,4 @@
-import { Box, Divider, Grid, Typography } from "@mui/material";
+import { Box, Divider, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
 import {
   FormCorrespondence,
@@ -9,15 +9,20 @@ import {
   FormWaitingListVaccine,
   GridContainer,
 } from "..";
-import { useWaitingListStore } from "../../hooks";
+import { useAppStore, useWaitingListStore } from "../../hooks";
 import { SPACING } from "../../services";
 
 export const WaitingListForm: React.FC = () => {
   const selectedWaitingListEntry = useWaitingListStore((state) => {
     return state.selectedWaitingListEntry;
   });
-
+  const role = useAppStore((state) => {
+    return state.role;
+  });
+  const disabled = role !== "admin";
   const addOrEdit = selectedWaitingListEntry ? "Edit" : "Add";
+  const theme = useTheme();
+  const greaterThanMedium = useMediaQuery(theme.breakpoints.up("md"));
 
   return (
     <>
@@ -29,20 +34,20 @@ export const WaitingListForm: React.FC = () => {
       <Divider />
       <FormPhoneNumbers noWhatsapp phonePath="phoneNumbers" selectedData={selectedWaitingListEntry} />
       <Divider />
-      <FormEntryInformation />
+      <FormEntryInformation disabled={disabled} />
       <Divider />
       <GridContainer>
-        <Grid item xs={5}>
-          <FormWaitingListVaccine />
+        <Grid item md={5.75} xs={12}>
+          <FormWaitingListVaccine disabled={disabled} />
         </Grid>
-        <Grid item marginLeft={SPACING * 2} xs={6.5}>
-          <FormOutcome />
+        <Grid item marginLeft={greaterThanMedium ? SPACING * 2 : 0} md={5.75} xs={12}>
+          <FormOutcome disabled={disabled} />
         </Grid>
       </GridContainer>
       <Divider />
-      <FormPlacementExam />
+      <FormPlacementExam disabled={disabled} />
       <Divider />
-      <FormCorrespondence selectedData={selectedWaitingListEntry} />
+      <FormCorrespondence disabled={disabled} selectedData={selectedWaitingListEntry} />
     </>
   );
 };

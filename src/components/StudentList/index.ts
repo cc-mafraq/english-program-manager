@@ -7,6 +7,7 @@ export * from "./StudentCard";
 export * from "./StudentCardHeader";
 export * from "./StudentCardImage";
 export * from "./StudentDatabaseActions";
+export * from "./StudentIdCardButton";
 export * from "./StudentInfo";
 export * from "./StudentList";
 export * from "./WithdrawButton";

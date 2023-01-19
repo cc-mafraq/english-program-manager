@@ -32,7 +32,7 @@ export const FormPhoneNumbers = <T extends object>({
       <GridContainer marginBottom={SPACING}>
         <FormList
           addItem={addPhone}
-          buttonGridProps={{ xs: 2 }}
+          buttonGridProps={{ sm: 2, xs: 4 }}
           buttonLabel="Add Phone"
           list={phoneNumbers}
           listName={phonePath}
@@ -41,7 +41,7 @@ export const FormPhoneNumbers = <T extends object>({
           <FormPhoneItem />
         </FormList>
         {!noWhatsapp && (
-          <Grid item xs={3}>
+          <Grid item sm={3} xs={12}>
             <GridItemTextField
               gridProps={{ paddingBottom: SPACING, paddingLeft: 0 }}
               label="WhatsApp Broadcast SAR"

@@ -1,6 +1,6 @@
 import { Brightness4, Brightness7, Logout } from "@mui/icons-material";
 import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography, useTheme } from "@mui/material";
-import React from "react";
+import React, { RefObject } from "react";
 import { useNavigate } from "react-router-dom";
 import { MenuDrawer } from "..";
 import { ColorModeContext } from "../../App";
@@ -8,10 +8,11 @@ import { saveLocal, useColors } from "../../hooks";
 import { logout } from "../../services";
 
 interface MenuBarProps {
+  innerRef?: RefObject<HTMLDivElement>;
   pageName: string;
 }
 
-export const MenuBar: React.FC<MenuBarProps> = ({ pageName }) => {
+export const MenuBar: React.FC<MenuBarProps> = ({ pageName, innerRef }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { iconColor } = useColors();
@@ -23,7 +24,7 @@ export const MenuBar: React.FC<MenuBarProps> = ({ pageName }) => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar ref={innerRef} position="static">
       <Toolbar
         sx={{
           justifyContent: "space-between",
@@ -63,4 +64,8 @@ export const MenuBar: React.FC<MenuBarProps> = ({ pageName }) => {
       </Toolbar>
     </AppBar>
   );
+};
+
+MenuBar.defaultProps = {
+  innerRef: undefined,
 };

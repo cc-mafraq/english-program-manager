@@ -1,3 +1,4 @@
+import { Clear } from "@mui/icons-material";
 import {
   FormControl,
   FormControlLabel,
@@ -5,8 +6,10 @@ import {
   FormLabel,
   Grid,
   GridProps,
+  IconButton,
   Radio,
   RadioGroup,
+  Tooltip,
   useTheme,
 } from "@mui/material";
 import React from "react";
@@ -27,6 +30,7 @@ export const GridItemRadioGroup = ({ defaultValue, gridProps, label, name, optio
   const {
     control,
     formState: { errors },
+    setValue,
   } = useFormContext();
   const { name: nameFallback, errorMessage } = useInput(
     label ?? "",
@@ -66,6 +70,15 @@ export const GridItemRadioGroup = ({ defaultValue, gridProps, label, name, optio
         />
         <FormHelperText>{errorMessage}</FormHelperText>
       </FormControl>
+      <Tooltip arrow title="Clear">
+        <IconButton
+          onClick={() => {
+            setValue(name ?? nameFallback, null);
+          }}
+        >
+          <Clear />
+        </IconButton>
+      </Tooltip>
     </Grid>
   );
 };

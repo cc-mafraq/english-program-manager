@@ -7,6 +7,7 @@ import { FilterValue } from "../../../interfaces";
 import { Searchbar } from "./Searchbar";
 
 interface CustomToolbarProps<T> {
+  addButtonCondition?: boolean;
   addButtonTooltip?: string;
   filter: FilterValue<T>[];
   filterComponent: React.ReactNode;
@@ -31,6 +32,7 @@ export const CustomToolbar = <T,>({
   handleDialogOpen,
   otherActions,
   addButtonTooltip,
+  addButtonCondition,
   searchString,
 }: CustomToolbarProps<T>) => {
   const [filterAnchorEl, setFilterAnchorEl] = React.useState<HTMLButtonElement | null>(null);
@@ -113,6 +115,7 @@ export const CustomToolbar = <T,>({
         </Toolbar>
       </AppBar>
       <ActionsMenu
+        addButtonCondition={addButtonCondition}
         addButtonTooltip={addButtonTooltip}
         handleDialogOpen={handleDialogOpen}
         otherActions={otherActions}
@@ -124,6 +127,7 @@ export const CustomToolbar = <T,>({
 };
 
 CustomToolbar.defaultProps = {
+  addButtonCondition: undefined,
   addButtonTooltip: undefined,
   handleDialogOpen: undefined,
   otherActions: undefined,

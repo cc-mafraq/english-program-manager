@@ -1,5 +1,5 @@
 import { Grid, GridProps, StandardTextFieldProps, TextField, useTheme } from "@mui/material";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { DatePicker, DatePickerProps, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { includes, omit } from "lodash";
 import moment from "moment";
@@ -9,6 +9,7 @@ import { useInput } from "../../../../hooks";
 import { MOMENT_FORMAT } from "../../../../services";
 
 interface GridItemDatePickerProps {
+  datePickerProps?: Partial<DatePickerProps<unknown, unknown>>;
   errorName?: string;
   gridProps?: GridProps;
   label: string;
@@ -22,6 +23,7 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
   label,
   gridProps,
   textFieldProps,
+  datePickerProps,
   value,
   name,
   errorName,
@@ -68,8 +70,8 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
                         svg: { color: errorColor },
                       }}
                       variant="outlined"
-                      {...textFieldProps}
                       {...omit(params, ["error"])}
+                      {...textFieldProps}
                     />
                   );
                 }}
@@ -80,6 +82,7 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
                     ? defaultValueMoment.format()
                     : dateMoment
                 }
+                {...datePickerProps}
               />
             </LocalizationProvider>
           );
@@ -90,6 +93,7 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
 };
 
 GridItemDatePicker.defaultProps = {
+  datePickerProps: undefined,
   errorName: undefined,
   gridProps: undefined,
   name: undefined,

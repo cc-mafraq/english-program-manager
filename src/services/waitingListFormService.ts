@@ -43,9 +43,6 @@ export const waitingListFormSchema = object().shape({
   probL3Plus: bool().optional(),
   probPL1: bool().optional(),
   referral: optionalStringSchema,
-  transferralAndDate: object().shape({
-    date: dateSchema.nullable(),
-    transferral: optionalStringSchema,
-  }),
+  transferDbDate: dateSchema.nullable(),
   waiting: bool().required(),
 });

@@ -1,5 +1,5 @@
-import { Box, Card, CardContent, Tab, Tabs, useTheme } from "@mui/material";
-import { get, map } from "lodash";
+import { Box, Card, CardContent, Tab, Tabs, useMediaQuery, useTheme } from "@mui/material";
+import { map } from "lodash";
 import React, { Attributes, CSSProperties, useCallback, useRef, useState } from "react";
 
 interface TabProps {
@@ -32,6 +32,7 @@ export const CustomCard = <T,>({
   header,
 }: CustomCardProps<T>) => {
   const theme = useTheme();
+  const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
 
   const rowRef = useRef<HTMLDivElement>(null);
   // use a local tab value because updating tabValue prop in parent is a ref (i.e. won't trigger re-render)
@@ -55,20 +56,22 @@ export const CustomCard = <T,>({
           width: "100%",
         }}
       >
-        <Box ref={rowRef} display="flex">
-          {React.isValidElement(image) && React.cloneElement(image, { data } as Partial<unknown> & Attributes)}
-          <Box
-            sx={{
-              width: `calc(100% - ${
-                (get(image, "props.imageWidth") || 0) / (get(image, "props.smallBreakpointScaleDown") || 1)
-              }px)`,
-            }}
-          >
+        <Box ref={rowRef}>
+          <Box sx={{ float: "left", marginRight: "15px" }}>
+            {React.isValidElement(image) && React.cloneElement(image, { data } as Partial<unknown> & Attributes)}
+          </Box>
+          <Box>
             <CardContent>
               {React.isValidElement(header) &&
                 React.cloneElement(header, { data } as Partial<unknown> & Attributes)}
               {!noTabs && (
-                <Tabs onChange={handleChange} scrollButtons={false} value={localTabValue} variant="scrollable">
+                <Tabs
+                  onChange={handleChange}
+                  scrollButtons={false}
+                  sx={greaterThanSmall ? undefined : { width: "100%" }}
+                  value={localTabValue}
+                  variant="scrollable"
+                >
                   {map(tabContents, (content, i) => {
                     return <Tab key={`card-tabpanel-${i}`} id={`card-tabpanel-${i}`} label={content.label} />;
                   })}

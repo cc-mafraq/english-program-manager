@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Logout } from "@mui/icons-material";
-import { Box, Breakpoint, IconButton, Tooltip } from "@mui/material";
+import { Box, Breakpoint, IconButton, Tooltip, useMediaQuery, useTheme } from "@mui/material";
 import React, { useCallback, useMemo, useState } from "react";
 import { FinalResult, Status, Student, Withdraw } from "../../interfaces";
 import { setData, SPACING, withdrawSchema } from "../../services";
@@ -22,6 +22,8 @@ FormWithdrawMemo.displayName = "Withdraw Form";
 
 export const WithdrawButton: React.FC<WithdrawButtonProps> = ({ student }) => {
   const [open, setOpen] = useState(false);
+  const theme = useTheme();
+  const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
 
   const handleDialogOpen = useCallback(() => {
     setOpen(true);
@@ -40,7 +42,13 @@ export const WithdrawButton: React.FC<WithdrawButtonProps> = ({ student }) => {
         student.status.droppedOutReason = data.droppedOutReason;
       }
       student.status.currentStatus = Status.WD;
-      student.academicRecords[student.academicRecords.length - 1].overallResult = FinalResult.WD;
+      const lastAcademicRecord = student.academicRecords[student.academicRecords.length - 1];
+      if (lastAcademicRecord.overallResult === undefined) {
+        lastAcademicRecord.overallResult = FinalResult.WD;
+        lastAcademicRecord.finalGrade
+          ? (lastAcademicRecord.finalGrade.result = FinalResult.WD)
+          : (lastAcademicRecord.finalGrade = { result: FinalResult.WD });
+      }
       setData(student, "students", "epId");
       handleDialogClose();
     },
@@ -67,11 +75,11 @@ export const WithdrawButton: React.FC<WithdrawButtonProps> = ({ student }) => {
   }, [student.status.noContactList]);
 
   return (
-    <Box marginBottom="20px">
+    <Box>
       <Tooltip arrow title="Withdraw Student">
         <IconButton
           onClick={handleDialogOpen}
-          sx={{ marginLeft: "50%", marginTop: "30px", transform: "scale(1.25) translate(-50%)" }}
+          sx={greaterThanSmall ? { marginLeft: "50%", transform: "scale(1.25) translate(-50%)" } : undefined}
         >
           <Logout />
         </IconButton>

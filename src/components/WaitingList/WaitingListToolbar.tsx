@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import React, { useState } from "react";
 import { WaitingListActions, WaitingListCounter, WaitingListFilter } from "..";
-import { loadLocal, useWaitingListStore } from "../../hooks";
+import { loadLocal, useAppStore, useWaitingListStore } from "../../hooks";
 import { WaitingListEntry } from "../../interfaces";
 import { CustomToolbar } from "../reusables";
 
@@ -21,6 +21,9 @@ export const WaitingListToolbar: React.FC<WaitingListToolbarProps> = ({
   const filter = useWaitingListStore((state) => {
     return state.filter;
   });
+  const role = useAppStore((state) => {
+    return state.role;
+  });
   const [showActions, setShowActions] = useState(loadLocal("showActions") !== false);
 
   return (
@@ -28,6 +31,7 @@ export const WaitingListToolbar: React.FC<WaitingListToolbarProps> = ({
       <WaitingListCounter />
       <Box position="sticky" top={0} zIndex={5}>
         <CustomToolbar
+          addButtonCondition={role === "faculty"}
           addButtonTooltip="Add Waiting List Entry"
           filter={filter}
           filterComponent={<WaitingListFilter />}

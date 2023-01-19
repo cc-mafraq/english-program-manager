@@ -10,7 +10,6 @@ import {
   FormName,
   FormOriginalPlacement,
   FormPhoneNumbers,
-  FormPlacement,
   FormProgramInformation,
   FormStatus,
 } from "..";
@@ -45,8 +44,6 @@ export const StudentForm: React.FC = () => {
       <FormLiteracyAndZoom />
       <Divider />
       <FormCorrespondence selectedData={selectedStudent} />
-      <Divider />
-      <FormPlacement />
       <Divider />
       <FormStatus />
       <Divider />

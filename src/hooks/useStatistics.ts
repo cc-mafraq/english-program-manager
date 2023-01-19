@@ -1,4 +1,4 @@
-import { countBy, filter, forEach, get, map, omit, set } from "lodash";
+import { countBy, filter, forEach, get, last, map, omit, set } from "lodash";
 import { useCallback } from "react";
 import {
   CovidStatus,
@@ -38,9 +38,13 @@ interface Statistics {
 }
 
 const getLevelCounts = (statistics: Statistics, path: string) => {
-  set(statistics, `${path}.PL1`, get(statistics, `${path}.PL1-M`) + get(statistics, `${path}.PL1-W`));
-  set(statistics, `${path}.L1`, get(statistics, `${path}.L1-M`) + get(statistics, `${path}.L1-W`));
-  set(statistics, `${path}.L2`, get(statistics, `${path}.L2-M`) + get(statistics, `${path}.L2-W`));
+  set(
+    statistics,
+    `${path}.PL1`,
+    (get(statistics, `${path}.PL1-M`) || 0) + (get(statistics, `${path}.PL1-W`) || 0),
+  );
+  set(statistics, `${path}.L1`, (get(statistics, `${path}.L1-M`) || 0) + (get(statistics, `${path}.L1-W`) || 0));
+  set(statistics, `${path}.L2`, (get(statistics, `${path}.L2-M`) || 0) + (get(statistics, `${path}.L2-W`) || 0));
   return omit(get(statistics, path), ["PL1-M", "PL1-W", "L1-M", "L1-W", "L2-M", "L2-W", ""]) as {
     [key in Level]: number;
   };
@@ -114,7 +118,7 @@ export const useStatistics = (): Statistics => {
     if (student.literacy.illiterateAr) statistics.totalIlliterateArabic += 1;
     if (student.literacy.illiterateEng) statistics.totalIlliterateEnglish += 1;
     if (student.status.noContactList) statistics.totalNCL += 1;
-    if (student.placement.pending) statistics.totalPending += 1;
+    if (last(student.placement)?.pending) statistics.totalPending += 1;
     if (student.work.isTeacher) statistics.totalTeachers += 1;
   });
   statistics.averageAge /= numStudentsWithAge;

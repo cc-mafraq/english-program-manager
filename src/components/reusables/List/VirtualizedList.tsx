@@ -1,5 +1,6 @@
-import { first, get } from "lodash";
-import React, { Attributes, useEffect, useRef } from "react";
+import { useMediaQuery, useTheme } from "@mui/material";
+import { first, get, isNaN } from "lodash";
+import React, { Attributes, RefObject, useEffect, useRef } from "react";
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 import { useWindowResize } from "../../../hooks";
 
@@ -7,6 +8,7 @@ interface VirtualizedListProps<T> {
   children: React.ReactNode;
   idPath: string;
   listData: T[];
+  menuRef?: RefObject<HTMLDivElement>;
   overscan?: number;
   scrollToIndex?: number;
   setScrollToIndex?: (scrollToIndex: number | undefined) => void;
@@ -19,10 +21,14 @@ export const VirtualizedList = <T,>({
   setScrollToIndex,
   children,
   overscan,
+  menuRef,
 }: VirtualizedListProps<T>) => {
   const listRef = useRef<VirtuosoHandle>(null);
   const tabValues = useRef({});
   const [, windowHeight] = useWindowResize();
+  const theme = useTheme();
+  const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
+  const menuHeight = menuRef?.current?.clientHeight;
 
   const setTabValue = (id: string | number, tabValue: number) => {
     tabValues.current = { ...tabValues.current, [id]: tabValue };
@@ -59,7 +65,9 @@ export const VirtualizedList = <T,>({
       data={listData}
       increaseViewportBy={overscan}
       itemContent={Row}
-      style={{ height: windowHeight - (2 * 64 + windowHeight / 100) }}
+      style={{
+        height: windowHeight - (greaterThanSmall ? 2 : 1) * (isNaN(menuHeight) || !menuHeight ? 64 : menuHeight),
+      }}
     />
   ) : (
     <></>
@@ -67,6 +75,7 @@ export const VirtualizedList = <T,>({
 };
 
 VirtualizedList.defaultProps = {
+  menuRef: undefined,
   overscan: undefined,
   scrollToIndex: undefined,
   setScrollToIndex: undefined,

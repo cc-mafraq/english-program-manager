@@ -1,3 +1,4 @@
+export * from "./AccordionList";
 export * from "./CorrespondenceList";
 export * from "./CustomCard";
 export * from "./LabeledContainer";

@@ -1,28 +1,30 @@
+import { useMediaQuery, useTheme } from "@mui/material";
 import { values } from "lodash";
 import React from "react";
 import { WaitlistOutcome } from "../../interfaces";
 import { SPACING } from "../../services";
-import {
-  FormLabel,
-  GridContainer,
-  GridItemAutocomplete,
-  GridItemDatePicker,
-  GridItemTextField,
-} from "../reusables";
+import { FormLabel, GridContainer, GridItemAutocomplete, GridItemDatePicker } from "../reusables";
 
-export const FormOutcome: React.FC = () => {
+interface FormOutcomeProps {
+  disabled: boolean;
+}
+
+export const FormOutcome: React.FC<FormOutcomeProps> = ({ disabled }) => {
+  const theme = useTheme();
+  const greaterThanMedium = useMediaQuery(theme.breakpoints.up("md"));
+
   return (
     <>
-      <FormLabel textProps={{ marginTop: SPACING }}>Outcome</FormLabel>
+      <FormLabel textProps={{ marginTop: greaterThanMedium ? SPACING : 0 }}>Outcome</FormLabel>
       <GridContainer marginBottom={SPACING}>
         <GridItemAutocomplete
           autoSelect={false}
+          disabled={disabled}
           label="Outcome"
           name="outcome"
           options={values(WaitlistOutcome)}
         />
-        <GridItemTextField label="Transferral Database" name="transferralAndDate.transferral" />
-        <GridItemDatePicker label="Transferral Date" name="transferralAndDate.date" />
+        <GridItemDatePicker datePickerProps={{ disabled }} label="Transfer DB Date" name="transferDbDate" />
       </GridContainer>
     </>
   );

@@ -1,15 +1,15 @@
-import { BoxProps, SxProps } from "@mui/material";
+import { BoxProps, GridProps, SxProps } from "@mui/material";
 import React from "react";
 import { Image } from "../../..";
 import { useStudentStore } from "../../../../hooks";
 
 interface FormImageProps {
   folderName: string;
+  gridProps: GridProps;
   imagePath: string;
   imageStyleProps: SxProps;
   loadingContainerProps: BoxProps & { transform?: string };
   outerContainerProps: BoxProps;
-  xs: number | boolean;
 }
 
 export const FormImage: React.FC<FormImageProps> = ({
@@ -18,7 +18,7 @@ export const FormImage: React.FC<FormImageProps> = ({
   imageStyleProps,
   loadingContainerProps,
   outerContainerProps,
-  xs,
+  gridProps,
 }) => {
   const selectedStudent = useStudentStore((state) => {
     return state.selectedStudent;
@@ -27,6 +27,7 @@ export const FormImage: React.FC<FormImageProps> = ({
   return (
     <Image
       folderName={folderName}
+      gridProps={gridProps}
       imagePath={imagePath}
       imageStyleProps={imageStyleProps}
       innerContainerProps={{
@@ -39,7 +40,6 @@ export const FormImage: React.FC<FormImageProps> = ({
       outerContainerProps={outerContainerProps}
       scale={2}
       student={selectedStudent}
-      xs={xs}
     />
   );
 };
