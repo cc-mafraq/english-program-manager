@@ -16,7 +16,7 @@ import { findIndex, forOwn, map, reverse } from "lodash";
 import React, { useCallback, useMemo, useState } from "react";
 import {
   AccordionList,
-  editFn,
+  EditFn,
   FormAcademicRecordsItem,
   FormDialog,
   LabeledContainer,
@@ -75,7 +75,7 @@ GradeInfo.defaultProps = {
 
 interface AcademicRecordAccordionSummaryProps {
   data: AcademicRecord;
-  handleEditClick?: editFn;
+  handleEditClick?: EditFn;
   i: number;
 }
 
@@ -269,6 +269,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
           DetailsComponent={AcademicRecordAccordionDetails}
           handleEditClick={handleEditClick}
           SummaryComponent={AcademicRecordAccordionSummary}
+          width="100%"
         />
         <LabeledText label="Certificate Requests">{student?.certificateRequests}</LabeledText>
       </LabeledContainer>

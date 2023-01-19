@@ -3,13 +3,14 @@ import { Accordion, AccordionDetails, AccordionSummary, Divider } from "@mui/mat
 import { includes, map, without } from "lodash";
 import React, { useCallback, useState } from "react";
 
-export type editFn = (i: number) => (e: React.MouseEvent) => void;
+export type EditFn = (i: number) => (e: React.MouseEvent) => void;
 
 interface AccordionListProps<T> {
   DetailsComponent: React.FC<{ data: T }>;
-  SummaryComponent: React.FC<{ data: T; handleEditClick?: editFn; i: number }>;
+  SummaryComponent: React.FC<{ data: T; handleEditClick?: EditFn; i: number }>;
   dataList: T[];
-  handleEditClick?: editFn;
+  handleEditClick?: EditFn;
+  width?: string;
 }
 
 export const AccordionList = <T,>({
@@ -17,6 +18,7 @@ export const AccordionList = <T,>({
   DetailsComponent,
   dataList,
   handleEditClick,
+  width,
 }: AccordionListProps<T>) => {
   const [expanded, setExpanded] = useState([0]);
 
@@ -41,7 +43,7 @@ export const AccordionList = <T,>({
               "& .MuiCollapse-wrapperInner": {
                 paddingBottom: "10px",
               },
-              width: "100%",
+              width,
             }}
             TransitionProps={{ unmountOnExit: true }}
           >
@@ -69,4 +71,5 @@ export const AccordionList = <T,>({
 
 AccordionList.defaultProps = {
   handleEditClick: undefined,
+  width: undefined,
 };

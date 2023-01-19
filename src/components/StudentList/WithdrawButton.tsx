@@ -75,7 +75,7 @@ export const WithdrawButton: React.FC<WithdrawButtonProps> = ({ student }) => {
   }, [student.status.noContactList]);
 
   return (
-    <Box marginBottom="20px">
+    <Box>
       <Tooltip arrow title="Withdraw Student">
         <IconButton
           onClick={handleDialogOpen}

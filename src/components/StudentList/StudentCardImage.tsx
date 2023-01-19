@@ -60,7 +60,7 @@ export const StudentCardImage: React.FC<StudentCardImageProps> = ({
         scale={greaterThanSmall ? 2 : 1.5}
         student={student}
       />
-      <Box display="flex" flexDirection="row" justifyContent="space-evenly" marginTop="30px">
+      <Box display="flex" flexDirection="row" justifyContent="space-evenly" marginBottom="20px" marginTop="30px">
         {student.status.currentStatus !== Status.WD && role === "admin" && greaterThanSmall && (
           <WithdrawButton student={student} />
         )}
