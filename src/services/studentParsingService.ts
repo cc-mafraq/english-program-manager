@@ -38,7 +38,7 @@
 
 // const separatorRegex = /[;,&]/g;
 // const phoneRegex = /([\d]+)/;
-// export const dateRegex = /\d{1,2}(\/|-)\d{1,2}\1\d{2,4}/g;
+export const dateRegex = /\d{1,2}(\/|-)\d{1,2}\1\d{2,4}/g;
 
 // export const splitAndTrim = (value: string, separator?: string | RegExp): string[] => {
 //   const sep = separator || separatorRegex;
