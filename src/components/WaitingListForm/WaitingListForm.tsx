@@ -37,10 +37,10 @@ export const WaitingListForm: React.FC = () => {
       <FormEntryInformation disabled={disabled} />
       <Divider />
       <GridContainer>
-        <Grid item md={5} xs={12}>
+        <Grid item md={5.75} xs={12}>
           <FormWaitingListVaccine disabled={disabled} />
         </Grid>
-        <Grid item marginLeft={greaterThanMedium ? SPACING * 2 : 0} md={6.5} xs={12}>
+        <Grid item marginLeft={greaterThanMedium ? SPACING * 2 : 0} md={5.75} xs={12}>
           <FormOutcome disabled={disabled} />
         </Grid>
       </GridContainer>

@@ -71,15 +71,14 @@ const EntryInformation: React.FC<WaitingListEntryInfoProps> = React.memo(({ data
         {wlEntry.numPeople}
       </LabeledText>
       <LabeledText label="Entry Date">{wlEntry.entryDate}</LabeledText>
+      <LabeledText label="Outcome">{wlEntry.outcome}</LabeledText>
+      <LabeledText label="Referral">{wlEntry.referral}</LabeledText>
       <LabeledText condition={wlEntry.enteredInPhone !== undefined} label="Entered in Phone">
         {wlEntry.enteredInPhone ? "Yes" : "No"}
       </LabeledText>
-      <LabeledText label="Referral">{wlEntry.referral}</LabeledText>
+      <LabeledText label="Transfer DB Date">{wlEntry.transferDbDate}</LabeledText>
       <LabeledText label="Probable PL1">{wlEntry.probPL1 ? "Yes" : undefined}</LabeledText>
       <LabeledText label="Probable L3+">{wlEntry.probL3Plus ? "Yes" : undefined}</LabeledText>
-      <LabeledText label="Transferral DB">{wlEntry.transferralAndDate?.transferral}</LabeledText>
-      <LabeledText label="Transferral Date">{wlEntry.transferralAndDate?.date}</LabeledText>
-      <LabeledText label="Outcome">{wlEntry.outcome}</LabeledText>
     </LabeledContainer>
   );
 }, equalProps);

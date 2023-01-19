@@ -20,13 +20,8 @@ export interface WaitingListEntry {
   probPL1?: boolean;
   referral?: string;
   timestamp?: string;
-  transferralAndDate?: TransferralAndDate;
+  transferDbDate?: string;
   waiting: boolean;
-}
-
-export interface TransferralAndDate {
-  date?: string;
-  transferral?: string;
 }
 
 export enum HighPriority {

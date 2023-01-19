@@ -85,7 +85,10 @@ export const getProgress = (student: Student, sessionOptions: string[]): Student
         level = (ar.levelAudited as Level) || ar.level;
     }
     if (!level) return;
-    const isCoreClass = includes(levels, level);
+    const isCoreClass =
+      find(levels, (l) => {
+        return level.includes(l);
+      }) !== undefined;
     const electiveOrAuditLevel = first(
       filter(levels, (l) => {
         return (

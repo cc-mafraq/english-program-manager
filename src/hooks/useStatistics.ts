@@ -1,4 +1,4 @@
-import { countBy, filter, forEach, get, map, omit, set } from "lodash";
+import { countBy, filter, forEach, get, last, map, omit, set } from "lodash";
 import { useCallback } from "react";
 import {
   CovidStatus,
@@ -118,7 +118,7 @@ export const useStatistics = (): Statistics => {
     if (student.literacy.illiterateAr) statistics.totalIlliterateArabic += 1;
     if (student.literacy.illiterateEng) statistics.totalIlliterateEnglish += 1;
     if (student.status.noContactList) statistics.totalNCL += 1;
-    if (student.placement.pending) statistics.totalPending += 1;
+    if (last(student.placement)?.pending) statistics.totalPending += 1;
     if (student.work.isTeacher) statistics.totalTeachers += 1;
   });
   statistics.averageAge /= numStudentsWithAge;

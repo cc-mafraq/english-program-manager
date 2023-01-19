@@ -45,7 +45,7 @@ import {
 
 export const SPACING = 2;
 export const MOMENT_FORMAT = "l";
-const sessionRegex = /(Fa|Sp) (I|II) \d{2}/;
+const sessionRegex = /(Fa|Sp|Su) (I|II) \d{2}/;
 
 export interface FormItem {
   children?: React.ReactNode;
@@ -96,7 +96,7 @@ const stringToResult = (value: string, originalValue: string) => {
 };
 
 export const dateToString = (value: string, originalValue: string) => {
-  if (isEmpty(originalValue) || originalValue.toLowerCase() === "y") return null;
+  if (isEmpty(originalValue) || originalValue === "y" || originalValue === "Y") return null;
   const momentVal = moment(originalValue, MOMENT_FORMAT);
   return momentVal.isValid() ? momentVal.format(MOMENT_FORMAT) : moment(originalValue).format(MOMENT_FORMAT);
 };
@@ -161,6 +161,8 @@ const gradeSchema = object()
   })
   .optional();
 
+const sessionSchema = string().matches(sessionRegex, "Session must be Fa/Sp/Su I/II year (e.g. Sp I 22)");
+
 export const academicRecordsSchema = object().shape({
   attendance: percentageSchema,
   comments: string().transform(emptyToNull).nullable().optional(),
@@ -172,7 +174,7 @@ export const academicRecordsSchema = object().shape({
   level: mixed<GenderedLevel>().transform(emptyToNull).nullable().optional(),
   levelAudited: mixed<GenderedLevel>().transform(emptyToNull).nullable().optional(),
   overallResult: finalResultSchema,
-  session: string().typeError("Session is required").required("Session is required"),
+  session: sessionSchema.typeError("Session is required").required("Session is required"),
 });
 
 export const correspondenceSchema = object().shape({
@@ -250,31 +252,25 @@ const phoneSchema = object()
   .required();
 
 const sectionPlacementSchema = object().shape({
+  date: dateSchema.nullable().optional(),
+  level: string()
+    .required("Level is required. You can remove the placement by clicking the ❌ button")
+    .typeError("Level is required. You can remove the placement by clicking the ❌ button"),
   notes: string().transform(emptyToNull).nullable().optional(),
-  sectionAndDate: string().required(
-    "Placement is required if added. You can remove the placement by clicking the ❌ button",
-  ),
+  section: string().nullable().optional(),
 });
 
 export const placementSchema = object().shape({
   classScheduleSentDate: array().of(dateSchema.nullable().optional()).transform(dateStringToArray).required(),
   noAnswerClassScheduleWPM: bool().optional(),
   pending: bool().optional(),
-  photoContact: dateSchema.nullable().optional(),
   placement: array().of(sectionPlacementSchema).default([]).required(),
   sectionsOffered: string().transform(emptyToNull).nullable().optional(),
+  session: sessionSchema.typeError("Session is required").required("Session is required"),
 });
 
 const statusSchema = object().shape({
-  cheatingSessions: array()
-    .of(
-      string()
-        .matches(sessionRegex, "must be Fa/Sp I/II year (e.g. Sp I 22)")
-        .transform(emptyToNull)
-        .nullable()
-        .optional(),
-    )
-    .optional(),
+  cheatingSessions: array().of(sessionSchema.transform(emptyToNull).nullable().optional()).optional(),
   currentStatus: mixed<Status>()
     .oneOf(Object.values(Status) as Status[])
     .transform(stringToStatus)
@@ -306,10 +302,10 @@ export const studentFormSchema = object().shape({
     .transform(stringToInteger)
     .test(
       "valid-age",
-      'Age must be an integer greater than 12 and less than 100. You can enter "Unknown"',
+      'Age must be an integer greater than 10 and less than 100. You can enter "Unknown"',
       (value) => {
         return (
-          (isInteger(value) && value && value > 12 && value < 100) || lowerCase(value as string) === "unknown"
+          (isInteger(value) && value && value > 10 && value < 100) || lowerCase(value as string) === "unknown"
         );
       },
     )
@@ -348,7 +344,8 @@ export const studentFormSchema = object().shape({
     })
     .required(),
   phone: phoneSchema,
-  placement: placementSchema,
+  photoContact: dateSchema.nullable().optional(),
+  placement: array().of(placementSchema),
   status: statusSchema,
   work: workSchema,
   zoom: string().transform(emptyToNull).nullable().optional(),
@@ -413,4 +410,8 @@ export const withdrawSchema = object().shape({
   inviteTag: bool().required(),
   noContactList: bool().required(),
   withdrawDate: dateSchema,
+});
+
+export const photoContactSchema = object().shape({
+  photoContact: dateSchema.nullable().optional(),
 });

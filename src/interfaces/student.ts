@@ -23,7 +23,8 @@ export interface Student {
     writing: LevelPlus;
   };
   phone: WhatsappInfo;
-  placement: Placement;
+  photoContact?: string;
+  placement: Placement[];
   status: StudentStatus;
   work: StudentWork;
   zoom?: string;
@@ -37,8 +38,8 @@ export interface AcademicRecord {
   finalGrade?: Grade;
   finalGradeReportNotes?: string;
   finalGradeSentDate?: string;
-  level?: GenderedLevel;
-  levelAudited?: GenderedLevel;
+  level?: string;
+  levelAudited?: string;
   overallResult?: FinalResult;
   session: string;
 }
@@ -59,17 +60,19 @@ export interface Grade {
 }
 
 export interface SectionPlacement {
+  date?: string;
+  level: string;
   notes?: string;
-  sectionAndDate: string;
+  section?: string;
 }
 
 export interface Placement {
   classScheduleSentDate: string[];
   noAnswerClassScheduleWpm?: boolean;
   pending?: boolean;
-  photoContact?: string;
   placement: SectionPlacement[];
   sectionsOffered?: string;
+  session: string;
 }
 
 export interface StudentWork {
@@ -270,7 +273,7 @@ export const emptyStudent: Student = {
     phoneNumbers: [],
     primaryPhone: -1,
   },
-  placement: { classScheduleSentDate: [], placement: [] },
+  placement: [],
   status: {
     currentStatus: Status.NEW,
     inviteTag: false,
@@ -282,5 +285,11 @@ export const emptyStudent: Student = {
 };
 
 export const emptyAcademicRecord: AcademicRecord = {
+  session: "",
+};
+
+export const emptyPlacement: Placement = {
+  classScheduleSentDate: [],
+  placement: [],
   session: "",
 };
