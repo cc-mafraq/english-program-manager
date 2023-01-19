@@ -46,7 +46,9 @@ export const StudentDatabasePage = () => {
     <>
       <MenuBar innerRef={menuRef} pageName="Student Database" />
       <StudentDatabaseToolbar
-        filteredStudents={filteredStudents}
+        filteredStudents={_filter(filteredStudents, (student) => {
+          return isArray(student.placement);
+        })}
         handleSearchStringChange={handleSearchStringChange}
         handleStudentDialogOpen={handleStudentDialogOpen}
         searchString={searchString}
