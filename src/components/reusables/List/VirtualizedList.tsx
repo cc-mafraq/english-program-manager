@@ -66,7 +66,10 @@ export const VirtualizedList = <T,>({
       increaseViewportBy={overscan}
       itemContent={Row}
       style={{
-        height: windowHeight - (greaterThanSmall ? 2 : 1) * (isNaN(menuHeight) || !menuHeight ? 64 : menuHeight),
+        height:
+          // Subtract menu heights (and an extra few pixels to prevent the scrollbar from appearing) from window height to fill the screen with the list
+          // Subtract 2 menu heights if it's on computer and 1 if it's on mobile
+          windowHeight - (greaterThanSmall ? 2 : 1) * (isNaN(menuHeight) || !menuHeight ? 64 : menuHeight) - 7,
       }}
     />
   ) : (
