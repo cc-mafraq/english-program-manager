@@ -127,6 +127,7 @@ export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
 
   const handleAddButtonClick = useCallback(() => {
     setSelectedStudent(null);
+    setSelectedPlacement(null);
     setOpen(true);
   }, [setSelectedStudent]);
 
