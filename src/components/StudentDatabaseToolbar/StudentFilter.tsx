@@ -1,4 +1,4 @@
-import { first, includes, last, range } from "lodash";
+import { first, includes, last, map, range, some } from "lodash";
 import React, { useCallback, useMemo } from "react";
 import { useAppStore, useStudentStore } from "../../hooks";
 import { covidStatuses, genderedLevels, nationalities, statusDetails, statuses, Student } from "../../interfaces";
@@ -64,6 +64,14 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
     return "None";
   }, []);
 
+  const pendingPlacementFn = useCallback((student: Student) => {
+    return some(map(student.placement, "pending"));
+  }, []);
+
+  const noAnswerCSPlacementFn = useCallback((student: Student) => {
+    return some(map(student.placement, "noAnswerClassScheduleWpm"));
+  }, []);
+
   const handleClearFilters = useCallback(() => {
     setFilter([]);
   }, [setFilter]);
@@ -71,9 +79,16 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
   const filterFields: FilterField<Student>[] = useMemo(() => {
     return [
       { condition: isAdmin, name: "Invite", path: "status.inviteTag", values: booleanCheckboxOptions },
-      { condition: isAdmin, name: "Placement Pending", path: "placement.pending", values: ["Yes"] },
       {
         condition: isAdmin,
+        fn: pendingPlacementFn,
+        name: "Placement Pending",
+        path: "placement.pending",
+        values: ["Yes"],
+      },
+      {
+        condition: isAdmin,
+        fn: noAnswerCSPlacementFn,
         name: "No Answer Class Schedule WPM",
         path: "placement.noAnswerClassScheduleWpm",
         values: ["Yes"],
