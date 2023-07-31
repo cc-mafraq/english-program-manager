@@ -1,9 +1,10 @@
-import { filter as _filter, isArray } from "lodash";
-import React, { useCallback, useRef } from "react";
+import { filter as _filter, isArray, isEmpty } from "lodash";
+import React, { useCallback, useMemo, useRef } from "react";
 import {
   FinalGradeReportDialog,
   Loading,
   MenuBar,
+  StudentDatabaseHome,
   StudentDatabaseToolbar,
   StudentFormDialog,
   StudentList,
@@ -42,20 +43,23 @@ export const StudentDatabasePage = () => {
     sortFn: sortStudents,
   });
 
+  const shouldEmpty = useMemo(() => {
+    return isEmpty(searchString) && isEmpty(filter);
+  }, [filter, searchString]);
+
   return (
     <>
       <MenuBar innerRef={menuRef} pageName="Student Database" />
       <StudentDatabaseToolbar
-        filteredStudents={_filter(filteredStudents, (student) => {
-          return isArray(student.placement);
-        })}
+        filteredStudents={shouldEmpty ? [] : filteredStudents}
         handleSearchStringChange={handleSearchStringChange}
         handleStudentDialogOpen={handleStudentDialogOpen}
         searchString={searchString}
       />
+      {shouldEmpty && <StudentDatabaseHome />}
       <Loading />
       <StudentList
-        filteredStudents={_filter(filteredStudents, (student) => {
+        filteredStudents={_filter(shouldEmpty ? [] : filteredStudents, (student) => {
           return isArray(student.placement);
         })}
         handleStudentDialogOpen={handleStudentDialogOpen}

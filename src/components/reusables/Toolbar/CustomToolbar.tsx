@@ -1,5 +1,6 @@
 import { FilterList, MoreHoriz } from "@mui/icons-material";
 import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography, useTheme } from "@mui/material";
+import { isEmpty } from "lodash";
 import React, { Attributes, Dispatch, SetStateAction, useCallback } from "react";
 import { ActionsMenu } from "../..";
 import { saveLocal, useAppStore, useColors } from "../../../hooks";
@@ -110,7 +111,11 @@ export const CustomToolbar = <T,>({
             </Box>
           </Box>
           <Box textAlign="right">
-            <Typography>{list.length} results</Typography>
+            {isEmpty(list) && isEmpty(searchString) && isEmpty(filter) ? (
+              <></>
+            ) : (
+              <Typography>{list.length} results</Typography>
+            )}
           </Box>
         </Toolbar>
       </AppBar>
