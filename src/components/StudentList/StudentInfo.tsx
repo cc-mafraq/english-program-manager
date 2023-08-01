@@ -4,7 +4,7 @@ import React, { useMemo } from "react";
 import { Image, LabeledContainer, LabeledText } from "..";
 import { useAppStore, useColors, useStudentStore } from "../../hooks";
 import { Status, Student } from "../../interfaces";
-import { covidVaccineImageFolder, getRepeatNum, getStatusDetails, isActive, JOIN_STR } from "../../services";
+import { JOIN_STR, covidVaccineImageFolder, getRepeatNum, getStatusDetails, isActive } from "../../services";
 
 interface StudentInfoProps {
   data: Student;

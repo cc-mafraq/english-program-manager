@@ -7,7 +7,6 @@ import { AddImageButton } from ".";
 import { FormImageActions } from "..";
 import { useAppStore } from "../../hooks";
 import { Student } from "../../interfaces";
-import { setData } from "../../services";
 
 interface ImageProps {
   folderName: string;
@@ -77,7 +76,6 @@ const ImageBody: React.FC<ImageBodyProps> = ({
           onError={() => {
             setImg(undefined);
             setLoading(false);
-            setData(omit(student, [imagePath]) as Student, "students", "epId");
           }}
           onLoad={() => {
             setLoading(false);
