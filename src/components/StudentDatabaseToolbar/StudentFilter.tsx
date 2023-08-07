@@ -1,7 +1,7 @@
 import { first, includes, last, map, range, some } from "lodash";
 import React, { useCallback, useMemo } from "react";
 import { useAppStore, useStudentStore } from "../../hooks";
-import { covidStatuses, genderedLevels, nationalities, statusDetails, statuses, Student } from "../../interfaces";
+import { Student, covidStatuses, genderedLevels, nationalities, statusDetails, statuses } from "../../interfaces";
 import { FilterField, getAllSessions, getSessionsWithResults, getStatusDetails } from "../../services";
 import { FilterDrawer } from "../reusables";
 
@@ -127,13 +127,15 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
       { fn: sessionsAttendedFn, name: "Sessions Attended", path: "sessionsAttended", values: range(11) },
     ];
   }, [
-    pendingAcademicRecordFn,
     isAdmin,
+    pendingPlacementFn,
+    noAnswerCSPlacementFn,
     isAdminOrFaculty,
-    sessionsAttendedFn,
-    statusDetailsFn,
+    pendingAcademicRecordFn,
     students,
     whatsAppGroupFn,
+    statusDetailsFn,
+    sessionsAttendedFn,
   ]);
   return (
     <FilterDrawer

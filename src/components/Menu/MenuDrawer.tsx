@@ -57,16 +57,16 @@ const drawerList: DrawerListItem[] = [
     route: "/waitlist",
   },
   {
+    component: FormatListBulleted,
+    name: "Class Lists",
+  },
+  {
     component: Create,
     name: "Attendance",
   },
   {
     component: Equalizer,
     name: "Gradebook",
-  },
-  {
-    component: FormatListBulleted,
-    name: "Class Lists",
   },
   {
     component: LibraryBooks,
