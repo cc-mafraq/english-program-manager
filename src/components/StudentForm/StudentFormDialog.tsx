@@ -52,13 +52,17 @@ export const StudentFormDialog: React.FC<StudentFormDialogProps> = ({ handleSear
         alert("You must choose a primary phone number.");
         return;
       }
-      if (isEmpty(data.academicRecords) && data.status.currentStatus === Status.NEW) {
-        data.academicRecords = [
-          {
-            level: data.currentLevel,
-            session: data.initialSession,
-          },
-        ];
+      if (isEmpty(data.academicRecords)) {
+        if (data.status.currentStatus === Status.NEW) {
+          data.academicRecords = [
+            {
+              level: data.currentLevel,
+              session: data.initialSession,
+            },
+          ];
+        } else {
+          data.academicRecords = [];
+        }
       }
       if (!data.imageName && selectedStudent?.imageName) {
         deleteImage(selectedStudent, "imageName", true);

@@ -201,7 +201,7 @@ export const getStatusDetails = ({
   if (
     (numSessionsAttended === 1 && progress[0]) ||
     // Return 1st Session if the student's ar has a session in the future (not inclded in sessionWithResults) and they have no sessions in the past
-    (student.academicRecords.length &&
+    (student.academicRecords?.length &&
       numSessionsAttended === 0 &&
       !includes(sessionsWithResults, student.academicRecords[0].session))
   )
