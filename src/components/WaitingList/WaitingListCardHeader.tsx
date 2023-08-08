@@ -1,9 +1,9 @@
 import { Edit, WhatsApp } from "@mui/icons-material";
 import { Box, Divider, IconButton, Tooltip, Typography, useTheme } from "@mui/material";
-import React from "react";
-import { useAppStore, useColors, useWaitingListStore } from "../../hooks";
-import { WaitingListEntry } from "../../interfaces";
-import { getPosition } from "../../services";
+import React, { useMemo } from "react";
+import { useAppStore, useColors, useStudentStore, useWaitingListStore } from "../../hooks";
+import { HighPriority, WaitingListEntry } from "../../interfaces";
+import { getPosition, getStudentIDByPhoneNumber } from "../../services";
 
 interface WaitingListHeaderProps {
   data: WaitingListEntry;
@@ -20,57 +20,73 @@ export const WaitingListCardHeader: React.FC<WaitingListHeaderProps> = ({
   const waitingList = useWaitingListStore((state) => {
     return state.waitingList;
   });
+  const students = useStudentStore((state) => {
+    return state.students;
+  });
   const setSelectedWaitingListEntry = useWaitingListStore((state) => {
     return state.setSelectedWaitingListEntry;
   });
+
+  const matchingStudentID = useMemo(() => {
+    return getStudentIDByPhoneNumber(students, wlEntry.primaryPhone);
+  }, [students, wlEntry.primaryPhone]);
 
   const theme = useTheme();
   const { iconColor } = useColors();
 
   return (
     <>
-      <Typography component="div" display="inline" fontSize={28} gutterBottom>
-        {wlEntry.primaryPhone === -1 ? "No Number" : wlEntry.primaryPhone}
-      </Typography>
-      {(role === "admin" || role === "faculty") && (
-        <Typography component="div" display="inline" fontSize={28} gutterBottom marginLeft="25%">
-          {wlEntry.name}
-        </Typography>
-      )}
-      <Box sx={{ flexDirection: "row", flexGrow: 1, float: "right" }}>
-        {wlEntry.primaryPhone > 700000000 ? (
-          <>
-            <Tooltip arrow title="Contact on WhatsApp">
-              <IconButton href={`https://wa.me/962${wlEntry.primaryPhone}`} target="_blank">
-                <WhatsApp sx={{ color: iconColor }} />
+      <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+        <Box display="flex">
+          <Typography fontSize={28}>{wlEntry.primaryPhone === -1 ? "No Number" : wlEntry.primaryPhone}</Typography>
+        </Box>
+        <Box display="flex" width="70%">
+          {(role === "admin" || role === "faculty") && (
+            <Typography fontSize={28} marginLeft="25%">
+              {wlEntry.name}
+            </Typography>
+          )}
+        </Box>
+        <Box sx={{ display: "flex" }}>
+          {wlEntry.primaryPhone > 700000000 ? (
+            <>
+              <Tooltip arrow title="Contact on WhatsApp">
+                <IconButton href={`https://wa.me/962${wlEntry.primaryPhone}`} target="_blank">
+                  <WhatsApp sx={{ color: iconColor }} />
+                </IconButton>
+              </Tooltip>
+            </>
+          ) : (
+            <Typography display="inline" marginRight="5px" variant="h5">
+              WA Number Invalid
+            </Typography>
+          )}
+          {role === "admin" && (
+            <Tooltip arrow title="Edit Waiting List Entry">
+              <IconButton
+                onClick={() => {
+                  setSelectedWaitingListEntry(wlEntry);
+                  handleEditEntryClick();
+                }}
+              >
+                <Edit sx={{ color: iconColor }} />
               </IconButton>
             </Tooltip>
-          </>
-        ) : (
-          <Typography display="inline" marginRight="5px" variant="h5">
-            WA Number Invalid
-          </Typography>
-        )}
-        {role === "admin" && (
-          <Tooltip arrow title="Edit Waiting List Entry">
-            <IconButton
-              onClick={() => {
-                setSelectedWaitingListEntry(wlEntry);
-                handleEditEntryClick();
-              }}
-            >
-              <Edit sx={{ color: iconColor }} />
-            </IconButton>
-          </Tooltip>
-        )}
+          )}
+        </Box>
       </Box>
-      <Box hidden={!wlEntry.waiting} paddingBottom={1}>
+      <Box display="flex" flexDirection="row" hidden={!wlEntry.waiting} paddingBottom={1}>
         <Typography
           color={theme.palette.mode === "light" ? theme.palette.secondary.main : theme.palette.primary.light}
           variant="h6"
         >
           {`Position: ${getPosition(waitingList, wlEntry)}`}
         </Typography>
+        {wlEntry.highPriority === HighPriority.NO && matchingStudentID && (
+          <Typography color={theme.palette.warning.main} marginLeft="5vw" variant="h6">
+            Warning: Number already in student database ({matchingStudentID})
+          </Typography>
+        )}
       </Box>
       <Divider />
     </>
