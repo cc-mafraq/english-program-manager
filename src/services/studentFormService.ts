@@ -34,13 +34,13 @@ import {
   DroppedOutReason,
   FinalResult,
   GenderedLevel,
-  genderedLevels,
   Level,
   LevelPlus,
-  levels,
-  levelsPlus,
   Nationality,
   Status,
+  genderedLevels,
+  levels,
+  levelsPlus,
 } from "../interfaces";
 
 export const SPACING = 2;
@@ -305,7 +305,8 @@ export const studentFormSchema = object().shape({
       'Age must be an integer greater than 10 and less than 100. You can enter "Unknown"',
       (value) => {
         return (
-          (isInteger(value) && value && value > 10 && value < 100) || lowerCase(value as string) === "unknown"
+          (isInteger(value) && value && Number(value) > 10 && Number(value) < 100) ||
+          lowerCase(value as string) === "unknown"
         );
       },
     )

@@ -18,6 +18,7 @@ export interface Student {
   nationality: Nationality;
   origPlacementData: {
     adjustment?: string;
+    examFile?: string;
     level: Level;
     speaking: LevelPlus;
     writing: LevelPlus;

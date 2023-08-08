@@ -1,6 +1,6 @@
 import { collection, deleteDoc, doc, getDocs, setDoc, SetOptions } from "firebase/firestore";
 import { deleteObject, getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
-import { find, forEach, get, map, omit, set, toString } from "lodash";
+import { cloneDeep, filter, find, forEach, get, map, omit, set, toString } from "lodash";
 import { db, storage } from ".";
 import { Student } from "../interfaces";
 
@@ -31,11 +31,24 @@ export const deleteCollection = async (collectionName: string) => {
   );
 };
 
-export const setImages = async (
-  students: Student[],
-  imagePath: string,
-  folderName: string,
-): Promise<Student[]> => {
+export const setPlacementExamFilePaths = (students: Student[]) => {
+  forEach(
+    filter(students, (student) => {
+      return student.origPlacementData.examFile === undefined;
+    }),
+    (studentWithoutExam) => {
+      getDownloadURL(ref(storage, `placementExams/${studentWithoutExam.epId}.pdf`)).then((fileUrl) => {
+        if (fileUrl) {
+          const studentCopy = cloneDeep(studentWithoutExam);
+          studentCopy.origPlacementData.examFile = fileUrl;
+          setData(studentCopy, "students", "epId");
+        }
+      });
+    },
+  );
+};
+
+export const setFilePaths = async (students: Student[], path: string, folderName: string): Promise<Student[]> => {
   try {
     const storageFiles = await listAll(ref(storage, folderName));
     const fileNames = await Promise.all(
@@ -48,7 +61,7 @@ export const setImages = async (
         if (name.includes(`${folderName.slice(0, -1)}%2F${student.epId}`)) return true;
         return false;
       });
-      set(student, imagePath, imageURL || "");
+      set(student, path, imageURL || "");
     });
   } catch (e) {
     console.error(e);

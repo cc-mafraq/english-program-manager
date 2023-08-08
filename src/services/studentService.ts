@@ -25,7 +25,7 @@ import {
   sum,
   uniq,
 } from "lodash";
-import { FinalResult, GenderedLevel, Level, levels, Status, StatusDetails, Student } from "../interfaces";
+import { FinalResult, GenderedLevel, Level, Status, StatusDetails, Student, levels } from "../interfaces";
 import { getLevelAtSession } from "./fgrService";
 
 export const JOIN_STR = ", ";
@@ -170,7 +170,7 @@ export const getSessionsWithResults = (students: Student[]) => {
     return some(
       map(
         filter(flatten(map(students, "academicRecords")), (ar) => {
-          return ar.session === session;
+          return ar?.session === session;
         }),
         "overallResult",
       ),
@@ -212,4 +212,11 @@ export const getStatusDetails = ({
   if (numSessionsAttended > 1 && progress[0] && progress[1]) return [StatusDetails.SE, numSessionsAttended];
   if (numSessionsAttended === 0) return [StatusDetails.WD1, numSessionsAttended];
   return [StatusDetails.SKIP, numSessionsAttended];
+};
+
+export const getStudentIDByPhoneNumber = (students: Student[], phoneNumber: number) => {
+  const matchedStudent = find(students, (student: Student) => {
+    return includes(map(student.phone.phoneNumbers, "number"), phoneNumber);
+  });
+  return matchedStudent?.epId;
 };

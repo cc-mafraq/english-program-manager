@@ -1,4 +1,5 @@
-import { Box, useMediaQuery, useTheme } from "@mui/material";
+import { FileOpen } from "@mui/icons-material";
+import { Box, IconButton, Tooltip, useMediaQuery, useTheme } from "@mui/material";
 import { join, map } from "lodash";
 import React, { useMemo } from "react";
 import { Image, LabeledContainer, LabeledText } from "..";
@@ -174,6 +175,17 @@ const PlacementData: React.FC<StudentInfoProps> = ({ data: student }) => {
       <LabeledText label="Speaking">{student.origPlacementData.speaking}</LabeledText>
       <LabeledText label="Placement Level">{student.origPlacementData.level}</LabeledText>
       <LabeledText label="Adjustment">{student.origPlacementData.adjustment}</LabeledText>
+      <Box sx={{ justifyContent: "center", marginLeft: "1vw", paddingTop: "10px" }}>
+        {student.origPlacementData.examFile ? (
+          <Tooltip title="Open Placement Exam">
+            <IconButton href={student.origPlacementData.examFile} target="_blank">
+              <FileOpen fontSize="large" />
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <></>
+        )}
+      </Box>
     </LabeledContainer>
   );
 };
