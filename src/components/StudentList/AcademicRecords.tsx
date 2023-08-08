@@ -24,14 +24,14 @@ import {
   ProgressBox,
 } from "..";
 import { useAppStore, useColors, useStudentStore } from "../../hooks";
-import { AcademicRecord, emptyAcademicRecord, FinalResult, GenderedLevel, Grade, Student } from "../../interfaces";
+import { AcademicRecord, FinalResult, GenderedLevel, Grade, Student, emptyAcademicRecord } from "../../interfaces";
 import {
+  SPACING,
   academicRecordsSchema,
   getAllSessions,
   getProgress,
   removeNullFromObject,
   setData,
-  SPACING,
 } from "../../services";
 
 interface AcademicRecordsProps {
@@ -265,7 +265,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
           </Box>
         )}
         <AccordionList
-          dataList={reverse([...student.academicRecords])}
+          dataList={student.academicRecords ? reverse([...student.academicRecords]) : []}
           DetailsComponent={AcademicRecordAccordionDetails}
           handleEditClick={handleEditClick}
           SummaryComponent={AcademicRecordAccordionSummary}
