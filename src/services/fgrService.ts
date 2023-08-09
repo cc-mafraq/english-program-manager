@@ -183,7 +183,12 @@ export const getStudentShortName = (student: Student) => {
   const secondName = nth(nameParts, 1);
   const thirdName = nth(nameParts, 2);
   const shortName = `${firstName} ${secondName}`;
-  return (secondName === "Al" || secondName === "Abd" || firstName === "Abd" || secondName?.startsWith('"')) &&
+  return (secondName === "Al" ||
+    secondName === "Abd" ||
+    firstName === "Abd" ||
+    secondName?.startsWith('"') ||
+    secondName === "Abed" ||
+    firstName === "Abed") &&
     thirdName !== "Al"
     ? `${shortName} ${thirdName}`
     : shortName;
