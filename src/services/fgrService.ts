@@ -94,8 +94,12 @@ export const getLevelForNextSession = ({
     const levelIndex = isCoreClass
       ? indexOf(levelsWithGrad, recordLevel)
       : indexOf(levelsWithGrad, getLevelAtSession(academicRecord.session, student, sessionOptions, noIncrement));
-    const hasPassed = academicRecord.overallResult === "P";
-    if (!noIncrement && isCoreClass && hasPassed) {
+    const hasPassed =
+      (isCoreClass && academicRecord.overallResult === "P") ||
+      (!isCoreClass &&
+        academicRecord.exitWritingExam?.result === "P" &&
+        academicRecord.exitSpeakingExam?.result === "P");
+    if (!noIncrement && hasPassed) {
       return getFullLevelName(levelsWithGrad[levelIndex + 1]);
     }
     return getFullLevelName(levelsWithGrad[levelIndex]);
