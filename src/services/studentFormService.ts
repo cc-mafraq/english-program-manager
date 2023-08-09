@@ -45,7 +45,7 @@ import {
 
 export const SPACING = 2;
 export const MOMENT_FORMAT = "l";
-const sessionRegex = /(Fa|Sp|Su) (I|II) \d{2}/;
+const sessionRegex = /^(Fa|Sp|Su) (I|II) \d{2}$/;
 
 export interface FormItem {
   children?: React.ReactNode;

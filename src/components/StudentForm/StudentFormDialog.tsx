@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { isEmpty, omit } from "lodash";
 import React, { useCallback, useMemo } from "react";
 import { useStudentFormStore, useStudentStore } from "../../hooks";
-import { Status, Student } from "../../interfaces";
+import { Student } from "../../interfaces";
 import {
   deleteImage,
   deleteStudentData,
@@ -53,16 +53,7 @@ export const StudentFormDialog: React.FC<StudentFormDialogProps> = ({ handleSear
         return;
       }
       if (isEmpty(data.academicRecords)) {
-        if (data.status.currentStatus === Status.NEW) {
-          data.academicRecords = [
-            {
-              level: data.currentLevel,
-              session: data.initialSession,
-            },
-          ];
-        } else {
-          data.academicRecords = [];
-        }
+        data.academicRecords = [];
       }
       if (!data.imageName && selectedStudent?.imageName) {
         deleteImage(selectedStudent, "imageName", true);

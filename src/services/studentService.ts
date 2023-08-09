@@ -128,17 +128,21 @@ export const filterOutById = (students: Student[], id: Student["epId"]): Student
 };
 
 export const sortBySession = (session: Student["initialSession"]) => {
-  const sessionParts = session.split(" ");
-  return `${nth(sessionParts, 2)} ${replace(replace(lowerCase(nth(sessionParts, 0)), "fa", "2"), "sp", "1")} ${nth(
-    sessionParts,
-    1,
-  )}`;
+  const sessionParts = session?.split(" ");
+  return `${nth(sessionParts, 2)} ${replace(
+    replace(replace(lowerCase(nth(sessionParts, 0)), "fa", "3"), "su", "2"),
+    "sp",
+    "1",
+  )} ${nth(sessionParts, 1)}`;
 };
 
-export const getAllSessions = (students: Student[]) => {
-  return filter(reverse(sortBy(uniq(map(students, "initialSession")), sortBySession)), (s) => {
-    return !isEmpty(s);
-  });
+export const getAllSessions = (students: Student[]): string[] => {
+  return filter(
+    reverse(sortBy(uniq(map(flatten(map(students, "academicRecords")), "session")), sortBySession)),
+    (s) => {
+      return !isEmpty(s) && !!s.match(/^(Fa|Sp|Su) (I|II) \d{2}$/);
+    },
+  );
 };
 
 export const generateId = (students: Student[]): number => {

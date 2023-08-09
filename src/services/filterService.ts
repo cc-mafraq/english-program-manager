@@ -11,14 +11,16 @@ export const phoneConditionFn = (searchString: string) => {
 };
 
 export const searchStudents = (students: Student[], searchString: string): Student[] => {
-  const searchStringRegEx = new RegExp(`^${toLower(searchString)}`);
+  const nonAlphaNumeric = /[^A-Za-z0-9\u0621-\u064A]/g;
+  const cleanSearchString = toLower(searchString.replace(nonAlphaNumeric, ""));
+  const searchStringRegEx = new RegExp(`^${cleanSearchString}`);
   return filter(students, (s) => {
     return (
       isEmpty(searchString) ||
       !!toLower(s.name.english).match(searchStringRegEx) ||
       includes(s.name.arabic, searchString) ||
       s.epId.toString() === searchString ||
-      some(map(s.phone.phoneNumbers, "number"), phoneConditionFn(searchString)) ||
+      some(map(s.phone.phoneNumbers, "number"), phoneConditionFn(cleanSearchString)) ||
       !!toLower(s.familyCoordinatorEntry).match(searchStringRegEx)
     );
   });

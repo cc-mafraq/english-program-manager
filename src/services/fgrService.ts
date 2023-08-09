@@ -1,5 +1,5 @@
 import { concat, filter, forEach, includes, indexOf, lowerCase, map, nth, replace, split, union } from "lodash";
-import { AcademicRecord, FinalResult, Level, levels, Student } from "../interfaces";
+import { AcademicRecord, FinalResult, Level, Student, levels } from "../interfaces";
 
 export interface StudentAcademicRecordIndex {
   academicRecordIndex: number;
@@ -130,20 +130,44 @@ export const isElective = (academicRecord: AcademicRecord): boolean => {
 };
 
 export const getElectiveFullName = (electiveName: string): string => {
-  return replace(replace(electiveName, "I&T", "IELTS & TOEFL"), /(Ac Rdg)|(Adv Rdg)/, "Advanced Reading");
+  return replace(
+    replace(
+      replace(
+        replace(
+          replace(
+            replace(replace(electiveName, "I&T", "IELTS & TOEFL"), /(Ac Rdg)|(Adv Rdg)|(AR)/, "Advanced Reading "),
+            /C(?=[0-9])/,
+            "Conversation ",
+          ),
+          /Conv(?=[0-9])/,
+          "Conversation ",
+        ),
+        "AW",
+        "Advanced Writing ",
+      ),
+      /(?<=IELTS & TOEFL)S/,
+      " Speaking",
+    ),
+    /(?<=IELTS & TOEFL)L/,
+    " Listening",
+  );
 };
 
 export const getSessionFullName = (session: string): string => {
   return replace(
     replace(
-      replace(replace(lowerCase(session), /i/g, "I"), /(\d{2})/, (r) => {
-        return `20${r}`;
-      }),
-      "sp",
-      "Spring",
+      replace(
+        replace(replace(lowerCase(session), /i/g, "I"), /(\d{2})/, (r) => {
+          return `20${r}`;
+        }),
+        "sp",
+        "Spring",
+      ),
+      "fa",
+      "Fall",
     ),
-    "fa",
-    "Fall",
+    "su",
+    "Summer",
   );
 };
 
@@ -159,5 +183,8 @@ export const getStudentShortName = (student: Student) => {
   const secondName = nth(nameParts, 1);
   const thirdName = nth(nameParts, 2);
   const shortName = `${firstName} ${secondName}`;
-  return secondName === "Al" ? `${shortName} ${thirdName}` : shortName;
+  return (secondName === "Al" || secondName === "Abd" || firstName === "Abd" || secondName?.startsWith('"')) &&
+    thirdName !== "Al"
+    ? `${shortName} ${thirdName}`
+    : shortName;
 };
