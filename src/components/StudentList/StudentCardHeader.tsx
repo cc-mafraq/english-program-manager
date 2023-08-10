@@ -8,7 +8,7 @@ import { isValidPhoneNumber } from "../../services";
 
 interface StudentCardHeaderProps {
   data: Student;
-  handleEditStudentClick: () => void;
+  handleEditStudentClick?: () => void;
 }
 
 const padding = "2px";
@@ -67,12 +67,15 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ data: stud
           <Box>
             {phoneNumberIsValid && (
               <Tooltip arrow placement="top" title="Contact on WhatsApp">
-                <IconButton href={`https://wa.me/962${student.phone.primaryPhone}`} target="_blank">
+                <IconButton
+                  href={`https://web.whatsapp.com/send?phone=962${student.phone.primaryPhone}`}
+                  target="_blank"
+                >
                   <WhatsApp sx={{ color: iconColor }} />
                 </IconButton>
               </Tooltip>
             )}
-            {role === "admin" && (
+            {role === "admin" && handleEditStudentClick && (
               <Tooltip arrow placement="top" title="Edit Student">
                 <IconButton
                   onClick={() => {
@@ -93,4 +96,8 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ data: stud
       <Divider />
     </>
   );
+};
+
+StudentCardHeader.defaultProps = {
+  handleEditStudentClick: undefined,
 };

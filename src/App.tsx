@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Authorization, MenuBar } from "./components";
 import { loadLocal } from "./hooks";
 import { getDesignTokens, voidFn } from "./interfaces";
-import { LoginPage, StatisticsPage, StudentDatabasePage, WaitingListPage } from "./pages";
+import { ClassListsPage, LoginPage, StatisticsPage, StudentDatabasePage, WaitingListPage } from "./pages";
 
 export const ColorModeContext = React.createContext({
   toggleColorMode: voidFn,
@@ -43,6 +43,7 @@ export const App = () => {
               <Routes>
                 <Route element={<StudentDatabasePage />} path="/epd" />
                 <Route element={<WaitingListPage />} path="/waitlist" />
+                <Route element={<ClassListsPage />} path="/classlists" />
                 <Route
                   element={
                     <>

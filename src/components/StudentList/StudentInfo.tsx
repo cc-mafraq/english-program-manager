@@ -136,25 +136,28 @@ const Demographics: React.FC<StudentInfoProps> = ({ data: student }) => {
   );
 };
 
-const PhoneNumbers: React.FC<StudentInfoProps> = ({ data: student }) => {
+export const PhoneNumbers: React.FC<StudentInfoProps & { noWhatsapp?: boolean }> = ({
+  data: student,
+  noWhatsapp,
+}) => {
   const role = useAppStore((state) => {
     return state.role;
   });
   const isAdminOrFaculty = role === "admin" || role === "faculty";
 
   return (
-    <LabeledContainer label="Phone Numbers and WhatsApp" showWhenEmpty>
+    <LabeledContainer label={noWhatsapp ? "Phone Numbers" : "Phone Numbers and WhatsApp"} showWhenEmpty>
       {map(student.phone.phoneNumbers, (pn, i) => {
         return (
           <span key={i}>
             <LabeledText label={`Number ${Number(i) + 1}`}>{pn.number}</LabeledText>
-            <LabeledText condition={isAdminOrFaculty} label={`Number ${Number(i) + 1} Notes`}>
+            <LabeledText condition={isAdminOrFaculty && !noWhatsapp} label={`Number ${Number(i) + 1} Notes`}>
               {pn.notes}
             </LabeledText>
           </span>
         );
       })}
-      <Box hidden={role !== "admin"}>
+      <Box hidden={role !== "admin" || noWhatsapp}>
         <LabeledText label="WA Broadcast SAR">{student.phone.waBroadcastSAR}</LabeledText>
         <LabeledText label="WA Broadcast Other Groups">
           {join(student.phone.otherWaBroadcastGroups, JOIN_STR)}
@@ -250,4 +253,8 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ data: student }) => {
       <LiteracyAndZoom data={student} />
     </Box>
   );
+};
+
+PhoneNumbers.defaultProps = {
+  noWhatsapp: undefined,
 };

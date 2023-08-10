@@ -22,10 +22,21 @@ import {
   set,
   some,
   sortBy,
+  split,
   sum,
   uniq,
+  uniqBy,
 } from "lodash";
-import { FinalResult, GenderedLevel, Level, Status, StatusDetails, Student, levels } from "../interfaces";
+import {
+  FinalResult,
+  GenderedLevel,
+  Level,
+  SectionPlacement,
+  Status,
+  StatusDetails,
+  Student,
+  levels,
+} from "../interfaces";
 import { getLevelAtSession } from "./fgrService";
 
 export const JOIN_STR = ", ";
@@ -143,6 +154,51 @@ export const getAllSessions = (students: Student[]): string[] => {
       return !isEmpty(s) && !!s.match(/^(Fa|Sp|Su) (I|II) \d{2}$/);
     },
   );
+};
+
+export const getCurrentSession = (students: Student[]): string => {
+  return (
+    first(
+      filter(reverse(sortBy(uniq(map(flatten(map(students, "placement")), "session")), sortBySession)), (s) => {
+        return !isEmpty(s) && !!s.match(/^(Fa|Sp|Su) (I|II) \d{2}$/);
+      }),
+    ) || "Fa I 22"
+  );
+};
+
+export const getClassOptions = (students: Student[], session: Student["initialSession"]) => {
+  return sortBy(
+    uniqBy(
+      flatten(
+        map(
+          filter(flatten(map(students, "placement")), (placement) => {
+            return placement && placement.session === session;
+          }),
+          "placement",
+        ),
+      ),
+      (sectionPlacement) => {
+        return sectionPlacement.level + sectionPlacement.section;
+      },
+    ),
+    "level",
+  );
+};
+
+export const getClassName = (placement: SectionPlacement) => {
+  return placement.section ? `${replace(placement.level, "-", "")}-${placement.section}` : placement.level;
+};
+
+export const getClassFromClassName = (className: string): SectionPlacement => {
+  const splitClassName = split(className, "-");
+  const level = nth(splitClassName, 0) || className;
+  const section = nth(splitClassName, 1);
+  const genderedSections = ["M", "W", "MW"];
+  return includes(genderedSections, section) || section === undefined
+    ? { level: className }
+    : includes(level, "M") || includes(level, "W")
+    ? { level: `${level.substring(0, -2)}-${level[-2]}`, section }
+    : { level, section };
 };
 
 export const generateId = (students: Student[]): number => {

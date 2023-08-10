@@ -59,6 +59,7 @@ const drawerList: DrawerListItem[] = [
   {
     component: FormatListBulleted,
     name: "Class Lists",
+    route: "/classlists",
   },
   {
     component: Create,

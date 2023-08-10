@@ -8,6 +8,8 @@ import { studentImageFolder } from "../../services";
 interface StudentCardImageProps {
   data: Student;
   imageWidth: number;
+  noBorder?: boolean;
+  noButtons?: boolean;
   smallBreakpointScaleDown: number;
 }
 
@@ -15,6 +17,8 @@ export const StudentCardImage: React.FC<StudentCardImageProps> = ({
   data: student,
   imageWidth,
   smallBreakpointScaleDown,
+  noButtons,
+  noBorder,
 }) => {
   const role = useAppStore((state) => {
     return state.role;
@@ -22,7 +26,7 @@ export const StudentCardImage: React.FC<StudentCardImageProps> = ({
   const theme = useTheme();
   const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
   const greaterThanMedium = useMediaQuery(theme.breakpoints.up("md"));
-  const maxImageHeight = 250;
+  const maxImageHeight = (imageWidth * 10) / 7;
 
   return (
     <Box>
@@ -46,7 +50,7 @@ export const StudentCardImage: React.FC<StudentCardImageProps> = ({
         }}
         outerContainerProps={{
           sx: {
-            border: "solid",
+            border: noBorder ? "" : "solid",
             borderColor: student.nationality === Nationality.JDN ? "rgb(0,176,80)" : "rgb(204,102,0)",
             borderWidth:
               (student.nationality === Nationality.JDN || student.nationality === Nationality.SYR) &&
@@ -60,12 +64,19 @@ export const StudentCardImage: React.FC<StudentCardImageProps> = ({
         scale={greaterThanSmall ? 2 : 1.5}
         student={student}
       />
-      <Box display="flex" flexDirection="row" justifyContent="space-evenly" marginBottom="20px" marginTop="30px">
-        {student.status.currentStatus !== Status.WD && role === "admin" && greaterThanSmall && (
-          <WithdrawButton student={student} />
-        )}
-        {student.imageName && greaterThanMedium && role === "admin" && <StudentIdCardButton student={student} />}
-      </Box>
+      {!noButtons && (
+        <Box display="flex" flexDirection="row" justifyContent="space-evenly" marginBottom="20px" marginTop="30px">
+          {student.status.currentStatus !== Status.WD && role === "admin" && greaterThanSmall && (
+            <WithdrawButton student={student} />
+          )}
+          {student.imageName && greaterThanMedium && role === "admin" && <StudentIdCardButton student={student} />}
+        </Box>
+      )}
     </Box>
   );
+};
+
+StudentCardImage.defaultProps = {
+  noBorder: undefined,
+  noButtons: undefined,
 };
