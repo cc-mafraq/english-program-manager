@@ -2,6 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Edit } from "@mui/icons-material";
 import { Box, Breakpoint, Button, IconButton, Tooltip, Typography } from "@mui/material";
 import { find, findIndex, forEach, join, map, omit, reverse } from "lodash";
+import moment from "moment";
 import React, { useCallback, useMemo, useState } from "react";
 import {
   AccordionList,
@@ -14,15 +15,15 @@ import {
   LabeledText,
 } from "..";
 import { useAppStore, useColors, useStudentStore } from "../../hooks";
-import { emptyPlacement, Placement, Student } from "../../interfaces";
+import { Placement, Student, emptyPlacement } from "../../interfaces";
 import {
   FormItem,
   JOIN_STR,
+  SPACING,
   photoContactSchema,
   placementSchema,
   removeNullFromObject,
   setData,
-  SPACING,
 } from "../../services";
 
 interface PlacementProps {
@@ -162,12 +163,16 @@ export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
         student.placement.push(dataNoNull);
       }
       forEach(dataNoNull.placement, (sp) => {
+        if (sp.section === "CSWL" && sp.timestamp === undefined) {
+          sp.timestamp = moment().format();
+        }
         if (
           !find(student.academicRecords, (academicRecord) => {
             return academicRecord.session === dataNoNull.session && sp.level && academicRecord.level === sp.level;
           }) &&
           dataNoNull.session !== "Fa I 22" &&
-          dataNoNull.session !== "Fa II 22"
+          dataNoNull.session !== "Fa II 22" &&
+          sp.section !== "CSWL"
         ) {
           student.academicRecords.push({ level: sp.level, session: dataNoNull.session });
         }

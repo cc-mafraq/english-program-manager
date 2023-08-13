@@ -65,6 +65,7 @@ export interface SectionPlacement {
   level: string;
   notes?: string;
   section?: string;
+  timestamp?: string;
 }
 
 export interface Placement {
