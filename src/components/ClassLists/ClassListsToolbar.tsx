@@ -1,5 +1,5 @@
 import { AppBar, Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Toolbar } from "@mui/material";
-import { filter, includes, map, sortBy, uniq } from "lodash";
+import { dropRight, filter, includes, map, sortBy, uniq } from "lodash";
 import React, { useMemo } from "react";
 import { useAppStore } from "../../hooks";
 import { SectionPlacement, Student } from "../../interfaces";
@@ -25,7 +25,7 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
   });
 
   const sessionOptions = useMemo(() => {
-    return getAllSessions(students);
+    return dropRight(getAllSessions(students), 20);
   }, [students]);
 
   const classOptions = useMemo(() => {
