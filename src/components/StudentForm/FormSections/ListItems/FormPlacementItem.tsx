@@ -24,7 +24,7 @@ export const FormPlacementItem: React.FC<FormItem> = ({ index, removeItem, name 
         freeSolo
         label="Section"
         name={name ? `${name}.section` : "section"}
-        options={["A", "B", "MW"]}
+        options={["A", "B", "MW", "CSWL"]}
       />
       <GridItemDatePicker label="Date" name={name ? `${name}.date` : "date"} />
       <GridItemTextField gridProps={{ sm: 5 }} label="Notes" name={name ? `${name}.notes` : "notes"} />

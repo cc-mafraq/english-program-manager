@@ -178,7 +178,11 @@ export const getClassOptions = (students: Student[], session: Student["initialSe
         ),
       ),
       (sectionPlacement) => {
-        return sectionPlacement.level + sectionPlacement.section;
+        return (
+          (sectionPlacement.section === "MW"
+            ? sectionPlacement.level.substring(0, sectionPlacement.level.length - 2)
+            : sectionPlacement.level) + sectionPlacement.section
+        );
       },
     ),
     "level",
@@ -186,19 +190,45 @@ export const getClassOptions = (students: Student[], session: Student["initialSe
 };
 
 export const getClassName = (placement: SectionPlacement) => {
-  return placement.section ? `${replace(placement.level, "-", "")}-${placement.section}` : placement.level;
+  return placement.section
+    ? placement.section === "CSWL"
+      ? `${placement.section} ${placement.level}`
+      : `${replace(placement.level, placement.section === "MW" ? /-(.)/ : "-", "")}-${placement.section}`
+    : placement.level;
 };
 
 export const getClassFromClassName = (className: string): SectionPlacement => {
-  const splitClassName = split(className, "-");
+  const splitClassName = split(className, includes(className, "CSWL") ? " " : "-");
   const level = nth(splitClassName, 0) || className;
   const section = nth(splitClassName, 1);
-  const genderedSections = ["M", "W", "MW"];
-  return includes(genderedSections, section) || section === undefined
+  const genderedSections = ["M", "W"];
+  return level === "CSWL"
+    ? { level: section || className, section: level }
+    : includes(genderedSections, section) || section === undefined
     ? { level: className }
     : includes(level, "M") || includes(level, "W")
-    ? { level: `${level.substring(0, -2)}-${level[-2]}`, section }
+    ? { level: `${level.substring(0, level.length - 1)}-${level.charAt(level.length - 1)}`, section }
     : { level, section };
+};
+
+export const getSectionPlacement = (
+  student: Student,
+  selectedSession: Student["initialSession"],
+  selectedClass: SectionPlacement,
+) => {
+  return find(
+    find(student.placement, (placement) => {
+      return placement.session === selectedSession;
+    })?.placement,
+    (sectionPlacement) => {
+      return (
+        sectionPlacement.level ===
+          (selectedClass.section === "MW"
+            ? `${selectedClass.level}-${student.gender === "F" ? "W" : "M"}`
+            : selectedClass.level) && sectionPlacement.section === selectedClass.section
+      );
+    },
+  );
 };
 
 export const generateId = (students: Student[]): number => {

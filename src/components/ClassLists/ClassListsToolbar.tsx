@@ -1,6 +1,7 @@
 import { AppBar, Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Toolbar } from "@mui/material";
-import { map } from "lodash";
+import { filter, includes, map, sortBy, uniq } from "lodash";
 import React, { useMemo } from "react";
+import { useAppStore } from "../../hooks";
 import { SectionPlacement, Student } from "../../interfaces";
 import { getAllSessions, getClassName, getClassOptions, getSessionFullName } from "../../services";
 
@@ -19,13 +20,28 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
   handleSessionChange,
   handleClassChange,
 }) => {
+  const role = useAppStore((state) => {
+    return state.role;
+  });
+
   const sessionOptions = useMemo(() => {
     return getAllSessions(students);
   }, [students]);
 
   const classOptions = useMemo(() => {
-    return getClassOptions(students, selectedSession);
-  }, [selectedSession, students]);
+    return filter(
+      sortBy(
+        uniq(
+          map(getClassOptions(students, selectedSession), (classOption) => {
+            return getClassName(classOption);
+          }),
+        ),
+      ),
+      (classOption) => {
+        return role === "admin" ? true : !includes(classOption, "CSWL");
+      },
+    );
+  }, [role, selectedSession, students]);
 
   return (
     <AppBar color="default" elevation={1} position="relative">
@@ -66,10 +82,9 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
               value={getClassName(selectedClass)}
             >
               {map(classOptions, (classOption) => {
-                const wholelevel = getClassName(classOption);
                 return (
-                  <MenuItem key={wholelevel} value={wholelevel}>
-                    {wholelevel}
+                  <MenuItem key={classOption} value={classOption}>
+                    {classOption}
                   </MenuItem>
                 );
               })}
