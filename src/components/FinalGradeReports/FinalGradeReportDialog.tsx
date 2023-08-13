@@ -46,6 +46,7 @@ export const FinalGradeReportDialog: React.FC = () => {
   });
 
   // Reset hidden students when the dialog opens
+  // TODO: I think this isn't working correctly
   useEffect(() => {
     const unsub = useFinalGradeReportStore.subscribe(
       (state) => {

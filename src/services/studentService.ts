@@ -22,10 +22,21 @@ import {
   set,
   some,
   sortBy,
+  split,
   sum,
   uniq,
+  uniqBy,
 } from "lodash";
-import { FinalResult, GenderedLevel, Level, Status, StatusDetails, Student, levels } from "../interfaces";
+import {
+  FinalResult,
+  GenderedLevel,
+  Level,
+  SectionPlacement,
+  Status,
+  StatusDetails,
+  Student,
+  levels,
+} from "../interfaces";
 import { getLevelAtSession } from "./fgrService";
 
 export const JOIN_STR = ", ";
@@ -128,17 +139,98 @@ export const filterOutById = (students: Student[], id: Student["epId"]): Student
 };
 
 export const sortBySession = (session: Student["initialSession"]) => {
-  const sessionParts = session.split(" ");
-  return `${nth(sessionParts, 2)} ${replace(replace(lowerCase(nth(sessionParts, 0)), "fa", "2"), "sp", "1")} ${nth(
-    sessionParts,
-    1,
-  )}`;
+  const sessionParts = session?.split(" ");
+  return `${nth(sessionParts, 2)} ${replace(
+    replace(replace(lowerCase(nth(sessionParts, 0)), "fa", "3"), "su", "2"),
+    "sp",
+    "1",
+  )} ${nth(sessionParts, 1)}`;
 };
 
-export const getAllSessions = (students: Student[]) => {
-  return filter(reverse(sortBy(uniq(map(students, "initialSession")), sortBySession)), (s) => {
-    return !isEmpty(s);
-  });
+export const getAllSessions = (students: Student[]): string[] => {
+  return filter(
+    reverse(sortBy(uniq(map(flatten(map(students, "academicRecords")), "session")), sortBySession)),
+    (s) => {
+      return !isEmpty(s) && !!s.match(/^(Fa|Sp|Su) (I|II) \d{2}$/);
+    },
+  );
+};
+
+export const getCurrentSession = (students: Student[]): string => {
+  return (
+    first(
+      filter(reverse(sortBy(uniq(map(flatten(map(students, "placement")), "session")), sortBySession)), (s) => {
+        return !isEmpty(s) && !!s.match(/^(Fa|Sp|Su) (I|II) \d{2}$/);
+      }),
+    ) || "Fa I 22"
+  );
+};
+
+export const getClassOptions = (students: Student[], session: Student["initialSession"]) => {
+  return sortBy(
+    uniqBy(
+      flatten(
+        map(
+          filter(flatten(map(students, "placement")), (placement) => {
+            return placement && placement.session === session;
+          }),
+          "placement",
+        ),
+      ),
+      (sectionPlacement) => {
+        return (
+          (sectionPlacement.section === "MW"
+            ? sectionPlacement.level.substring(0, sectionPlacement.level.length - 2)
+            : sectionPlacement.level) + sectionPlacement.section
+        );
+      },
+    ),
+    "level",
+  );
+};
+
+export const getClassName = (placement?: SectionPlacement) => {
+  return placement?.section
+    ? placement?.section === "CSWL"
+      ? `${placement.section} ${placement.level}`
+      : `${replace(placement.level, placement.section === "MW" ? /-(.)/ : "-", "")}-${placement.section}`
+    : placement?.level;
+};
+
+export const getClassFromClassName = (className: string): SectionPlacement | undefined => {
+  if (isEmpty(className)) return undefined;
+  const splitClassName = split(className, includes(className, "CSWL") ? " " : "-");
+  const level = nth(splitClassName, 0) || className;
+  const section = nth(splitClassName, 1);
+  const genderedSections = ["M", "W"];
+  return level === "CSWL"
+    ? { level: section || className, section: level }
+    : includes(genderedSections, section) || section === undefined
+    ? { level: className }
+    : includes(level, "M") || includes(level, "W")
+    ? { level: `${level.substring(0, level.length - 1)}-${level.charAt(level.length - 1)}`, section }
+    : { level, section };
+};
+
+export const getSectionPlacement = (
+  student: Student,
+  selectedSession: Student["initialSession"],
+  selectedClass?: SectionPlacement,
+) => {
+  if (selectedClass === undefined) return undefined;
+  return find(
+    find(student.placement, (placement) => {
+      return placement.session === selectedSession;
+    })?.placement,
+    (sectionPlacement) => {
+      return (
+        sectionPlacement.level ===
+          (selectedClass.section === "MW"
+            ? `${selectedClass.level}-${student.gender === "F" ? "W" : "M"}`
+            : selectedClass.level) && sectionPlacement.section === selectedClass.section
+      );
+    },
+  );
 };
 
 export const generateId = (students: Student[]): number => {
