@@ -8,7 +8,7 @@ import { getAllSessions, getClassName, getClassOptions, getSessionFullName } fro
 interface ClassListsToolbarProps {
   handleClassChange: (e: SelectChangeEvent) => void;
   handleSessionChange: (e: SelectChangeEvent) => void;
-  selectedClass: SectionPlacement;
+  selectedClass?: SectionPlacement;
   selectedSession: Student["initialSession"];
   students: Student[];
 }
@@ -59,7 +59,7 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
               label="Session"
               labelId="session-label"
               onChange={handleSessionChange}
-              value={selectedSession}
+              value={sessionOptions.length ? selectedSession : ""}
             >
               {map(sessionOptions, (so) => {
                 return (
@@ -75,11 +75,12 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
           <FormControl fullWidth>
             <InputLabel id="class-label">Class</InputLabel>
             <Select
+              displayEmpty
               id="class-select"
               label="Class"
               labelId="class-label"
               onChange={handleClassChange}
-              value={getClassName(selectedClass)}
+              value={classOptions.length ? getClassName(selectedClass) ?? "" : ""}
             >
               {map(classOptions, (classOption) => {
                 return (
@@ -94,4 +95,8 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
       </Toolbar>
     </AppBar>
   );
+};
+
+ClassListsToolbar.defaultProps = {
+  selectedClass: undefined,
 };

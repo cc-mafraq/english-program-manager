@@ -189,15 +189,16 @@ export const getClassOptions = (students: Student[], session: Student["initialSe
   );
 };
 
-export const getClassName = (placement: SectionPlacement) => {
-  return placement.section
-    ? placement.section === "CSWL"
+export const getClassName = (placement?: SectionPlacement) => {
+  return placement?.section
+    ? placement?.section === "CSWL"
       ? `${placement.section} ${placement.level}`
       : `${replace(placement.level, placement.section === "MW" ? /-(.)/ : "-", "")}-${placement.section}`
-    : placement.level;
+    : placement?.level;
 };
 
-export const getClassFromClassName = (className: string): SectionPlacement => {
+export const getClassFromClassName = (className: string): SectionPlacement | undefined => {
+  if (isEmpty(className)) return undefined;
   const splitClassName = split(className, includes(className, "CSWL") ? " " : "-");
   const level = nth(splitClassName, 0) || className;
   const section = nth(splitClassName, 1);
@@ -214,8 +215,9 @@ export const getClassFromClassName = (className: string): SectionPlacement => {
 export const getSectionPlacement = (
   student: Student,
   selectedSession: Student["initialSession"],
-  selectedClass: SectionPlacement,
+  selectedClass?: SectionPlacement,
 ) => {
+  if (selectedClass === undefined) return undefined;
   return find(
     find(student.placement, (placement) => {
       return placement.session === selectedSession;

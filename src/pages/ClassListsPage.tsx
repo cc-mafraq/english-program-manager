@@ -1,8 +1,9 @@
 import { SelectChangeEvent } from "@mui/material";
 import { filter, orderBy } from "lodash";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ClassList, ClassListsToolbar, MenuBar } from "../components";
-import { useStudentStore } from "../hooks";
+import { loadLocal, saveLocal, useAppStore, useStudentStore } from "../hooks";
 import { SectionPlacement } from "../interfaces";
 import { getClassFromClassName, getCurrentSession, getSectionPlacement } from "../services";
 
@@ -11,13 +12,19 @@ export const ClassListsPage = () => {
   const students = useStudentStore((state) => {
     return state.students;
   });
+  const role = useAppStore((state) => {
+    return state.role;
+  });
+  const navigate = useNavigate();
 
   const currentSession = useMemo(() => {
     return getCurrentSession(students);
   }, [students]);
 
   const [selectedSession, setSelectedSession] = useState(currentSession);
-  const [selectedClass, setSelectedClass] = useState<SectionPlacement>({ level: "PL1-M" });
+  const [selectedClass, setSelectedClass] = useState<SectionPlacement | undefined>(
+    getClassFromClassName(loadLocal("classListSelection") ?? ""),
+  );
 
   const filteredStudents = useMemo(() => {
     return orderBy(
@@ -38,8 +45,13 @@ export const ClassListsPage = () => {
   }, []);
 
   const handleClassChange = useCallback((event: SelectChangeEvent) => {
-    setSelectedClass(getClassFromClassName(event.target.value));
+    saveLocal("classListSelection", event.target.value);
+    setSelectedClass(getClassFromClassName(event.target.value) ?? { level: "PL1-M" });
   }, []);
+
+  useEffect(() => {
+    if (students.length === 0) navigate("/epd", { replace: true });
+  }, [navigate, students]);
 
   return (
     <>
@@ -51,7 +63,10 @@ export const ClassListsPage = () => {
         selectedSession={selectedSession}
         students={students}
       />
-      <ClassList filteredStudents={filteredStudents} menuRef={menuRef} />
+      <ClassList
+        filteredStudents={role === "admin" || role === "faculty" ? filteredStudents : []}
+        menuRef={menuRef}
+      />
     </>
   );
 };
