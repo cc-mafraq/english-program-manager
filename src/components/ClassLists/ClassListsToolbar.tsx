@@ -1,4 +1,14 @@
-import { AppBar, Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Toolbar } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import { dropRight, filter, includes, map, sortBy, uniq } from "lodash";
 import React, { useMemo } from "react";
 import { useAppStore } from "../../hooks";
@@ -6,6 +16,7 @@ import { SectionPlacement, Student } from "../../interfaces";
 import { getAllSessions, getClassName, getClassOptions, getSessionFullName } from "../../services";
 
 interface ClassListsToolbarProps {
+  filteredStudents: Student[];
   handleClassChange: (e: SelectChangeEvent) => void;
   handleSessionChange: (e: SelectChangeEvent) => void;
   selectedClass?: SectionPlacement;
@@ -15,6 +26,7 @@ interface ClassListsToolbarProps {
 
 export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
   students,
+  filteredStudents,
   selectedSession,
   selectedClass,
   handleSessionChange,
@@ -91,6 +103,9 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
               })}
             </Select>
           </FormControl>
+        </Box>
+        <Box>
+          <Typography>{filteredStudents.length} students</Typography>
         </Box>
       </Toolbar>
     </AppBar>
