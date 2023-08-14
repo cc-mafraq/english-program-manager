@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import { ClassList, ClassListsToolbar, MenuBar } from "../components";
 import { loadLocal, saveLocal, useAppStore, useStudentStore } from "../hooks";
-import { SectionPlacement } from "../interfaces";
+import { SectionPlacement, Status } from "../interfaces";
 import { getClassFromClassName, getCurrentSession, getSectionPlacement } from "../services";
 
 export const ClassListsPage = () => {
@@ -25,11 +25,15 @@ export const ClassListsPage = () => {
   const [selectedClass, setSelectedClass] = useState<SectionPlacement | undefined>(
     getClassFromClassName(loadLocal("classListSelection") ?? ""),
   );
+  const [showWDStudents, setShowWDStudents] = useState(!!(loadLocal("showWDStudents") ?? true));
 
   const filteredStudents = useMemo(() => {
     return orderBy(
       filter(students, (student) => {
-        return !!getSectionPlacement(student, selectedSession, selectedClass);
+        return (
+          !!getSectionPlacement(student, selectedSession, selectedClass) &&
+          (showWDStudents || student.status.currentStatus !== Status.WD)
+        );
       }),
       [
         (student) => {
@@ -38,7 +42,7 @@ export const ClassListsPage = () => {
         "name.english",
       ],
     );
-  }, [selectedClass, selectedSession, students]);
+  }, [selectedClass, selectedSession, showWDStudents, students]);
 
   const handleSessionChange = useCallback((event: SelectChangeEvent) => {
     setSelectedSession(event.target.value);
@@ -47,6 +51,11 @@ export const ClassListsPage = () => {
   const handleClassChange = useCallback((event: SelectChangeEvent) => {
     saveLocal("classListSelection", event.target.value);
     setSelectedClass(getClassFromClassName(event.target.value) ?? { level: "PL1-M" });
+  }, []);
+
+  const handleShowWDCheckboxChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    saveLocal("showWDStudents", event.target.checked);
+    setShowWDStudents(event.target.checked);
   }, []);
 
   useEffect(() => {
@@ -60,8 +69,10 @@ export const ClassListsPage = () => {
         filteredStudents={filteredStudents}
         handleClassChange={handleClassChange}
         handleSessionChange={handleSessionChange}
+        handleShowWDCheckboxChange={handleShowWDCheckboxChange}
         selectedClass={selectedClass}
         selectedSession={selectedSession}
+        showWDStudents={showWDStudents}
         students={students}
       />
       <ClassList
