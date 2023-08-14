@@ -118,7 +118,7 @@ const Demographics: React.FC<StudentInfoProps> = ({ data: student }) => {
   return (
     <LabeledContainer label="Demographics">
       <LabeledText label="Nationality">{student.nationality}</LabeledText>
-      <LabeledText label="Gender">{student.gender}</LabeledText>
+      <LabeledText label="Gender">{student.gender === "M" ? "Male" : "Female"}</LabeledText>
       <LabeledText label="Age at Prog. Entry">{student.age}</LabeledText>
       <LabeledText label="Occupation">{student.work?.occupation}</LabeledText>
       <LabeledText condition={isAdminOrFaculty} label="Looking For Job">
