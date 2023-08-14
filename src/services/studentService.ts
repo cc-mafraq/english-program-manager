@@ -62,7 +62,12 @@ export interface FilterField<T> {
 }
 
 export const getRepeatNum = (student: Student): string | undefined => {
-  const levelsTaken = map(student.academicRecords, "level");
+  const levelsTaken = map(
+    filter(student.academicRecords, (ar) => {
+      return ar.overallResult !== FinalResult.WD;
+    }),
+    "level",
+  );
   const levelCounts = countBy(levelsTaken);
   const lastResult = last(student.academicRecords)?.overallResult;
   const repeatNum = levelCounts[student.currentLevel] - 1; // - 1 to not include initial session (not repeated)

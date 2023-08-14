@@ -1,7 +1,9 @@
 import {
   AppBar,
   Box,
+  Checkbox,
   FormControl,
+  FormControlLabel,
   InputLabel,
   MenuItem,
   Select,
@@ -19,8 +21,10 @@ interface ClassListsToolbarProps {
   filteredStudents: Student[];
   handleClassChange: (e: SelectChangeEvent) => void;
   handleSessionChange: (e: SelectChangeEvent) => void;
+  handleShowWDCheckboxChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   selectedClass?: SectionPlacement;
   selectedSession: Student["initialSession"];
+  showWDStudents: boolean;
   students: Student[];
 }
 
@@ -29,8 +33,10 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
   filteredStudents,
   selectedSession,
   selectedClass,
+  showWDStudents,
   handleSessionChange,
   handleClassChange,
+  handleShowWDCheckboxChange,
 }) => {
   const role = useAppStore((state) => {
     return state.role;
@@ -63,6 +69,11 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
           paddingTop: "1vh",
         }}
       >
+        <FormControlLabel
+          control={<Checkbox checked={showWDStudents} onChange={handleShowWDCheckboxChange} />}
+          label="Show WD Students"
+          sx={{ display: "flex", marginTop: -0.5 }}
+        />
         <Box sx={{ width: "25%" }}>
           <FormControl fullWidth>
             <InputLabel id="session-label">Session</InputLabel>

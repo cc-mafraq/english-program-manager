@@ -102,7 +102,7 @@ const StatusBox: React.FC<StudentInfoProps> = ({ data: student }) => {
       <LabeledText condition={isAdminOrFaculty} label="Withdraw Reason">
         {student.status.droppedOutReason}
       </LabeledText>
-      <LabeledText condition={isAdminOrFaculty} label="Repeat Number">
+      <LabeledText condition={isAdminOrFaculty} label="Repeat">
         {repeatNum}
       </LabeledText>
     </LabeledContainer>
