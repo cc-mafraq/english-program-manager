@@ -104,7 +104,7 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
             </Select>
           </FormControl>
         </Box>
-        <Box textAlign="right">
+        <Box>
           <Typography>{filteredStudents.length} students</Typography>
         </Box>
       </Toolbar>
