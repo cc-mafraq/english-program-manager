@@ -11,7 +11,7 @@ export const phoneConditionFn = (searchString: string) => {
 };
 
 export const searchStudents = (students: Student[], searchString: string): Student[] => {
-  const nonAlphaNumeric = /[^A-Za-z0-9\u0621-\u064A]/g;
+  const nonAlphaNumeric = /[^A-Za-z0-9\u0621-\u064A\s]/g;
   const cleanSearchString = toLower(searchString.replace(nonAlphaNumeric, ""));
   const searchStringRegEx = new RegExp(`^${cleanSearchString}`);
   return filter(students, (s) => {
