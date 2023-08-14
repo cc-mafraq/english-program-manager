@@ -57,6 +57,7 @@ export const ClassListsPage = () => {
     <>
       <MenuBar innerRef={menuRef} pageName="Class Lists" />
       <ClassListsToolbar
+        filteredStudents={filteredStudents}
         handleClassChange={handleClassChange}
         handleSessionChange={handleSessionChange}
         selectedClass={selectedClass}
