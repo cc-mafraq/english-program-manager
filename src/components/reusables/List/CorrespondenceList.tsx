@@ -7,13 +7,15 @@ import React, { useCallback, useMemo, useState } from "react";
 import { FormDialog, FormLabel, LabeledContainer } from "..";
 import { useColors } from "../../../hooks";
 import { Correspondence } from "../../../interfaces";
-import { correspondenceSchema, MOMENT_FORMAT, setData } from "../../../services";
+import { MOMENT_FORMAT, correspondenceSchema, setData } from "../../../services";
 import { FormCorrespondenceItem } from "../../StudentForm";
 
 interface CorrespondenceProps<T extends object> {
   collectionName: string;
+  correspondencePath?: string;
   data: T;
   idPath: string;
+  itemName?: string;
 }
 
 const FormCorrespondenceMemo = React.memo(() => {
@@ -26,11 +28,17 @@ const FormCorrespondenceMemo = React.memo(() => {
 });
 FormCorrespondenceMemo.displayName = "Correspondence Form";
 
-export const CorrespondenceList = <T extends object>({ data, collectionName, idPath }: CorrespondenceProps<T>) => {
+export const CorrespondenceList = <T extends object>({
+  data,
+  collectionName,
+  idPath,
+  correspondencePath,
+  itemName: sectionName,
+}: CorrespondenceProps<T>) => {
   const { defaultBackgroundColor, defaultBorderColor, iconColor } = useColors();
   const [open, setOpen] = useState(false);
   const [selectedCorrespondence, setSelectedCorrespondence] = useState<Correspondence | null>(null);
-  const correspondence = get(data, "correspondence") as unknown as Correspondence[];
+  const correspondence = get(data, correspondencePath ?? "correspondence") as unknown as Correspondence[];
   const theme = useTheme();
   const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
 
@@ -59,12 +67,14 @@ export const CorrespondenceList = <T extends object>({ data, collectionName, idP
         const recordIndex = findIndex(correspondence, selectedCorrespondence);
         correspondence[recordIndex] = newCorrespondence;
       } else {
-        correspondence ? correspondence.push(newCorrespondence) : set(data, "correspondence", [newCorrespondence]);
+        correspondence
+          ? correspondence.push(newCorrespondence)
+          : set(data, correspondencePath ?? "correspondence", [newCorrespondence]);
       }
       setData(data as T, collectionName, idPath);
       handleDialogClose();
     },
-    [collectionName, correspondence, data, handleDialogClose, idPath, selectedCorrespondence],
+    [collectionName, correspondence, correspondencePath, data, handleDialogClose, idPath, selectedCorrespondence],
   );
 
   const CorrespondenceData = useMemo(() => {
@@ -123,10 +133,10 @@ export const CorrespondenceList = <T extends object>({ data, collectionName, idP
 
   return (
     <Box display={greaterThanSmall ? "flex" : undefined}>
-      <LabeledContainer label="Correspondence" parentContainerProps={{ marginBottom: 2 }}>
+      <LabeledContainer label="" parentContainerProps={{ marginBottom: 2 }}>
         <Box marginBottom={1} marginTop={1} width="100%">
           <Button color="secondary" onClick={handleDialogOpen} variant="contained">
-            Add Correspondence
+            Add {sectionName ?? "Correspondence"}
           </Button>
         </Box>
         {CorrespondenceData}
@@ -142,4 +152,9 @@ export const CorrespondenceList = <T extends object>({ data, collectionName, idP
       </FormDialog>
     </Box>
   );
+};
+
+CorrespondenceList.defaultProps = {
+  correspondencePath: undefined,
+  itemName: undefined,
 };

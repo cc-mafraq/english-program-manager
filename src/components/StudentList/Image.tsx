@@ -17,6 +17,7 @@ interface ImageProps {
   isForm?: boolean;
   lightColor?: "primary" | "default" | "secondary";
   loadingContainerProps?: BoxProps & { transform?: string };
+  loadingIconSize?: string;
   noButton?: boolean;
   outerContainerProps?: BoxProps;
   scale?: number;
@@ -36,6 +37,7 @@ interface ImageBodyProps extends ImageProps {
 const ImageBody: React.FC<ImageBodyProps> = ({
   imageStyleProps,
   loadingContainerProps,
+  loadingIconSize,
   innerContainerProps,
   scale,
   student,
@@ -65,7 +67,12 @@ const ImageBody: React.FC<ImageBodyProps> = ({
               ...loadingContainerProps,
             }}
           >
-            <ReactLoading color={theme.palette.primary.main} type="cylon" />
+            <ReactLoading
+              color={theme.palette.primary.main}
+              height={loadingIconSize}
+              type="cylon"
+              width={loadingIconSize}
+            />
           </Box>
         </Box>
       )}
@@ -157,6 +164,7 @@ const defaultProps: Partial<ImageProps> = {
   isForm: false,
   lightColor: "default",
   loadingContainerProps: undefined,
+  loadingIconSize: undefined,
   noButton: false,
   outerContainerProps: undefined,
   scale: 1,
