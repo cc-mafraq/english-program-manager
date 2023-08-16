@@ -1,4 +1,5 @@
-import { Box, useMediaQuery, useTheme } from "@mui/material";
+import { Box, BoxProps, useMediaQuery, useTheme } from "@mui/material";
+import { isEmpty } from "lodash";
 import React from "react";
 import { Image, StudentIdCardButton, WithdrawButton } from "..";
 import { useAppStore } from "../../hooks";
@@ -7,9 +8,12 @@ import { studentImageFolder } from "../../services";
 
 interface StudentCardImageProps {
   data: Student;
+  imageContainerProps?: BoxProps;
   imageWidth: number;
+  loadingIconSize?: string;
   noBorder?: boolean;
   noButtons?: boolean;
+  noMinWidth?: boolean;
   smallBreakpointScaleDown: number;
 }
 
@@ -19,6 +23,9 @@ export const StudentCardImage: React.FC<StudentCardImageProps> = ({
   smallBreakpointScaleDown,
   noButtons,
   noBorder,
+  imageContainerProps,
+  loadingIconSize,
+  noMinWidth,
 }) => {
   const role = useAppStore((state) => {
     return state.role;
@@ -29,7 +36,7 @@ export const StudentCardImage: React.FC<StudentCardImageProps> = ({
   const maxImageHeight = (imageWidth * 10) / 7;
 
   return (
-    <Box>
+    <Box {...imageContainerProps}>
       <Image
         folderName={studentImageFolder}
         imagePath="imageName"
@@ -48,6 +55,8 @@ export const StudentCardImage: React.FC<StudentCardImageProps> = ({
             : `${maxImageHeight / (2 * smallBreakpointScaleDown)}px`,
           transform: "translate(-50%, -50%)",
         }}
+        loadingIconSize={loadingIconSize}
+        noButton={noButtons}
         outerContainerProps={{
           sx: {
             border: noBorder ? "" : "solid",
@@ -58,7 +67,12 @@ export const StudentCardImage: React.FC<StudentCardImageProps> = ({
                 ? 2
                 : 0,
             height: greaterThanSmall ? `${maxImageHeight}px` : `${maxImageHeight / smallBreakpointScaleDown}px`,
-            minWidth: greaterThanSmall ? `${imageWidth}px` : `${imageWidth / smallBreakpointScaleDown}px`,
+            minWidth:
+              noMinWidth && isEmpty(student.imageName)
+                ? 0
+                : greaterThanSmall
+                ? `${imageWidth}px`
+                : `${imageWidth / smallBreakpointScaleDown}px`,
           },
         }}
         scale={greaterThanSmall ? 2 : 1.5}
@@ -77,6 +91,9 @@ export const StudentCardImage: React.FC<StudentCardImageProps> = ({
 };
 
 StudentCardImage.defaultProps = {
+  imageContainerProps: undefined,
+  loadingIconSize: undefined,
   noBorder: undefined,
   noButtons: undefined,
+  noMinWidth: undefined,
 };

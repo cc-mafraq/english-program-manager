@@ -10,6 +10,8 @@ import {
   SelectChangeEvent,
   Toolbar,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { dropRight, filter, includes, map, sortBy, uniq } from "lodash";
 import React, { useMemo } from "react";
@@ -42,6 +44,9 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
     return state.role;
   });
 
+  const theme = useTheme();
+  const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
+
   const sessionOptions = useMemo(() => {
     return dropRight(getAllSessions(students), 20);
   }, [students]);
@@ -69,14 +74,7 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
           paddingTop: "1vh",
         }}
       >
-        <Box sx={{ width: "20%" }}>
-          <FormControlLabel
-            control={<Checkbox checked={showWDStudents} onChange={handleShowWDCheckboxChange} />}
-            label="Show WD Students"
-            sx={{ display: "flex", marginTop: -0.5 }}
-          />
-        </Box>
-        <Box sx={{ width: "25%" }}>
+        <Box sx={{ marginRight: "10px", width: greaterThanSmall ? "25%" : "35%" }}>
           <FormControl fullWidth>
             <InputLabel id="session-label">Session</InputLabel>
             <Select
@@ -96,7 +94,7 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
             </Select>
           </FormControl>
         </Box>
-        <Box sx={{ width: "25%" }}>
+        <Box sx={{ width: greaterThanSmall ? "25%" : "35%" }}>
           <FormControl fullWidth>
             <InputLabel id="class-label">Class</InputLabel>
             <Select
@@ -117,7 +115,14 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
             </Select>
           </FormControl>
         </Box>
-        <Box sx={{ width: "15%" }} textAlign="right">
+        <Box sx={{ alignItems: "center" }}>
+          <FormControlLabel
+            control={<Checkbox checked={showWDStudents} onChange={handleShowWDCheckboxChange} />}
+            label="Show WD Students"
+            sx={{ display: "flex", margin: "0 auto" }}
+          />
+        </Box>
+        <Box textAlign="right">
           <Typography>{filteredStudents.length} students</Typography>
         </Box>
       </Toolbar>

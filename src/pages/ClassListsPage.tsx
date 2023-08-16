@@ -78,6 +78,8 @@ export const ClassListsPage = () => {
       <ClassList
         filteredStudents={role === "admin" || role === "faculty" ? filteredStudents : []}
         menuRef={menuRef}
+        selectedClass={selectedClass}
+        selectedSession={selectedSession}
       />
     </>
   );

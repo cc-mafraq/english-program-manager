@@ -1,9 +1,10 @@
 import { Box, useMediaQuery, useTheme } from "@mui/material";
+import { findIndex, nth } from "lodash";
 import React, { useMemo } from "react";
 import { PhoneNumbers, StudentCardHeader, StudentCardImage } from "..";
-import { Status, Student, emptyStudent } from "../../interfaces";
-import { getRepeatNum } from "../../services";
-import { CustomCard, LabeledContainer, LabeledText } from "../reusables";
+import { SectionPlacement, Status, Student, emptyStudent } from "../../interfaces";
+import { getClassName, getRepeatNum } from "../../services";
+import { CorrespondenceList, CustomCard, LabeledContainer, LabeledText } from "../reusables";
 
 const ClassListStudentInfoMemo: React.FC<{ allSameGender: boolean; allSameLevel: boolean; data: Student }> =
   React.memo(({ data, allSameLevel, allSameGender }) => {
@@ -31,18 +32,43 @@ ClassListStudentInfoMemo.displayName = "Class List Student Info";
 interface ClassListStudentCardProps {
   allSameGender: boolean;
   allSameLevel: boolean;
+  data?: Student;
+  selectedClass?: SectionPlacement;
+  selectedSession: string;
 }
 
 export const ClassListStudentCard: React.FC<ClassListStudentCardProps> = (props) => {
-  const { allSameGender, allSameLevel } = props;
+  const { allSameGender, allSameLevel, data, selectedClass, selectedSession } = props;
+  const sessionIndex = useMemo(() => {
+    return findIndex(data?.placement, (placement) => {
+      return placement.session === selectedSession;
+    });
+  }, [data?.placement, selectedSession]);
+  const classIndex = useMemo(() => {
+    return findIndex(nth(data?.placement, sessionIndex)?.placement, (sectionPlacement) => {
+      return getClassName(selectedClass) === getClassName(sectionPlacement);
+    });
+  }, [data?.placement, selectedClass, sessionIndex]);
+
+  const theme = useTheme();
+  const greaterThanMedium = useMediaQuery(theme.breakpoints.up("md"));
+
   return (
     <CustomCard
       data={emptyStudent}
       header={<StudentCardHeader data={emptyStudent} />}
       image={
-        <StudentCardImage data={emptyStudent} imageWidth={150} noBorder noButtons smallBreakpointScaleDown={1.5} />
+        <StudentCardImage
+          data={emptyStudent}
+          imageContainerProps={{ marginLeft: "15px" }}
+          imageWidth={greaterThanMedium ? 65 : 95}
+          loadingIconSize="32px"
+          noBorder
+          noButtons
+          noMinWidth
+          smallBreakpointScaleDown={1.5}
+        />
       }
-      noTabs
       tabContents={[
         {
           component: (
@@ -54,8 +80,25 @@ export const ClassListStudentCard: React.FC<ClassListStudentCardProps> = (props)
           ),
           label: "Student Information",
         },
+        {
+          component: (
+            <CorrespondenceList
+              collectionName="students"
+              correspondencePath={`placement[${sessionIndex}].placement[${classIndex}].classListNotes`}
+              data={emptyStudent}
+              idPath="epId"
+              itemName="Note"
+            />
+          ),
+          label: "Notes",
+        },
       ]}
       {...props}
     />
   );
+};
+
+ClassListStudentCard.defaultProps = {
+  data: undefined,
+  selectedClass: undefined,
 };

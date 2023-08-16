@@ -61,6 +61,7 @@ export interface Grade {
 }
 
 export interface SectionPlacement {
+  classListNotes?: Correspondence[];
   date?: string;
   level: string;
   notes?: string;

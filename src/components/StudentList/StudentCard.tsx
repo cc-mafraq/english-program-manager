@@ -1,7 +1,7 @@
 import React from "react";
 import { AcademicRecords, PlacementList, StudentCardHeader, StudentCardImage, StudentInfo } from "..";
 import { useAppStore } from "../../hooks";
-import { emptyStudent, Student } from "../../interfaces";
+import { Student, emptyStudent } from "../../interfaces";
 import { CorrespondenceList, CustomCard } from "../reusables";
 
 interface StudentCardProps {
@@ -24,7 +24,7 @@ export const StudentCard: React.FC<StudentCardProps> = (props) => {
     <CustomCard
       data={emptyStudent}
       header={<StudentCardHeader data={emptyStudent} handleEditStudentClick={handleStudentDialogOpen} />}
-      image={<StudentCardImage data={emptyStudent} imageWidth={175} smallBreakpointScaleDown={1.5} />}
+      image={<StudentCardImage data={emptyStudent} imageWidth={150} smallBreakpointScaleDown={1.5} />}
       noTabs={role !== "admin" && role !== "faculty"}
       tabContents={[
         {
