@@ -9,13 +9,16 @@ import {
   GridItemDatePicker,
   GridItemTextField,
 } from "../../..";
-import { useColors, useStudentStore } from "../../../../hooks";
+import { useAppStore, useColors, useStudentStore } from "../../../../hooks";
 import { genderedLevels } from "../../../../interfaces";
-import { FormItem, getAllSessions, SPACING } from "../../../../services";
+import { FormItem, SPACING, getAllSessions } from "../../../../services";
 
 export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem, name }) => {
   const students = useStudentStore((state) => {
     return state.students;
+  });
+  const role = useAppStore((state) => {
+    return state.role;
   });
 
   const { iconColor } = useColors();
@@ -23,9 +26,11 @@ export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem,
   return (
     <>
       <Grid container marginLeft={SPACING}>
-        <FormLabel textProps={{ marginTop: SPACING }}>
-          Session {index === undefined ? "" : Number(index) + 1}
-        </FormLabel>
+        {role === "admin" && (
+          <FormLabel textProps={{ marginTop: SPACING }}>
+            Session {index === undefined ? "" : Number(index) + 1}
+          </FormLabel>
+        )}
         {removeItem && (
           <Tooltip arrow title="Remove Session">
             <IconButton
@@ -38,41 +43,50 @@ export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem,
         )}
       </Grid>
       <GridContainer marginBottom={SPACING / 2} marginLeft={0}>
-        <GridItemAutocomplete
-          freeSolo
-          label="Session"
-          name={name ? `${name}.session` : "session"}
-          options={getAllSessions(students)}
-          textFieldProps={{ required: true }}
-        />
-        <GridItemAutocomplete
-          autoHighlight={false}
-          freeSolo
-          label="Level"
-          name={name ? `${name}.level` : "level"}
-          options={genderedLevels}
-        />
-        <GridItemTextField label="Attendance Percentage" name={name ? `${name}.attendance` : "attendance"} />
-        <GridItemAutocomplete
-          autoHighlight={false}
-          freeSolo
-          label="Level Audited"
-          name={name ? `${name}.levelAudited` : "levelAudited"}
-          options={genderedLevels}
-        />
+        {role === "admin" && (
+          <>
+            <GridItemAutocomplete
+              freeSolo
+              label="Session"
+              name={name ? `${name}.session` : "session"}
+              options={getAllSessions(students)}
+              textFieldProps={{ required: true }}
+            />
+            <GridItemAutocomplete
+              autoHighlight={false}
+              freeSolo
+              label="Level"
+              name={name ? `${name}.level` : "level"}
+              options={genderedLevels}
+            />
+            <GridItemAutocomplete
+              autoHighlight={false}
+              freeSolo
+              label="Level Audited"
+              name={name ? `${name}.levelAudited` : "levelAudited"}
+              options={genderedLevels}
+            />
+            <GridItemTextField label="Attendance Percentage" name={name ? `${name}.attendance` : "attendance"} />
+          </>
+        )}
       </GridContainer>
       <FormGrade
         directGradePath
         gradePath={name ? `${name}.overallResult` : "overallResult"}
         label="Overall Result"
+        noNotes={role !== "admin"}
         notesLabel="FGR Notes"
         notesPath={name ? `${name}.finalGradeReportNotes` : "finalGradeReportNotes"}
         percentageComponent={
-          <GridItemDatePicker
-            gridProps={{ sm: 3 }}
-            label="Final Grade Report Sent"
-            name={name ? `${name}.finalGradeSentDate` : "finalGradeSentDate"}
-          />
+          role === "admin" ? (
+            <GridItemDatePicker
+              gridProps={{ sm: 3 }}
+              label="Final Grade Report Sent"
+              name={name ? `${name}.finalGradeSentDate` : "finalGradeSentDate"}
+            />
+          ) : (
+            <GridItemTextField label="Attendance Percentage" name={name ? `${name}.attendance` : "attendance"} />
+          )
         }
       />
       <FormGrade gradePath={name ? `${name}.finalGrade` : "finalGrade"} label="Class Grade" />

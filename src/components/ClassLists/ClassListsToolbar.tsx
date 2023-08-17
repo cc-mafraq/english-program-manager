@@ -13,7 +13,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { dropRight, filter, includes, map, sortBy, uniq } from "lodash";
+import { dropRight, filter, first, includes, map, sortBy, uniq } from "lodash";
 import React, { useMemo } from "react";
 import { useAppStore } from "../../hooks";
 import { SectionPlacement, Student } from "../../interfaces";
@@ -25,7 +25,7 @@ interface ClassListsToolbarProps {
   handleSessionChange: (e: SelectChangeEvent) => void;
   handleShowWDCheckboxChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   selectedClass?: SectionPlacement;
-  selectedSession: Student["initialSession"];
+  selectedSession?: Student["initialSession"];
   showWDStudents: boolean;
   students: Student[];
 }
@@ -55,7 +55,7 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
     return filter(
       sortBy(
         uniq(
-          map(getClassOptions(students, selectedSession), (classOption) => {
+          map(getClassOptions(students, selectedSession ?? first(sessionOptions)), (classOption) => {
             return getClassName(classOption);
           }),
         ),
@@ -64,7 +64,7 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
         return role === "admin" ? true : !includes(classOption, "CSWL");
       },
     );
-  }, [role, selectedSession, students]);
+  }, [role, selectedSession, sessionOptions, students]);
 
   return (
     <AppBar color="default" elevation={1} position="relative">
@@ -82,7 +82,7 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
               label="Session"
               labelId="session-label"
               onChange={handleSessionChange}
-              value={sessionOptions.length ? selectedSession : ""}
+              value={sessionOptions.length ? selectedSession || first(sessionOptions) : ""}
             >
               {map(sessionOptions, (so) => {
                 return (
@@ -132,4 +132,5 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
 
 ClassListsToolbar.defaultProps = {
   selectedClass: undefined,
+  selectedSession: undefined,
 };

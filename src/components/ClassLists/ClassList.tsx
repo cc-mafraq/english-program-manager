@@ -8,7 +8,7 @@ interface ClassListProps {
   filteredStudents: Student[];
   menuRef: RefObject<HTMLDivElement>;
   selectedClass?: SectionPlacement;
-  selectedSession: string;
+  selectedSession?: string;
 }
 
 export const ClassList: React.FC<ClassListProps> = ({
@@ -39,4 +39,5 @@ export const ClassList: React.FC<ClassListProps> = ({
 
 ClassList.defaultProps = {
   selectedClass: undefined,
+  selectedSession: undefined,
 };

@@ -1,18 +1,44 @@
-import { Box, useMediaQuery, useTheme } from "@mui/material";
+import { Assessment } from "@mui/icons-material";
+import { Box, IconButton, Tooltip, useMediaQuery, useTheme } from "@mui/material";
 import { findIndex, nth } from "lodash";
-import React, { useMemo } from "react";
-import { PhoneNumbers, StudentCardHeader, StudentCardImage } from "..";
+import React, { useCallback, useMemo, useState } from "react";
+import {
+  AcademicRecordAccordionDetails,
+  FormAcademicRecordsDialog,
+  GradeInfo,
+  PhoneNumbers,
+  StudentCardHeader,
+  StudentCardImage,
+} from "..";
 import { SectionPlacement, Status, Student, emptyStudent } from "../../interfaces";
-import { getClassName, getRepeatNum } from "../../services";
+import { getAcademicRecordByPlacement, getClassName, getRepeatNum } from "../../services";
 import { CorrespondenceList, CustomCard, LabeledContainer, LabeledText } from "../reusables";
 
-const ClassListStudentInfoMemo: React.FC<{ allSameGender: boolean; allSameLevel: boolean; data: Student }> =
-  React.memo(({ data, allSameLevel, allSameGender }) => {
+interface ClassListStudentInfoProps {
+  allSameGender: boolean;
+  allSameLevel: boolean;
+  data: Student;
+  selectedClass?: SectionPlacement;
+  selectedSession?: Student["initialSession"];
+}
+
+const ClassListStudentInfoMemo: React.FC<ClassListStudentInfoProps> = React.memo(
+  ({ data, allSameLevel, allSameGender, selectedSession, selectedClass }) => {
     const repeatNum = useMemo(() => {
       return getRepeatNum(data);
     }, [data]);
     const theme = useTheme();
     const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
+    const [open, setOpen] = useState(false);
+    const selectedAcademicRecord = getAcademicRecordByPlacement(data, selectedSession, selectedClass);
+
+    const handleDialogOpen = useCallback(() => {
+      setOpen(true);
+    }, []);
+
+    const handleDialogClose = useCallback(() => {
+      setOpen(false);
+    }, []);
 
     return (
       <Box sx={greaterThanSmall ? { display: "flex", flexWrap: "wrap" } : undefined}>
@@ -24,9 +50,29 @@ const ClassListStudentInfoMemo: React.FC<{ allSameGender: boolean; allSameLevel:
           <LabeledText label="Repeat">{repeatNum}</LabeledText>
         </LabeledContainer>
         <PhoneNumbers data={data} noWhatsapp />
+        <Box position="relative">
+          <Tooltip sx={{ position: "absolute", top: "40%" }} title="Submit Final Grades">
+            <IconButton onClick={handleDialogOpen}>
+              <Assessment fontSize="large" />
+            </IconButton>
+          </Tooltip>
+        </Box>
+        {selectedAcademicRecord && (
+          <>
+            <GradeInfo bold grade={{ result: selectedAcademicRecord.overallResult }} label="Overall Result" />
+            <AcademicRecordAccordionDetails bold data={selectedAcademicRecord} />
+          </>
+        )}
+        <FormAcademicRecordsDialog
+          handleDialogClose={handleDialogClose}
+          open={open}
+          selectedAcademicRecord={selectedAcademicRecord}
+          student={data}
+        />
       </Box>
     );
-  });
+  },
+);
 ClassListStudentInfoMemo.displayName = "Class List Student Info";
 
 interface ClassListStudentCardProps {
@@ -34,7 +80,7 @@ interface ClassListStudentCardProps {
   allSameLevel: boolean;
   data?: Student;
   selectedClass?: SectionPlacement;
-  selectedSession: string;
+  selectedSession?: string;
 }
 
 export const ClassListStudentCard: React.FC<ClassListStudentCardProps> = (props) => {
@@ -76,6 +122,8 @@ export const ClassListStudentCard: React.FC<ClassListStudentCardProps> = (props)
               allSameGender={allSameGender}
               allSameLevel={allSameLevel}
               data={emptyStudent}
+              selectedClass={selectedClass}
+              selectedSession={selectedSession}
             />
           ),
           label: "Student Information",
@@ -101,4 +149,5 @@ export const ClassListStudentCard: React.FC<ClassListStudentCardProps> = (props)
 ClassListStudentCard.defaultProps = {
   data: undefined,
   selectedClass: undefined,
+  selectedSession: undefined,
 };

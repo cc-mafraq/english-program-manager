@@ -8,6 +8,7 @@ interface FormGradeProps {
   directGradePath?: boolean;
   gradePath: string;
   label: string;
+  noNotes?: boolean;
   notesLabel?: string;
   notesPath?: string;
   percentageComponent?: ReactNode;
@@ -22,6 +23,7 @@ export const FormGrade: React.FC<FormGradeProps> = ({
   notesLabel,
   notesPath,
   directGradePath,
+  noNotes,
 }) => {
   return (
     <>
@@ -37,7 +39,7 @@ export const FormGrade: React.FC<FormGradeProps> = ({
         {percentageComponent || (
           <GridItemTextField gridProps={{ sm: 3 }} label="Percentage" name={`${gradePath}.percentage`} />
         )}
-        <GridItemTextField label={notesLabel || "Notes"} name={notesPath || `${gradePath}.notes`} />
+        {!noNotes && <GridItemTextField label={notesLabel || "Notes"} name={notesPath || `${gradePath}.notes`} />}
       </GridContainer>
     </>
   );
@@ -45,6 +47,7 @@ export const FormGrade: React.FC<FormGradeProps> = ({
 
 FormGrade.defaultProps = {
   directGradePath: undefined,
+  noNotes: undefined,
   notesLabel: undefined,
   notesPath: undefined,
   percentageComponent: undefined,
