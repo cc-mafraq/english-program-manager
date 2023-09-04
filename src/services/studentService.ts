@@ -239,12 +239,12 @@ export const getSectionPlacement = (
 };
 
 export const getAcademicRecordByPlacement = (
-  student: Student,
+  student?: Student,
   selectedSession?: Student["initialSession"],
   selectedClass?: SectionPlacement,
 ) => {
   return (
-    find(student.academicRecords, (academicRecord: AcademicRecord) => {
+    find(student?.academicRecords, (academicRecord: AcademicRecord) => {
       return (
         academicRecord.session === selectedSession &&
         (includes(academicRecord.level, selectedClass?.level) ||

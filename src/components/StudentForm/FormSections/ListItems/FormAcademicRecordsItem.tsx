@@ -13,7 +13,12 @@ import { useAppStore, useColors, useStudentStore } from "../../../../hooks";
 import { genderedLevels } from "../../../../interfaces";
 import { FormItem, SPACING, getAllSessions } from "../../../../services";
 
-export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem, name }) => {
+export const FormAcademicRecordsItem: React.FC<FormItem & { title?: string }> = ({
+  index,
+  removeItem,
+  name,
+  title,
+}) => {
   const students = useStudentStore((state) => {
     return state.students;
   });
@@ -26,11 +31,9 @@ export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem,
   return (
     <>
       <Grid container marginLeft={SPACING}>
-        {role === "admin" && (
-          <FormLabel textProps={{ marginTop: SPACING }}>
-            Session {index === undefined ? "" : Number(index) + 1}
-          </FormLabel>
-        )}
+        <FormLabel textProps={{ marginTop: SPACING }}>
+          {role === "admin" ? `Session ${index === undefined ? "" : Number(index) + 1}` : title ?? ""}
+        </FormLabel>
         {removeItem && (
           <Tooltip arrow title="Remove Session">
             <IconButton
@@ -43,32 +46,37 @@ export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem,
         )}
       </Grid>
       <GridContainer marginBottom={SPACING / 2} marginLeft={0}>
-        {role === "admin" && (
-          <>
-            <GridItemAutocomplete
-              freeSolo
-              label="Session"
-              name={name ? `${name}.session` : "session"}
-              options={getAllSessions(students)}
-              textFieldProps={{ required: true }}
-            />
-            <GridItemAutocomplete
-              autoHighlight={false}
-              freeSolo
-              label="Level"
-              name={name ? `${name}.level` : "level"}
-              options={genderedLevels}
-            />
-            <GridItemAutocomplete
-              autoHighlight={false}
-              freeSolo
-              label="Level Audited"
-              name={name ? `${name}.levelAudited` : "levelAudited"}
-              options={genderedLevels}
-            />
-            <GridItemTextField label="Attendance Percentage" name={name ? `${name}.attendance` : "attendance"} />
-          </>
-        )}
+        <>
+          <GridItemAutocomplete
+            freeSolo
+            gridProps={{ hidden: role !== "admin" }}
+            label="Session"
+            name={name ? `${name}.session` : "session"}
+            options={getAllSessions(students)}
+            textFieldProps={{ required: true }}
+          />
+          <GridItemAutocomplete
+            autoHighlight={false}
+            freeSolo
+            gridProps={{ hidden: role !== "admin" }}
+            label="Level"
+            name={name ? `${name}.level` : "level"}
+            options={genderedLevels}
+          />
+          <GridItemAutocomplete
+            autoHighlight={false}
+            freeSolo
+            gridProps={{ hidden: role !== "admin" }}
+            label="Level Audited"
+            name={name ? `${name}.levelAudited` : "levelAudited"}
+            options={genderedLevels}
+          />
+          <GridItemTextField
+            gridProps={{ hidden: role !== "admin" }}
+            label="Attendance Percentage"
+            name={name ? `${name}.attendance` : "attendance"}
+          />
+        </>
       </GridContainer>
       <FormGrade
         directGradePath
@@ -85,7 +93,11 @@ export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem,
               name={name ? `${name}.finalGradeSentDate` : "finalGradeSentDate"}
             />
           ) : (
-            <GridItemTextField label="Attendance Percentage" name={name ? `${name}.attendance` : "attendance"} />
+            <GridItemTextField
+              gridProps={{ sm: 3 }}
+              label="Attendance Percentage"
+              name={name ? `${name}.attendance` : "attendance"}
+            />
           )
         }
       />
@@ -101,4 +113,8 @@ export const FormAcademicRecordsItem: React.FC<FormItem> = ({ index, removeItem,
       </GridContainer>
     </>
   );
+};
+
+FormAcademicRecordsItem.defaultProps = {
+  title: undefined,
 };

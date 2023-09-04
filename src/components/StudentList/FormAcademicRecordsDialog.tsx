@@ -7,27 +7,29 @@ import { SPACING, academicRecordsSchema, removeNullFromObject, setData } from ".
 import { FormAcademicRecordsItem } from "../StudentForm";
 import { FormDialog } from "../reusables";
 
-const FormAcademicRecordsMemo = React.memo(() => {
-  return (
-    <Box paddingRight={SPACING * 2}>
-      <FormAcademicRecordsItem />
-    </Box>
-  );
-});
-FormAcademicRecordsMemo.displayName = "Academic Records Form";
-
 interface FormAcademicRecordsDialogProps {
+  formTitle?: string;
   handleDialogClose: () => void;
   open: boolean;
   selectedAcademicRecord: AcademicRecord | null;
   student: Student;
 }
 
+const FormAcademicRecordsMemo: React.FC<{ formTitle?: string }> = React.memo(({ formTitle }) => {
+  return (
+    <Box paddingRight={SPACING * 2}>
+      <FormAcademicRecordsItem title={formTitle} />
+    </Box>
+  );
+});
+FormAcademicRecordsMemo.displayName = "Academic Records Form";
+
 export const FormAcademicRecordsDialog: React.FC<FormAcademicRecordsDialogProps> = ({
   selectedAcademicRecord,
   student,
   handleDialogClose,
   open,
+  formTitle,
 }) => {
   const onSubmit = useCallback(
     (data: AcademicRecord) => {
@@ -64,7 +66,11 @@ export const FormAcademicRecordsDialog: React.FC<FormAcademicRecordsDialogProps>
       open={open}
       useFormProps={useFormProps}
     >
-      <FormAcademicRecordsMemo />
+      <FormAcademicRecordsMemo formTitle={formTitle} />
     </FormDialog>
   );
+};
+
+FormAcademicRecordsDialog.defaultProps = {
+  formTitle: undefined,
 };

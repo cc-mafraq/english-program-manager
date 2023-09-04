@@ -10,7 +10,7 @@ import {
   StudentCardHeader,
   StudentCardImage,
 } from "..";
-import { SectionPlacement, Status, Student, emptyStudent } from "../../interfaces";
+import { AcademicRecord, SectionPlacement, Status, Student, emptyStudent } from "../../interfaces";
 import { getAcademicRecordByPlacement, getClassName, getRepeatNum } from "../../services";
 import { CorrespondenceList, CustomCard, LabeledContainer, LabeledText } from "../reusables";
 
@@ -18,27 +18,16 @@ interface ClassListStudentInfoProps {
   allSameGender: boolean;
   allSameLevel: boolean;
   data: Student;
-  selectedClass?: SectionPlacement;
-  selectedSession?: Student["initialSession"];
+  selectedAcademicRecord: AcademicRecord | null;
 }
 
 const ClassListStudentInfoMemo: React.FC<ClassListStudentInfoProps> = React.memo(
-  ({ data, allSameLevel, allSameGender, selectedSession, selectedClass }) => {
+  ({ data, allSameLevel, allSameGender, selectedAcademicRecord }) => {
     const repeatNum = useMemo(() => {
       return getRepeatNum(data);
     }, [data]);
     const theme = useTheme();
     const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
-    const [open, setOpen] = useState(false);
-    const selectedAcademicRecord = getAcademicRecordByPlacement(data, selectedSession, selectedClass);
-
-    const handleDialogOpen = useCallback(() => {
-      setOpen(true);
-    }, []);
-
-    const handleDialogClose = useCallback(() => {
-      setOpen(false);
-    }, []);
 
     return (
       <Box sx={greaterThanSmall ? { display: "flex", flexWrap: "wrap" } : undefined}>
@@ -50,25 +39,12 @@ const ClassListStudentInfoMemo: React.FC<ClassListStudentInfoProps> = React.memo
           <LabeledText label="Repeat">{repeatNum}</LabeledText>
         </LabeledContainer>
         <PhoneNumbers data={data} noWhatsapp />
-        <Box position="relative">
-          <Tooltip sx={{ position: "absolute", top: "40%" }} title="Submit Final Grades">
-            <IconButton onClick={handleDialogOpen}>
-              <Assessment fontSize="large" />
-            </IconButton>
-          </Tooltip>
-        </Box>
         {selectedAcademicRecord && (
-          <>
+          <Box>
             <GradeInfo bold grade={{ result: selectedAcademicRecord.overallResult }} label="Overall Result" />
             <AcademicRecordAccordionDetails bold data={selectedAcademicRecord} />
-          </>
+          </Box>
         )}
-        <FormAcademicRecordsDialog
-          handleDialogClose={handleDialogClose}
-          open={open}
-          selectedAcademicRecord={selectedAcademicRecord}
-          student={data}
-        />
       </Box>
     );
   },
@@ -95,54 +71,84 @@ export const ClassListStudentCard: React.FC<ClassListStudentCardProps> = (props)
       return getClassName(selectedClass) === getClassName(sectionPlacement);
     });
   }, [data?.placement, selectedClass, sessionIndex]);
+  const selectedAcademicRecord = getAcademicRecordByPlacement(data, selectedSession, selectedClass);
+
+  const [open, setOpen] = useState(false);
+
+  const handleDialogOpen = useCallback(() => {
+    setOpen(true);
+  }, []);
+
+  const handleDialogClose = useCallback(() => {
+    setOpen(false);
+  }, []);
 
   const theme = useTheme();
   const greaterThanMedium = useMediaQuery(theme.breakpoints.up("md"));
 
   return (
-    <CustomCard
-      data={emptyStudent}
-      header={<StudentCardHeader data={emptyStudent} />}
-      image={
-        <StudentCardImage
-          data={emptyStudent}
-          imageContainerProps={{ marginLeft: "15px" }}
-          imageWidth={greaterThanMedium ? 65 : 95}
-          loadingIconSize="32px"
-          noBorder
-          noButtons
-          noMinWidth
-          smallBreakpointScaleDown={1.5}
-        />
-      }
-      tabContents={[
-        {
-          component: (
-            <ClassListStudentInfoMemo
-              allSameGender={allSameGender}
-              allSameLevel={allSameLevel}
-              data={emptyStudent}
-              selectedClass={selectedClass}
-              selectedSession={selectedSession}
-            />
-          ),
-          label: "Student Information",
-        },
-        {
-          component: (
-            <CorrespondenceList
-              collectionName="students"
-              correspondencePath={`placement[${sessionIndex}].placement[${classIndex}].classListNotes`}
-              data={emptyStudent}
-              idPath="epId"
-              itemName="Note"
-            />
-          ),
-          label: "Notes",
-        },
-      ]}
-      {...props}
-    />
+    <>
+      <CustomCard
+        data={emptyStudent}
+        header={
+          <StudentCardHeader
+            data={emptyStudent}
+            otherButtons={
+              <Tooltip title="Submit Final Grades">
+                <IconButton onClick={handleDialogOpen}>
+                  <Assessment />
+                </IconButton>
+              </Tooltip>
+            }
+          />
+        }
+        image={
+          <StudentCardImage
+            data={emptyStudent}
+            imageContainerProps={{ marginLeft: "15px" }}
+            imageWidth={greaterThanMedium ? 65 : 95}
+            loadingIconSize="32px"
+            noBorder
+            noButtons
+            noMinWidth
+            smallBreakpointScaleDown={1.5}
+          />
+        }
+        tabContents={[
+          {
+            component: (
+              <ClassListStudentInfoMemo
+                allSameGender={allSameGender}
+                allSameLevel={allSameLevel}
+                data={emptyStudent}
+                selectedAcademicRecord={selectedAcademicRecord}
+              />
+            ),
+            label: "Student Information",
+          },
+          {
+            component: (
+              <CorrespondenceList
+                collectionName="students"
+                correspondencePath={`placement[${sessionIndex}].placement[${classIndex}].classListNotes`}
+                data={emptyStudent}
+                idPath="epId"
+                itemName="Note"
+              />
+            ),
+            label: "Notes",
+          },
+        ]}
+        {...props}
+      />
+      <FormAcademicRecordsDialog
+        formTitle={data?.name.english}
+        handleDialogClose={handleDialogClose}
+        open={open}
+        selectedAcademicRecord={selectedAcademicRecord}
+        student={data ?? emptyStudent}
+      />
+    </>
   );
 };
 
