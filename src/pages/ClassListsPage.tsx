@@ -21,6 +21,15 @@ export const ClassListsPage = () => {
     return getCurrentSession(students);
   }, [students]);
 
+  // const placementsSet = useRef(false);
+
+  // useEffect(() => {
+  //   if (!placementsSet.current && students.length) {
+  //     setPlacementExamFilePaths(students);
+  //     placementsSet.current = true;
+  //   }
+  // }, [placementsSet, students]);
+
   const [selectedSession, setSelectedSession] = useState(currentSession);
   const [selectedClass, setSelectedClass] = useState<SectionPlacement | undefined>(
     getClassFromClassName(loadLocal("classListSelection") ?? ""),
