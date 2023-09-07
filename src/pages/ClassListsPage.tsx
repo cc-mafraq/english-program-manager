@@ -16,10 +16,20 @@ export const ClassListsPage = () => {
   });
 
   const [selectedSession, setSelectedSession] = useState<string | undefined>();
+
   const [selectedClass, setSelectedClass] = useState<SectionPlacement | undefined>(
     getClassFromClassName(loadLocal("classListSelection") ?? ""),
   );
   const [showWDStudents, setShowWDStudents] = useState(!!(loadLocal("showWDStudents") ?? true));
+
+  // const placementsSet = useRef(false);
+
+  // useEffect(() => {
+  //   if (!placementsSet.current && students.length) {
+  //     setPlacementExamFilePaths(students);
+  //     placementsSet.current = true;
+  //   }
+  // }, [placementsSet, students]);
 
   useEffect(() => {
     if (students.length && selectedSession === undefined) {
