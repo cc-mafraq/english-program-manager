@@ -128,9 +128,9 @@ export const getFGRStudents = (
   return fgrStudents;
 };
 
-export const isElective = (academicRecord: AcademicRecord): boolean => {
+export const isElective = (level: AcademicRecord["level"]): boolean => {
   const genderedLevels = concat(levelsWithGrad, ["PL1-M", "PL1-W", "L1-M", "L1-W", "L2-M", "L2-W"]);
-  return !includes(genderedLevels, academicRecord.level || academicRecord.levelAudited);
+  return !includes(genderedLevels, level);
 };
 
 export const getElectiveFullName = (electiveName: string): string => {

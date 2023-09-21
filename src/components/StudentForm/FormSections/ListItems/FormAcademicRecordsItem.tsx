@@ -1,6 +1,8 @@
 import { Close } from "@mui/icons-material";
 import { Grid, IconButton, Tooltip } from "@mui/material";
-import React from "react";
+import { includes, parseInt } from "lodash";
+import React, { ChangeEvent, useCallback } from "react";
+import { useFormContext } from "react-hook-form";
 import {
   FormGrade,
   FormLabel,
@@ -11,7 +13,7 @@ import {
 } from "../../..";
 import { useAppStore, useColors, useStudentStore } from "../../../../hooks";
 import { genderedLevels } from "../../../../interfaces";
-import { FormItem, SPACING, getAllSessions } from "../../../../services";
+import { FormItem, SPACING, getAllSessions, isElective } from "../../../../services";
 
 export const FormAcademicRecordsItem: React.FC<FormItem & { title?: string }> = ({
   index,
@@ -27,6 +29,42 @@ export const FormAcademicRecordsItem: React.FC<FormItem & { title?: string }> = 
   });
 
   const { iconColor } = useColors();
+
+  const { watch, setValue, getValues } = useFormContext();
+  const level =
+    getValues(name ? `${name}.level` : "level") || getValues(name ? `${name}.levelAudited` : "levelAudited");
+  const [attendancePercentage, classPercentage, writingPercentage, speakingPercentage] = watch([
+    name ? `${name}.attendance` : "attendance",
+    name ? `${name}.finalGrade.percentage` : "finalGrade.percentage",
+    name ? `${name}.exitWritingExam.percentage` : "exitWritingExam.percentage",
+    name ? `${name}.exitSpeakingExam.percentage` : "exitSpeakingExam.percentage",
+  ]);
+
+  const updateOverallResult = useCallback(
+    (caller: string) => {
+      return (e: ChangeEvent<HTMLInputElement>) => {
+        const newPercentage = parseInt(e.target.value);
+        const newAttendancePercentage = includes(caller, "attendance") ? newPercentage : attendancePercentage;
+        const newClassPercentage = includes(caller, "finalGrade") ? newPercentage : classPercentage;
+        const newWritingPercentage = includes(caller, "exitWritingExam") ? newPercentage : writingPercentage;
+        const newSpeakingPercentage = includes(caller, "exitSpeakingExam") ? newPercentage : speakingPercentage;
+        if (newAttendancePercentage < 50) {
+          setValue(name ? `${name}.overallResult` : "overallResult", "WD");
+        } else if (
+          newAttendancePercentage >= 70 &&
+          newClassPercentage >= 80 &&
+          ((newWritingPercentage >= 80 && newSpeakingPercentage >= 80) || isElective(level))
+        ) {
+          setValue(name ? `${name}.overallResult` : "overallResult", "P");
+        } else if (newAttendancePercentage && newClassPercentage) {
+          setValue(name ? `${name}.overallResult` : "overallResult", "F");
+        } else {
+          setValue(name ? `${name}.overallResult` : "overallResult", null);
+        }
+      };
+    },
+    [attendancePercentage, classPercentage, level, name, setValue, speakingPercentage, writingPercentage],
+  );
 
   return (
     <>
@@ -97,13 +135,29 @@ export const FormAcademicRecordsItem: React.FC<FormItem & { title?: string }> = 
               gridProps={{ sm: 3 }}
               label="Attendance Percentage"
               name={name ? `${name}.attendance` : "attendance"}
+              textFieldProps={{ onChange: updateOverallResult("attendance") }}
             />
           )
         }
       />
-      <FormGrade gradePath={name ? `${name}.finalGrade` : "finalGrade"} label="Class Grade" />
-      <FormGrade gradePath={name ? `${name}.exitWritingExam` : "exitWritingExam"} label="Exit Writing Exam" />
-      <FormGrade gradePath={name ? `${name}.exitSpeakingExam` : "exitSpeakingExam"} label="Exit Speaking Exam" />
+      <FormGrade
+        gradePath={name ? `${name}.finalGrade` : "finalGrade"}
+        label="Class Grade"
+        noNotes={role !== "admin"}
+        onPercentageChange={updateOverallResult("finalGrade")}
+      />
+      <FormGrade
+        gradePath={name ? `${name}.exitWritingExam` : "exitWritingExam"}
+        label="Exit Writing Exam"
+        noNotes={role !== "admin"}
+        onPercentageChange={updateOverallResult("exitWritingExam")}
+      />
+      <FormGrade
+        gradePath={name ? `${name}.exitSpeakingExam` : "exitSpeakingExam"}
+        label="Exit Speaking Exam"
+        noNotes={role !== "admin"}
+        onPercentageChange={updateOverallResult("exitSpeakingExam")}
+      />
       <GridContainer marginBottom={0} marginLeft={0}>
         <GridItemTextField
           label="Teacher Comments"

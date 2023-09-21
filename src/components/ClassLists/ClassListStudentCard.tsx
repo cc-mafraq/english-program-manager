@@ -10,6 +10,7 @@ import {
   StudentCardHeader,
   StudentCardImage,
 } from "..";
+import { useColors } from "../../hooks";
 import { AcademicRecord, SectionPlacement, Status, Student, emptyStudent } from "../../interfaces";
 import { getAcademicRecordByPlacement, getClassName, getRepeatNum } from "../../services";
 import { CorrespondenceList, CustomCard, LabeledContainer, LabeledText } from "../reusables";
@@ -28,6 +29,7 @@ const ClassListStudentInfoMemo: React.FC<ClassListStudentInfoProps> = React.memo
     }, [data]);
     const theme = useTheme();
     const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
+    const { red, green } = useColors();
 
     return (
       <Box sx={greaterThanSmall ? { display: "flex", flexWrap: "wrap" } : undefined}>
@@ -39,6 +41,25 @@ const ClassListStudentInfoMemo: React.FC<ClassListStudentInfoProps> = React.memo
           <LabeledText label="Repeat">{repeatNum}</LabeledText>
         </LabeledContainer>
         <PhoneNumbers data={data} noWhatsapp />
+        {/* {selectedAcademicRecord?.overallResult && (
+          <Box>
+            <Typography
+              color={
+                selectedAcademicRecord.overallResult === FinalResult.P
+                  ? theme.palette.mode === "light"
+                    ? materialGreen[600]
+                    : green
+                  : theme.palette.mode === "light"
+                  ? materialRed[600]
+                  : red
+              }
+              sx={{ fontWeight: "bold" }}
+              variant="h6"
+            >
+              {selectedAcademicRecord.overallResult}
+            </Typography>
+          </Box>
+        )} */}
         {selectedAcademicRecord && (
           <Box>
             <GradeInfo bold grade={{ result: selectedAcademicRecord.overallResult }} label="Overall Result" />

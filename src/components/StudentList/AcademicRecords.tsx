@@ -1,6 +1,7 @@
 import { Edit } from "@mui/icons-material";
 import {
   Box,
+  BoxProps,
   Button,
   IconButton,
   Tooltip,
@@ -21,6 +22,40 @@ interface AcademicRecordsProps {
   data: Student;
 }
 
+interface ResultBoxProps {
+  containerProps?: BoxProps;
+  result?: FinalResult;
+  showEmpty?: boolean;
+}
+
+export const ResultBox: React.FC<ResultBoxProps> = ({ result, showEmpty, containerProps }) => {
+  const { green, red } = useColors();
+
+  const gradeContainerProps = () => {
+    return {
+      sx: {
+        backgroundColor: result === "P" ? green : result === "F" || result === "WD" ? red : undefined,
+      },
+    };
+  };
+
+  return (
+    <LabeledText
+      containerProps={{ ...gradeContainerProps(), ...containerProps }}
+      label="Result"
+      showWhenEmpty={showEmpty}
+    >
+      {result ? FinalResult[result] : undefined}
+    </LabeledText>
+  );
+};
+
+ResultBox.defaultProps = {
+  containerProps: undefined,
+  result: undefined,
+  showEmpty: undefined,
+};
+
 interface GradeInfoProps {
   bold?: boolean;
   grade?: Grade;
@@ -30,22 +65,11 @@ interface GradeInfoProps {
 const labelProps: TypographyProps = { fontWeight: "normal", variant: "subtitle1" };
 
 export const GradeInfo: React.FC<GradeInfoProps> = ({ grade, label, bold }) => {
-  const { green, red } = useColors();
   const labelPropsWithBold = { ...labelProps, fontWeight: bold ? "bold" : undefined };
-
-  const gradeContainerProps = (result?: FinalResult) => {
-    return {
-      sx: {
-        backgroundColor: result === "P" ? green : red,
-      },
-    };
-  };
 
   return (
     <LabeledContainer label={label} labelProps={labelPropsWithBold}>
-      <LabeledText containerProps={gradeContainerProps(grade?.result)} label="Result">
-        {grade?.result ? FinalResult[grade.result] : undefined}
-      </LabeledText>
+      <ResultBox result={grade?.result} />
       <LabeledText label="Percentage">
         {grade?.percentage !== undefined ? `${grade.percentage}%` : undefined}
       </LabeledText>
