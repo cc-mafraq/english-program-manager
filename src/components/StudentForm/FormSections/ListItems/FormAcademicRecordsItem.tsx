@@ -132,7 +132,7 @@ export const FormAcademicRecordsItem: React.FC<FormItem & { title?: string }> = 
             />
           ) : (
             <GridItemTextField
-              gridProps={{ sm: 9 }}
+              gridProps={{ sm: 4.75 }}
               label="Attendance Percentage"
               name={name ? `${name}.attendance` : "attendance"}
               textFieldProps={{ onChange: updateOverallResult("attendance") }}

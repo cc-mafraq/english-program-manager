@@ -57,7 +57,7 @@ export const FormGrade: React.FC<FormGradeProps> = ({
             options={results}
           />
         ) : (
-          <Grid item marginTop={-SPACING / 2} xs={3}>
+          <Grid item marginTop={-SPACING / 2} xs={1.25}>
             <ResultBox
               containerProps={{ marginBottom: SPACING / 2, marginRight: SPACING, minHeight: "45px" }}
               result={watch(directGradePath ? gradePath : `${gradePath}.result`)}
@@ -67,7 +67,7 @@ export const FormGrade: React.FC<FormGradeProps> = ({
         )}
         {percentageComponent || (
           <GridItemTextField
-            gridProps={role === "admin" ? { sm: 3 } : { sm: 9 }}
+            gridProps={role === "admin" ? { sm: 3 } : { sm: 4.75 }}
             label="Percentage"
             name={`${gradePath}.percentage`}
             textFieldProps={{ onChange: onPercentageChange }}

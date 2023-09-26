@@ -1,5 +1,5 @@
 import { Close } from "@mui/icons-material";
-import { Box, Button, Dialog, DialogProps, IconButton, Tooltip, useTheme } from "@mui/material";
+import { Box, Button, Dialog, DialogProps, Grid, IconButton, Tooltip, Typography, useTheme } from "@mui/material";
 import { green, grey } from "@mui/material/colors";
 import { isEqual } from "lodash";
 import React, { CSSProperties, PropsWithChildren, useState } from "react";
@@ -97,12 +97,12 @@ export const FormDialog = <T extends FieldValues>({
                   Submit
                 </Button>
               </Box>
-              {/* <Grid item sx={{ float: stickySubmit ? "right" : undefined }}>
+              <Grid item sx={{ float: stickySubmit ? "right" : undefined }}>
                 <Typography variant="caption">
                   Tip: use <b>tab</b> and <b>shift + tab</b> to navigate, <b>space bar</b> to select checkboxes,{" "}
                   <b>arrow keys</b> to select radio buttons, and <b>return</b> to submit and click buttons.
                 </Typography>
-              </Grid> */}
+              </Grid>
             </form>
             <FormErrorDialog handleDialogClose={closeErrorDialog} open={openErrorDialog} />
           </FormProvider>
