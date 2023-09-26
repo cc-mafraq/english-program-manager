@@ -2,6 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Breakpoint } from "@mui/material";
 import { findIndex } from "lodash";
 import React, { useCallback, useMemo } from "react";
+import { useAppStore } from "../../hooks";
 import { AcademicRecord, Student, emptyAcademicRecord } from "../../interfaces";
 import { SPACING, academicRecordsSchema, removeNullFromObject, setData } from "../../services";
 import { FormAcademicRecordsItem } from "../StudentForm";
@@ -31,6 +32,10 @@ export const FormAcademicRecordsDialog: React.FC<FormAcademicRecordsDialogProps>
   open,
   formTitle,
 }) => {
+  const role = useAppStore((state) => {
+    return state.role;
+  });
+
   const onSubmit = useCallback(
     (data: AcademicRecord) => {
       const dataNoNull = removeNullFromObject(data) as AcademicRecord;
@@ -48,8 +53,8 @@ export const FormAcademicRecordsDialog: React.FC<FormAcademicRecordsDialogProps>
 
   const dialogProps = useMemo(() => {
     const breakpoint: Breakpoint = "lg";
-    return { maxWidth: breakpoint };
-  }, []);
+    return { fullWidth: role === "admin", maxWidth: breakpoint };
+  }, [role]);
 
   const useFormProps = useMemo(() => {
     return {

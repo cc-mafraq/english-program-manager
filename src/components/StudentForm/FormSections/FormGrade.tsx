@@ -1,4 +1,4 @@
-import { FormLabel, FormLabelProps } from "@mui/material";
+import { FormLabel, FormLabelProps, Grid } from "@mui/material";
 import { parseInt } from "lodash";
 import React, { ChangeEvent, ReactNode } from "react";
 import { useFormContext } from "react-hook-form";
@@ -57,15 +57,17 @@ export const FormGrade: React.FC<FormGradeProps> = ({
             options={results}
           />
         ) : (
-          <ResultBox
-            containerProps={{ marginLeft: "1vw" }}
-            result={watch(directGradePath ? gradePath : `${gradePath}.result`)}
-            showEmpty
-          />
+          <Grid item marginTop={-SPACING / 2} xs={3}>
+            <ResultBox
+              containerProps={{ marginBottom: SPACING / 2, marginRight: SPACING, minHeight: "45px" }}
+              result={watch(directGradePath ? gradePath : `${gradePath}.result`)}
+              showEmpty
+            />
+          </Grid>
         )}
         {percentageComponent || (
           <GridItemTextField
-            gridProps={{ sm: 3 }}
+            gridProps={role === "admin" ? { sm: 3 } : { sm: 9 }}
             label="Percentage"
             name={`${gradePath}.percentage`}
             textFieldProps={{ onChange: onPercentageChange }}

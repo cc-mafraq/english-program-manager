@@ -45,12 +45,14 @@ export const ClassListsPage = () => {
           (showWDStudents || student.status.currentStatus !== Status.WD)
         );
       }),
-      [
-        (student) => {
-          return getSectionPlacement(student, selectedSession, selectedClass)?.timestamp;
-        },
-        "name.english",
-      ],
+      selectedClass?.section === "CSWL"
+        ? [
+            (student) => {
+              return getSectionPlacement(student, selectedSession, selectedClass)?.timestamp;
+            },
+            "name.english",
+          ]
+        : "name.english",
     );
   }, [selectedClass, selectedSession, showWDStudents, students]);
 

@@ -132,7 +132,7 @@ export const FormAcademicRecordsItem: React.FC<FormItem & { title?: string }> = 
             />
           ) : (
             <GridItemTextField
-              gridProps={{ sm: 3 }}
+              gridProps={{ sm: 9 }}
               label="Attendance Percentage"
               name={name ? `${name}.attendance` : "attendance"}
               textFieldProps={{ onChange: updateOverallResult("attendance") }}
@@ -160,6 +160,7 @@ export const FormAcademicRecordsItem: React.FC<FormItem & { title?: string }> = 
       />
       <GridContainer marginBottom={0} marginLeft={0}>
         <GridItemTextField
+          gridProps={role !== "admin" ? { sm: 12 } : undefined}
           label="Teacher Comments"
           name={name ? `${name}.comments` : "comments"}
           textFieldProps={{ multiline: true, rows: 4 }}

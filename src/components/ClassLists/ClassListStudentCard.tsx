@@ -1,6 +1,7 @@
 import { Assessment } from "@mui/icons-material";
-import { Box, IconButton, Tooltip, useMediaQuery, useTheme } from "@mui/material";
-import { findIndex, nth } from "lodash";
+import { Box, IconButton, Tooltip, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { green as materialGreen, red as materialRed } from "@mui/material/colors";
+import { filter, findIndex, nth } from "lodash";
 import React, { useCallback, useMemo, useState } from "react";
 import {
   AcademicRecordAccordionDetails,
@@ -11,7 +12,7 @@ import {
   StudentCardImage,
 } from "..";
 import { useColors } from "../../hooks";
-import { AcademicRecord, SectionPlacement, Status, Student, emptyStudent } from "../../interfaces";
+import { AcademicRecord, FinalResult, SectionPlacement, Status, Student, emptyStudent } from "../../interfaces";
 import { getAcademicRecordByPlacement, getClassName, getRepeatNum } from "../../services";
 import { CorrespondenceList, CustomCard, LabeledContainer, LabeledText } from "../reusables";
 
@@ -29,7 +30,28 @@ const ClassListStudentInfoMemo: React.FC<ClassListStudentInfoProps> = React.memo
     }, [data]);
     const theme = useTheme();
     const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
-    const { red, green } = useColors();
+
+    const borderlineConditions = useMemo(() => {
+      return [
+        selectedAcademicRecord?.finalGrade?.percentage &&
+          selectedAcademicRecord?.finalGrade?.percentage >= 78 &&
+          selectedAcademicRecord?.finalGrade?.percentage < 80,
+        selectedAcademicRecord?.exitSpeakingExam?.percentage &&
+          selectedAcademicRecord?.exitSpeakingExam?.percentage >= 78 &&
+          selectedAcademicRecord?.exitSpeakingExam?.percentage < 80,
+        selectedAcademicRecord?.exitWritingExam?.percentage &&
+          selectedAcademicRecord?.exitWritingExam?.percentage >= 78 &&
+          selectedAcademicRecord?.exitWritingExam?.percentage < 80,
+        selectedAcademicRecord?.attendance &&
+          selectedAcademicRecord?.attendance >= 50 &&
+          selectedAcademicRecord?.attendance < 70,
+      ];
+    }, [
+      selectedAcademicRecord?.attendance,
+      selectedAcademicRecord?.exitSpeakingExam?.percentage,
+      selectedAcademicRecord?.exitWritingExam?.percentage,
+      selectedAcademicRecord?.finalGrade?.percentage,
+    ]);
 
     return (
       <Box sx={greaterThanSmall ? { display: "flex", flexWrap: "wrap" } : undefined}>
@@ -41,27 +63,14 @@ const ClassListStudentInfoMemo: React.FC<ClassListStudentInfoProps> = React.memo
           <LabeledText label="Repeat">{repeatNum}</LabeledText>
         </LabeledContainer>
         <PhoneNumbers data={data} noWhatsapp />
-        {/* {selectedAcademicRecord?.overallResult && (
-          <Box>
-            <Typography
-              color={
-                selectedAcademicRecord.overallResult === FinalResult.P
-                  ? theme.palette.mode === "light"
-                    ? materialGreen[600]
-                    : green
-                  : theme.palette.mode === "light"
-                  ? materialRed[600]
-                  : red
-              }
-              sx={{ fontWeight: "bold" }}
-              variant="h6"
-            >
-              {selectedAcademicRecord.overallResult}
-            </Typography>
-          </Box>
-        )} */}
+
         {selectedAcademicRecord && (
           <Box>
+            {filter(borderlineConditions).length > 0 && filter(borderlineConditions).length < 3 && (
+              <Typography color={theme.palette.warning.main} variant="h6">
+                Warning: Borderline Case!
+              </Typography>
+            )}
             <GradeInfo bold grade={{ result: selectedAcademicRecord.overallResult }} label="Overall Result" />
             <AcademicRecordAccordionDetails bold data={selectedAcademicRecord} />
           </Box>
@@ -105,6 +114,7 @@ export const ClassListStudentCard: React.FC<ClassListStudentCardProps> = (props)
   }, []);
 
   const theme = useTheme();
+  const { red, green } = useColors();
   const greaterThanMedium = useMediaQuery(theme.breakpoints.up("md"));
 
   return (
@@ -115,11 +125,32 @@ export const ClassListStudentCard: React.FC<ClassListStudentCardProps> = (props)
           <StudentCardHeader
             data={emptyStudent}
             otherButtons={
-              <Tooltip title="Submit Final Grades">
-                <IconButton onClick={handleDialogOpen}>
-                  <Assessment />
-                </IconButton>
-              </Tooltip>
+              <>
+                <Tooltip title="Submit Final Grades">
+                  <IconButton onClick={handleDialogOpen}>
+                    <Assessment />
+                  </IconButton>
+                </Tooltip>
+                {selectedAcademicRecord?.overallResult && (
+                  <Box>
+                    <Typography
+                      color={
+                        selectedAcademicRecord.overallResult === FinalResult.P
+                          ? theme.palette.mode === "light"
+                            ? materialGreen[600]
+                            : green
+                          : theme.palette.mode === "light"
+                          ? materialRed[600]
+                          : red
+                      }
+                      sx={{ float: "right", fontWeight: "bold", marginRight: greaterThanMedium ? "1vw" : "6vw" }}
+                      variant="h6"
+                    >
+                      {selectedAcademicRecord.overallResult}
+                    </Typography>
+                  </Box>
+                )}
+              </>
             }
           />
         }
