@@ -68,7 +68,7 @@ export const GradeInfo: React.FC<GradeInfoProps> = ({ grade, label, bold }) => {
   const labelPropsWithBold = { ...labelProps, fontWeight: bold ? "bold" : undefined };
 
   return (
-    <LabeledContainer label={label} labelProps={labelPropsWithBold}>
+    <LabeledContainer label={label} labelProps={labelPropsWithBold} showWhenEmpty={grade?.result !== undefined}>
       <ResultBox result={grade?.result} />
       <LabeledText label="Percentage">
         {grade?.percentage !== undefined ? `${grade.percentage}%` : undefined}

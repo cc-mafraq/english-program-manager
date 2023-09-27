@@ -6,7 +6,6 @@ import React, { useCallback, useMemo, useState } from "react";
 import {
   AcademicRecordAccordionDetails,
   FormAcademicRecordsDialog,
-  GradeInfo,
   PhoneNumbers,
   StudentCardHeader,
   StudentCardImage,
@@ -71,7 +70,6 @@ const ClassListStudentInfoMemo: React.FC<ClassListStudentInfoProps> = React.memo
                 Warning: Borderline Case!
               </Typography>
             )}
-            <GradeInfo bold grade={{ result: selectedAcademicRecord.overallResult }} label="Overall Result" />
             <AcademicRecordAccordionDetails bold data={selectedAcademicRecord} />
           </Box>
         )}
