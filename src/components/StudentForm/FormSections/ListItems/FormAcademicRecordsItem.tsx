@@ -48,7 +48,7 @@ export const FormAcademicRecordsItem: React.FC<FormItem & { title?: string }> = 
         const newClassPercentage = includes(caller, "finalGrade") ? newPercentage : classPercentage;
         const newWritingPercentage = includes(caller, "exitWritingExam") ? newPercentage : writingPercentage;
         const newSpeakingPercentage = includes(caller, "exitSpeakingExam") ? newPercentage : speakingPercentage;
-        if (newAttendancePercentage !== "" && newAttendancePercentage < 50) {
+        if (newAttendancePercentage < 50) {
           setValue(name ? `${name}.overallResult` : "overallResult", "WD");
         } else if (
           newAttendancePercentage >= 70 &&
@@ -120,6 +120,7 @@ export const FormAcademicRecordsItem: React.FC<FormItem & { title?: string }> = 
       <FormGrade
         directGradePath
         gradePath={name ? `${name}.overallResult` : "overallResult"}
+        includeWDOption
         label="Overall Result"
         noNotes={role !== "admin"}
         notesLabel="FGR Notes"
@@ -143,6 +144,7 @@ export const FormAcademicRecordsItem: React.FC<FormItem & { title?: string }> = 
       />
       <FormGrade
         gradePath={name ? `${name}.finalGrade` : "finalGrade"}
+        includeWDOption
         label="Class Grade"
         noNotes={role !== "admin"}
         onPercentageChange={updateOverallResult("finalGrade")}

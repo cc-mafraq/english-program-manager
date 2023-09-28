@@ -1,5 +1,5 @@
 import { FormLabel, FormLabelProps, Grid } from "@mui/material";
-import { parseInt } from "lodash";
+import { filter, parseInt } from "lodash";
 import React, { ChangeEvent, ReactNode } from "react";
 import { useFormContext } from "react-hook-form";
 import { ResultBox } from "../..";
@@ -11,6 +11,7 @@ import { GridContainer, GridItemRadioGroup, GridItemTextField } from "../../reus
 interface FormGradeProps {
   directGradePath?: boolean;
   gradePath: string;
+  includeWDOption?: boolean;
   label: string;
   noNotes?: boolean;
   notesLabel?: string;
@@ -30,6 +31,7 @@ export const FormGrade: React.FC<FormGradeProps> = ({
   directGradePath,
   noNotes,
   onPercentageChange: onPercentageChangeExt,
+  includeWDOption,
 }) => {
   const role = useAppStore((state) => {
     return state.role;
@@ -54,10 +56,16 @@ export const FormGrade: React.FC<FormGradeProps> = ({
           <GridItemRadioGroup
             gridProps={{ sm: 3 }}
             name={directGradePath ? gradePath : `${gradePath}.result`}
-            options={results}
+            options={
+              includeWDOption
+                ? results
+                : filter(results, (result) => {
+                    return result !== "WD";
+                  })
+            }
           />
         ) : (
-          <Grid item marginTop={-SPACING / 2} xs={1.25}>
+          <Grid item marginTop={-SPACING / 2} minWidth="80px" xs={1.25}>
             <ResultBox
               containerProps={{ marginBottom: SPACING / 2, marginRight: SPACING, minHeight: "45px" }}
               result={watch(directGradePath ? gradePath : `${gradePath}.result`)}
@@ -81,6 +89,7 @@ export const FormGrade: React.FC<FormGradeProps> = ({
 
 FormGrade.defaultProps = {
   directGradePath: undefined,
+  includeWDOption: undefined,
   noNotes: undefined,
   notesLabel: undefined,
   notesPath: undefined,
