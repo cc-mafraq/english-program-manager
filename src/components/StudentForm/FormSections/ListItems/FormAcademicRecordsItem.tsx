@@ -48,7 +48,7 @@ export const FormAcademicRecordsItem: React.FC<FormItem & { title?: string }> = 
         const newClassPercentage = includes(caller, "finalGrade") ? newPercentage : classPercentage;
         const newWritingPercentage = includes(caller, "exitWritingExam") ? newPercentage : writingPercentage;
         const newSpeakingPercentage = includes(caller, "exitSpeakingExam") ? newPercentage : speakingPercentage;
-        if (newAttendancePercentage < 50) {
+        if (newAttendancePercentage < 50 && !newWritingPercentage && !newSpeakingPercentage) {
           setValue(name ? `${name}.overallResult` : "overallResult", "WD");
         } else if (
           newAttendancePercentage >= 70 &&
