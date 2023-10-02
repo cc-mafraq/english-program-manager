@@ -3,7 +3,7 @@ import { Box, Button, Dialog, DialogProps, Grid, IconButton, Tooltip, Typography
 import { green, grey } from "@mui/material/colors";
 import { isEqual } from "lodash";
 import React, { CSSProperties, PropsWithChildren, useState } from "react";
-import { DeepPartial, FieldValues, FormProvider, SubmitHandler, useForm, UseFormProps } from "react-hook-form";
+import { DeepPartial, FieldValues, FormProvider, SubmitHandler, UseFormProps, useForm } from "react-hook-form";
 import { useColors } from "../../../hooks";
 import { SPACING } from "../../../services";
 import { FormErrorDialog } from "./FormErrorDialog";

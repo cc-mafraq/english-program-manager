@@ -1,8 +1,7 @@
-import { yupResolver } from "@hookform/resolvers/yup";
 import { Edit } from "@mui/icons-material";
 import {
   Box,
-  Breakpoint,
+  BoxProps,
   Button,
   IconButton,
   Tooltip,
@@ -12,55 +11,65 @@ import {
   useTheme,
 } from "@mui/material";
 import { green as materialGreen, red as materialRed } from "@mui/material/colors";
-import { findIndex, forOwn, map, reverse } from "lodash";
+import { forOwn, map, reverse } from "lodash";
 import React, { useCallback, useMemo, useState } from "react";
-import {
-  AccordionList,
-  EditFn,
-  FormAcademicRecordsItem,
-  FormDialog,
-  LabeledContainer,
-  LabeledText,
-  ProgressBox,
-} from "..";
+import { AccordionList, EditFn, FormAcademicRecordsDialog, LabeledContainer, LabeledText, ProgressBox } from "..";
 import { useAppStore, useColors, useStudentStore } from "../../hooks";
-import { AcademicRecord, FinalResult, GenderedLevel, Grade, Student, emptyAcademicRecord } from "../../interfaces";
-import {
-  SPACING,
-  academicRecordsSchema,
-  getAllSessions,
-  getProgress,
-  removeNullFromObject,
-  setData,
-} from "../../services";
+import { AcademicRecord, FinalResult, GenderedLevel, Grade, Student } from "../../interfaces";
+import { getAllSessions, getProgress } from "../../services";
 
 interface AcademicRecordsProps {
   data: Student;
 }
 
+interface ResultBoxProps {
+  containerProps?: BoxProps;
+  result?: FinalResult;
+  showEmpty?: boolean;
+}
+
+export const ResultBox: React.FC<ResultBoxProps> = ({ result, showEmpty, containerProps }) => {
+  const { green, red } = useColors();
+
+  const gradeContainerProps = () => {
+    return {
+      sx: {
+        backgroundColor: result === "P" ? green : result === "F" || result === "WD" ? red : undefined,
+      },
+    };
+  };
+
+  return (
+    <LabeledText
+      containerProps={{ ...gradeContainerProps(), ...containerProps }}
+      label="Result"
+      showWhenEmpty={showEmpty}
+    >
+      {result ? FinalResult[result] : undefined}
+    </LabeledText>
+  );
+};
+
+ResultBox.defaultProps = {
+  containerProps: undefined,
+  result: undefined,
+  showEmpty: undefined,
+};
+
 interface GradeInfoProps {
+  bold?: boolean;
   grade?: Grade;
   label: string;
 }
 
 const labelProps: TypographyProps = { fontWeight: "normal", variant: "subtitle1" };
 
-const GradeInfo: React.FC<GradeInfoProps> = ({ grade, label }) => {
-  const { green, red } = useColors();
-
-  const gradeContainerProps = (result?: FinalResult) => {
-    return {
-      sx: {
-        backgroundColor: result === "P" ? green : red,
-      },
-    };
-  };
+export const GradeInfo: React.FC<GradeInfoProps> = ({ grade, label, bold }) => {
+  const labelPropsWithBold = { ...labelProps, fontWeight: bold ? "bold" : undefined };
 
   return (
-    <LabeledContainer label={label} labelProps={labelProps}>
-      <LabeledText containerProps={gradeContainerProps(grade?.result)} label="Result">
-        {grade?.result ? FinalResult[grade.result] : undefined}
-      </LabeledText>
+    <LabeledContainer label={label} labelProps={labelPropsWithBold} showWhenEmpty={grade?.result !== undefined}>
+      <ResultBox result={grade?.result} />
       <LabeledText label="Percentage">
         {grade?.percentage !== undefined ? `${grade.percentage}%` : undefined}
       </LabeledText>
@@ -70,6 +79,7 @@ const GradeInfo: React.FC<GradeInfoProps> = ({ grade, label }) => {
 };
 
 GradeInfo.defaultProps = {
+  bold: undefined,
   grade: undefined,
 };
 
@@ -139,45 +149,44 @@ AcademicRecordAccordionSummary.defaultProps = {
 };
 
 interface AcademicRecordAccordionDetailsProps {
+  bold?: boolean;
   data: AcademicRecord;
 }
 
-const AcademicRecordAccordionDetails: React.FC<AcademicRecordAccordionDetailsProps> = ({
+export const AcademicRecordAccordionDetails: React.FC<AcademicRecordAccordionDetailsProps> = ({
   data: academicRecord,
+  bold,
 }) => {
+  const labelPropsWithBold = { ...labelProps, fontWeight: bold ? "bold" : undefined };
+
   return (
     <>
-      <GradeInfo grade={academicRecord.finalGrade} label="Class Grade" />
-      <GradeInfo grade={academicRecord.exitWritingExam} label="Exit Writing Exam" />
-      <GradeInfo grade={academicRecord.exitSpeakingExam} label="Exit Speaking Exam" />
-      <LabeledContainer label="Attendance" labelProps={labelProps}>
+      <GradeInfo bold={bold} grade={academicRecord.finalGrade} label="Class Grade" />
+      <GradeInfo bold={bold} grade={academicRecord.exitWritingExam} label="Exit Writing Exam" />
+      <GradeInfo bold={bold} grade={academicRecord.exitSpeakingExam} label="Exit Speaking Exam" />
+      <LabeledContainer label="Attendance" labelProps={labelPropsWithBold}>
         <LabeledText label="">
           {academicRecord.attendance !== undefined ? `${academicRecord.attendance}%` : undefined}
         </LabeledText>
       </LabeledContainer>
-      <LabeledContainer label="Teacher Comments" labelProps={labelProps}>
+      <LabeledContainer label="Teacher Comments" labelProps={labelPropsWithBold}>
         <LabeledText label="" textProps={{ fontSize: "11pt" }}>
           {academicRecord.comments}
         </LabeledText>
       </LabeledContainer>
-      <LabeledContainer label="Final Grade Report Sent" labelProps={labelProps}>
+      <LabeledContainer label="Final Grade Report Sent" labelProps={labelPropsWithBold}>
         <LabeledText label="">{academicRecord.finalGradeSentDate}</LabeledText>
       </LabeledContainer>
-      <LabeledContainer label="Final Grade Report Notes" labelProps={labelProps}>
+      <LabeledContainer label="Final Grade Report Notes" labelProps={labelPropsWithBold}>
         <LabeledText label="">{academicRecord.finalGradeReportNotes}</LabeledText>
       </LabeledContainer>
     </>
   );
 };
 
-const FormAcademicRecordsMemo = React.memo(() => {
-  return (
-    <Box paddingRight={SPACING * 2}>
-      <FormAcademicRecordsItem />
-    </Box>
-  );
-});
-FormAcademicRecordsMemo.displayName = "Academic Records Form";
+AcademicRecordAccordionDetails.defaultProps = {
+  bold: undefined,
+};
 
 export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student }) => {
   const students = useStudentStore((state) => {
@@ -214,33 +223,6 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
     [handleDialogOpen, student.academicRecords],
   );
 
-  const onSubmit = useCallback(
-    (data: AcademicRecord) => {
-      const dataNoNull = removeNullFromObject(data) as AcademicRecord;
-      if (selectedAcademicRecord) {
-        const recordIndex = findIndex(student.academicRecords, selectedAcademicRecord);
-        student.academicRecords[recordIndex] = dataNoNull;
-      } else {
-        student.academicRecords.push(dataNoNull);
-      }
-      setData(student, "students", "epId");
-      handleDialogClose();
-    },
-    [handleDialogClose, selectedAcademicRecord, student],
-  );
-
-  const dialogProps = useMemo(() => {
-    const breakpoint: Breakpoint = "lg";
-    return { maxWidth: breakpoint };
-  }, []);
-
-  const useFormProps = useMemo(() => {
-    return {
-      defaultValues: selectedAcademicRecord || emptyAcademicRecord,
-      resolver: yupResolver(academicRecordsSchema),
-    };
-  }, [selectedAcademicRecord]);
-
   const PB = useMemo(() => {
     return map(forOwn(progress), (v, k) => {
       return <ProgressBox key={k} level={k as GenderedLevel} sessionResults={v} />;
@@ -273,15 +255,12 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
         />
         <LabeledText label="Certificate Requests">{student?.certificateRequests}</LabeledText>
       </LabeledContainer>
-      <FormDialog<AcademicRecord>
-        dialogProps={dialogProps}
+      <FormAcademicRecordsDialog
         handleDialogClose={handleDialogClose}
-        onSubmit={onSubmit}
         open={open}
-        useFormProps={useFormProps}
-      >
-        <FormAcademicRecordsMemo />
-      </FormDialog>
+        selectedAcademicRecord={selectedAcademicRecord}
+        student={student}
+      />
     </Box>
   );
 };

@@ -1,5 +1,6 @@
 export * from "./AcademicRecords";
 export * from "./AddImageButton";
+export * from "./FormAcademicRecordsDialog";
 export * from "./Image";
 export * from "./PlacementList";
 export * from "./ProgressBox";

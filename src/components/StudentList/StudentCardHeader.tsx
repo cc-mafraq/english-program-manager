@@ -9,11 +9,16 @@ import { isValidPhoneNumber } from "../../services";
 interface StudentCardHeaderProps {
   data: Student;
   handleEditStudentClick?: () => void;
+  otherButtons?: React.ReactNode;
 }
 
 const padding = "2px";
 
-export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ data: student, handleEditStudentClick }) => {
+export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({
+  data: student,
+  handleEditStudentClick,
+  otherButtons,
+}) => {
   const role = useAppStore((state) => {
     return state.role;
   });
@@ -87,6 +92,7 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ data: stud
                 </IconButton>
               </Tooltip>
             )}
+            {React.isValidElement(otherButtons) && otherButtons}
           </Box>
           {student.status.currentStatus !== Status.WD && role === "admin" && !greaterThanSmall && (
             <WithdrawButton student={student} />
@@ -100,4 +106,5 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({ data: stud
 
 StudentCardHeader.defaultProps = {
   handleEditStudentClick: undefined,
+  otherButtons: undefined,
 };

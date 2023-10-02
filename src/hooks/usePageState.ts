@@ -9,10 +9,10 @@ import { useAppStore } from "./useStores";
 
 interface UsePageStateParams<T> {
   collectionName: string;
-  filter: FilterValue<T>[];
+  filter?: FilterValue<T>[];
   // a doc won't be added to the list unless it has a value at this path
   requiredValuePath?: string;
-  searchFn: (list: T[], searchString: string) => T[];
+  searchFn?: (list: T[], searchString: string) => T[];
   setData: (data: T[]) => void;
   sortFn: (list: T[]) => T[];
 }
@@ -42,11 +42,11 @@ export const usePageState = <T>({
         return !requiredValuePath || get(data, requiredValuePath);
       },
     );
-    return sortFn(newDataList as T[]);
+    return sortFn ? sortFn(newDataList as T[]) : (newDataList as T[]);
   }, [docs?.docs, requiredValuePath, sortFn]);
 
   const searchedList = useMemo(() => {
-    return searchString ? searchFn(sortedList, searchString) : sortedList;
+    return searchString && searchFn ? searchFn(sortedList, searchString) : sortedList;
   }, [searchFn, searchString, sortedList]);
 
   const filterList = useCallback(
