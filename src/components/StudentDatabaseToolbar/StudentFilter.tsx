@@ -100,7 +100,7 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
         fn: pendingAcademicRecordFn,
         name: "Pending Academic Record",
         path: "academicRecords",
-        values: ["Yes"],
+        values: ["Yes", "No"],
       },
       { condition: isAdmin, name: "NCL", path: "status.noContactList", values: booleanCheckboxOptions },
       { condition: isAdminOrFaculty, name: "Teacher", path: "work.isTeacher", values: ["Yes"] },

@@ -9,6 +9,7 @@ import {
   IconButton,
   Radio,
   RadioGroup,
+  RadioProps,
   Tooltip,
   useTheme,
 } from "@mui/material";
@@ -22,11 +23,21 @@ interface GridItemRadioGroup {
   label?: string;
   name?: string;
   options: string[];
+  radioProps?: RadioProps;
+  value?: string;
 }
 
 /* Renders a group of radio buttons for a form.
 Ref: https://stackoverflow.com/questions/64042394/react-hook-form-and-material-ui-formcontrol */
-export const GridItemRadioGroup = ({ defaultValue, gridProps, label, name, options }: GridItemRadioGroup) => {
+export const GridItemRadioGroup = ({
+  defaultValue,
+  gridProps,
+  label,
+  name,
+  options,
+  value: valueProp,
+  radioProps,
+}: GridItemRadioGroup) => {
   const {
     control,
     formState: { errors },
@@ -50,13 +61,19 @@ export const GridItemRadioGroup = ({ defaultValue, gridProps, label, name, optio
           name={name ?? nameFallback}
           render={({ field: { onChange, onBlur, ref, value } }) => {
             return (
-              <RadioGroup sx={{ flexDirection: "row" }} value={value}>
+              <RadioGroup sx={{ flexDirection: "row" }} value={valueProp || value}>
                 {options.map((opt) => {
                   return (
                     <FormControlLabel
                       key={opt}
                       control={
-                        <Radio inputRef={ref} onBlur={onBlur} onChange={onChange} sx={{ color: errorColor }} />
+                        <Radio
+                          inputRef={ref}
+                          onBlur={onBlur}
+                          onChange={onChange}
+                          sx={{ color: errorColor }}
+                          {...radioProps}
+                        />
                       }
                       label={opt}
                       sx={{ color: errorColor }}
@@ -72,6 +89,7 @@ export const GridItemRadioGroup = ({ defaultValue, gridProps, label, name, optio
       </FormControl>
       <Tooltip arrow title="Clear">
         <IconButton
+          disabled={radioProps?.disabled}
           onClick={() => {
             setValue(name ?? nameFallback, null);
           }}
@@ -88,4 +106,6 @@ GridItemRadioGroup.defaultProps = {
   gridProps: undefined,
   label: undefined,
   name: undefined,
+  radioProps: undefined,
+  value: undefined,
 };

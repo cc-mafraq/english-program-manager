@@ -75,19 +75,21 @@ export const WaitingListCardHeader: React.FC<WaitingListHeaderProps> = ({
           )}
         </Box>
       </Box>
-      <Box display="flex" flexDirection="row" hidden={!wlEntry.waiting} paddingBottom={1}>
-        <Typography
-          color={theme.palette.mode === "light" ? theme.palette.secondary.main : theme.palette.primary.light}
-          variant="h6"
-        >
-          {`Position: ${getPosition(waitingList, wlEntry)}`}
-        </Typography>
-        {wlEntry.highPriority === HighPriority.NO && matchingStudentID && (
-          <Typography color={theme.palette.warning.main} marginLeft="5vw" variant="h6">
-            Warning: Number already in student database ({matchingStudentID})
+      {wlEntry.waiting && (
+        <Box display="flex" flexDirection="row" paddingBottom={1}>
+          <Typography
+            color={theme.palette.mode === "light" ? theme.palette.secondary.main : theme.palette.primary.light}
+            variant="h6"
+          >
+            {`Position: ${getPosition(waitingList, wlEntry)}`}
           </Typography>
-        )}
-      </Box>
+          {wlEntry.highPriority === HighPriority.NO && matchingStudentID && (
+            <Typography color={theme.palette.warning.main} marginLeft="5vw" variant="h6">
+              Warning: Number already in student database ({matchingStudentID})
+            </Typography>
+          )}
+        </Box>
+      )}
       <Divider />
     </>
   );

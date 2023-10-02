@@ -1,7 +1,6 @@
 import { SelectChangeEvent } from "@mui/material";
 import { filter, orderBy } from "lodash";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { ClassList, ClassListsToolbar, MenuBar } from "../components";
 import { loadLocal, saveLocal, useAppStore, useStudentStore } from "../hooks";
 import { SectionPlacement, Status } from "../interfaces";
@@ -15,17 +14,28 @@ export const ClassListsPage = () => {
   const role = useAppStore((state) => {
     return state.role;
   });
-  const navigate = useNavigate();
 
-  const currentSession = useMemo(() => {
-    return getCurrentSession(students);
-  }, [students]);
+  const [selectedSession, setSelectedSession] = useState<string | undefined>();
 
-  const [selectedSession, setSelectedSession] = useState(currentSession);
   const [selectedClass, setSelectedClass] = useState<SectionPlacement | undefined>(
     getClassFromClassName(loadLocal("classListSelection") ?? ""),
   );
   const [showWDStudents, setShowWDStudents] = useState(!!(loadLocal("showWDStudents") ?? true));
+
+  // const placementsSet = useRef(false);
+
+  // useEffect(() => {
+  //   if (!placementsSet.current && students.length) {
+  //     setPlacementExamFilePaths(students);
+  //     placementsSet.current = true;
+  //   }
+  // }, [placementsSet, students]);
+
+  useEffect(() => {
+    if (students.length && selectedSession === undefined) {
+      setSelectedSession(getCurrentSession(students));
+    }
+  }, [selectedSession, students]);
 
   const filteredStudents = useMemo(() => {
     return orderBy(
@@ -35,12 +45,14 @@ export const ClassListsPage = () => {
           (showWDStudents || student.status.currentStatus !== Status.WD)
         );
       }),
-      [
-        (student) => {
-          return getSectionPlacement(student, selectedSession, selectedClass)?.timestamp;
-        },
-        "name.english",
-      ],
+      selectedClass?.section === "CSWL"
+        ? [
+            (student) => {
+              return getSectionPlacement(student, selectedSession, selectedClass)?.timestamp;
+            },
+            "name.english",
+          ]
+        : "name.english",
     );
   }, [selectedClass, selectedSession, showWDStudents, students]);
 
@@ -57,10 +69,6 @@ export const ClassListsPage = () => {
     saveLocal("showWDStudents", event.target.checked);
     setShowWDStudents(event.target.checked);
   }, []);
-
-  useEffect(() => {
-    if (students.length === 0) navigate("/epd", { replace: true });
-  }, [navigate, students]);
 
   return (
     <>

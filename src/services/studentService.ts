@@ -28,6 +28,7 @@ import {
   uniqBy,
 } from "lodash";
 import {
+  AcademicRecord,
   FinalResult,
   GenderedLevel,
   Level,
@@ -161,17 +162,16 @@ export const getAllSessions = (students: Student[]): string[] => {
   );
 };
 
-export const getCurrentSession = (students: Student[]): string => {
-  return (
-    first(
-      filter(reverse(sortBy(uniq(map(flatten(map(students, "placement")), "session")), sortBySession)), (s) => {
-        return !isEmpty(s) && !!s.match(/^(Fa|Sp|Su) (I|II) \d{2}$/);
-      }),
-    ) || "Fa I 22"
+export const getCurrentSession = (students: Student[]) => {
+  return first(
+    filter(reverse(sortBy(uniq(map(flatten(map(students, "placement")), "session")), sortBySession)), (s) => {
+      return !isEmpty(s) && !!s.match(/^(Fa|Sp|Su) (I|II) \d{2}$/);
+    }),
   );
 };
 
-export const getClassOptions = (students: Student[], session: Student["initialSession"]) => {
+export const getClassOptions = (students: Student[], session?: Student["initialSession"]) => {
+  if (session === undefined) return [];
   return sortBy(
     uniqBy(
       flatten(
@@ -219,10 +219,10 @@ export const getClassFromClassName = (className: string): SectionPlacement | und
 
 export const getSectionPlacement = (
   student: Student,
-  selectedSession: Student["initialSession"],
+  selectedSession?: Student["initialSession"],
   selectedClass?: SectionPlacement,
 ) => {
-  if (selectedClass === undefined) return undefined;
+  if (selectedClass === undefined || selectedSession === undefined) return undefined;
   return find(
     find(student.placement, (placement) => {
       return placement.session === selectedSession;
@@ -235,6 +235,22 @@ export const getSectionPlacement = (
             : selectedClass.level) && sectionPlacement.section === selectedClass.section
       );
     },
+  );
+};
+
+export const getAcademicRecordByPlacement = (
+  student?: Student,
+  selectedSession?: Student["initialSession"],
+  selectedClass?: SectionPlacement,
+) => {
+  return (
+    find(student?.academicRecords, (academicRecord: AcademicRecord) => {
+      return (
+        academicRecord.session === selectedSession &&
+        (includes(academicRecord.level, selectedClass?.level) ||
+          includes(academicRecord.levelAudited, selectedClass?.level))
+      );
+    }) ?? null
   );
 };
 

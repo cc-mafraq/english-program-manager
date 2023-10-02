@@ -7,15 +7,15 @@ import { countBy, isUndefined, map, nth, replace } from "lodash";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FGRGridRow, FGRGridRowProps, FGRHeader } from ".";
 import { useFinalGradeReportStore } from "../../hooks";
-import { FinalResult, lightPrimaryColor, Student } from "../../interfaces";
+import { FinalResult, Student, lightPrimaryColor } from "../../interfaces";
 import {
   FinalGradeReportFormValues,
+  StudentAcademicRecordIndex,
   getElectiveFullName,
   getLevelForNextSession,
   getSessionFullName,
   getStudentShortName,
   isElective,
-  StudentAcademicRecordIndex,
 } from "../../services";
 import { FGRForm } from "./FGRForm";
 
@@ -145,7 +145,9 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
     session: getSessionFullName(session),
     studentId: student.epId.toString(),
   });
-  const [elective, setElective] = useState(academicRecord !== undefined && isElective(academicRecord));
+  const [elective, setElective] = useState(
+    academicRecord !== undefined && isElective(academicRecord.level || academicRecord.levelAudited),
+  );
 
   const fgrGridRowData: FGRGridRowMapProps[] = [
     {
