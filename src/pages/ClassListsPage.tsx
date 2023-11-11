@@ -4,7 +4,7 @@ import { every, filter, find, orderBy, some } from "lodash";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ClassList, ClassListsToolbar, MenuBar } from "../components";
 import { loadLocal, saveLocal, useAppStore, useStudentStore } from "../hooks";
-import { AcademicRecord, SectionPlacement, Status, Student } from "../interfaces";
+import { AcademicRecord, FinalResult, SectionPlacement, Student } from "../interfaces";
 import { getClassFromClassName, getCurrentSession, getSectionPlacement } from "../services";
 
 export const ClassListsPage = () => {
@@ -50,7 +50,7 @@ export const ClassListsPage = () => {
         }) as AcademicRecord;
         return (
           !!getSectionPlacement(student, selectedSession, selectedClass) &&
-          (showWDStudents || academicRecord.overallResult !== Status.WD)
+          (showWDStudents || academicRecord.overallResult !== FinalResult.WD)
         );
       }),
       selectedClass?.section === "CSWL"
