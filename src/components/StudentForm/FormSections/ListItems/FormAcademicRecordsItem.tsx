@@ -75,7 +75,7 @@ export const FormAcademicRecordsItem: React.FC<FormItem & { title?: string }> = 
     <>
       <Grid container marginLeft={SPACING}>
         <FormLabel textProps={{ marginTop: SPACING }}>
-          {role === "admin" ? `Session ${index === undefined ? "" : Number(index) + 1}` : title ?? ""}
+          {title ?? `Session ${index === undefined ? "" : Number(index) + 1}`}
         </FormLabel>
         {removeItem && (
           <Tooltip arrow title="Remove Session">
@@ -129,10 +129,12 @@ export const FormAcademicRecordsItem: React.FC<FormItem & { title?: string }> = 
         label="Overall Result"
         noNotes={role !== "admin" && emptyOverallResult}
         notesComponent={
-          <GridItemDatePicker
-            label="Final Grade Report Sent"
-            name={name ? `${name}.finalGradeSentDate` : "finalGradeSentDate"}
-          />
+          role !== "admin" ? (
+            <GridItemDatePicker
+              label="Final Grade Report Sent"
+              name={name ? `${name}.finalGradeSentDate` : "finalGradeSentDate"}
+            />
+          ) : undefined
         }
         notesLabel="FGR Notes"
         notesPath={name ? `${name}.finalGradeReportNotes` : "finalGradeReportNotes"}

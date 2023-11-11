@@ -196,6 +196,7 @@ export const ClassListStudentCard: React.FC<ClassListStudentCardProps> = (props)
         handleDialogClose={handleDialogClose}
         open={open}
         selectedAcademicRecord={selectedAcademicRecord}
+        shouldSetStudents
         student={data ?? emptyStudent}
       />
     </>
