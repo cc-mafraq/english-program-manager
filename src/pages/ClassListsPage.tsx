@@ -108,7 +108,6 @@ export const ClassListsPage = () => {
         selectedClass={selectedClass}
         selectedSession={selectedSession}
         showWDStudents={showWDStudents}
-        students={students}
       />
       {gradesAreStarted && (
         <Typography

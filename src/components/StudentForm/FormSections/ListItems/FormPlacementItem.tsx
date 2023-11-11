@@ -1,9 +1,10 @@
 import { Close } from "@mui/icons-material";
 import { Grid, IconButton, Tooltip } from "@mui/material";
+import moment from "moment";
 import React from "react";
 import { useColors } from "../../../../hooks";
 import { genderedLevels } from "../../../../interfaces";
-import { FormItem } from "../../../../services";
+import { FormItem, MOMENT_FORMAT } from "../../../../services";
 import { GridContainer, GridItemAutocomplete, GridItemDatePicker, GridItemTextField } from "../../../reusables";
 
 export const FormPlacementItem: React.FC<FormItem> = ({ index, removeItem, name }) => {
@@ -26,7 +27,11 @@ export const FormPlacementItem: React.FC<FormItem> = ({ index, removeItem, name 
         name={name ? `${name}.section` : "section"}
         options={["A", "B", "MW", "CSWL"]}
       />
-      <GridItemDatePicker label="Date" name={name ? `${name}.date` : "date"} />
+      <GridItemDatePicker
+        label="Date"
+        name={name ? `${name}.date` : "date"}
+        value={moment().format(MOMENT_FORMAT)}
+      />
       <GridItemTextField gridProps={{ sm: 5 }} label="Notes" name={name ? `${name}.notes` : "notes"} />
       {removeItem && (
         <Grid item>

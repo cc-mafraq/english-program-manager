@@ -13,7 +13,7 @@ interface FGRFormProps {
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const levelOptions = ["Pre-Level 1", "Level 1", "Level 2", "Level 3", "Level 5", "Level 5 Graduate"];
+const levelOptions = ["Pre-Level 1", "Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Level 5 Graduate"];
 
 export const FGRForm: React.FC<FGRFormProps> = ({
   defaultValues,

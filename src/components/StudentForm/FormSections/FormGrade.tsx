@@ -14,6 +14,7 @@ interface FormGradeProps {
   includeWDOption?: boolean;
   label: string;
   noNotes?: boolean;
+  notesComponent?: ReactNode;
   notesLabel?: string;
   notesPath?: string;
   onPercentageChange?: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -32,6 +33,7 @@ export const FormGrade: React.FC<FormGradeProps> = ({
   noNotes,
   onPercentageChange: onPercentageChangeExt,
   includeWDOption,
+  notesComponent,
 }) => {
   const role = useAppStore((state) => {
     return state.role;
@@ -81,7 +83,10 @@ export const FormGrade: React.FC<FormGradeProps> = ({
             textFieldProps={{ onChange: onPercentageChange }}
           />
         )}
-        {!noNotes && <GridItemTextField label={notesLabel || "Notes"} name={notesPath || `${gradePath}.notes`} />}
+        {!noNotes &&
+          (notesComponent || (
+            <GridItemTextField label={notesLabel || "Notes"} name={notesPath || `${gradePath}.notes`} />
+          ))}
       </GridContainer>
     </>
   );
@@ -91,6 +96,7 @@ FormGrade.defaultProps = {
   directGradePath: undefined,
   includeWDOption: undefined,
   noNotes: undefined,
+  notesComponent: undefined,
   notesLabel: undefined,
   notesPath: undefined,
   onPercentageChange: undefined,

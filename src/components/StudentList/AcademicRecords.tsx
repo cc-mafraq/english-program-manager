@@ -16,7 +16,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import { AccordionList, EditFn, FormAcademicRecordsDialog, LabeledContainer, LabeledText, ProgressBox } from "..";
 import { useAppStore, useColors, useStudentStore } from "../../hooks";
 import { AcademicRecord, FinalResult, GenderedLevel, Grade, Student } from "../../interfaces";
-import { getAllSessions, getProgress } from "../../services";
+import { getAllSessionsWithRecord, getProgress } from "../../services";
 
 interface AcademicRecordsProps {
   data: Student;
@@ -196,7 +196,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
     return state.role;
   });
   const progress = useMemo(() => {
-    return getProgress(student, getAllSessions(students));
+    return getProgress(student, getAllSessionsWithRecord(students));
   }, [student, students]);
   const theme = useTheme();
   const [open, setOpen] = useState(false);

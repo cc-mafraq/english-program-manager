@@ -1,27 +1,18 @@
 import { Close, Download } from "@mui/icons-material";
-import {
-  Box,
-  Card,
-  FormControl,
-  IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Tooltip,
-  Typography,
-} from "@mui/material";
-import { map } from "lodash";
+import { Box, Card, IconButton, SelectChangeEvent, Tooltip } from "@mui/material";
 import React from "react";
-import { getSessionFullName } from "../../services";
+import { SectionPlacement } from "../../interfaces";
+import { ClassAndSessionSelect } from "../ClassLists";
 import { Searchbar } from "../reusables";
 
 interface FGRDialogHeaderProps {
   fgrSession: string;
+  handleClassChange: (event: SelectChangeEvent) => void;
   handleDialogClose: () => void;
   handleDownloadAllClick: () => void;
   handleSearchStringChange: (value: string) => void;
   handleSessionChange: (event: SelectChangeEvent) => void;
+  selectedClass?: SectionPlacement;
   sessionOptions: string[];
 }
 
@@ -32,6 +23,8 @@ export const FGRDialogHeader: React.FC<FGRDialogHeaderProps> = ({
   handleSessionChange,
   sessionOptions,
   handleSearchStringChange,
+  handleClassChange,
+  selectedClass,
 }) => {
   return (
     <>
@@ -44,11 +37,6 @@ export const FGRDialogHeader: React.FC<FGRDialogHeaderProps> = ({
           padding: "5px",
         }}
       >
-        <Box sx={{ marginBottom: "auto", marginLeft: "5%", marginTop: "auto" }}>
-          <Typography fontWeight="bold" variant="h5">
-            Final Grade Reports
-          </Typography>
-        </Box>
         <Box marginTop="9px">
           <Searchbar
             handleSearchStringChange={handleSearchStringChange}
@@ -57,26 +45,17 @@ export const FGRDialogHeader: React.FC<FGRDialogHeaderProps> = ({
             width="100%"
           />
         </Box>
-        <Box sx={{ width: "25%" }}>
-          <FormControl fullWidth>
-            <InputLabel id="session-label">Session</InputLabel>
-            <Select
-              id="session-select"
-              label="Session"
-              labelId="session-label"
-              onChange={handleSessionChange}
-              value={sessionOptions?.length ? fgrSession : ""}
-            >
-              {map(sessionOptions, (so) => {
-                return (
-                  <MenuItem key={so} value={so}>
-                    {getSessionFullName(so)}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-        </Box>
+        <ClassAndSessionSelect
+          classSelectSxProps={{ width: "25%" }}
+          handleClassChange={handleClassChange}
+          handleSessionChange={handleSessionChange}
+          includeAllOption
+          noCSWL
+          selectedClass={selectedClass}
+          selectedSession={fgrSession}
+          sessionOptions={sessionOptions}
+          sessionSelectSxProps={{ width: "25%" }}
+        />
         <Box display="flex" flexDirection="row" marginTop="5px">
           <Tooltip arrow title="Download All">
             <IconButton color="primary" onClick={handleDownloadAllClick} sx={{ height: "45px" }}>
@@ -92,4 +71,8 @@ export const FGRDialogHeader: React.FC<FGRDialogHeaderProps> = ({
       </Card>
     </>
   );
+};
+
+FGRDialogHeader.defaultProps = {
+  selectedClass: undefined,
 };

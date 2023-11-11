@@ -7,10 +7,10 @@ import { FinalGradeReport } from ".";
 import { useStudentStore } from "../../hooks";
 import { Student } from "../../interfaces";
 import {
-  getAllSessions,
+  StudentAcademicRecordIndex,
+  getAllSessionsWithRecord,
   getSortedSARIndexArray,
   searchStudents,
-  StudentAcademicRecordIndex,
 } from "../../services";
 
 interface FinalGradeReportListProps {
@@ -37,7 +37,7 @@ export const FinalGradeReportList: React.FC<FinalGradeReportListProps> = ({
   });
 
   const sessionOptions = useMemo(() => {
-    return getAllSessions(students);
+    return getAllSessionsWithRecord(students);
   }, [students]);
   const filteredStudentsIds = map(searchStudents(map(fgrStudents, "student"), searchString), "epId");
   const filteredFgrStudents = filter(fgrStudents, (aris) => {

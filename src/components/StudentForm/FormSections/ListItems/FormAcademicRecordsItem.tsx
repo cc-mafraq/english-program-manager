@@ -1,7 +1,7 @@
 import { Close } from "@mui/icons-material";
 import { Grid, IconButton, Tooltip } from "@mui/material";
 import { includes, parseInt } from "lodash";
-import React, { ChangeEvent, useCallback } from "react";
+import React, { ChangeEvent, useCallback, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import {
   FormGrade,
@@ -13,7 +13,7 @@ import {
 } from "../../..";
 import { useAppStore, useColors, useStudentStore } from "../../../../hooks";
 import { genderedLevels } from "../../../../interfaces";
-import { FormItem, SPACING, getAllSessions, isElective } from "../../../../services";
+import { FormItem, SPACING, getAllSessionsWithRecord, isElective } from "../../../../services";
 
 export const FormAcademicRecordsItem: React.FC<FormItem & { title?: string }> = ({
   index,
@@ -39,6 +39,11 @@ export const FormAcademicRecordsItem: React.FC<FormItem & { title?: string }> = 
     name ? `${name}.exitWritingExam.percentage` : "exitWritingExam.percentage",
     name ? `${name}.exitSpeakingExam.percentage` : "exitSpeakingExam.percentage",
   ]);
+  const emptyOverallResult = useMemo(() => {
+    return getValues(name ? `${name}.overallResult` : "overallResult") === undefined;
+    // disable exhaustive deps because I the original overall result value from when form opens
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const updateOverallResult = useCallback(
     (caller: string) => {
@@ -90,7 +95,7 @@ export const FormAcademicRecordsItem: React.FC<FormItem & { title?: string }> = 
             gridProps={{ hidden: role !== "admin" }}
             label="Session"
             name={name ? `${name}.session` : "session"}
-            options={getAllSessions(students)}
+            options={getAllSessionsWithRecord(students)}
             textFieldProps={{ required: true }}
           />
           <GridItemAutocomplete
@@ -122,7 +127,13 @@ export const FormAcademicRecordsItem: React.FC<FormItem & { title?: string }> = 
         gradePath={name ? `${name}.overallResult` : "overallResult"}
         includeWDOption
         label="Overall Result"
-        noNotes={role !== "admin"}
+        noNotes={role !== "admin" && emptyOverallResult}
+        notesComponent={
+          <GridItemDatePicker
+            label="Final Grade Report Sent"
+            name={name ? `${name}.finalGradeSentDate` : "finalGradeSentDate"}
+          />
+        }
         notesLabel="FGR Notes"
         notesPath={name ? `${name}.finalGradeReportNotes` : "finalGradeReportNotes"}
         percentageComponent={
