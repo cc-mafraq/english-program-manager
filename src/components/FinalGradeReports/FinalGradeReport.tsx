@@ -46,7 +46,9 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
 }) => {
   const { student } = studentAcademicRecord;
   const academicRecord = nth(student.academicRecords, studentAcademicRecord.academicRecordIndex);
-  const fileStartString = `${student.epId}_${replace(getStudentShortName(student), " ", "_")}`;
+  const fileStartString = `${replace(replace(getStudentShortName(student), /"/g, ""), /\s/g, "_")}_${
+    student.epId
+  }`;
   const fileName =
     academicRecord && countBy(student.academicRecords, "session")[academicRecord.session] > 1
       ? `${fileStartString}_${studentAcademicRecord.academicRecordIndex + 1}.png`
