@@ -2,7 +2,7 @@ import { Edit, WhatsApp } from "@mui/icons-material";
 import { Box, Divider, IconButton, Tooltip, Typography, useTheme } from "@mui/material";
 import React, { useMemo } from "react";
 import { useAppStore, useColors, useStudentStore, useWaitingListStore } from "../../hooks";
-import { HighPriority, WaitingListEntry } from "../../interfaces";
+import { WaitingListEntry } from "../../interfaces";
 import { getPosition, getStudentIDByPhoneNumber } from "../../services";
 
 interface WaitingListHeaderProps {
@@ -83,7 +83,7 @@ export const WaitingListCardHeader: React.FC<WaitingListHeaderProps> = ({
           >
             {`Position: ${getPosition(waitingList, wlEntry)}`}
           </Typography>
-          {wlEntry.highPriority === HighPriority.NO && matchingStudentID && (
+          {matchingStudentID && (
             <Typography color={theme.palette.warning.main} marginLeft="5vw" variant="h6">
               Warning: Number already in student database ({matchingStudentID})
             </Typography>
