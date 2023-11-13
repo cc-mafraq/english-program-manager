@@ -88,9 +88,10 @@ export const FinalGradeReportDialog: React.FC = () => {
   );
 
   const handleDownloadAllClick = useCallback(() => {
+    if (filteredFgrStudents.length === 0) return;
     setLoading(true);
     setShouldDownload(true);
-  }, [setShouldDownload]);
+  }, [filteredFgrStudents.length, setShouldDownload]);
 
   const handleDownloadAllComplete = useCallback(() => {
     setLoading(false);
@@ -147,6 +148,7 @@ export const FinalGradeReportDialog: React.FC = () => {
             handleRemoveFGR={handleRemoveFGR}
             scale={scale}
             searchString={searchString}
+            selectedClass={selectedClass}
             session={fgrOrCurrentSession}
             width={fgrWidth}
           />

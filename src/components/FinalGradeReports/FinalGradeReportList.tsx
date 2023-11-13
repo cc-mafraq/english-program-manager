@@ -5,10 +5,11 @@ import { filter, includes, isEqual, map, replace } from "lodash";
 import React, { useMemo } from "react";
 import { FinalGradeReport } from ".";
 import { useStudentStore } from "../../hooks";
-import { Student } from "../../interfaces";
+import { SectionPlacement, Student } from "../../interfaces";
 import {
   StudentAcademicRecordIndex,
   getAllSessionsWithRecord,
+  getClassName,
   getSortedSARIndexArray,
   searchStudents,
 } from "../../services";
@@ -19,6 +20,7 @@ interface FinalGradeReportListProps {
   handleRemoveFGR: (studentAcademicRecord: StudentAcademicRecordIndex) => void;
   scale: number;
   searchString: string;
+  selectedClass?: SectionPlacement;
   session: Student["initialSession"];
   width: number;
 }
@@ -31,6 +33,7 @@ export const FinalGradeReportList: React.FC<FinalGradeReportListProps> = ({
   searchString,
   session,
   width,
+  selectedClass,
 }) => {
   const students = useStudentStore((state) => {
     return state.students;
@@ -53,7 +56,9 @@ export const FinalGradeReportList: React.FC<FinalGradeReportListProps> = ({
     ) {
       handleDownloadComplete();
       const content = await zip.generateAsync({ type: "blob" });
-      await download(content, `${replace(session, /\s/g, "-")}-FGRs`);
+      const sessionString = replace(session, /\s/g, "-");
+      const classString = getClassName(selectedClass);
+      await download(content, selectedClass ? `${classString}_${sessionString}_FGRs` : `${sessionString}-FGRs`);
       zippedStudentAcademicRecords = [];
       zip = new JSZip();
     }
@@ -79,4 +84,8 @@ export const FinalGradeReportList: React.FC<FinalGradeReportListProps> = ({
       })}
     </Box>
   );
+};
+
+FinalGradeReportList.defaultProps = {
+  selectedClass: undefined,
 };
