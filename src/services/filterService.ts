@@ -3,7 +3,7 @@ import { Student, WaitingListEntry } from "../interfaces";
 import { sortWaitingList } from "./waitingListService";
 
 export const phoneConditionFn = (searchString: string) => {
-  return (n: string) => {
+  return (n: number) => {
     return (
       n?.toString().match(new RegExp(`${searchString}$`)) ||
       `${n?.toString()}`.match(new RegExp(`^${searchString}`)) ||
