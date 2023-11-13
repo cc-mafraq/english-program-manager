@@ -57,7 +57,7 @@ export const FinalGradeReportList: React.FC<FinalGradeReportListProps> = ({
       handleDownloadComplete();
       const content = await zip.generateAsync({ type: "blob" });
       const sessionString = replace(session, /\s/g, "-");
-      const classString = replace(getClassName(selectedClass), /\s/g, "-");
+      const classString = replace(getClassName(selectedClass) ?? "", /\s/g, "-");
       await download(content, selectedClass ? `${classString}_${sessionString}_FGRs` : `${sessionString}-FGRs`);
       zippedStudentAcademicRecords = [];
       zip = new JSZip();
