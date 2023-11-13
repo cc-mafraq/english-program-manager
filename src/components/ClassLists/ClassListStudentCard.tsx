@@ -12,7 +12,7 @@ import {
 } from "..";
 import { useColors } from "../../hooks";
 import { AcademicRecord, FinalResult, SectionPlacement, Status, Student, emptyStudent } from "../../interfaces";
-import { getAcademicRecordByPlacement, getClassName, getRepeatNum } from "../../services";
+import { getAcademicRecordByPlacement, getClassName, getRepeatNum, isElective } from "../../services";
 import { CorrespondenceList, CustomCard, LabeledContainer, LabeledText } from "../reusables";
 
 interface ClassListStudentInfoProps {
@@ -30,8 +30,27 @@ const ClassListStudentInfoMemo: React.FC<ClassListStudentInfoProps> = React.memo
     const theme = useTheme();
     const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
 
+    const passingConditions = useMemo(() => {
+      return [
+        selectedAcademicRecord?.attendance && selectedAcademicRecord?.attendance >= 70,
+        selectedAcademicRecord?.finalGrade?.percentage && selectedAcademicRecord?.finalGrade?.percentage >= 80,
+        selectedAcademicRecord?.exitSpeakingExam?.percentage &&
+          selectedAcademicRecord?.exitSpeakingExam?.percentage >= 80,
+        selectedAcademicRecord?.exitWritingExam?.percentage &&
+          selectedAcademicRecord?.exitWritingExam?.percentage >= 80,
+      ];
+    }, [
+      selectedAcademicRecord?.attendance,
+      selectedAcademicRecord?.exitSpeakingExam?.percentage,
+      selectedAcademicRecord?.exitWritingExam?.percentage,
+      selectedAcademicRecord?.finalGrade?.percentage,
+    ]);
+
     const borderlineConditions = useMemo(() => {
       return [
+        selectedAcademicRecord?.attendance &&
+          selectedAcademicRecord?.attendance >= 50 &&
+          selectedAcademicRecord?.attendance < 70,
         selectedAcademicRecord?.finalGrade?.percentage &&
           selectedAcademicRecord?.finalGrade?.percentage >= 78 &&
           selectedAcademicRecord?.finalGrade?.percentage < 80,
@@ -41,9 +60,6 @@ const ClassListStudentInfoMemo: React.FC<ClassListStudentInfoProps> = React.memo
         selectedAcademicRecord?.exitWritingExam?.percentage &&
           selectedAcademicRecord?.exitWritingExam?.percentage >= 78 &&
           selectedAcademicRecord?.exitWritingExam?.percentage < 80,
-        selectedAcademicRecord?.attendance &&
-          selectedAcademicRecord?.attendance >= 50 &&
-          selectedAcademicRecord?.attendance < 70,
       ];
     }, [
       selectedAcademicRecord?.attendance,
@@ -51,6 +67,9 @@ const ClassListStudentInfoMemo: React.FC<ClassListStudentInfoProps> = React.memo
       selectedAcademicRecord?.exitWritingExam?.percentage,
       selectedAcademicRecord?.finalGrade?.percentage,
     ]);
+
+    const electivePassingConditions = passingConditions.slice(0, 2);
+    const electiveBorderlineConditions = borderlineConditions.slice(0, 2);
 
     return (
       <Box sx={greaterThanSmall ? { display: "flex", flexWrap: "wrap" } : undefined}>
@@ -65,7 +84,15 @@ const ClassListStudentInfoMemo: React.FC<ClassListStudentInfoProps> = React.memo
 
         {selectedAcademicRecord && (
           <Box>
-            {filter(borderlineConditions).length > 0 && filter(borderlineConditions).length < 3 && (
+            {/* if 1 or 2 borderline conditions are true and the rest of the conditions are passing, its a borderline case */}
+            {((!isElective(selectedAcademicRecord.level || selectedAcademicRecord.levelAudited) &&
+              filter(borderlineConditions).length > 0 &&
+              filter(borderlineConditions).length < 3 &&
+              filter(borderlineConditions).length + filter(passingConditions).length ===
+                passingConditions.length) ||
+              (isElective(selectedAcademicRecord.level || selectedAcademicRecord.levelAudited) &&
+                filter(electiveBorderlineConditions).length === 1 &&
+                filter(electivePassingConditions).length === 1)) && (
               <Typography color={theme.palette.warning.main} variant="h6">
                 Warning: Borderline Case!
               </Typography>
@@ -196,6 +223,7 @@ export const ClassListStudentCard: React.FC<ClassListStudentCardProps> = (props)
         handleDialogClose={handleDialogClose}
         open={open}
         selectedAcademicRecord={selectedAcademicRecord}
+        shouldSetStudents
         student={data ?? emptyStudent}
       />
     </>

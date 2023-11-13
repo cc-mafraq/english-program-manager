@@ -153,21 +153,30 @@ export const sortBySession = (session: Student["initialSession"]) => {
   )} ${nth(sessionParts, 1)}`;
 };
 
-export const getAllSessions = (students: Student[]): string[] => {
+const filterSession = (s: Student["initialSession"]) => {
+  return !isEmpty(s) && !!s.match(/^(Fa|Sp|Su) (I|II) \d{2}$/);
+};
+
+export const getAllInitialSessions = (students: Student[]): string[] => {
+  return filter(reverse(sortBy(uniq(map(students, "initialSession")), sortBySession)), filterSession);
+};
+
+export const getAllSessionsWithRecord = (students: Student[]): string[] => {
   return filter(
     reverse(sortBy(uniq(map(flatten(map(students, "academicRecords")), "session")), sortBySession)),
-    (s) => {
-      return !isEmpty(s) && !!s.match(/^(Fa|Sp|Su) (I|II) \d{2}$/);
-    },
+    filterSession,
+  );
+};
+
+export const getAllSessionsWithPlacement = (students: Student[]): string[] => {
+  return filter(
+    reverse(sortBy(uniq(map(flatten(map(students, "placement")), "session")), sortBySession)),
+    filterSession,
   );
 };
 
 export const getCurrentSession = (students: Student[]) => {
-  return first(
-    filter(reverse(sortBy(uniq(map(flatten(map(students, "placement")), "session")), sortBySession)), (s) => {
-      return !isEmpty(s) && !!s.match(/^(Fa|Sp|Su) (I|II) \d{2}$/);
-    }),
-  );
+  return first(getAllSessionsWithPlacement(students));
 };
 
 export const getClassOptions = (students: Student[], session?: Student["initialSession"]) => {
@@ -203,7 +212,7 @@ export const getClassName = (placement?: SectionPlacement) => {
 };
 
 export const getClassFromClassName = (className: string): SectionPlacement | undefined => {
-  if (isEmpty(className)) return undefined;
+  if (isEmpty(className) || className === "All") return undefined;
   const splitClassName = split(className, includes(className, "CSWL") ? " " : "-");
   const level = nth(splitClassName, 0) || className;
   const section = nth(splitClassName, 1);
@@ -278,7 +287,7 @@ export const getStudentById = (id: Student["epId"], students: Student[]): Studen
 };
 
 export const getSessionsWithResults = (students: Student[]) => {
-  const allSessions = getAllSessions(students);
+  const allSessions = getAllSessionsWithRecord(students);
   return filter(allSessions, (session) => {
     return some(
       map(
@@ -314,9 +323,9 @@ export const getStatusDetails = ({
   if (
     (numSessionsAttended === 1 && progress[0]) ||
     // Return 1st Session if the student's ar has a session in the future (not inclded in sessionWithResults) and they have no sessions in the past
-    (student.academicRecords?.length &&
+    (student.academicRecords?.length === 0 &&
       numSessionsAttended === 0 &&
-      !includes(sessionsWithResults, student.academicRecords[0].session))
+      student.initialSession === first(getAllInitialSessions(students ?? [])))
   )
     return [StatusDetails.SES1, numSessionsAttended];
   if (numSessionsAttended === 1 && !progress[0]) return [StatusDetails.DO1, numSessionsAttended];

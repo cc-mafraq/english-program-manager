@@ -2,22 +2,19 @@ import {
   AppBar,
   Box,
   Checkbox,
-  FormControl,
   FormControlLabel,
-  InputLabel,
-  MenuItem,
-  Select,
   SelectChangeEvent,
   Toolbar,
   Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { dropRight, filter, first, includes, map, sortBy, uniq } from "lodash";
+import { dropRight } from "lodash";
 import React, { useMemo } from "react";
-import { useAppStore } from "../../hooks";
+import { useStudentStore } from "../../hooks";
 import { SectionPlacement, Student } from "../../interfaces";
-import { getAllSessions, getClassName, getClassOptions, getSessionFullName } from "../../services";
+import { getAllSessionsWithRecord } from "../../services";
+import { ClassAndSessionSelect } from "./ClassAndSessionSelect";
 
 interface ClassListsToolbarProps {
   filteredStudents: Student[];
@@ -27,11 +24,9 @@ interface ClassListsToolbarProps {
   selectedClass?: SectionPlacement;
   selectedSession?: Student["initialSession"];
   showWDStudents: boolean;
-  students: Student[];
 }
 
 export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
-  students,
   filteredStudents,
   selectedSession,
   selectedClass,
@@ -40,31 +35,16 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
   handleClassChange,
   handleShowWDCheckboxChange,
 }) => {
-  const role = useAppStore((state) => {
-    return state.role;
+  const students = useStudentStore((state) => {
+    return state.students;
   });
 
   const theme = useTheme();
   const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
 
   const sessionOptions = useMemo(() => {
-    return dropRight(getAllSessions(students), 20);
+    return dropRight(getAllSessionsWithRecord(students), 20);
   }, [students]);
-
-  const classOptions = useMemo(() => {
-    return filter(
-      sortBy(
-        uniq(
-          map(getClassOptions(students, selectedSession ?? first(sessionOptions)), (classOption) => {
-            return getClassName(classOption);
-          }),
-        ),
-      ),
-      (classOption) => {
-        return role === "admin" ? true : !includes(classOption, "CSWL");
-      },
-    );
-  }, [role, selectedSession, sessionOptions, students]);
 
   return (
     <AppBar color="default" elevation={1} position="relative">
@@ -74,47 +54,15 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
           paddingTop: "1vh",
         }}
       >
-        <Box sx={{ marginRight: "10px", width: greaterThanSmall ? "25%" : "35%" }}>
-          <FormControl fullWidth>
-            <InputLabel id="session-label">Session</InputLabel>
-            <Select
-              id="session-select"
-              label="Session"
-              labelId="session-label"
-              onChange={handleSessionChange}
-              value={sessionOptions.length ? selectedSession || first(sessionOptions) : ""}
-            >
-              {map(sessionOptions, (so) => {
-                return (
-                  <MenuItem key={so} value={so}>
-                    {getSessionFullName(so)}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-        </Box>
-        <Box sx={{ width: greaterThanSmall ? "25%" : "35%" }}>
-          <FormControl fullWidth>
-            <InputLabel id="class-label">Class</InputLabel>
-            <Select
-              displayEmpty
-              id="class-select"
-              label="Class"
-              labelId="class-label"
-              onChange={handleClassChange}
-              value={classOptions.length ? getClassName(selectedClass) ?? "" : ""}
-            >
-              {map(classOptions, (classOption) => {
-                return (
-                  <MenuItem key={classOption} value={classOption}>
-                    {classOption}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-        </Box>
+        <ClassAndSessionSelect
+          classSelectSxProps={{ width: greaterThanSmall ? "25%" : "35%" }}
+          handleClassChange={handleClassChange}
+          handleSessionChange={handleSessionChange}
+          selectedClass={selectedClass}
+          selectedSession={selectedSession}
+          sessionOptions={sessionOptions}
+          sessionSelectSxProps={{ marginRight: "10px", width: greaterThanSmall ? "25%" : "35%" }}
+        />
         <Box sx={{ alignItems: "center" }}>
           <FormControlLabel
             control={<Checkbox checked={showWDStudents} onChange={handleShowWDCheckboxChange} />}

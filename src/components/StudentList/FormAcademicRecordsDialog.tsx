@@ -1,8 +1,8 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Breakpoint } from "@mui/material";
-import { findIndex } from "lodash";
+import { findIndex, remove } from "lodash";
 import React, { useCallback, useMemo } from "react";
-import { useAppStore } from "../../hooks";
+import { useAppStore, useStudentStore } from "../../hooks";
 import { AcademicRecord, Student, emptyAcademicRecord } from "../../interfaces";
 import { SPACING, academicRecordsSchema, removeNullFromObject, setData } from "../../services";
 import { FormAcademicRecordsItem } from "../StudentForm";
@@ -13,6 +13,7 @@ interface FormAcademicRecordsDialogProps {
   handleDialogClose: () => void;
   open: boolean;
   selectedAcademicRecord: AcademicRecord | null;
+  shouldSetStudents?: boolean;
   student: Student;
 }
 
@@ -31,7 +32,14 @@ export const FormAcademicRecordsDialog: React.FC<FormAcademicRecordsDialogProps>
   handleDialogClose,
   open,
   formTitle,
+  shouldSetStudents,
 }) => {
+  const students = useStudentStore((state) => {
+    return state.students;
+  });
+  const setStudents = useStudentStore((state) => {
+    return state.setStudents;
+  });
   const role = useAppStore((state) => {
     return state.role;
   });
@@ -46,9 +54,16 @@ export const FormAcademicRecordsDialog: React.FC<FormAcademicRecordsDialogProps>
         student.academicRecords.push(dataNoNull);
       }
       setData(student, "students", "epId");
+      shouldSetStudents &&
+        setStudents([
+          ...remove(students, (s) => {
+            return s.epId !== student.epId;
+          }),
+          student,
+        ]);
       handleDialogClose();
     },
-    [handleDialogClose, selectedAcademicRecord, student],
+    [handleDialogClose, selectedAcademicRecord, setStudents, shouldSetStudents, student, students],
   );
 
   const dialogProps = useMemo(() => {
@@ -78,4 +93,5 @@ export const FormAcademicRecordsDialog: React.FC<FormAcademicRecordsDialogProps>
 
 FormAcademicRecordsDialog.defaultProps = {
   formTitle: undefined,
+  shouldSetStudents: undefined,
 };

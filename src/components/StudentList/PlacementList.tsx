@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Edit } from "@mui/icons-material";
 import { Box, Breakpoint, Button, IconButton, Tooltip, Typography } from "@mui/material";
-import { find, findIndex, forEach, join, map, omit, reverse } from "lodash";
+import { find, findIndex, forEach, includes, join, map, omit, reverse } from "lodash";
 import moment from "moment";
 import React, { useCallback, useMemo, useState } from "react";
 import {
@@ -19,6 +19,7 @@ import { Placement, Student, emptyPlacement } from "../../interfaces";
 import {
   FormItem,
   JOIN_STR,
+  MOMENT_FORMAT,
   SPACING,
   photoContactSchema,
   placementSchema,
@@ -156,13 +157,13 @@ export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
   const onSubmit = useCallback(
     (data: Placement) => {
       const dataNoNull = removeNullFromObject(data) as Placement;
+      const recordIndex = selectedPlacement ? findIndex(student.placement, selectedPlacement) : -1;
       if (selectedPlacement) {
-        const recordIndex = findIndex(student.placement, selectedPlacement);
         student.placement[recordIndex] = dataNoNull;
       } else {
         student.placement.push(dataNoNull);
       }
-      forEach(dataNoNull.placement, (sp) => {
+      forEach(dataNoNull.placement, (sp, classIndex) => {
         if (sp.section === "CSWL" && sp.timestamp === undefined) {
           sp.timestamp = moment().format();
         }
@@ -175,6 +176,27 @@ export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
           sp.section !== "CSWL"
         ) {
           student.academicRecords.push({ level: sp.level, session: dataNoNull.session });
+        }
+
+        const selectedClassPlacement = student.placement[recordIndex].placement[classIndex];
+        if (
+          recordIndex >= 0 &&
+          sp.notes &&
+          !includes(map(selectedClassPlacement?.classListNotes, "notes"), sp.notes)
+        ) {
+          if (selectedClassPlacement.classListNotes) {
+            selectedClassPlacement.classListNotes.push({
+              date: moment().format(MOMENT_FORMAT),
+              notes: sp.notes,
+            });
+          } else {
+            selectedClassPlacement.classListNotes = [
+              {
+                date: moment().format(MOMENT_FORMAT),
+                notes: sp.notes,
+              },
+            ];
+          }
         }
       });
       setData(student, "students", "epId");

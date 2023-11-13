@@ -1,10 +1,18 @@
 import { Box, Dialog, SelectChangeEvent, useTheme } from "@mui/material";
-import { filter, includes, nth } from "lodash";
+import { filter, includes } from "lodash";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ReactLoading from "react-loading";
 import { FGRDialogHeader, FinalGradeReportList } from ".";
 import { useColors, useFinalGradeReportStore, useStudentStore } from "../../hooks";
-import { getAllSessions, getFGRStudents, StudentAcademicRecordIndex } from "../../services";
+import { SectionPlacement } from "../../interfaces";
+import {
+  StudentAcademicRecordIndex,
+  getAllSessionsWithRecord,
+  getClassFromClassName,
+  getCurrentSession,
+  getFGRStudents,
+  getSectionPlacement,
+} from "../../services";
 
 export const FinalGradeReportDialog: React.FC = () => {
   const students = useStudentStore((state) => {
@@ -26,15 +34,16 @@ export const FinalGradeReportDialog: React.FC = () => {
   const dialogWidth = `${fgrWidth * 3 + 80 * scale + 42}px`;
 
   const sessionOptions = useMemo(() => {
-    return getAllSessions(students);
+    return getAllSessionsWithRecord(students);
   }, [students]);
 
   const [fgrSession, setFGRSession] = useState("");
+  const [selectedClass, setSelectedClass] = useState<SectionPlacement | undefined>(getClassFromClassName(""));
   const [loading, setLoading] = useState(false);
   const [searchString, setSearchString] = useState("");
   const [hiddenFgrStudents, setHiddenFgrStudents] = useState<StudentAcademicRecordIndex[]>([]);
   const theme = useTheme();
-  const currentSession = nth(sessionOptions, 1);
+  const currentSession = getCurrentSession(students);
   const fgrOrCurrentSession = fgrSession || currentSession || "";
 
   const fgrStudents = useMemo(() => {
@@ -42,7 +51,13 @@ export const FinalGradeReportDialog: React.FC = () => {
   }, [fgrOrCurrentSession, students]);
 
   const filteredFgrStudents = filter(fgrStudents, (fgrStudent) => {
-    return !includes(hiddenFgrStudents, fgrStudent);
+    const fgrStudentAcademicRecord = fgrStudent.student.academicRecords[fgrStudent.academicRecordIndex];
+    return (
+      !includes(hiddenFgrStudents, fgrStudent) &&
+      (selectedClass === undefined ||
+        getSectionPlacement(fgrStudent.student, fgrOrCurrentSession, selectedClass)?.level ===
+          (fgrStudentAcademicRecord?.level ?? fgrStudentAcademicRecord?.levelAudited))
+    );
   });
 
   // Reset hidden students when the dialog opens
@@ -73,9 +88,10 @@ export const FinalGradeReportDialog: React.FC = () => {
   );
 
   const handleDownloadAllClick = useCallback(() => {
+    if (filteredFgrStudents.length === 0) return;
     setLoading(true);
     setShouldDownload(true);
-  }, [setShouldDownload]);
+  }, [filteredFgrStudents.length, setShouldDownload]);
 
   const handleDownloadAllComplete = useCallback(() => {
     setLoading(false);
@@ -90,6 +106,10 @@ export const FinalGradeReportDialog: React.FC = () => {
 
   const handleSearchStringChange = useCallback((value: string) => {
     setSearchString(value);
+  }, []);
+
+  const handleClassChange = useCallback((event: SelectChangeEvent) => {
+    setSelectedClass(getClassFromClassName(event.target.value));
   }, []);
 
   return (
@@ -109,10 +129,12 @@ export const FinalGradeReportDialog: React.FC = () => {
         <Box sx={{ padding: "10px" }}>
           <FGRDialogHeader
             fgrSession={fgrOrCurrentSession}
+            handleClassChange={handleClassChange}
             handleDialogClose={handleDialogClose}
             handleDownloadAllClick={handleDownloadAllClick}
             handleSearchStringChange={handleSearchStringChange}
             handleSessionChange={handleSessionChange}
+            selectedClass={selectedClass}
             sessionOptions={sessionOptions}
           />
           {loading && (
@@ -126,6 +148,7 @@ export const FinalGradeReportDialog: React.FC = () => {
             handleRemoveFGR={handleRemoveFGR}
             scale={scale}
             searchString={searchString}
+            selectedClass={selectedClass}
             session={fgrOrCurrentSession}
             width={fgrWidth}
           />

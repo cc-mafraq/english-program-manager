@@ -1,7 +1,7 @@
 import React from "react";
 import { useStudentStore } from "../../../hooks";
 import { genderedLevels, Status, statuses } from "../../../interfaces";
-import { generateId, getAllSessions, SPACING } from "../../../services";
+import { generateId, getAllInitialSessions, SPACING } from "../../../services";
 import { FormLabel, GridContainer, GridItemAutocomplete, GridItemTextField } from "../../reusables";
 
 export const FormProgramInformation: React.FC = () => {
@@ -36,7 +36,7 @@ export const FormProgramInformation: React.FC = () => {
         <GridItemAutocomplete
           freeSolo
           label="Initial Session"
-          options={getAllSessions(students)}
+          options={getAllInitialSessions(students)}
           textFieldProps={{ required: true }}
         />
         <GridItemTextField label="Family Coordinator Entry" name="familyCoordinatorEntry" />

@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppStore, useStatistics, useStudentStore } from "../hooks";
 import { levels } from "../interfaces";
-import { getAllSessions, sortObjectByValues } from "../services";
+import { getAllInitialSessions, sortObjectByValues } from "../services";
 
 const INDENT = 3;
 
@@ -111,7 +111,7 @@ export const StatisticsPage = () => {
       <Typography {...textProps} fontWeight="bold">
         Initial Sessions
       </Typography>
-      {map(getAllSessions(students), (key) => {
+      {map(getAllInitialSessions(students), (key) => {
         return (
           <Typography {...textProps} key={`session-${key}`} marginLeft={INDENT}>
             {key}: {get(statistics.sessionCounts, key)}
