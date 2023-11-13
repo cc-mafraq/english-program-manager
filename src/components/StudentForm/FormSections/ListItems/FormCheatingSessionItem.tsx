@@ -2,7 +2,7 @@ import { Close } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
 import React from "react";
 import { useColors, useStudentStore } from "../../../../hooks";
-import { FormItem, getAllSessions } from "../../../../services";
+import { FormItem, getAllSessionsWithRecord } from "../../../../services";
 import { GridItemAutocomplete } from "../../../reusables";
 
 export const FormCheatingSessionItem: React.FC<FormItem> = ({ index, removeItem, name }) => {
@@ -18,7 +18,7 @@ export const FormCheatingSessionItem: React.FC<FormItem> = ({ index, removeItem,
         gridProps={{ xs: 4.5 }}
         label="Cheating Session"
         name={name}
-        options={getAllSessions(students)}
+        options={getAllSessionsWithRecord(students)}
       />
       <Tooltip arrow title="Remove Cheating Session">
         <IconButton onClick={removeItem && removeItem(index)} sx={{ color: iconColor, height: "100%" }}>

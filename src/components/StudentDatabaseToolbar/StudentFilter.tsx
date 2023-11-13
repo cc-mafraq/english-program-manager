@@ -2,7 +2,7 @@ import { first, includes, last, map, range, some } from "lodash";
 import React, { useCallback, useMemo } from "react";
 import { useAppStore, useStudentStore } from "../../hooks";
 import { Student, covidStatuses, genderedLevels, nationalities, statusDetails, statuses } from "../../interfaces";
-import { FilterField, getAllSessions, getSessionsWithResults, getStatusDetails } from "../../services";
+import { FilterField, getAllInitialSessions, getSessionsWithResults, getStatusDetails } from "../../services";
 import { FilterDrawer } from "../reusables";
 
 interface StudentFilterProps {
@@ -105,7 +105,7 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
       { condition: isAdmin, name: "NCL", path: "status.noContactList", values: booleanCheckboxOptions },
       { condition: isAdminOrFaculty, name: "Teacher", path: "work.isTeacher", values: ["Yes"] },
       { condition: isAdminOrFaculty, name: "English Teacher", path: "work.isEnglishTeacher", values: ["Yes"] },
-      { name: "Initial Session", path: "initialSession", values: getAllSessions(students) },
+      { name: "Initial Session", path: "initialSession", values: getAllInitialSessions(students) },
       { name: "Nationality", path: "nationality", values: nationalities },
       { name: "Gender", path: "gender", values: ["Male", "Female"] },
       {

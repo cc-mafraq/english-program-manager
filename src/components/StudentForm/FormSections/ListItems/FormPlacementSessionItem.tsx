@@ -1,9 +1,10 @@
 import { Close } from "@mui/icons-material";
 import { Box, Grid, IconButton, Tooltip } from "@mui/material";
+import moment from "moment";
 import React, { useMemo } from "react";
 import { FieldValues, useFormContext } from "react-hook-form";
 import { useColors, useDateInitialState, useFormList, useStudentStore } from "../../../../hooks";
-import { FormItem, getAllSessions, SPACING } from "../../../../services";
+import { FormItem, MOMENT_FORMAT, SPACING, getAllSessionsWithPlacement } from "../../../../services";
 import {
   FormLabel,
   FormList,
@@ -43,7 +44,7 @@ export const FormPlacementSessionItem = <T extends FieldValues>({ index, removeI
   );
 
   const sessions = useMemo(() => {
-    return getAllSessions(students);
+    return getAllSessionsWithPlacement(students);
   }, [students]);
 
   return (
@@ -77,6 +78,7 @@ export const FormPlacementSessionItem = <T extends FieldValues>({ index, removeI
         />
         <Grid item sm={3} xs={4}>
           <LabeledCheckbox
+            checkboxProps={{ defaultChecked: true }}
             containerProps={{ marginTop: -2 }}
             label="Pending"
             name={name ? `${name}.pending` : "pending"}
@@ -97,7 +99,11 @@ export const FormPlacementSessionItem = <T extends FieldValues>({ index, removeI
           removeItem={removeClassScheduleSentDate}
         >
           <FormDateItem>
-            <GridItemDatePicker gridProps={{ md: 3, xs: 6 }} label="Class Schedule Sent Date" />
+            <GridItemDatePicker
+              gridProps={{ md: 3, xs: 6 }}
+              label="Class Schedule Sent Date"
+              value={moment().format(MOMENT_FORMAT)}
+            />
           </FormDateItem>
         </FormList>
         <GridContainer marginBottom={0} marginLeft={0}>

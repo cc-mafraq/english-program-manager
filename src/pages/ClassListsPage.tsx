@@ -4,7 +4,7 @@ import { every, filter, find, orderBy, some } from "lodash";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ClassList, ClassListsToolbar, MenuBar } from "../components";
 import { loadLocal, saveLocal, useAppStore, useStudentStore } from "../hooks";
-import { SectionPlacement, Status, Student } from "../interfaces";
+import { AcademicRecord, FinalResult, SectionPlacement, Student } from "../interfaces";
 import { getClassFromClassName, getCurrentSession, getSectionPlacement } from "../services";
 
 export const ClassListsPage = () => {
@@ -41,9 +41,16 @@ export const ClassListsPage = () => {
   const filteredStudents = useMemo(() => {
     return orderBy(
       filter(students, (student) => {
+        const academicRecord = find(student.academicRecords, (ar) => {
+          return (
+            ar.session === selectedSession &&
+            selectedClass &&
+            (ar.level?.includes(selectedClass?.level) || ar.levelAudited?.includes(selectedClass?.level))
+          );
+        }) as AcademicRecord;
         return (
           !!getSectionPlacement(student, selectedSession, selectedClass) &&
-          (showWDStudents || student.status.currentStatus !== Status.WD)
+          (showWDStudents || academicRecord.overallResult !== FinalResult.WD)
         );
       }),
       selectedClass?.section === "CSWL"
@@ -108,7 +115,6 @@ export const ClassListsPage = () => {
         selectedClass={selectedClass}
         selectedSession={selectedSession}
         showWDStudents={showWDStudents}
-        students={students}
       />
       {gradesAreStarted && (
         <Typography

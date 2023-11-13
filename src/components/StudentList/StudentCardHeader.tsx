@@ -1,6 +1,7 @@
 import { Edit, WhatsApp } from "@mui/icons-material";
 import { Box, Divider, IconButton, Tooltip, Typography, useMediaQuery, useTheme } from "@mui/material";
-import React from "react";
+import { countBy, filter, map } from "lodash";
+import React, { useMemo } from "react";
 import { WithdrawButton } from ".";
 import { useAppStore, useColors, useStudentStore } from "../../hooks";
 import { Status, Student } from "../../interfaces";
@@ -25,6 +26,19 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({
   const setSelectedStudent = useStudentStore((state) => {
     return state.setSelectedStudent;
   });
+  const students = useStudentStore((state) => {
+    return state.students;
+  });
+  const primaryPhoneCounts = useMemo(() => {
+    return countBy(
+      map(
+        filter(students, (s) => {
+          return s.status.inviteTag;
+        }),
+        "phone.primaryPhone",
+      ),
+    );
+  }, [students]);
 
   const theme = useTheme();
   const { iconColor } = useColors();
@@ -58,7 +72,12 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({
           </Tooltip>
           {phoneNumberIsValid ? (
             <Tooltip enterDelay={500} placement="top" title="Primary WhatsApp Number">
-              <Typography marginRight="5px" paddingBottom={padding} variant="h5">
+              <Typography
+                borderTop={primaryPhoneCounts[student.phone.primaryPhone as number] > 1 ? "solid" : undefined}
+                marginRight="5px"
+                paddingBottom={padding}
+                variant="h5"
+              >
                 {student.phone.primaryPhone}
               </Typography>
             </Tooltip>
