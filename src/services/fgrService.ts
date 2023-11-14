@@ -116,10 +116,10 @@ export const getFGRStudents = (
     forEach(student.academicRecords, (ar, i) => {
       // conditions for creating an FGR
       if (
-        lowerCase(ar?.session) === lowerCase(session) &&
-        ar?.overallResult !== FinalResult.WD &&
-        !(ar?.overallResult === undefined && ar?.attendance === undefined) &&
-        (ar?.level || ar?.levelAudited)
+        lowerCase(ar.session) === lowerCase(session) &&
+        ar.overallResult !== FinalResult.WD &&
+        !(ar.overallResult === undefined && ar.attendance === undefined) &&
+        (ar.level || ar.levelAudited)
       ) {
         fgrStudents.push({ academicRecordIndex: i, student });
       }
