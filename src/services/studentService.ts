@@ -314,8 +314,8 @@ export const getStatusDetails = ({
     return false;
   });
   forEach(student.academicRecords, (ar) => {
-    if (ar?.overallResult !== FinalResult.WD && includes(sessionsWithResults, ar.session)) {
-      set(sessionsAttended, ar.session, true);
+    if (ar?.overallResult !== FinalResult.WD && includes(sessionsWithResults, ar?.session)) {
+      set(sessionsAttended, ar?.session, true);
     }
   });
   const progress = Object.values(sessionsAttended);

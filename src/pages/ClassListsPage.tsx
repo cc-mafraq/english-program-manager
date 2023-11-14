@@ -50,7 +50,7 @@ export const ClassListsPage = () => {
         }) as AcademicRecord;
         return (
           !!getSectionPlacement(student, selectedSession, selectedClass) &&
-          (showWDStudents || academicRecord.overallResult !== FinalResult.WD)
+          (showWDStudents || academicRecord?.overallResult !== FinalResult.WD)
         );
       }),
       selectedClass?.section === "CSWL"
