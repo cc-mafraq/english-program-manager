@@ -1,10 +1,10 @@
 import { SelectChangeEvent, Typography } from "@mui/material";
 import { green, red } from "@mui/material/colors";
-import { every, filter, find, orderBy, some } from "lodash";
+import { every, filter, find, includes, orderBy, some } from "lodash";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ClassList, ClassListsToolbar, MenuBar } from "../components";
 import { loadLocal, saveLocal, useAppStore, useStudentStore } from "../hooks";
-import { AcademicRecord, FinalResult, SectionPlacement, Student } from "../interfaces";
+import { FinalResult, SectionPlacement, Student } from "../interfaces";
 import { getClassFromClassName, getCurrentSession, getSectionPlacement } from "../services";
 
 export const ClassListsPage = () => {
@@ -44,10 +44,10 @@ export const ClassListsPage = () => {
         const academicRecord = find(student.academicRecords, (ar) => {
           return (
             ar.session === selectedSession &&
-            selectedClass &&
-            (ar.level?.includes(selectedClass?.level) || ar.levelAudited?.includes(selectedClass?.level))
+            selectedClass !== undefined &&
+            (includes(ar.level, selectedClass?.level) || includes(ar.levelAudited, selectedClass?.level))
           );
-        }) as AcademicRecord | undefined;
+        });
         return (
           !!getSectionPlacement(student, selectedSession, selectedClass) &&
           (showWDStudents || academicRecord?.overallResult !== FinalResult.WD)
