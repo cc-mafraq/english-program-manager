@@ -65,7 +65,7 @@ export interface FilterField<T> {
 export const getRepeatNum = (student: Student): string | undefined => {
   const levelsTaken = map(
     filter(student.academicRecords, (ar) => {
-      return ar.overallResult !== FinalResult.WD;
+      return ar?.overallResult !== FinalResult.WD;
     }),
     "level",
   );
@@ -314,7 +314,7 @@ export const getStatusDetails = ({
     return false;
   });
   forEach(student.academicRecords, (ar) => {
-    if (ar.overallResult !== FinalResult.WD && includes(sessionsWithResults, ar.session)) {
+    if (ar?.overallResult !== FinalResult.WD && includes(sessionsWithResults, ar.session)) {
       set(sessionsAttended, ar.session, true);
     }
   });

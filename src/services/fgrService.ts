@@ -117,7 +117,7 @@ export const getFGRStudents = (
       // conditions for creating an FGR
       if (
         lowerCase(ar.session) === lowerCase(session) &&
-        ar.overallResult !== FinalResult.WD &&
+        ar?.overallResult !== FinalResult.WD &&
         !(ar.overallResult === undefined && ar.attendance === undefined) &&
         (ar.level || ar.levelAudited)
       ) {
