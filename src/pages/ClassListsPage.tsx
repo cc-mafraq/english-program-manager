@@ -47,7 +47,7 @@ export const ClassListsPage = () => {
             selectedClass &&
             (ar.level?.includes(selectedClass?.level) || ar.levelAudited?.includes(selectedClass?.level))
           );
-        }) as AcademicRecord;
+        }) as AcademicRecord | undefined;
         return (
           !!getSectionPlacement(student, selectedSession, selectedClass) &&
           (showWDStudents || academicRecord?.overallResult !== FinalResult.WD)
