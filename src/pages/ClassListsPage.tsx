@@ -67,10 +67,10 @@ export const ClassListsPage = () => {
   const studentHasResult = useCallback(
     (filteredStudent: Student) => {
       return find(filteredStudent.academicRecords, (ar) => {
-        return ar.session === getCurrentSession(students) && ar.level === selectedClass?.level;
+        return ar.session === selectedSession && includes(ar.level, selectedClass?.level);
       })?.overallResult;
     },
-    [selectedClass?.level, students],
+    [selectedClass?.level, selectedSession],
   );
 
   const gradesAreStarted = useMemo(() => {
@@ -78,13 +78,13 @@ export const ClassListsPage = () => {
       filter(filteredStudents, (filteredStudent) => {
         return (
           find(filteredStudent.academicRecords, (ar) => {
-            return ar.session === getCurrentSession(students) && ar.level === selectedClass?.level;
+            return ar.session === selectedSession && includes(ar.level, selectedClass?.level);
           })?.overallResult !== "WD"
         );
       }),
       studentHasResult,
     );
-  }, [filteredStudents, selectedClass?.level, studentHasResult, students]);
+  }, [filteredStudents, selectedClass?.level, selectedSession, studentHasResult]);
 
   const gradesAreComplete = useMemo(() => {
     return every(filteredStudents, studentHasResult);
