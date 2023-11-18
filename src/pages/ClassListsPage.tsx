@@ -16,7 +16,9 @@ export const ClassListsPage = () => {
     return state.role;
   });
 
-  const [selectedSession, setSelectedSession] = useState<string | undefined>();
+  const [selectedSession, setSelectedSession] = useState<string | undefined>(
+    loadLocal("sessionSelection") ?? undefined,
+  );
 
   const [selectedClass, setSelectedClass] = useState<SectionPlacement | undefined>(
     getClassFromClassName(loadLocal("classListSelection") ?? ""),
@@ -91,6 +93,7 @@ export const ClassListsPage = () => {
   }, [filteredStudents, studentHasResult]);
 
   const handleSessionChange = useCallback((event: SelectChangeEvent) => {
+    saveLocal("sessionSelection", event.target.value);
     setSelectedSession(event.target.value);
   }, []);
 
