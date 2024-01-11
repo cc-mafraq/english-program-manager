@@ -47,7 +47,7 @@ export const ClassListsPage = () => {
           return (
             ar.session === selectedSession &&
             selectedClass !== undefined &&
-            (includes(ar.level, selectedClass?.level) || includes(ar.levelAudited, selectedClass?.level))
+            (ar.level === selectedClass?.level || ar.levelAudited === selectedClass?.level)
           );
         });
         return (

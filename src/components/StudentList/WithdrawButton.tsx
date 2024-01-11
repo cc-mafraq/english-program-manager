@@ -3,9 +3,9 @@ import { Logout } from "@mui/icons-material";
 import { Box, Breakpoint, IconButton, Tooltip, useMediaQuery, useTheme } from "@mui/material";
 import React, { useCallback, useMemo, useState } from "react";
 import { FinalResult, Status, Student, Withdraw } from "../../interfaces";
-import { setData, SPACING, withdrawSchema } from "../../services";
-import { FormDialog } from "../reusables";
+import { SPACING, setData, withdrawSchema } from "../../services";
 import { FormWithdraw } from "../StudentForm";
+import { FormDialog } from "../reusables";
 
 interface WithdrawButtonProps {
   student: Student;
@@ -43,7 +43,7 @@ export const WithdrawButton: React.FC<WithdrawButtonProps> = ({ student }) => {
       }
       student.status.currentStatus = Status.WD;
       const lastAcademicRecord = student.academicRecords[student.academicRecords.length - 1];
-      if (lastAcademicRecord.overallResult === undefined) {
+      if (lastAcademicRecord && lastAcademicRecord.overallResult === undefined) {
         lastAcademicRecord.overallResult = FinalResult.WD;
         lastAcademicRecord.finalGrade
           ? (lastAcademicRecord.finalGrade.result = FinalResult.WD)
@@ -67,12 +67,13 @@ export const WithdrawButton: React.FC<WithdrawButtonProps> = ({ student }) => {
   const useFormProps = useMemo(() => {
     return {
       defaultValues: {
+        droppedOutReason: student.status.droppedOutReason,
         inviteTag: false,
         noContactList: student.status.noContactList,
       },
       resolver: yupResolver(withdrawSchema),
     };
-  }, [student.status.noContactList]);
+  }, [student.status.droppedOutReason, student.status.noContactList]);
 
   return (
     <Box>

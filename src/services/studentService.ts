@@ -238,10 +238,10 @@ export const getSectionPlacement = (
     })?.placement,
     (sectionPlacement) => {
       return (
-        sectionPlacement.level ===
-          (selectedClass.section === "MW"
-            ? `${selectedClass.level}-${student.gender === "F" ? "W" : "M"}`
-            : selectedClass.level) && sectionPlacement.section === selectedClass.section
+        (selectedClass.section === "MW"
+          ? sectionPlacement.level === `${selectedClass.level}-M` ||
+            sectionPlacement.level === `${selectedClass.level}-W`
+          : sectionPlacement.level === selectedClass.level) && sectionPlacement.section === selectedClass.section
       );
     },
   );
@@ -256,8 +256,7 @@ export const getAcademicRecordByPlacement = (
     find(student?.academicRecords, (academicRecord: AcademicRecord) => {
       return (
         academicRecord.session === selectedSession &&
-        (includes(academicRecord.level, selectedClass?.level) ||
-          includes(academicRecord.levelAudited, selectedClass?.level))
+        (academicRecord.level === selectedClass?.level || academicRecord.levelAudited === selectedClass?.level)
       );
     }) ?? null
   );
