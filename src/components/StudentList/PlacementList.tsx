@@ -21,6 +21,7 @@ import {
   JOIN_STR,
   MOMENT_FORMAT,
   SPACING,
+  getCurrentSession,
   photoContactSchema,
   placementSchema,
   removeNullFromObject,
@@ -116,6 +117,9 @@ const PlacementAccordionDetails: React.FC<PlacementAccordionDetailsProps> = ({ d
 };
 
 export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
+  const students = useStudentStore((state) => {
+    return state.students;
+  });
   const setSelectedStudent = useStudentStore((state) => {
     return state.setSelectedStudent;
   });
@@ -178,7 +182,7 @@ export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
           student.academicRecords.push({ level: sp.level, session: dataNoNull.session });
         }
 
-        const selectedClassPlacement = student.placement[recordIndex].placement[classIndex];
+        const selectedClassPlacement = student.placement[recordIndex]?.placement[classIndex];
         if (
           recordIndex >= 0 &&
           sp.notes &&
@@ -225,10 +229,10 @@ export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
 
   const useFormProps = useMemo(() => {
     return {
-      defaultValues: selectedPlacement || emptyPlacement,
+      defaultValues: selectedPlacement || { ...emptyPlacement, session: getCurrentSession(students) },
       resolver: yupResolver(placementSchema),
     };
-  }, [selectedPlacement]);
+  }, [selectedPlacement, students]);
 
   const usePhotoContactFormProps = useMemo(() => {
     return {
@@ -295,6 +299,7 @@ export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
           gridProps={{ sx: { marginTop: "15px", width: "50%" } }}
           label="Photo Contact"
           name="photoContact"
+          value={moment().format(MOMENT_FORMAT)}
         />
       </FormDialog>
     </Box>

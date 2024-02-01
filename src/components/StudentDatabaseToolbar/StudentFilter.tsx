@@ -1,8 +1,14 @@
-import { first, includes, last, map, range, some } from "lodash";
+import { find, first, includes, range, some } from "lodash";
 import React, { useCallback, useMemo } from "react";
 import { useAppStore, useStudentStore } from "../../hooks";
 import { Student, covidStatuses, genderedLevels, nationalities, statusDetails, statuses } from "../../interfaces";
-import { FilterField, getAllInitialSessions, getSessionsWithResults, getStatusDetails } from "../../services";
+import {
+  FilterField,
+  getAllInitialSessions,
+  getCurrentSession,
+  getSessionsWithResults,
+  getStatusDetails,
+} from "../../services";
 import { FilterDrawer } from "../reusables";
 
 interface StudentFilterProps {
@@ -28,6 +34,7 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
   });
 
   const sessionsWithResults = getSessionsWithResults(students);
+  const currentSession = getCurrentSession(students);
   const isAdmin = role === "admin";
   const isAdminOrFaculty = isAdmin || role === "faculty";
 
@@ -46,8 +53,9 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
   );
 
   const pendingAcademicRecordFn = useCallback((student: Student) => {
-    const lastAcademicRecord = last(student.academicRecords);
-    return lastAcademicRecord && lastAcademicRecord.overallResult === undefined;
+    return some(student.academicRecords, (ar) => {
+      return ar.overallResult === undefined;
+    });
   }, []);
 
   const whatsAppGroupFn = useCallback((student: Student) => {
@@ -64,13 +72,23 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
     return "None";
   }, []);
 
-  const pendingPlacementFn = useCallback((student: Student) => {
-    return some(map(student.placement, "pending"));
-  }, []);
+  const pendingPlacementFn = useCallback(
+    (student: Student) => {
+      return find(student.placement, (p) => {
+        return p.session === currentSession;
+      })?.pending;
+    },
+    [currentSession],
+  );
 
-  const noAnswerCSPlacementFn = useCallback((student: Student) => {
-    return some(map(student.placement, "noAnswerClassScheduleWpm"));
-  }, []);
+  const noAnswerCSPlacementFn = useCallback(
+    (student: Student) => {
+      return find(student.placement, (p) => {
+        return p.session === currentSession;
+      })?.noAnswerClassScheduleWpm;
+    },
+    [currentSession],
+  );
 
   const handleClearFilters = useCallback(() => {
     setFilter([]);

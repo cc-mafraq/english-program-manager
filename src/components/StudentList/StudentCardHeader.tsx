@@ -91,10 +91,7 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({
           <Box>
             {phoneNumberIsValid && (
               <Tooltip arrow placement="top" title="Contact on WhatsApp">
-                <IconButton
-                  href={`https://web.whatsapp.com/send?phone=962${student.phone.primaryPhone}`}
-                  target="_blank"
-                >
+                <IconButton href={`https://wa.me/962${student.phone.primaryPhone}`} target="_blank">
                   <WhatsApp sx={{ color: iconColor }} />
                 </IconButton>
               </Tooltip>

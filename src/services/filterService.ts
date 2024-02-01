@@ -17,9 +17,10 @@ export const searchStudents = (students: Student[], searchString: string): Stude
   const cleanSearchString = toLower(searchString.replace(nonAlphaNumeric, ""));
   const searchStringRegEx = new RegExp(`^${cleanSearchString}`);
   return filter(students, (s) => {
+    const cleanName = toLower(s.name.english.replace(nonAlphaNumeric, ""));
     return (
       isEmpty(searchString) ||
-      !!toLower(s.name.english).match(searchStringRegEx) ||
+      !!toLower(cleanName).match(searchStringRegEx) ||
       includes(s.name.arabic, searchString) ||
       s.epId.toString() === searchString ||
       some(map(s.phone.phoneNumbers, "number"), phoneConditionFn(cleanSearchString)) ||
