@@ -1,5 +1,5 @@
 import { Box, Typography, TypographyProps, useTheme } from "@mui/material";
-import { get, keys, map, round, sortBy } from "lodash";
+import { get, keys, map, round, sortBy, sum, values } from "lodash";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppStore, useStatistics, useStudentStore } from "../hooks";
@@ -23,6 +23,10 @@ export const StatisticsPage = () => {
     color: theme.palette.text.primary,
     marginTop: 1,
   };
+
+  const totalWaitingListOutcomes =
+    sum(values(statistics.waitingListOutcomeCounts)) - statistics.waitingListOutcomeCounts.undefined;
+
   useEffect(() => {
     if (!statistics.totalRegistered) navigate("/epd", { replace: true });
   }, [navigate, statistics]);
@@ -40,7 +44,8 @@ export const StatisticsPage = () => {
       {map(keys(sortObjectByValues(statistics.activeNationalityCounts)).reverse(), (key) => {
         return (
           <Typography {...textProps} key={`active-nationality-${key}`} marginLeft={INDENT}>
-            {key}: {get(statistics.activeNationalityCounts, key)}
+            {key}: {get(statistics.activeNationalityCounts, key)} (
+            {round(get(statistics.activeNationalityCounts, key) / statistics.totalActive, 3) * 100}%)
           </Typography>
         );
       })}
@@ -50,10 +55,22 @@ export const StatisticsPage = () => {
       {map([...levels, "L5 GRAD"], (key) => {
         return (
           <Typography {...textProps} key={`active-level-${key}`} marginLeft={INDENT}>
-            Active {key}: {get(statistics.activeLevelCounts, key)}
+            Active {key}: {get(statistics.activeLevelCounts, key)} (
+            {round((get(statistics.activeLevelCounts, key) ?? 0) / statistics.totalActive, 3) * 100}%)
           </Typography>
         );
       })}
+      <Typography {...textProps} fontWeight="bold">
+        Active Students by Gender
+      </Typography>
+      <Typography {...textProps} marginLeft={INDENT}>
+        Total Male: {get(statistics.activeGenderCounts, "M")} (
+        {round((get(statistics.activeGenderCounts, "M") ?? 0) / statistics.totalActive, 2) * 100}%)
+      </Typography>
+      <Typography {...textProps} marginLeft={INDENT}>
+        Total Female: {get(statistics.activeGenderCounts, "F")} (
+        {round((get(statistics.activeGenderCounts, "F") ?? 0) / statistics.totalActive, 2) * 100}%)
+      </Typography>
       <Typography {...textProps}>Current Pending Enrollment: {statistics.totalPending}</Typography>
       <Typography {...textProps}>Total Eligible for Next Session: {statistics.totalEligible}</Typography>
       <Typography {...textProps}>Total on No Contact List: {statistics.totalNCL}</Typography>
@@ -104,7 +121,7 @@ export const StatisticsPage = () => {
         return (
           <Typography {...textProps} key={`status-details-${key}`} marginLeft={INDENT}>
             {key}: {get(statistics.statusDetailsCounts, key)} (
-            {round(get(statistics.statusDetailsCounts, key) / students.length, 3) * 100}%)
+            {round(get(statistics.statusDetailsCounts, key) / students.length, 2) * 100}%)
           </Typography>
         );
       })}
@@ -116,6 +133,34 @@ export const StatisticsPage = () => {
           <Typography {...textProps} key={`session-${key}`} marginLeft={INDENT}>
             {key}: {get(statistics.sessionCounts, key)}
           </Typography>
+        );
+      })}
+      <Typography {...textProps} fontWeight="bold">
+        Placement Registration Rates by Status
+      </Typography>
+      {map(statistics.placementRegistrationCounts, (placementRegistrationSessionCounts) => {
+        return (
+          <>
+            <Typography {...textProps} fontWeight="bold" marginLeft={INDENT}>
+              {placementRegistrationSessionCounts.session}
+            </Typography>
+            {map(keys(placementRegistrationSessionCounts.inviteCounts), (key) => {
+              return (
+                <Typography {...textProps} marginLeft={INDENT * 2}>
+                  {key}: {get(placementRegistrationSessionCounts.registrationCounts, key)} of{" "}
+                  {get(placementRegistrationSessionCounts.inviteCounts, key)} (
+                  {(
+                    round(
+                      get(placementRegistrationSessionCounts.registrationCounts, key) /
+                        get(placementRegistrationSessionCounts.inviteCounts, key),
+                      2,
+                    ) * 100
+                  ).toFixed(0)}
+                  %)
+                </Typography>
+              );
+            })}
+          </>
         );
       })}
       <Typography {...textProps} fontWeight="bold">
@@ -150,6 +195,19 @@ export const StatisticsPage = () => {
       <Typography {...textProps}>Total English Teachers: {statistics.totalEnglishTeachers}</Typography>
       <Typography {...textProps}>Total Illiterate Arabic: {statistics.totalIlliterateArabic}</Typography>
       <Typography {...textProps}>Total Illiterate English: {statistics.totalIlliterateEnglish}</Typography>
+      <Typography {...textProps} fontWeight="bold">
+        Waiting List Outcomes
+      </Typography>
+      {map(keys(sortObjectByValues(statistics.waitingListOutcomeCounts)).reverse(), (key) => {
+        return (
+          key !== "undefined" && (
+            <Typography {...textProps} key={`waiting-list0outcome-${key}`} marginLeft={INDENT}>
+              Total {key}: {get(statistics.waitingListOutcomeCounts, key)} (
+              {round(get(statistics.waitingListOutcomeCounts, key) / totalWaitingListOutcomes, 2) * 100}%)
+            </Typography>
+          )
+        );
+      })}
     </Box>
   ) : (
     <></>
