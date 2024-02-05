@@ -1,5 +1,5 @@
 import { Box, Typography, TypographyProps, useTheme } from "@mui/material";
-import { get, keys, map, round, sortBy, sum, values } from "lodash";
+import { get, isEmpty, keys, map, round, sortBy, sum, values } from "lodash";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppStore, useStatistics, useStudentStore } from "../hooks";
@@ -64,11 +64,11 @@ export const StatisticsPage = () => {
         Active Students by Gender
       </Typography>
       <Typography {...textProps} marginLeft={INDENT}>
-        Total Male: {get(statistics.activeGenderCounts, "M")} (
+        Active Male: {get(statistics.activeGenderCounts, "M")} (
         {(round((get(statistics.activeGenderCounts, "M") ?? 0) / statistics.totalActive, 2) * 100).toFixed(0)}%)
       </Typography>
       <Typography {...textProps} marginLeft={INDENT}>
-        Total Female: {get(statistics.activeGenderCounts, "F")} (
+        Active Female: {get(statistics.activeGenderCounts, "F")} (
         {(round((get(statistics.activeGenderCounts, "F") ?? 0) / statistics.totalActive, 2) * 100).toFixed(0)}%)
       </Typography>
       <Typography {...textProps}>Current Pending Enrollment: {statistics.totalPending}</Typography>
@@ -200,19 +200,25 @@ export const StatisticsPage = () => {
       <Typography {...textProps} fontWeight="bold">
         Waiting List Outcomes
       </Typography>
-      {map(keys(sortObjectByValues(statistics.waitingListOutcomeCounts)).reverse(), (key) => {
-        return (
-          key !== "undefined" && (
-            <Typography {...textProps} key={`waiting-list0outcome-${key}`} marginLeft={INDENT}>
-              Total {key}: {get(statistics.waitingListOutcomeCounts, key)} (
-              {(round(get(statistics.waitingListOutcomeCounts, key) / totalWaitingListOutcomes, 2) * 100).toFixed(
-                0,
-              )}
-              %)
-            </Typography>
-          )
-        );
-      })}
+      {!isEmpty(statistics.waitingListOutcomeCounts) ? (
+        map(keys(sortObjectByValues(statistics.waitingListOutcomeCounts)).reverse(), (key) => {
+          return (
+            key !== "undefined" && (
+              <Typography {...textProps} key={`waiting-list0outcome-${key}`} marginLeft={INDENT}>
+                Total {key}: {get(statistics.waitingListOutcomeCounts, key)} (
+                {(
+                  round(get(statistics.waitingListOutcomeCounts, key) / totalWaitingListOutcomes, 2) * 100
+                ).toFixed(0)}
+                %)
+              </Typography>
+            )
+          );
+        })
+      ) : (
+        <Typography {...textProps} textAlign="center">
+          Please go to the Waiting List page then return here to view Waiting List statistics
+        </Typography>
+      )}
     </Box>
   ) : (
     <></>

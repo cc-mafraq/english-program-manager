@@ -1,7 +1,15 @@
 import { find, first, includes, range, some } from "lodash";
 import React, { useCallback, useMemo } from "react";
 import { useAppStore, useStudentStore } from "../../hooks";
-import { Student, covidStatuses, genderedLevels, nationalities, statusDetails, statuses } from "../../interfaces";
+import {
+  Student,
+  covidStatuses,
+  genderedLevels,
+  levels,
+  nationalities,
+  statusDetails,
+  statuses,
+} from "../../interfaces";
 import {
   FilterField,
   getAllInitialSessions,
@@ -97,6 +105,8 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
   const filterFields: FilterField<Student>[] = useMemo(() => {
     return [
       { condition: isAdmin, name: "Invite", path: "status.inviteTag", values: booleanCheckboxOptions },
+      { name: "Current Level", path: "currentLevel", values: [...genderedLevels, "L5 GRAD"] },
+      { name: "Current Status", path: "status.currentStatus", values: statuses },
       {
         condition: isAdmin,
         fn: pendingPlacementFn,
@@ -111,8 +121,6 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
         path: "placement.noAnswerClassScheduleWpm",
         values: ["Yes"],
       },
-      { name: "Current Level", path: "currentLevel", values: [...genderedLevels, "L5 GRAD"] },
-      { name: "Current Status", path: "status.currentStatus", values: statuses },
       {
         condition: isAdminOrFaculty,
         fn: pendingAcademicRecordFn,
@@ -120,6 +128,7 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
         path: "academicRecords",
         values: ["Yes", "No"],
       },
+      { name: "Original Placement Level", path: "origPlacementData.level", values: levels },
       { condition: isAdmin, name: "NCL", path: "status.noContactList", values: booleanCheckboxOptions },
       { condition: isAdminOrFaculty, name: "Teacher", path: "work.isTeacher", values: ["Yes"] },
       { condition: isAdminOrFaculty, name: "English Teacher", path: "work.isEnglishTeacher", values: ["Yes"] },
@@ -131,7 +140,16 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
         fn: whatsAppGroupFn,
         name: "WA BC Group",
         path: "phone.waBroadcastSAR",
-        values: ["None", "SAR Group 1", "SAR Group 2", "SAR Group 3", "SAR Group 4", "SAR Group 5", "SAR Group 6"],
+        values: [
+          "None",
+          "SAR Group 1",
+          "SAR Group 2",
+          "SAR Group 3",
+          "SAR Group 4",
+          "SAR Group 5",
+          "SAR Group 6",
+          "SAR Group 7",
+        ],
       },
       { condition: isAdmin, name: "COVID Vaccine Status", path: "covidVaccine.status", values: covidStatuses },
       {
