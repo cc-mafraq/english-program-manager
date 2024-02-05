@@ -254,10 +254,12 @@ export const getAcademicRecordByPlacement = (
 ) => {
   return (
     find(student?.academicRecords, (academicRecord: AcademicRecord) => {
-      return (
-        academicRecord.session === selectedSession &&
-        (academicRecord.level === selectedClass?.level || academicRecord.levelAudited === selectedClass?.level)
+      const academicRecordLevelNoGender = replace(
+        academicRecord.level ?? academicRecord.levelAudited ?? "",
+        /-M|-W/g,
+        "",
       );
+      return academicRecord.session === selectedSession && academicRecordLevelNoGender === selectedClass?.level;
     }) ?? null
   );
 };
