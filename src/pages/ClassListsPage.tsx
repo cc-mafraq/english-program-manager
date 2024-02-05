@@ -1,6 +1,6 @@
 import { SelectChangeEvent, Typography } from "@mui/material";
 import { green, red } from "@mui/material/colors";
-import { every, filter, find, includes, orderBy, some } from "lodash";
+import { every, filter, find, includes, orderBy, replace, some } from "lodash";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ClassList, ClassListsToolbar, MenuBar } from "../components";
 import { loadLocal, saveLocal, useAppStore, useStudentStore } from "../hooks";
@@ -44,10 +44,11 @@ export const ClassListsPage = () => {
     return orderBy(
       filter(students, (student) => {
         const academicRecord = find(student.academicRecords, (ar) => {
+          const academicRecordLevelNoGender = replace(ar.level ?? ar.levelAudited ?? "", /-M|-W/g, "");
           return (
             ar.session === selectedSession &&
             selectedClass !== undefined &&
-            (ar.level === selectedClass?.level || ar.levelAudited === selectedClass?.level)
+            academicRecordLevelNoGender === selectedClass?.level
           );
         });
         return (
