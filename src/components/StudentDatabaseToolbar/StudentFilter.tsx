@@ -40,16 +40,16 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
 
   const statusDetailsFn = useCallback(
     (student: Student) => {
-      return getStatusDetails({ sessions: sessionsWithResults, student })[0];
+      return getStatusDetails({ sessions: sessionsWithResults, student, students })[0];
     },
-    [sessionsWithResults],
+    [sessionsWithResults, students],
   );
 
   const sessionsAttendedFn = useCallback(
     (student: Student) => {
-      return getStatusDetails({ sessions: sessionsWithResults, student })[1];
+      return getStatusDetails({ sessions: sessionsWithResults, student, students })[1];
     },
-    [sessionsWithResults],
+    [sessionsWithResults, students],
   );
 
   const pendingAcademicRecordFn = useCallback((student: Student) => {

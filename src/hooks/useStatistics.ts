@@ -1,19 +1,23 @@
-import { countBy, filter, forEach, get, last, map, omit, set } from "lodash";
+import { countBy, dropRight, filter, find, findIndex, forEach, get, includes, last, map, omit, set } from "lodash";
 import { useCallback } from "react";
 import {
   CovidStatus,
   DroppedOutReason,
+  FinalResult,
   GenderedLevel,
   Level,
   Nationality,
   Status,
   StatusDetails,
   Student,
+  StudentStatus,
+  WaitlistOutcome,
 } from "../interfaces";
-import { getSessionsWithResults, getStatusDetails, isActive } from "../services";
-import { useStudentStore } from "./useStores";
+import { getAllSessionsWithPlacement, getSessionsWithResults, getStatusDetails, isActive } from "../services";
+import { useStudentStore, useWaitingListStore } from "./useStores";
 
 interface Statistics {
+  activeGenderCounts: { [key in Student["gender"]]: number };
   activeLevelCounts: { [key in Level]: number };
   activeNationalityCounts: { [key in Nationality]: number };
   averageAge: number;
@@ -23,6 +27,11 @@ interface Statistics {
   genderCounts: { [key in Student["age"]]: number };
   levelCounts: { [key in Level]: number };
   nationalityCounts: { [key in Nationality]: number };
+  placementRegistrationCounts: {
+    inviteCounts: { [key in StudentStatus["currentStatus"]]: number };
+    registrationCounts: { [key in StudentStatus["currentStatus"]]: number };
+    session: Student["initialSession"];
+  }[];
   sessionCounts: { [key in Student["initialSession"]]: number };
   statusCounts: { [key in Status]: number };
   statusDetailsCounts: { [key in StatusDetails]: number };
@@ -35,6 +44,7 @@ interface Statistics {
   totalPending: number;
   totalRegistered: number;
   totalTeachers: number;
+  waitingListOutcomeCounts: { [key in WaitlistOutcome | "undefined"]: number };
 }
 
 const getLevelCounts = (statistics: Statistics, path: string) => {
@@ -54,6 +64,9 @@ export const useStatistics = (): Statistics => {
   const students = useStudentStore((state) => {
     return state.students;
   });
+  const waitingList = useWaitingListStore((state) => {
+    return state.waitingList;
+  });
 
   const filterIsActive = useCallback(() => {
     return filter(students, (s) => {
@@ -67,9 +80,69 @@ export const useStatistics = (): Statistics => {
     });
   }, [students]);
 
-  const sessions = getSessionsWithResults(students);
+  const removeSummerSession = (session: Student["initialSession"]) => {
+    return !includes(session, "Su");
+  };
+
+  const sessions = filter(getSessionsWithResults(students), removeSummerSession);
+  const sessionsWithPlacement = filter(getAllSessionsWithPlacement(students), removeSummerSession);
+
+  const placementRegistrationCounts = dropRight(
+    map(sessionsWithPlacement, (session) => {
+      const placementSessionStudents = filter(students, (student) => {
+        return includes(map(student.placement, "session"), session);
+      });
+
+      const studentIsRegistered = (student: Student) => {
+        const studentPlacementSession = find(student.placement, (placement) => {
+          return placement.session === session;
+        });
+        return studentPlacementSession?.placement !== undefined && studentPlacementSession.placement.length > 0;
+      };
+
+      const previousSession =
+        sessions[
+          findIndex(sessions, (s) => {
+            return s === session;
+          }) + 1
+        ];
+      const newInviteStudents = filter(placementSessionStudents, (psrs) => {
+        return psrs.initialSession === session;
+      });
+      const retInviteStudents = filter(placementSessionStudents, (psrs) => {
+        const previousAcademicRecord = find(psrs.academicRecords, (ar) => {
+          return ar.session === previousSession;
+        });
+        return (
+          previousAcademicRecord?.overallResult === FinalResult.P ||
+          previousAcademicRecord?.overallResult === FinalResult.F
+        );
+      });
+      const wdInviteStudents = filter(placementSessionStudents, (psrs) => {
+        const previousAcademicRecord = find(psrs.academicRecords, (ar) => {
+          return ar.session === previousSession;
+        });
+        return previousAcademicRecord === undefined || previousAcademicRecord?.overallResult === FinalResult.WD;
+      });
+      return {
+        inviteCounts: {
+          NEW: newInviteStudents.length,
+          RET: retInviteStudents.length,
+          WD: wdInviteStudents.length,
+        },
+        registrationCounts: {
+          NEW: filter(newInviteStudents, studentIsRegistered).length,
+          RET: filter(retInviteStudents, studentIsRegistered).length,
+          WD: filter(wdInviteStudents, studentIsRegistered).length,
+        },
+        session,
+      };
+    }),
+    1,
+  );
 
   const statistics: Statistics = {
+    activeGenderCounts: countBy(filterIsActive(), "gender") as { [key in Student["gender"]]: number },
     activeLevelCounts: countBy(filterIsActive(), "currentLevel") as { [key in GenderedLevel]: number },
     activeNationalityCounts: countBy(filterIsActive(), "nationality") as { [key in Nationality]: number },
     averageAge: 0,
@@ -83,13 +156,14 @@ export const useStatistics = (): Statistics => {
     genderCounts: countBy(students, "gender") as { [key in Student["age"]]: number },
     levelCounts: countBy(students, "currentLevel") as { [key in GenderedLevel]: number },
     nationalityCounts: countBy(students, "nationality") as { [key in Nationality]: number },
+    placementRegistrationCounts,
     sessionCounts: omit(countBy(students, "initialSession"), "") as {
       [key in Student["initialSession"]]: number;
     },
     statusCounts: countBy(students, "status.currentStatus") as { [key in Status]: number },
     statusDetailsCounts: countBy(
       map(students, (student) => {
-        return getStatusDetails({ sessions, student })[0];
+        return getStatusDetails({ sessions, student, students })[0];
       }),
     ) as { [key in StatusDetails]: number },
     totalActive: 0,
@@ -101,6 +175,9 @@ export const useStatistics = (): Statistics => {
     totalPending: 0,
     totalRegistered: 0,
     totalTeachers: 0,
+    waitingListOutcomeCounts: countBy(waitingList, "outcome") as {
+      [key in WaitlistOutcome | "undefined"]: number;
+    },
   };
 
   let numStudentsWithAge = 0;
