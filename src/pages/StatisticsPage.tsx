@@ -35,7 +35,7 @@ export const StatisticsPage = () => {
     <Box marginLeft="10%" paddingBottom={5}>
       <Typography {...textProps}>
         Active Students: {statistics.totalActive} (
-        {round(statistics.totalActive / statistics.totalRegistered, 3) * 100 || 0}
+        {(round(statistics.totalActive / statistics.totalRegistered, 3) * 100 || 0).toFixed(1)}
         %)
       </Typography>
       <Typography {...textProps} fontWeight="bold">
@@ -45,7 +45,7 @@ export const StatisticsPage = () => {
         return (
           <Typography {...textProps} key={`active-nationality-${key}`} marginLeft={INDENT}>
             {key}: {get(statistics.activeNationalityCounts, key)} (
-            {round(get(statistics.activeNationalityCounts, key) / statistics.totalActive, 3) * 100}%)
+            {(round(get(statistics.activeNationalityCounts, key) / statistics.totalActive, 3) * 100).toFixed(1)}%)
           </Typography>
         );
       })}
@@ -56,7 +56,7 @@ export const StatisticsPage = () => {
         return (
           <Typography {...textProps} key={`active-level-${key}`} marginLeft={INDENT}>
             Active {key}: {get(statistics.activeLevelCounts, key)} (
-            {round((get(statistics.activeLevelCounts, key) ?? 0) / statistics.totalActive, 3) * 100}%)
+            {(round((get(statistics.activeLevelCounts, key) ?? 0) / statistics.totalActive, 3) * 100).toFixed(1)}%)
           </Typography>
         );
       })}
@@ -65,11 +65,11 @@ export const StatisticsPage = () => {
       </Typography>
       <Typography {...textProps} marginLeft={INDENT}>
         Total Male: {get(statistics.activeGenderCounts, "M")} (
-        {round((get(statistics.activeGenderCounts, "M") ?? 0) / statistics.totalActive, 2) * 100}%)
+        {(round((get(statistics.activeGenderCounts, "M") ?? 0) / statistics.totalActive, 2) * 100).toFixed(0)}%)
       </Typography>
       <Typography {...textProps} marginLeft={INDENT}>
         Total Female: {get(statistics.activeGenderCounts, "F")} (
-        {round((get(statistics.activeGenderCounts, "F") ?? 0) / statistics.totalActive, 2) * 100}%)
+        {(round((get(statistics.activeGenderCounts, "F") ?? 0) / statistics.totalActive, 2) * 100).toFixed(0)}%)
       </Typography>
       <Typography {...textProps}>Current Pending Enrollment: {statistics.totalPending}</Typography>
       <Typography {...textProps}>Total Eligible for Next Session: {statistics.totalEligible}</Typography>
@@ -121,7 +121,7 @@ export const StatisticsPage = () => {
         return (
           <Typography {...textProps} key={`status-details-${key}`} marginLeft={INDENT}>
             {key}: {get(statistics.statusDetailsCounts, key)} (
-            {round(get(statistics.statusDetailsCounts, key) / students.length, 2) * 100}%)
+            {(round(get(statistics.statusDetailsCounts, key) / students.length, 2) * 100).toFixed(0)}%)
           </Typography>
         );
       })}
@@ -190,7 +190,9 @@ export const StatisticsPage = () => {
           </Typography>
         );
       })}
-      <Typography {...textProps}>Average Age at Program Entry: {round(statistics.averageAge, 2)}</Typography>
+      <Typography {...textProps}>
+        Average Age at Program Entry: {round(statistics.averageAge, 1).toFixed(1)}
+      </Typography>
       <Typography {...textProps}>Total Teachers: {statistics.totalTeachers}</Typography>
       <Typography {...textProps}>Total English Teachers: {statistics.totalEnglishTeachers}</Typography>
       <Typography {...textProps}>Total Illiterate Arabic: {statistics.totalIlliterateArabic}</Typography>
@@ -203,7 +205,10 @@ export const StatisticsPage = () => {
           key !== "undefined" && (
             <Typography {...textProps} key={`waiting-list0outcome-${key}`} marginLeft={INDENT}>
               Total {key}: {get(statistics.waitingListOutcomeCounts, key)} (
-              {round(get(statistics.waitingListOutcomeCounts, key) / totalWaitingListOutcomes, 2) * 100}%)
+              {(round(get(statistics.waitingListOutcomeCounts, key) / totalWaitingListOutcomes, 2) * 100).toFixed(
+                0,
+              )}
+              %)
             </Typography>
           )
         );
