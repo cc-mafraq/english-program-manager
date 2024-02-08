@@ -37,6 +37,16 @@ const EntryInformation: React.FC<WaitingListEntryInfoProps> = React.memo(({ data
       <LabeledText
         containerProps={{
           sx: {
+            backgroundColor: wlEntry.eligible ? green : undefined,
+          },
+        }}
+        label="Eligible"
+      >
+        {wlEntry.eligible ? "Yes" : undefined}
+      </LabeledText>
+      <LabeledText
+        containerProps={{
+          sx: {
             backgroundColor:
               wlEntry.highPriority === HighPriority.YES
                 ? red
@@ -71,6 +81,9 @@ const EntryInformation: React.FC<WaitingListEntryInfoProps> = React.memo(({ data
         {wlEntry.numPeople}
       </LabeledText>
       <LabeledText label="Entry Date">{wlEntry.entryDate}</LabeledText>
+      <LabeledText label="Gender">
+        {wlEntry.gender === "M" ? "Male" : wlEntry.gender === "F" ? "Female" : wlEntry.gender}
+      </LabeledText>
       <LabeledText label="Outcome">{wlEntry.outcome}</LabeledText>
       <LabeledText label="Referral">{wlEntry.referral}</LabeledText>
       <LabeledText condition={wlEntry.enteredInPhone !== undefined} label="Entered in Phone">

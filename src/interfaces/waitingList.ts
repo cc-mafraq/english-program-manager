@@ -6,8 +6,10 @@ export interface WaitingListEntry {
   correspondence: Correspondence[];
   covidStatus: CovidStatus;
   covidVaccineNotes?: string;
+  eligible?: boolean;
   enteredInPhone?: boolean;
   entryDate: string;
+  gender?: "M" | "F" | "Mixed";
   highPriority: HighPriority;
   id: string;
   name?: string;
