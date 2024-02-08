@@ -1,5 +1,5 @@
 import { array, bool, mixed, number, object, string } from "yup";
-import { HighPriority, WaitlistOutcome } from "../interfaces";
+import { HighPriority, WaitingListEntry, WaitlistOutcome } from "../interfaces";
 import {
   correspondenceSchema,
   covidStatusSchema,
@@ -24,8 +24,10 @@ export const waitingListFormSchema = object().shape({
   correspondence: array().of(correspondenceSchema),
   covidStatus: covidStatusSchema,
   covidVaccineNotes: optionalStringSchema,
+  eligible: bool().nullable().optional(),
   enteredInPhone: bool().optional(),
   entryDate: dateSchema.required("Entry date is required").typeError("Entry date is required"),
+  gender: mixed<WaitingListEntry["gender"]>().oneOf(["M", "F", "Mixed", null]).nullable().optional(),
   highPriority: mixed<HighPriority>()
     .oneOf(Object.values(HighPriority) as HighPriority[])
     .transform(stringToHighPriority)

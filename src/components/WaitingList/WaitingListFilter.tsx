@@ -73,6 +73,10 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({
     return valueMatches.length ? (valueMatch === "NS" ? "NO SHOW" : valueMatch) : "NONE";
   }, []);
 
+  const eligibleFn = useCallback((wlEntry: WaitingListEntry) => {
+    return wlEntry.eligible === undefined ? false : wlEntry.eligible;
+  }, []);
+
   const placementExamValues = useMemo(() => {
     return take(
       uniq(
@@ -100,6 +104,13 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({
       },
       {
         condition: isAdminOrFaculty,
+        fn: eligibleFn,
+        name: "Eligible",
+        path: "eligible",
+        values: booleanCheckboxOptions,
+      },
+      {
+        condition: isAdminOrFaculty,
         fn: removeDuplicates,
         name: "Remove Duplicates",
         path: "phone.primaryPhone",
@@ -110,6 +121,12 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({
         name: "Entered in Phone",
         path: "enteredInPhone",
         values: booleanCheckboxOptions,
+      },
+      {
+        condition: isAdminOrFaculty,
+        name: "Gender",
+        path: "gender",
+        values: ["Male", "Female", "Mixed"],
       },
       {
         condition: isAdminOrFaculty,
@@ -138,7 +155,7 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({
         values: booleanCheckboxOptions,
       },
     ];
-  }, [isAdminOrFaculty, outcomeFn, placementExamFn, placementExamValues, removeDuplicates]);
+  }, [eligibleFn, isAdminOrFaculty, outcomeFn, placementExamFn, placementExamValues, removeDuplicates]);
 
   return (
     <FilterDrawer

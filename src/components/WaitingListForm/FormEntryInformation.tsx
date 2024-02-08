@@ -8,6 +8,7 @@ import {
   GridContainer,
   GridItemAutocomplete,
   GridItemDatePicker,
+  GridItemRadioGroup,
   GridItemTextField,
   LabeledCheckbox,
 } from "../reusables";
@@ -23,6 +24,12 @@ export const FormEntryInformation: React.FC<FormEntryInformationProps> = ({ disa
       <GridContainer marginBottom={0}>
         <Grid item sm={2} xs={3}>
           <LabeledCheckbox checkboxProps={{ defaultChecked: true, disabled }} label="Waiting" name="waiting" />
+          <LabeledCheckbox
+            checkboxProps={{ disabled }}
+            containerProps={{ marginTop: -1 }}
+            label="Eligibile"
+            name="eligible"
+          />
         </Grid>
         <GridItemDatePicker
           datePickerProps={{ disabled }}
@@ -42,12 +49,15 @@ export const FormEntryInformation: React.FC<FormEntryInformationProps> = ({ disa
         />
         <GridItemTextField gridProps={{ md: 3, sm: 4, xs: 9 }} label="Name (Optional)" name="name" />
       </GridContainer>
-      <GridContainer>
+      <GridContainer marginBottom={0}>
         <Grid item sm={2} xs={3}>
           <LabeledCheckbox checkboxProps={{ disabled }} label="Entered in Phone" name="enteredInPhone" />
         </Grid>
         <GridItemTextField gridProps={{ sm: 3, xs: 9 }} label="Referral" name="referral" />
         <GridItemTextField gridProps={{ xs: 3 }} label="Number of People" name="numPeople" value="1" />
+        <GridItemRadioGroup gridProps={{ xs: 3 }} label="Gender" options={["M", "F", "Mixed"]} />
+      </GridContainer>
+      <GridContainer>
         <Grid item sm={3}>
           <LabeledCheckbox containerProps={{ marginTop: -1 }} label="Probable PL1" name="probPL1" />
           <LabeledCheckbox containerProps={{ marginTop: -1 }} label="Probable L3+" name="probL3Plus" />
