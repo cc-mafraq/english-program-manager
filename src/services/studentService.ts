@@ -259,7 +259,11 @@ export const getAcademicRecordByPlacement = (
         /-M|-W/g,
         "",
       );
-      return academicRecord.session === selectedSession && academicRecordLevelNoGender === selectedClass?.level;
+      return (
+        academicRecord.session === selectedSession &&
+        (academicRecordLevelNoGender === selectedClass?.level ||
+          (academicRecord?.level ?? academicRecord?.levelAudited) === selectedClass?.level)
+      );
     }) ?? null
   );
 };
