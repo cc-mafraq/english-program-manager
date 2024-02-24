@@ -1,5 +1,3 @@
-import { filter as _filter, last } from "lodash";
-import moment from "moment";
 import React, { useCallback, useRef } from "react";
 import { Loading, MenuBar, WaitingList, WaitingListFormDialog, WaitingListToolbar } from "../components";
 import { usePageState, useWaitingListFormStore, useWaitingListStore } from "../hooks";
@@ -36,22 +34,18 @@ export const WaitingListPage = () => {
     setWaitingListFormDialogOpen(true);
   }, [setWaitingListFormDialogOpen]);
 
-  const filteredWaitingListSession = _filter(filteredWaitingList, (wle) => {
-    return moment(last(wle.correspondence)?.date).isBetween("2023-11-20", "2024-02-04");
-  });
-
   return (
     <>
       <MenuBar innerRef={menuRef} pageName="Waiting List" />
       <WaitingListToolbar
-        filteredWaitingList={filteredWaitingListSession}
+        filteredWaitingList={filteredWaitingList}
         handleSearchStringChange={handleSearchStringChange}
         handleWLEntryDialogOpen={handleWLEntryDialogOpen}
         searchString={searchString}
       />
       <Loading />
       <WaitingList
-        filteredWaitingList={filteredWaitingListSession}
+        filteredWaitingList={filteredWaitingList}
         handleWLEntryDialogOpen={handleWLEntryDialogOpen}
         menuRef={menuRef}
       />
