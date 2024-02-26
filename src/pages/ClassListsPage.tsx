@@ -48,7 +48,8 @@ export const ClassListsPage = () => {
           return (
             ar.session === selectedSession &&
             selectedClass !== undefined &&
-            academicRecordLevelNoGender === selectedClass?.level
+            (academicRecordLevelNoGender === selectedClass?.level ||
+              (ar?.level ?? ar?.levelAudited) === selectedClass?.level)
           );
         });
         return (
