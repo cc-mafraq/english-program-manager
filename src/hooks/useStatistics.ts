@@ -122,7 +122,10 @@ export const useStatistics = (): Statistics => {
         const previousAcademicRecord = find(psrs.academicRecords, (ar) => {
           return ar.session === previousSession;
         });
-        return previousAcademicRecord === undefined || previousAcademicRecord?.overallResult === FinalResult.WD;
+        return (
+          (previousAcademicRecord === undefined && psrs.initialSession !== session) ||
+          previousAcademicRecord?.overallResult === FinalResult.WD
+        );
       });
       return {
         inviteCounts: {
