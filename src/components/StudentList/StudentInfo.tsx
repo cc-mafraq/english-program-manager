@@ -105,6 +105,7 @@ const StatusBox: React.FC<StudentInfoProps> = ({ data: student }) => {
       <LabeledText condition={isAdminOrFaculty} label="Repeat">
         {repeatNum}
       </LabeledText>
+      <LabeledText label="ID Card in Box">{student.status.idCardInBox ? "Yes" : undefined}</LabeledText>
     </LabeledContainer>
   );
 };

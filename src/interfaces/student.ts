@@ -105,6 +105,7 @@ export interface StudentStatus {
   cheatingSessions?: string[];
   currentStatus: Status;
   droppedOutReason?: DroppedOutReason;
+  idCardInBox?: boolean;
   inviteTag: boolean;
   levelReevalDate?: string;
   noContactList: boolean;

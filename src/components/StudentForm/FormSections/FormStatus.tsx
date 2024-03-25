@@ -1,9 +1,17 @@
+import { Grid } from "@mui/material";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { useDateInitialState, useFormList, useStudentStore } from "../../../hooks";
 import { Student, withdrawReasons } from "../../../interfaces";
 import { SPACING } from "../../../services";
-import { FormLabel, FormList, GridContainer, GridItemAutocomplete, GridItemDatePicker } from "../../reusables";
+import {
+  FormLabel,
+  FormList,
+  GridContainer,
+  GridItemAutocomplete,
+  GridItemDatePicker,
+  LabeledCheckbox,
+} from "../../reusables";
 import { FormCheatingSessionItem, FormDateItem } from "./ListItems";
 
 export const FormStatus: React.FC = () => {
@@ -67,19 +75,7 @@ export const FormStatus: React.FC = () => {
           </FormDateItem>
         </FormList>
       </GridContainer>
-      <GridContainer>
-        <GridItemAutocomplete
-          autoSelect={false}
-          gridProps={{ sm: 2.5, xs: 6 }}
-          label="Withdraw Reason"
-          name="status.droppedOutReason"
-          options={withdrawReasons}
-        />
-        <GridItemDatePicker
-          gridProps={{ sm: 2.5, xs: 6 }}
-          label="Level Reeval Date"
-          name="status.levelReevalDate"
-        />
+      <GridContainer marginBottom={0}>
         <FormList
           addItem={addCheatingSession}
           buttonGridProps={{ md: 2, sm: 4, xs: 6 }}
@@ -90,6 +86,19 @@ export const FormStatus: React.FC = () => {
         >
           <FormCheatingSessionItem />
         </FormList>
+      </GridContainer>
+      <GridContainer>
+        <GridItemAutocomplete
+          autoSelect={false}
+          gridProps={{ sm: 5, xs: 4.5 }}
+          label="Withdraw Reason"
+          name="status.droppedOutReason"
+          options={withdrawReasons}
+        />
+        <GridItemDatePicker label="Level Reeval Date" name="status.levelReevalDate" />
+        <Grid item>
+          <LabeledCheckbox label="ID Card in Box" name="status.idCardInBox" />
+        </Grid>
       </GridContainer>
     </>
   );
