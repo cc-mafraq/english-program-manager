@@ -15,7 +15,7 @@ export const FormCheatingSessionItem: React.FC<FormItem> = ({ index, removeItem,
     <>
       <GridItemAutocomplete
         autoSelect={false}
-        gridProps={{ xs: 4.5 }}
+        gridProps={{ sm: 5, xs: 4.5 }}
         label="Cheating Session"
         name={name}
         options={getAllSessionsWithRecord(students)}

@@ -280,6 +280,7 @@ const statusSchema = object().shape({
     .transform(emptyToNull)
     .nullable()
     .optional(),
+  idCardInBox: bool().optional(),
   inviteTag: bool().required(),
   levelReevalDate: dateSchema.nullable().optional(),
   noContactList: bool().required(),
