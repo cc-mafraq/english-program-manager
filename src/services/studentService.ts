@@ -1,6 +1,7 @@
 import {
   concat,
   countBy,
+  every,
   filter,
   find,
   first,
@@ -314,31 +315,65 @@ export const getStatusDetails = ({
   student: Student;
   students: Student[];
 }): [StatusDetails, number] => {
-  const sessionsWithResults = sessions || (students && getSessionsWithResults(students));
+  const sessionsWithResults = sessions ?? (students && getSessionsWithResults(students));
   const sessionsAttended = mapValues(keyBy(sessionsWithResults), () => {
     return false;
   });
   forEach(student.academicRecords, (ar) => {
-    if (ar.overallResult !== FinalResult.WD && includes(sessionsWithResults, ar.session)) {
+    if (
+      (ar.overallResult === FinalResult.F || ar.overallResult === FinalResult.P) &&
+      includes(sessionsWithResults, ar.session)
+    ) {
       set(sessionsAttended, ar.session, true);
     }
   });
-  const progress = Object.values(sessionsAttended);
+  const progress = map(sessionsWithResults, (session) => {
+    return sessionsAttended[session];
+  });
   const numSessionsAttended = sum(progress);
+  const currentSession = getCurrentSession(students);
+  const currentSessionAcademicRecords = filter(student.academicRecords, (ar) => {
+    return ar.session === currentSession;
+  });
+  const currentSessionIsActive = some(currentSessionAcademicRecords, (ar) => {
+    return ar.overallResult !== FinalResult.WD;
+  });
+
   if (
-    (numSessionsAttended === 1 && progress[0]) ||
-    // Return 1st Session if the student's ar has a session in the future (not included in sessionWithResults) and they have no sessions in the past
-    (student.academicRecords?.length <= 1 &&
-      numSessionsAttended === 0 &&
-      student.initialSession === first(getAllInitialSessions(students)))
+    (student.status.currentStatus === Status.NEW && student.academicRecords?.length === 0) ||
+    (student.academicRecords?.length === 1 &&
+      student.academicRecords[0].overallResult === undefined &&
+      student.academicRecords[0].session === student.initialSession)
   )
     return [StatusDetails.SES1, numSessionsAttended];
-  if (numSessionsAttended === 1 && !progress[0]) return [StatusDetails.DO1, numSessionsAttended];
-  if (numSessionsAttended === 2 && !progress[0]) return [StatusDetails.DO2, numSessionsAttended];
-  if (numSessionsAttended > 2 && !progress[0]) return [StatusDetails.DO3, numSessionsAttended];
-  if (numSessionsAttended > 1 && progress[0] && progress[1]) return [StatusDetails.SE, numSessionsAttended];
-  if (numSessionsAttended === 0) return [StatusDetails.WD1, numSessionsAttended];
-  return [StatusDetails.SKIP, numSessionsAttended];
+  if (currentSessionIsActive) {
+    if (
+      progress[0] ||
+      (progress[1] &&
+        some(currentSessionAcademicRecords, (ar) => {
+          return ar.overallResult === undefined;
+        }))
+    )
+      return [StatusDetails.SE, numSessionsAttended];
+    if (student.academicRecords.length <= 1) return [StatusDetails.NEWWD, numSessionsAttended];
+    if (numSessionsAttended === 0) return [StatusDetails.RETWD, numSessionsAttended];
+    if (some(progress)) return [StatusDetails.SKIP, numSessionsAttended];
+  } else {
+    if (numSessionsAttended === 1) return [StatusDetails.DO1, numSessionsAttended];
+    if (numSessionsAttended === 2) return [StatusDetails.DO2, numSessionsAttended];
+    if (numSessionsAttended > 2) return [StatusDetails.DO3, numSessionsAttended];
+    if (
+      student.academicRecords?.length === 0 ||
+      student.academicRecords === undefined ||
+      every(student.academicRecords, (ar) => {
+        return ar.overallResult === FinalResult.WD && !ar.attendance;
+      })
+    )
+      return [StatusDetails.NORET, numSessionsAttended];
+    if (numSessionsAttended === 0 && student.academicRecords?.length > 0)
+      return [StatusDetails.WD1, numSessionsAttended];
+  }
+  return [StatusDetails.ERR, numSessionsAttended];
 };
 
 export const getStudentIDByPhoneNumber = (students: Student[], phoneNumber: number) => {

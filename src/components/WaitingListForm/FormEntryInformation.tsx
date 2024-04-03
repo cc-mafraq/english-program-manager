@@ -27,7 +27,7 @@ export const FormEntryInformation: React.FC<FormEntryInformationProps> = ({ disa
           <LabeledCheckbox
             checkboxProps={{ disabled }}
             containerProps={{ marginTop: -1 }}
-            label="Eligibile"
+            label="Eligible"
             name="eligible"
           />
         </Grid>
