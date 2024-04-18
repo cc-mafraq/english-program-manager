@@ -1,9 +1,11 @@
 import { Edit, WhatsApp } from "@mui/icons-material";
 import { Box, Divider, IconButton, Tooltip, Typography, useTheme } from "@mui/material";
+import { filter, includes } from "lodash";
+import moment from "moment";
 import React, { useMemo } from "react";
 import { useAppStore, useColors, useStudentStore, useWaitingListStore } from "../../hooks";
-import { WaitingListEntry } from "../../interfaces";
-import { getPosition, getStudentIDByPhoneNumber } from "../../services";
+import { HighPriority, WaitingListEntry, WaitlistOutcome } from "../../interfaces";
+import { MOMENT_FORMAT, getPosition, getStudentIDByPhoneNumber } from "../../services";
 
 interface WaitingListHeaderProps {
   data: WaitingListEntry;
@@ -33,6 +35,75 @@ export const WaitingListCardHeader: React.FC<WaitingListHeaderProps> = ({
 
   const theme = useTheme();
   const { iconColor } = useColors();
+  const position = getPosition(waitingList, wlEntry);
+  const newStudentRate = useMemo(() => {
+    return (
+      filter(waitingList, (wle) => {
+        return wle.outcome === WaitlistOutcome.N;
+      }).length /
+      filter(waitingList, (wle) => {
+        return wle.outcome !== undefined;
+      }).length
+    );
+  }, [waitingList]);
+  const newStudentsPerMonth = students.length / moment().diff(moment("09-01-2017"), "months");
+  const notWaitingLength = useMemo(() => {
+    return filter(waitingList, (wle) => {
+      return !wle.waiting && wle.outcome === WaitlistOutcome.N;
+    }).length;
+  }, [waitingList]);
+  const numNewPastHighPriority = useMemo(() => {
+    return filter(waitingList, (wle) => {
+      return wle.highPriority === HighPriority.PAST && wle.outcome === WaitlistOutcome.N;
+    }).length;
+  }, [waitingList]);
+  const overallHighPriorityRate = numNewPastHighPriority / notWaitingLength;
+  const reactivatedRate = useMemo(() => {
+    return (
+      filter(waitingList, (wle) => {
+        return (
+          (includes(wle.placementExam, "NS") || includes(wle.placementExam, "NO RESPONSE")) &&
+          wle.outcome === WaitlistOutcome.N
+        );
+      }).length / notWaitingLength
+    );
+  }, [notWaitingLength, waitingList]);
+  const numActiveEligibleInFront = useMemo(() => {
+    return filter(waitingList, (wle) => {
+      return (
+        wle.eligible &&
+        wle.waiting &&
+        wle.highPriority === HighPriority.NO &&
+        moment(wle.entryDate, MOMENT_FORMAT) < moment(wlEntry.entryDate, MOMENT_FORMAT) &&
+        (moment(wle.entryDate, MOMENT_FORMAT) !== moment(wlEntry.entryDate, MOMENT_FORMAT) ||
+          (wle.timestamp ?? 0) < (wlEntry.timestamp ?? 1))
+      );
+    }).length;
+  }, [waitingList, wlEntry.entryDate, wlEntry.timestamp]);
+  const eligibleNewStudentRate = useMemo(() => {
+    const numPreviousNewEligible = filter(waitingList, (wle) => {
+      return wle.eligible && !wle.waiting && wle.outcome === WaitlistOutcome.N;
+    }).length;
+    return numPreviousNewEligible > 50
+      ? numPreviousNewEligible /
+          filter(waitingList, (wle) => {
+            return wle.eligible && !wle.waiting;
+          }).length
+      : 2 / 3;
+  }, [waitingList]);
+  const numHighPriority = useMemo(() => {
+    return filter(waitingList, (wle) => {
+      return wle.highPriority !== HighPriority.NO && wle.waiting && wle.outcome === WaitlistOutcome.N;
+    }).length;
+  }, [waitingList]);
+  const newHighPriorityRate = useMemo(() => {
+    return (
+      numNewPastHighPriority /
+      filter(waitingList, (wle) => {
+        return wle.highPriority === HighPriority.PAST;
+      }).length
+    );
+  }, [numNewPastHighPriority, waitingList]);
 
   return (
     <>
@@ -81,11 +152,25 @@ export const WaitingListCardHeader: React.FC<WaitingListHeaderProps> = ({
             color={theme.palette.mode === "light" ? theme.palette.secondary.main : theme.palette.primary.light}
             variant="h6"
           >
-            {`Position: ${getPosition(waitingList, wlEntry)}`}
+            {`Position: ${position}`}
           </Typography>
           {matchingStudentID && (
             <Typography color={theme.palette.warning.main} marginLeft="5vw" variant="h6">
               Warning: Number already in student database ({matchingStudentID})
+            </Typography>
+          )}
+          {wlEntry.highPriority === HighPriority.NO && (
+            <Typography marginLeft="5vw" variant="h6">
+              Estimated Wait Time:{" "}
+              {wlEntry.highPriority === HighPriority.NO
+                ? Math.round(
+                    ((position - numActiveEligibleInFront - numHighPriority) * newStudentRate +
+                      numActiveEligibleInFront * eligibleNewStudentRate) /
+                      (newStudentsPerMonth * (1 - (overallHighPriorityRate + reactivatedRate))) +
+                      (numHighPriority * newHighPriorityRate) / newStudentsPerMonth,
+                  )
+                : 0}{" "}
+              months
             </Typography>
           )}
         </Box>
