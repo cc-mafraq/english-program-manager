@@ -339,14 +339,15 @@ export const getStatusDetails = ({
     return ar.overallResult !== FinalResult.WD;
   });
 
-  if (
-    (student.status.currentStatus === Status.NEW && student.academicRecords?.length === 0) ||
-    (student.academicRecords?.length === 1 &&
-      student.academicRecords[0].overallResult === undefined &&
-      student.academicRecords[0].session === student.initialSession)
-  )
-    return [StatusDetails.SES1, numSessionsAttended];
+  if (student.status.currentStatus === Status.NEW && student.academicRecords?.length === 0)
+    return [StatusDetails.NEW, numSessionsAttended];
   if (currentSessionIsActive) {
+    if (
+      every(student.academicRecords, (ar) => {
+        return ar.session === student.initialSession;
+      })
+    )
+      return [StatusDetails.SES1, numSessionsAttended];
     if (
       progress[0] ||
       (progress[1] &&
@@ -355,7 +356,12 @@ export const getStatusDetails = ({
         }))
     )
       return [StatusDetails.SE, numSessionsAttended];
-    if (student.academicRecords.length <= 1) return [StatusDetails.NEWWD, numSessionsAttended];
+    if (
+      every(student.academicRecords, (ar) => {
+        return ar.session === first(student.academicRecords)?.session;
+      })
+    )
+      return [StatusDetails.NEWWD, numSessionsAttended];
     if (numSessionsAttended === 0) return [StatusDetails.RETWD, numSessionsAttended];
     if (some(progress)) return [StatusDetails.SKIP, numSessionsAttended];
   } else {
