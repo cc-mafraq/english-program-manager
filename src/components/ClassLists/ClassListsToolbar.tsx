@@ -88,7 +88,7 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
     const classListCSV = reduce(
       filteredStudents,
       (csvString, student) => {
-        return `${csvString}"${student.name.english}","${generateClassListNotes(student)}","${
+        return `${csvString}"${student.name.english.replaceAll('"', "'")}","${generateClassListNotes(student)}","${
           student.name.arabic
         }",${student.epId},${student.status.currentStatus},"${getStatusDetails({ student, students })[0]}",${
           student.phone.primaryPhone
