@@ -1,19 +1,23 @@
+import { Download } from "@mui/icons-material";
 import {
   AppBar,
   Box,
   Checkbox,
   FormControlLabel,
+  IconButton,
   SelectChangeEvent,
   Toolbar,
+  Tooltip,
   Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import download from "downloadjs";
 import { dropRight } from "lodash";
-import React, { useMemo } from "react";
-import { useStudentStore } from "../../hooks";
+import React, { useCallback, useMemo } from "react";
+import { useAppStore, useStudentStore } from "../../hooks";
 import { SectionPlacement, Student } from "../../interfaces";
-import { getAllSessionsWithRecord } from "../../services";
+import { getAllSessionsWithRecord, getClassListCSV, getClassName } from "../../services";
 import { ClassAndSessionSelect } from "./ClassAndSessionSelect";
 
 interface ClassListsToolbarProps {
@@ -38,6 +42,9 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
   const students = useStudentStore((state) => {
     return state.students;
   });
+  const role = useAppStore((state) => {
+    return state.role;
+  });
 
   const theme = useTheme();
   const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
@@ -45,6 +52,15 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
   const sessionOptions = useMemo(() => {
     return dropRight(getAllSessionsWithRecord(students), 20);
   }, [students]);
+
+  const exportClassList = useCallback(() => {
+    const classListCSV = getClassListCSV(filteredStudents, students, selectedClass, selectedSession);
+    download(
+      `data:text/plain,${classListCSV}`,
+      `${getClassName(selectedClass)} ${selectedSession}.csv`,
+      "text/plain",
+    );
+  }, [filteredStudents, selectedClass, selectedSession, students]);
 
   return (
     <AppBar color="default" elevation={1} position="relative">
@@ -54,6 +70,13 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
           paddingTop: "1vh",
         }}
       >
+        {role === "admin" && greaterThanSmall && (
+          <Tooltip title="Export Class List">
+            <IconButton onClick={exportClassList} size="small">
+              <Download />
+            </IconButton>
+          </Tooltip>
+        )}
         <ClassAndSessionSelect
           classSelectSxProps={{ width: greaterThanSmall ? "25%" : "35%" }}
           handleClassChange={handleClassChange}
