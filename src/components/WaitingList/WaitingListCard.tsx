@@ -2,9 +2,11 @@ import React from "react";
 import { CorrespondenceList, CustomCard, WaitingListCardHeader, WaitingListEntryInfo } from "..";
 import { useAppStore } from "../../hooks";
 import { emptyWaitingListEntry, WaitingListEntry } from "../../interfaces";
+import { WaitingListTimeStats } from "../../services";
 
 interface WaitingListCardProps {
   handleWLEntryDialogOpen: () => void;
+  waitingListTimeStats: WaitingListTimeStats;
 }
 
 const WaitingListEntryInfoMemo: React.FC<{ data: WaitingListEntry }> = React.memo(({ data }) => {
@@ -16,13 +18,17 @@ export const WaitingListCard: React.FC<WaitingListCardProps> = (props) => {
   const role = useAppStore((state) => {
     return state.role;
   });
-  const { handleWLEntryDialogOpen } = props;
+  const { handleWLEntryDialogOpen, waitingListTimeStats } = props;
 
   return (
     <CustomCard
       data={emptyWaitingListEntry}
       header={
-        <WaitingListCardHeader data={emptyWaitingListEntry} handleEditEntryClick={handleWLEntryDialogOpen} />
+        <WaitingListCardHeader
+          data={emptyWaitingListEntry}
+          handleEditEntryClick={handleWLEntryDialogOpen}
+          waitingListTimeStats={waitingListTimeStats}
+        />
       }
       noTabs={role !== "admin"}
       tabContents={[

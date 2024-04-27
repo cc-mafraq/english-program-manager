@@ -1,7 +1,8 @@
-import React, { RefObject } from "react";
+import React, { RefObject, useMemo } from "react";
 import { VirtualizedList, WaitingListCard } from "..";
-import { useWaitingListStore } from "../../hooks";
+import { useStudentStore, useWaitingListStore } from "../../hooks";
 import { WaitingListEntry } from "../../interfaces";
+import { getWaitingListTimeStats } from "../../services";
 
 interface WaitingListProps {
   filteredWaitingList: WaitingListEntry[];
@@ -14,12 +15,22 @@ export const WaitingList: React.FC<WaitingListProps> = ({
   handleWLEntryDialogOpen,
   menuRef,
 }) => {
+  const students = useStudentStore((state) => {
+    return state.students;
+  });
+  const waitingList = useWaitingListStore((state) => {
+    return state.waitingList;
+  });
   const scrollToIndex = useWaitingListStore((state) => {
     return state.scrollToIndex;
   });
   const setScrollToIndex = useWaitingListStore((state) => {
     return state.setScrollToIndex;
   });
+
+  const waitingListTimeStats = useMemo(() => {
+    return getWaitingListTimeStats(waitingList, students);
+  }, [students, waitingList]);
 
   return (
     <VirtualizedList
@@ -30,7 +41,10 @@ export const WaitingList: React.FC<WaitingListProps> = ({
       scrollToIndex={scrollToIndex}
       setScrollToIndex={setScrollToIndex}
     >
-      <WaitingListCard handleWLEntryDialogOpen={handleWLEntryDialogOpen} />
+      <WaitingListCard
+        handleWLEntryDialogOpen={handleWLEntryDialogOpen}
+        waitingListTimeStats={waitingListTimeStats}
+      />
     </VirtualizedList>
   );
 };

@@ -2,17 +2,24 @@ import { Edit, WhatsApp } from "@mui/icons-material";
 import { Box, Divider, IconButton, Tooltip, Typography, useTheme } from "@mui/material";
 import React, { useMemo } from "react";
 import { useAppStore, useColors, useStudentStore, useWaitingListStore } from "../../hooks";
-import { WaitingListEntry } from "../../interfaces";
-import { getPosition, getStudentIDByPhoneNumber } from "../../services";
+import { HighPriority, WaitingListEntry } from "../../interfaces";
+import {
+  WaitingListTimeStats,
+  getNumActiveEligibleInFront,
+  getPosition,
+  getStudentIDByPhoneNumber,
+} from "../../services";
 
 interface WaitingListHeaderProps {
   data: WaitingListEntry;
   handleEditEntryClick: () => void;
+  waitingListTimeStats: WaitingListTimeStats;
 }
 
 export const WaitingListCardHeader: React.FC<WaitingListHeaderProps> = ({
   data: wlEntry,
   handleEditEntryClick,
+  waitingListTimeStats,
 }) => {
   const role = useAppStore((state) => {
     return state.role;
@@ -33,6 +40,18 @@ export const WaitingListCardHeader: React.FC<WaitingListHeaderProps> = ({
 
   const theme = useTheme();
   const { iconColor } = useColors();
+  const position = getPosition(waitingList, wlEntry);
+  const { newStudentRate, eligibleNewStudentRate, numHighPriority, numSpotsPerMonth } = waitingListTimeStats;
+  const numActiveEligibleInFront = useMemo(() => {
+    return getNumActiveEligibleInFront(waitingList, wlEntry);
+  }, [waitingList, wlEntry]);
+  const numMonthsWait = Math.round(
+    // number of entries in front of this entry who are expected to become a new student and have not yet received the Eligibility WPM
+    ((position - numActiveEligibleInFront - numHighPriority) * newStudentRate +
+      // number of entries in front of this entry who are expected to become a new student and have received the Eligibility WPM
+      numActiveEligibleInFront * eligibleNewStudentRate) /
+      numSpotsPerMonth,
+  );
 
   return (
     <>
@@ -81,11 +100,17 @@ export const WaitingListCardHeader: React.FC<WaitingListHeaderProps> = ({
             color={theme.palette.mode === "light" ? theme.palette.secondary.main : theme.palette.primary.light}
             variant="h6"
           >
-            {`Position: ${getPosition(waitingList, wlEntry)}`}
+            {`Position: ${position}`}
           </Typography>
           {matchingStudentID && (
             <Typography color={theme.palette.warning.main} marginLeft="5vw" variant="h6">
               Warning: Number already in student database ({matchingStudentID})
+            </Typography>
+          )}
+          {wlEntry.highPriority === HighPriority.NO && students.length > 0 && (
+            <Typography marginLeft="5vw" variant="h6">
+              Estimated Wait Time: {wlEntry.highPriority === HighPriority.NO ? numMonthsWait : 0} month
+              {numMonthsWait === 1 ? "" : "s"}
             </Typography>
           )}
         </Box>
