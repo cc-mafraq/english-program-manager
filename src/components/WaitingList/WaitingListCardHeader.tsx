@@ -107,7 +107,7 @@ export const WaitingListCardHeader: React.FC<WaitingListHeaderProps> = ({
               Warning: Number already in student database ({matchingStudentID})
             </Typography>
           )}
-          {wlEntry.highPriority === HighPriority.NO && (
+          {wlEntry.highPriority === HighPriority.NO && students.length > 0 && (
             <Typography marginLeft="5vw" variant="h6">
               Estimated Wait Time: {wlEntry.highPriority === HighPriority.NO ? numMonthsWait : 0} month
               {numMonthsWait === 1 ? "" : "s"}
