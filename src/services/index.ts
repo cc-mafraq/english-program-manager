@@ -1,3 +1,4 @@
+export * from "./classListsService";
 export * from "./dataService";
 export * from "./fgrService";
 export * from "./filterService";

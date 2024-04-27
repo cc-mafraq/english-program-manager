@@ -13,11 +13,11 @@ import {
   useTheme,
 } from "@mui/material";
 import download from "downloadjs";
-import { dropRight, every, filter, findIndex, first, map, nth, reduce } from "lodash";
+import { dropRight } from "lodash";
 import React, { useCallback, useMemo } from "react";
 import { useAppStore, useStudentStore } from "../../hooks";
 import { SectionPlacement, Student } from "../../interfaces";
-import { getAllSessionsWithRecord, getClassName, getStatusDetails } from "../../services";
+import { getAllSessionsWithRecord, getClassListCSV, getClassName } from "../../services";
 import { ClassAndSessionSelect } from "./ClassAndSessionSelect";
 
 interface ClassListsToolbarProps {
@@ -53,57 +53,14 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
     return dropRight(getAllSessionsWithRecord(students), 20);
   }, [students]);
 
-  const generateClassListNotes = useCallback(
-    (student: Student) => {
-      const sessionIndex = findIndex(student.placement, (placement) => {
-        return placement.session === selectedSession;
-      });
-      const classIndex = findIndex(nth(student.placement, sessionIndex)?.placement, (sectionPlacement) => {
-        return getClassName(selectedClass) === getClassName(sectionPlacement);
-      });
-
-      return `${
-        every(filteredStudents, (fs) => {
-          return fs.gender === first(filteredStudents)?.gender;
-        })
-          ? ""
-          : `${student.gender === "M" ? "Male" : "Female"}. `
-      }${
-        student.currentLevel === selectedClass?.level ||
-        every(filteredStudents, (fs) => {
-          return fs.currentLevel === first(filteredStudents)?.currentLevel;
-        })
-          ? ""
-          : `${student.currentLevel}. `
-      }${
-        student.currentLevel.includes("PL1") && student.literacy.illiterateEng ? "Struggling with literacy. " : ""
-      }${map(student.placement[sessionIndex].placement[classIndex].classListNotes, (c) => {
-        return `${c.date}: ${c.notes}\n`;
-      })}`;
-    },
-    [filteredStudents, selectedClass, selectedSession],
-  );
-
   const exportClassList = useCallback(() => {
-    const classListCSV = reduce(
-      filteredStudents,
-      (csvString, student) => {
-        return `${csvString}"${student.name.english.replaceAll('"', "'")}","${generateClassListNotes(student)}","${
-          student.name.arabic
-        }",${student.epId},${student.status.currentStatus},"${getStatusDetails({ student, students })[0]}",${
-          student.phone.primaryPhone
-        },${
-          first(
-            filter(student.phone.phoneNumbers, (pn) => {
-              return pn.number !== student.phone.primaryPhone;
-            }),
-          )?.number ?? ""
-        },${student.nationality}\n`;
-      },
-      "",
+    const classListCSV = getClassListCSV(filteredStudents, students, selectedClass, selectedSession);
+    download(
+      `data:text/plain,${classListCSV}`,
+      `${getClassName(selectedClass)} ${selectedSession}.csv`,
+      "text/plain",
     );
-    download(`data:text/plain,${classListCSV}`, `${getClassName(selectedClass)}.csv`, "text/plain");
-  }, [filteredStudents, generateClassListNotes, selectedClass, students]);
+  }, [filteredStudents, selectedClass, selectedSession, students]);
 
   return (
     <AppBar color="default" elevation={1} position="relative">
