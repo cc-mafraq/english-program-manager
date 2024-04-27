@@ -1,20 +1,25 @@
 import { Edit, WhatsApp } from "@mui/icons-material";
 import { Box, Divider, IconButton, Tooltip, Typography, useTheme } from "@mui/material";
-import { filter, includes } from "lodash";
-import moment from "moment";
 import React, { useMemo } from "react";
 import { useAppStore, useColors, useStudentStore, useWaitingListStore } from "../../hooks";
-import { HighPriority, WaitingListEntry, WaitlistOutcome } from "../../interfaces";
-import { MOMENT_FORMAT, getPosition, getStudentIDByPhoneNumber } from "../../services";
+import { HighPriority, WaitingListEntry } from "../../interfaces";
+import {
+  WaitingListTimeStats,
+  getNumActiveEligibleInFront,
+  getPosition,
+  getStudentIDByPhoneNumber,
+} from "../../services";
 
 interface WaitingListHeaderProps {
   data: WaitingListEntry;
   handleEditEntryClick: () => void;
+  waitingListTimeStats: WaitingListTimeStats;
 }
 
 export const WaitingListCardHeader: React.FC<WaitingListHeaderProps> = ({
   data: wlEntry,
   handleEditEntryClick,
+  waitingListTimeStats,
 }) => {
   const role = useAppStore((state) => {
     return state.role;
@@ -36,74 +41,17 @@ export const WaitingListCardHeader: React.FC<WaitingListHeaderProps> = ({
   const theme = useTheme();
   const { iconColor } = useColors();
   const position = getPosition(waitingList, wlEntry);
-  const newStudentRate = useMemo(() => {
-    return (
-      filter(waitingList, (wle) => {
-        return wle.outcome === WaitlistOutcome.N;
-      }).length /
-      filter(waitingList, (wle) => {
-        return wle.outcome !== undefined;
-      }).length
-    );
-  }, [waitingList]);
-  const newStudentsPerMonth = students.length / moment().diff(moment("09-01-2017"), "months");
-  const notWaitingLength = useMemo(() => {
-    return filter(waitingList, (wle) => {
-      return !wle.waiting && wle.outcome === WaitlistOutcome.N;
-    }).length;
-  }, [waitingList]);
-  const numNewPastHighPriority = useMemo(() => {
-    return filter(waitingList, (wle) => {
-      return wle.highPriority === HighPriority.PAST && wle.outcome === WaitlistOutcome.N;
-    }).length;
-  }, [waitingList]);
-  const overallHighPriorityRate = numNewPastHighPriority / notWaitingLength;
-  const reactivatedRate = useMemo(() => {
-    return (
-      filter(waitingList, (wle) => {
-        return (
-          (includes(wle.placementExam, "NS") || includes(wle.placementExam, "NO RESPONSE")) &&
-          wle.outcome === WaitlistOutcome.N
-        );
-      }).length / notWaitingLength
-    );
-  }, [notWaitingLength, waitingList]);
+  const { newStudentRate, eligibleNewStudentRate, numHighPriority, numSpotsPerMonth } = waitingListTimeStats;
   const numActiveEligibleInFront = useMemo(() => {
-    return filter(waitingList, (wle) => {
-      return (
-        wle.eligible &&
-        wle.waiting &&
-        wle.highPriority === HighPriority.NO &&
-        moment(wle.entryDate, MOMENT_FORMAT) < moment(wlEntry.entryDate, MOMENT_FORMAT) &&
-        (moment(wle.entryDate, MOMENT_FORMAT) !== moment(wlEntry.entryDate, MOMENT_FORMAT) ||
-          (wle.timestamp ?? 0) < (wlEntry.timestamp ?? 1))
-      );
-    }).length;
-  }, [waitingList, wlEntry.entryDate, wlEntry.timestamp]);
-  const eligibleNewStudentRate = useMemo(() => {
-    const numPreviousNewEligible = filter(waitingList, (wle) => {
-      return wle.eligible && !wle.waiting && wle.outcome === WaitlistOutcome.N;
-    }).length;
-    return numPreviousNewEligible > 50
-      ? numPreviousNewEligible /
-          filter(waitingList, (wle) => {
-            return wle.eligible && !wle.waiting;
-          }).length
-      : 2 / 3;
-  }, [waitingList]);
-  const numHighPriority = useMemo(() => {
-    return filter(waitingList, (wle) => {
-      return wle.highPriority !== HighPriority.NO && wle.waiting && wle.outcome === WaitlistOutcome.N;
-    }).length;
-  }, [waitingList]);
-  const newHighPriorityRate = useMemo(() => {
-    return (
-      numNewPastHighPriority /
-      filter(waitingList, (wle) => {
-        return wle.highPriority === HighPriority.PAST;
-      }).length
-    );
-  }, [numNewPastHighPriority, waitingList]);
+    return getNumActiveEligibleInFront(waitingList, wlEntry);
+  }, [waitingList, wlEntry]);
+  const numMonthsWait = Math.round(
+    // number of entries in front of this entry who are expected to become a new student and have not yet received the Eligibility WPM
+    ((position - numActiveEligibleInFront - numHighPriority) * newStudentRate +
+      // number of entries in front of this entry who are expected to become a new student and have received the Eligibility WPM
+      numActiveEligibleInFront * eligibleNewStudentRate) /
+      numSpotsPerMonth,
+  );
 
   return (
     <>
@@ -161,16 +109,8 @@ export const WaitingListCardHeader: React.FC<WaitingListHeaderProps> = ({
           )}
           {wlEntry.highPriority === HighPriority.NO && (
             <Typography marginLeft="5vw" variant="h6">
-              Estimated Wait Time:{" "}
-              {wlEntry.highPriority === HighPriority.NO
-                ? Math.round(
-                    ((position - numActiveEligibleInFront - numHighPriority) * newStudentRate +
-                      numActiveEligibleInFront * eligibleNewStudentRate) /
-                      (newStudentsPerMonth * (1 - (overallHighPriorityRate + reactivatedRate))) +
-                      (numHighPriority * newHighPriorityRate) / newStudentsPerMonth,
-                  )
-                : 0}{" "}
-              months
+              Estimated Wait Time: {wlEntry.highPriority === HighPriority.NO ? numMonthsWait : 0} month
+              {numMonthsWait === 1 ? "" : "s"}
             </Typography>
           )}
         </Box>
