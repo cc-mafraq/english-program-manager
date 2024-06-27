@@ -3,7 +3,7 @@ import { get, isEmpty, keys, map, round, sortBy, sum, values } from "lodash";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppStore, useStatistics, useStudentStore } from "../hooks";
-import { levels } from "../interfaces";
+import { genderedLevels, levels } from "../interfaces";
 import { getAllInitialSessions, sortObjectByValues } from "../services";
 
 const INDENT = 3;
@@ -157,6 +157,26 @@ export const StatisticsPage = () => {
                     ) * 100
                   ).toFixed(0)}
                   %)
+                </Typography>
+              );
+            })}
+          </>
+        );
+      })}
+      <Typography {...textProps} fontWeight="bold">
+        Predicted Registration Numbers for Next Session by Level
+      </Typography>
+      {map(genderedLevels, (level) => {
+        const levelPredictedRegistration = get(statistics.predictedRegistration, level);
+        return (
+          <>
+            <Typography {...textProps} fontWeight="bold" marginLeft={INDENT}>
+              {level}: {sum(values(levelPredictedRegistration))}
+            </Typography>
+            {map(keys(levelPredictedRegistration), (key) => {
+              return (
+                <Typography {...textProps} marginLeft={INDENT * 2}>
+                  {key}: {get(levelPredictedRegistration, key)}
                 </Typography>
               );
             })}
