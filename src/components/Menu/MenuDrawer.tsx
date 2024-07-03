@@ -44,12 +44,12 @@ const drawerList: DrawerListItem[] = [
   {
     component: Home,
     name: "Home",
-    route: "/epd",
+    route: "/students",
   },
   {
     component: Person,
     name: "Student Database",
-    route: "/epd",
+    route: "/students",
   },
   {
     component: PendingActions,

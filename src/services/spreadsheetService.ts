@@ -1,71 +1,66 @@
-// import {
-//   cloneDeep,
-//   filter,
-//   find,
-//   first,
-//   forEach,
-//   get,
-//   isEqual,
-//   join,
-//   map,
-//   omit,
-//   replace,
-//   slice,
-//   sortBy,
-// } from "lodash";
-// import papa from "papaparse";
-// import { v4 } from "uuid";
-// import { emptyStudent, emptyWaitingListEntry, Student, WaitingListEntry } from "../interfaces";
-// import { deleteCollection, setData, setImages } from "./dataService";
-// import { covidVaccineImageFolder, studentImageFolder } from "./firebaseService";
-// import * as ps from "./studentParsingService";
-// import * as wlps from "./waitingListParsingService";
-// import { sortWaitingList } from "./waitingListService";
+import {
+  cloneDeep,
+  filter,
+  findIndex,
+  first,
+  forEach,
+  get,
+  includes,
+  join,
+  map,
+  replace,
+  slice,
+  toLower,
+} from "lodash";
+import papa from "papaparse";
+import { Student, emptyStudent } from "../interfaces";
+import * as ps from "./studentParsingService";
+import { generateId, sortStudents } from "./studentService";
 
-// export interface ValidFields<T> {
-//   [key: string]: (key: string, value: string, object: T) => void;
-// }
+export interface ValidFields<T> {
+  [key: string]: (key: string, value: string, object: T) => void;
+}
 
-// const fieldCleanRegex = /[\s)(\-#/+:,;→&%'◄?+]/g;
+const fieldCleanRegex = /[\s)(\-#/+:,;→&%'◄?+°/]/g;
 
-// export const spreadsheetToList = <T>(
-//   csvString: string,
-//   TFields: ValidFields<T>,
-//   emptyT: T,
-//   numSkipLines?: number,
-// ) => {
-//   // Remove junk and title rows from Excel export to CSV
-//   const csvStringClean = join(
-//     slice(replace(replace(csvString, "ï»¿", ""), "\t", ",").split("\n"), numSkipLines || 0),
-//     "\n",
-//   );
-//   const objects: papa.ParseResult<never> = papa.parse(csvStringClean, {
-//     header: true,
-//     skipEmptyLines: "greedy",
-//   });
+export const spreadsheetToList = <T>(
+  csvString: string,
+  TFields: ValidFields<T>,
+  emptyT: T,
+  numSkipLines?: number,
+) => {
+  // Remove junk and title rows from Excel export to CSV
+  const csvStringClean = join(
+    slice(replace(replace(csvString, "ï»¿", ""), "\t", ",").split("\n"), numSkipLines || 0),
+    "\n",
+  );
+  const objects: papa.ParseResult<never> = papa.parse(csvStringClean, {
+    header: true,
+    skipEmptyLines: "greedy",
+  });
 
-//   const TList: T[] = [];
+  const TList: T[] = [];
 
-//   const { data, meta } = objects;
-//   const { fields } = meta;
-//   // Parse each row of the CSV as an object
-//   forEach(data, (object) => {
-//     const newObject = cloneDeep(emptyT);
+  const { data, meta } = objects;
+  const { fields } = meta;
+  // Parse each row of the CSV as an object
+  forEach(data, (object) => {
+    const newObject = cloneDeep(emptyT);
 
-//     // Iterate through the fields of the CSV, and parse their values for this object
-//     if (fields) {
-//       fields.forEach((field) => {
-//         const value = String(object[field]);
-//         const fieldClean = replace(field, fieldCleanRegex, "");
-//         if (fieldClean in TFields) {
-//           get(TFields, fieldClean)(field, value, newObject);
-//         }
-//       });
-//       TList.push(newObject);
-//     }
-//   });
-//   return TList;
-// };
+    // Iterate through the fields of the CSV, and parse their values for this object
+    if (fields) {
+      fields.forEach((field) => {
+        const value = String(object[field]);
+        const fieldClean = replace(field, fieldCleanRegex, "");
+        if (fieldClean in TFields) {
+          get(TFields, fieldClean)(field, value, newObject);
+        }
+      });
+      TList.push(newObject);
+    }
+  });
+  return TList;
+};
 
 // const studentFieldsUnexpanded: ValidFields<Student> = {
 //   ADJ: ps.parseOrigPlacementAdjustment,
@@ -206,4 +201,127 @@
 //   );
 //   return sortWaitingList(newWaitingList);
 // };
-export {};
+
+const tunisiaStudentFieldsUnexpanded = {
+  CERTIFICATEISSUEDDATE: ps.parseCertificateDate,
+  CIN: ps.parseCIN,
+  COURSEREGISTERED: ps.parseCourseRegistered,
+  EMAIL: ps.parseEmail,
+  FIRSTNAME: ps.parseName,
+  LASTNAME: ps.parseName,
+  NOTES: ps.parseNotes,
+  NTEL: ps.parsePrimPhone,
+  PROFESSION: ps.parseProfession,
+  "PaymentAmount,Payment1,Payment2,Payment3": ps.parsePayment,
+  "PaymentDate,PaymentDate1,PaymentDate2,PaymentDate3": ps.parsePaymentDate,
+  SEMESTER: ps.parseSemester,
+  VILLE: ps.parseVille,
+};
+const tunisiaStudentFields = ps.expand(tunisiaStudentFieldsUnexpanded);
+
+export const tunisiaSpreadsheetToStudentList = async (csvString: string): Promise<Student[]> => {
+  const studentPlacements = filter(spreadsheetToList(csvString, tunisiaStudentFields, emptyStudent, 2), (s) => {
+    return s.placement.length > 0;
+  });
+  const students: Student[] = [];
+  forEach(studentPlacements, (studentPlacement) => {
+    const studentIndex = findIndex(students, (student) => {
+      const spSplitName = student.name.english.split(" ");
+      const studentPlacementSplitName = studentPlacement.name.english.split(" ");
+      return (
+        student.name.english === studentPlacement.name.english ||
+        (first(spSplitName) === first(studentPlacementSplitName) &&
+          includes(map(student.phone?.phoneNumbers, "number"), studentPlacement.phone?.primaryPhone))
+      );
+    });
+    if (studentIndex === -1) {
+      studentPlacement.epId = generateId(students);
+      students.push(studentPlacement);
+    } else {
+      if (studentPlacement.name.english.length > students[studentIndex].name.english.length) {
+        students[studentIndex].name.english = studentPlacement.name.english;
+      }
+      if (
+        studentPlacement.phone?.primaryPhone &&
+        studentPlacement.phone.primaryPhone !== students[studentIndex].phone?.primaryPhone
+      ) {
+        students[studentIndex].phone = {
+          phoneNumbers:
+            (students[studentIndex].phone === undefined
+              ? [{ number: Number(studentPlacement.phone.primaryPhone) }]
+              : includes(
+                  map(students[studentIndex].phone?.phoneNumbers, "number"),
+                  studentPlacement.phone.primaryPhone,
+                )
+              ? students[studentIndex].phone?.phoneNumbers
+              : [
+                  ...(students[studentIndex].phone?.phoneNumbers ?? []),
+                  { number: Number(studentPlacement.phone.primaryPhone) },
+                ]) ?? [],
+          primaryPhone: studentPlacement.phone.primaryPhone,
+        };
+      }
+      if (studentPlacement.nationalID) {
+        students[studentIndex].nationalID = studentPlacement.nationalID;
+      }
+      if (studentPlacement.email) {
+        students[studentIndex].email = studentPlacement.email;
+      }
+      if (studentPlacement.work?.occupation) {
+        students[studentIndex].work = { occupation: studentPlacement.work.occupation };
+      }
+      if (studentPlacement.city) {
+        students[studentIndex].city = studentPlacement.city;
+      }
+      if (studentPlacement.certificateRequests) {
+        if (students[studentIndex].certificateRequests) {
+          students[studentIndex].certificateRequests += `; ${studentPlacement.certificateRequests}`;
+        } else {
+          students[studentIndex].certificateRequests = studentPlacement.certificateRequests;
+        }
+      }
+      const firstSessionPlacement = first(studentPlacement.placement);
+      if (includes(map(students[studentIndex].placement, "session"), firstSessionPlacement?.session)) {
+        const sessionIndex = findIndex(students[studentIndex].placement, (placement) => {
+          return placement.session === firstSessionPlacement?.session;
+        });
+        const firstPlacement = first(firstSessionPlacement?.placement);
+        if (firstPlacement) {
+          const levelIndex = findIndex(students[studentIndex].placement[sessionIndex].placement, (p) => {
+            return toLower(p.level) === toLower(firstPlacement?.level);
+          });
+          if (levelIndex === -1) {
+            students[studentIndex].placement[sessionIndex].placement.push(firstPlacement);
+          } else {
+            const payment = first(firstPlacement?.payments);
+            if (
+              payment?.date === undefined ||
+              !includes(
+                map(students[studentIndex].placement[sessionIndex].placement[levelIndex].payments, "date"),
+                payment?.date,
+              )
+            )
+              payment &&
+                students[studentIndex].placement[sessionIndex].placement[levelIndex].payments?.push(payment);
+          }
+        }
+      } else {
+        firstSessionPlacement && students[studentIndex].placement.push(firstSessionPlacement);
+      }
+    }
+  });
+  // await deleteCollection("students");
+  // await Promise.all(
+  //   map(students, async (student) => {
+  //     await setData(student, "students", "id", { merge: true });
+  //   }),
+  // );
+
+  // TODO: sort placement sessions for each student before picking their initial session
+  // TODO: format dates
+  forEach(students, (student) => {
+    const initialSession = first(student.placement)?.session;
+    if (initialSession) student.initialSession = initialSession;
+  });
+  return sortStudents(students);
+};

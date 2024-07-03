@@ -64,20 +64,23 @@ export interface FilterField<T> {
 }
 
 export const getRepeatNum = (student: Student): string | undefined => {
-  const levelsTaken = map(
-    filter(student.academicRecords, (ar) => {
-      return ar.overallResult !== FinalResult.WD;
-    }),
-    "level",
-  );
-  const levelCounts = countBy(levelsTaken);
-  const lastResult = last(student.academicRecords)?.overallResult;
-  const repeatNum = levelCounts[student.currentLevel] - 1; // - 1 to not include initial session (not repeated)
-  return lastResult === FinalResult.P || !repeatNum ? undefined : `${repeatNum}x`;
+  if (student.currentLevel) {
+    const levelsTaken = map(
+      filter(student.academicRecords, (ar) => {
+        return ar.overallResult !== FinalResult.WD;
+      }),
+      "level",
+    );
+    const levelCounts = countBy(levelsTaken);
+    const lastResult = last(student.academicRecords)?.overallResult;
+    const repeatNum = levelCounts[student.currentLevel] - 1; // - 1 to not include initial session (not repeated)
+    return lastResult === FinalResult.P || !repeatNum ? undefined : `${repeatNum}x`;
+  }
+  return undefined;
 };
 
 export const isActive = (student: Student): boolean => {
-  return student.status.currentStatus === Status.NEW || student.status.currentStatus === Status.RET;
+  return student.status?.currentStatus === Status.NEW || student.status?.currentStatus === Status.RET;
 };
 
 export const getProgress = (student: Student, sessionOptions: string[]): StudentProgress => {
@@ -114,20 +117,19 @@ export const getProgress = (student: Student, sessionOptions: string[]): Student
         );
       }) as Level[],
     );
-    progress[
-      isCoreClass || electiveOrAuditLevel
-        ? electiveOrAuditLevel || level
-        : getLevelAtSession(ar.session, student, sessionOptions, true)
-    ]?.push({
-      isAudit: !isUndefined(ar.levelAudited) && isUndefined(ar.level),
-      level: isCoreClass ? undefined : level,
-      result:
-        isCoreClass ||
-        (!isCoreClass && (ar.overallResult === "F" || ar.overallResult === "WD" || !ar.finalGrade?.percentage))
-          ? ar.overallResult
-          : FinalResult.P,
-      session: ar.session,
-    });
+    const levelAtSession = getLevelAtSession(ar.session, student, sessionOptions, true);
+    if (levelAtSession) {
+      progress[isCoreClass || electiveOrAuditLevel ? electiveOrAuditLevel || level : levelAtSession]?.push({
+        isAudit: !isUndefined(ar.levelAudited) && isUndefined(ar.level),
+        level: isCoreClass ? undefined : level,
+        result:
+          isCoreClass ||
+          (!isCoreClass && (ar.overallResult === "F" || ar.overallResult === "WD" || !ar.finalGrade?.percentage))
+            ? ar.overallResult
+            : FinalResult.P,
+        session: ar.session,
+      });
+    }
   });
   progress.L5 = concat(progress.L5 || [], progress["L5 GRAD"] || []);
   return omit(progress, "L5 GRAD");
@@ -339,7 +341,7 @@ export const getStatusDetails = ({
     return ar.overallResult !== FinalResult.WD;
   });
 
-  if (student.status.currentStatus === Status.NEW && student.academicRecords?.length === 0)
+  if (student.status?.currentStatus === Status.NEW && student.academicRecords?.length === 0)
     return [StatusDetails.NEW, numSessionsAttended];
   if (currentSessionIsActive) {
     if (
@@ -384,7 +386,7 @@ export const getStatusDetails = ({
 
 export const getStudentIDByPhoneNumber = (students: Student[], phoneNumber: number) => {
   const matchedStudent = find(students, (student: Student) => {
-    return includes(map(student.phone.phoneNumbers, "number"), phoneNumber);
+    return includes(map(student.phone?.phoneNumbers, "number"), phoneNumber);
   });
   return matchedStudent?.epId;
 };

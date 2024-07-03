@@ -35,8 +35,10 @@ export const WithdrawButton: React.FC<WithdrawButtonProps> = ({ student }) => {
 
   const onSubmit = useCallback(
     (data: Withdraw) => {
+      if (student.status === undefined) student.status = {};
       student.status.inviteTag = data.inviteTag;
       student.status.noContactList = data.noContactList;
+      if (student.status.withdrawDate === undefined) student.status.withdrawDate = [];
       student.status.withdrawDate.push(data.withdrawDate);
       if (data.droppedOutReason !== null) {
         student.status.droppedOutReason = data.droppedOutReason;
@@ -67,13 +69,13 @@ export const WithdrawButton: React.FC<WithdrawButtonProps> = ({ student }) => {
   const useFormProps = useMemo(() => {
     return {
       defaultValues: {
-        droppedOutReason: student.status.droppedOutReason,
+        droppedOutReason: student.status?.droppedOutReason,
         inviteTag: false,
-        noContactList: student.status.noContactList,
+        noContactList: student.status?.noContactList,
       },
       resolver: yupResolver(withdrawSchema),
     };
-  }, [student.status.droppedOutReason, student.status.noContactList]);
+  }, [student.status?.droppedOutReason, student.status?.noContactList]);
 
   return (
     <Box>

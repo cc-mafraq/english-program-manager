@@ -75,7 +75,9 @@ const ClassListStudentInfoMemo: React.FC<ClassListStudentInfoProps> = React.memo
       <Box sx={greaterThanSmall ? { display: "flex", flexWrap: "wrap" } : undefined}>
         <LabeledContainer label="Student Information">
           {!allSameLevel && <LabeledText label="Current Level">{data.currentLevel}</LabeledText>}
-          <LabeledText label="Status">{Status[data.status.currentStatus]}</LabeledText>
+          {data.status?.currentStatus && (
+            <LabeledText label="Status">{Status[data.status.currentStatus]}</LabeledText>
+          )}
           <LabeledText label="Nationality">{data.nationality}</LabeledText>
           {!allSameGender && <LabeledText label="Gender">{data.gender === "M" ? "Male" : "Female"}</LabeledText>}
           <LabeledText label="Repeat">{repeatNum}</LabeledText>

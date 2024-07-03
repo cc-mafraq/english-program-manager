@@ -21,7 +21,7 @@ export const FormStatus: React.FC = () => {
   const methods = useFormContext<Student>();
 
   const [cheatingSessions, addCheatingSession, removeCheatingSession] = useFormList(
-    selectedStudent && selectedStudent.status.cheatingSessions && selectedStudent.status.cheatingSessions.length
+    selectedStudent && selectedStudent.status?.cheatingSessions && selectedStudent.status.cheatingSessions.length
       ? selectedStudent.status.cheatingSessions
       : [""],
     "status.cheatingSessions",

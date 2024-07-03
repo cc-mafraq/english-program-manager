@@ -15,12 +15,12 @@ export const LoginPage = () => {
   const [user, loading] = useAuthState(auth);
   useEffect(() => {
     if (loading) return;
-    if (user) navigate("/epd", { replace: true });
+    if (user) navigate("/students", { replace: true });
   }, [user, loading, navigate]);
 
   const handleLogin = async () => {
     await signInWithGoogle();
-    navigate("/epd");
+    navigate("/students");
   };
   const theme = useTheme();
   const whiteOrGrey = theme.palette.mode === "light" ? "white" : grey[300];

@@ -80,9 +80,10 @@ export const StudentCardImage: React.FC<StudentCardImageProps> = ({
       />
       {!noButtons && (
         <Box display="flex" flexDirection="row" justifyContent="space-evenly" marginBottom="20px" marginTop="30px">
-          {student.status.currentStatus !== Status.WD && role === "admin" && greaterThanSmall && (
-            <WithdrawButton student={student} />
-          )}
+          {student.status?.currentStatus !== undefined &&
+            student.status?.currentStatus !== Status.WD &&
+            role === "admin" &&
+            greaterThanSmall && <WithdrawButton student={student} />}
           {student.imageName && greaterThanMedium && role === "admin" && <StudentIdCardButton student={student} />}
         </Box>
       )}
