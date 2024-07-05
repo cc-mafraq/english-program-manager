@@ -37,7 +37,6 @@ export const StudentDatabaseActions: React.FC<StudentDatabaseActionsProps> = ({
     reader.onloadend = async () => {
       const studentListString = String(reader.result);
       const newStudents = await tunisiaSpreadsheetToStudentList(studentListString);
-      console.log(newStudents);
       setStudents(newStudents);
       setLoading(false);
     };

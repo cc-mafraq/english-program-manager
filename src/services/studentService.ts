@@ -12,7 +12,6 @@ import {
   isUndefined,
   keyBy,
   last,
-  lowerCase,
   map,
   mapValues,
   nth,
@@ -25,6 +24,7 @@ import {
   sortBy,
   split,
   sum,
+  toLower,
   uniq,
   uniqBy,
 } from "lodash";
@@ -148,16 +148,20 @@ export const filterOutById = (students: Student[], id: Student["epId"]): Student
 };
 
 export const sortBySession = (session: Student["initialSession"]) => {
-  const sessionParts = session?.split(" ");
-  return `${nth(sessionParts, 2)} ${replace(
-    replace(replace(lowerCase(nth(sessionParts, 0)), "fa", "3"), "su", "2"),
-    "sp",
-    "1",
-  )} ${nth(sessionParts, 1)}`;
+  const sessionYear = first(session?.match(/\d{2,4}/));
+  const sessionSeason = first(toLower(session)?.match(/fa|wi|sp|su/));
+  const sessionNumber = first(session?.match(/\s\d\s|\s\d$|\sI\s|\sI$|\sII\s|\sII$/));
+  return `${sessionYear} ${replace(
+    replace(replace(replace(toLower(sessionSeason), "fa", "3"), "su", "2"), "sp", "1"),
+    "wi",
+    "0",
+  )} ${sessionNumber}`;
 };
 
 const filterSession = (s: Student["initialSession"]) => {
-  return !isEmpty(s) && !!s.match(/^(Fa|Sp|Su) (I|II) \d{2}$/);
+  return (
+    !isEmpty(s) && (import.meta.env.VITE_PROJECT_NAME !== "ccm-english" || !!s.match(/^(Fa|Sp|Su) (I|II) \d{2}$/))
+  );
 };
 
 export const getAllInitialSessions = (students: Student[]): string[] => {

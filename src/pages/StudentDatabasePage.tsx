@@ -1,4 +1,5 @@
-import React, { useCallback, useRef } from "react";
+import { filter as _filter, isArray, isEmpty } from "lodash";
+import React, { useCallback, useMemo, useRef } from "react";
 import {
   FinalGradeReportDialog,
   Loading,
@@ -18,9 +19,6 @@ export const StudentDatabasePage = () => {
   });
   const setStudents = useStudentStore((state) => {
     return state.setStudents;
-  });
-  const students = useStudentStore((state) => {
-    return state.students;
   });
   const setStudentDialogOpen = useStudentFormStore((state) => {
     return state.setOpen;
@@ -46,16 +44,15 @@ export const StudentDatabasePage = () => {
   });
 
   const shouldEmpty = false;
-  // useMemo(() => {
-  //   return isEmpty(searchString) && isEmpty(filter);
-  // }, [filter, searchString]);
+  useMemo(() => {
+    return isEmpty(searchString) && isEmpty(filter);
+  }, [filter, searchString]);
 
   return (
     <>
       <MenuBar innerRef={menuRef} pageName="Student Database" />
       <StudentDatabaseToolbar
-        filteredStudents={students}
-        // filteredStudents={shouldEmpty ? [] : filteredStudents}
+        filteredStudents={shouldEmpty ? [] : filteredStudents}
         handleSearchStringChange={handleSearchStringChange}
         handleStudentDialogOpen={handleStudentDialogOpen}
         searchString={searchString}
@@ -63,10 +60,9 @@ export const StudentDatabasePage = () => {
       {shouldEmpty && <StudentDatabaseHome />}
       <Loading />
       <StudentList
-        filteredStudents={students}
-        // filteredStudents={_filter(shouldEmpty ? [] : filteredStudents, (student) => {
-        //   return isArray(student.placement);
-        // })}
+        filteredStudents={_filter(shouldEmpty ? [] : filteredStudents, (student) => {
+          return isArray(student.placement);
+        })}
         handleStudentDialogOpen={handleStudentDialogOpen}
         menuRef={menuRef}
       />

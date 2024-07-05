@@ -76,11 +76,17 @@ const StatusBox: React.FC<StudentInfoProps> = ({ data: student }) => {
 
   return (
     <LabeledContainer label="Status">
-      <LabeledText condition={isAdminOrFaculty} label="Status Details">
-        {statusDetailsAndNumSessions[0]}
-      </LabeledText>
+      {import.meta.env.VITE_PROJECT_NAME === "ccm-english" ? (
+        <LabeledText condition={isAdminOrFaculty} label="Status Details">
+          {statusDetailsAndNumSessions[0]}
+        </LabeledText>
+      ) : (
+        <></>
+      )}
       <LabeledText label="Sessions Attended">
-        {statusDetailsAndNumSessions[1]} session{statusDetailsAndNumSessions[1] === 1 ? "" : "s"}
+        {student.academicRecords.length === 0
+          ? `${student.placement.length} session${student.placement.length === 1 ? "" : "s"}`
+          : `${statusDetailsAndNumSessions[1]} session${statusDetailsAndNumSessions[1] === 1 ? "" : "s"}`}
       </LabeledText>
       <LabeledText
         containerProps={{

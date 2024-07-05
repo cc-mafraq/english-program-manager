@@ -1,5 +1,6 @@
 import {
   findIndex,
+  first,
   forEach,
   includes,
   isEmpty,
@@ -577,7 +578,16 @@ export const parsePaymentDate = (key: string, value: string, student: Student) =
       return payment.date === "";
     });
     if (paymentIndex !== -1) {
-      payments[paymentIndex].date = value;
+      payments[paymentIndex].date = moment(first(split(value, "; ")), [
+        "DD/MM/YYYY",
+        "MMMM",
+        "YYYY",
+        "MMM D",
+        "MMM. D",
+        "M/DD",
+        "DD MMM",
+        "MMMM D",
+      ]).format(MOMENT_FORMAT);
     }
   }
 };

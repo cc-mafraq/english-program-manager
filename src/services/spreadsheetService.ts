@@ -8,14 +8,17 @@ import {
   includes,
   join,
   map,
+  nth,
   replace,
   slice,
+  sortBy,
   toLower,
 } from "lodash";
 import papa from "papaparse";
-import { Student, emptyStudent } from "../interfaces";
+import { Status, Student, emptyStudent } from "../interfaces";
+import { deleteCollection, setData } from "./dataService";
 import * as ps from "./studentParsingService";
-import { generateId, sortStudents } from "./studentService";
+import { generateId, sortBySession, sortStudents } from "./studentService";
 
 export interface ValidFields<T> {
   [key: string]: (key: string, value: string, object: T) => void;
@@ -310,18 +313,49 @@ export const tunisiaSpreadsheetToStudentList = async (csvString: string): Promis
       }
     }
   });
-  // await deleteCollection("students");
-  // await Promise.all(
-  //   map(students, async (student) => {
-  //     await setData(student, "students", "id", { merge: true });
-  //   }),
-  // );
 
-  // TODO: sort placement sessions for each student before picking their initial session
-  // TODO: format dates
   forEach(students, (student) => {
-    const initialSession = first(student.placement)?.session;
+    const sortedPlacements = sortBy(student.placement, (placement) => {
+      return sortBySession(placement.session);
+    });
+    const initialSession = first(sortedPlacements)?.session;
+    forEach(sortedPlacements, (sp) => {
+      forEach(sp.placement, (p) => {
+        forEach(p.payments, (payment) => {
+          if (payment.date) {
+            const sessionYear = first(sp.session?.match(/\d{2,4}/));
+            if (!includes(payment.date, sessionYear)) {
+              const splitDate = payment.date.split("/");
+              payment.date = `${nth(splitDate, 0)}/${nth(splitDate, 1)}/${sessionYear}`;
+            }
+          }
+        });
+      });
+    });
+    student.placement = sortedPlacements;
     if (initialSession) student.initialSession = initialSession;
+    const currentPlacements = filter(sortedPlacements, (sp) => {
+      return sp.session === "Winter 2024";
+    });
+    if (currentPlacements.length === 0) {
+      if (student.status) {
+        student.status.currentStatus = Status.WD;
+      } else {
+        student.status = { currentStatus: Status.WD };
+      }
+    } else if (student.status) {
+      student.status.currentStatus = Status.RET;
+    } else {
+      student.status = { currentStatus: Status.RET };
+    }
   });
+
+  await deleteCollection("students");
+  await Promise.all(
+    map(students, async (student) => {
+      await setData(student, "students", "epId", { merge: true });
+    }),
+  );
+
   return sortStudents(students);
 };

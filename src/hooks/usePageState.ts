@@ -65,9 +65,9 @@ export const usePageState = <T>({
     return dataFilter && dataFilter.length > 0 ? filterFn(searchedList, filterList) : searchedList;
   }, [dataFilter, filterList, searchedList]);
 
-  // useEffect(() => {
-  //   setData(sortedList);
-  // }, [setData, sortedList]);
+  useEffect(() => {
+    setData(sortedList);
+  }, [setData, sortedList]);
 
   useEffect(() => {
     setLoading(docsLoading);
