@@ -24,7 +24,8 @@ export const searchStudents = (students: Student[], searchString: string): Stude
       includes(s.name.arabic, searchString) ||
       s.epId.toString() === searchString ||
       some(map(s.phone?.phoneNumbers, "number"), phoneConditionFn(cleanSearchString)) ||
-      !!toLower(s.familyCoordinatorEntry).match(searchStringRegEx)
+      !!toLower(s.familyCoordinatorEntry).match(searchStringRegEx) ||
+      !!`${s.nationalID?.toString()}`.match(searchStringRegEx)
     );
   });
 };

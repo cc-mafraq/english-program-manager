@@ -78,11 +78,15 @@ export const WithdrawButton: React.FC<WithdrawButtonProps> = ({ student }) => {
   }, [student.status?.droppedOutReason, student.status?.noContactList]);
 
   return (
-    <Box>
+    <span>
       <Tooltip arrow title="Withdraw Student">
         <IconButton
           onClick={handleDialogOpen}
-          sx={greaterThanSmall ? { marginLeft: "50%", transform: "scale(1.25) translate(-50%)" } : undefined}
+          sx={
+            greaterThanSmall && import.meta.env.VITE_PROJECT_NAME === "ccm-english"
+              ? { marginLeft: "50%", transform: "scale(1.25) translate(-50%)" }
+              : undefined
+          }
         >
           <Logout />
         </IconButton>
@@ -97,6 +101,6 @@ export const WithdrawButton: React.FC<WithdrawButtonProps> = ({ student }) => {
       >
         <FormWithdrawMemo />
       </FormDialog>
-    </Box>
+    </span>
   );
 };

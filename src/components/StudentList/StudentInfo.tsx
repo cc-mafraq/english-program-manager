@@ -51,7 +51,7 @@ const ProgramInformation: React.FC<StudentInfoProps> = ({ data: student }) => {
       {student.status?.currentStatus && (
         <LabeledText label="Status">{Status[student.status.currentStatus]}</LabeledText>
       )}
-      <LabeledText label="Active">{active}</LabeledText>
+      {import.meta.env.VITE_PROJECT_NAME === "ccm-english" && <LabeledText label="Active">{active}</LabeledText>}
       <LabeledText label="Initial Session">{student.initialSession}</LabeledText>
     </LabeledContainer>
   );
@@ -160,7 +160,14 @@ export const PhoneNumbers: React.FC<StudentInfoProps & { noWhatsapp?: boolean }>
   const isAdminOrFaculty = role === "admin" || role === "faculty";
 
   return (
-    <LabeledContainer label={noWhatsapp ? "Phone Numbers" : "Phone Numbers and WhatsApp"} showWhenEmpty>
+    <LabeledContainer
+      label={
+        noWhatsapp || import.meta.env.VITE_PROJECT_NAME !== "ccm-english"
+          ? "Phone Numbers"
+          : "Phone Numbers and WhatsApp"
+      }
+      showWhenEmpty
+    >
       {map(student.phone?.phoneNumbers, (pn, i) => {
         return (
           <span key={i}>

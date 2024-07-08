@@ -101,7 +101,11 @@ export const ClassListsPage = () => {
 
   const handleClassChange = useCallback((event: SelectChangeEvent) => {
     saveLocal("classListSelection", event.target.value);
-    setSelectedClass(getClassFromClassName(event.target.value) ?? { level: "PL1-M" });
+    setSelectedClass(
+      import.meta.env.VITE_PROJECT_NAME === "ccm-english"
+        ? getClassFromClassName(event.target.value) ?? { level: "PL1-M" }
+        : { level: event.target.value },
+    );
   }, []);
 
   const handleShowWDCheckboxChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {

@@ -43,6 +43,7 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({
   const theme = useTheme();
   const { iconColor } = useColors();
   const phoneNumberIsValid = isValidPhoneNumber(student.phone?.primaryPhone as number);
+  const countryPhoneCode = import.meta.env.VITE_PROJECT_NAME === "ccm-english" ? 962 : 216;
   const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
   const greaterThanMedium = useMediaQuery(theme.breakpoints.up("md"));
 
@@ -91,9 +92,18 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({
         </Box>
         <Box>
           <Box>
+            {student.status?.currentStatus !== undefined &&
+              student.status?.currentStatus !== Status.WD &&
+              role === "admin" &&
+              !(greaterThanSmall && import.meta.env.VITE_PROJECT_NAME === "ccm-english") && (
+                <WithdrawButton student={student} />
+              )}
             {phoneNumberIsValid && (
               <Tooltip arrow placement="top" title="Contact on WhatsApp">
-                <IconButton href={`https://wa.me/962${student.phone?.primaryPhone}`} target="_blank">
+                <IconButton
+                  href={`https://wa.me/${countryPhoneCode}${student.phone?.primaryPhone}`}
+                  target="_blank"
+                >
                   <WhatsApp sx={{ color: iconColor }} />
                 </IconButton>
               </Tooltip>
@@ -112,10 +122,6 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({
             )}
             {React.isValidElement(otherButtons) && otherButtons}
           </Box>
-          {student.status?.currentStatus !== undefined &&
-            student.status?.currentStatus !== Status.WD &&
-            role === "admin" &&
-            !greaterThanSmall && <WithdrawButton student={student} />}
         </Box>
       </Box>
       <Divider />

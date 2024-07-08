@@ -511,12 +511,13 @@ export const parseName = (key: string, value: string, student: Student) => {
 
 export const parseCIN = (key: string, value: string, student: Student) => {
   if (!value) return;
-  student.nationalID = value;
+  student.nationalID = trim(value);
 };
 
 export const parsePrimPhone = (key: string, value: string, student: Student) => {
   if (!value) return;
-  student.phone = { phoneNumbers: [{ number: Number(value) }], primaryPhone: Number(value) };
+  const cleanValue = replace(value, /[-)(\s]/g, "");
+  student.phone = { phoneNumbers: [{ number: Number(cleanValue) }], primaryPhone: Number(cleanValue) };
 };
 
 export const parseProfession = (key: string, value: string, student: Student) => {
@@ -546,7 +547,7 @@ export const parseSemester = (key: string, value: string, student: Student) => {
     student.placement.push({
       classScheduleSentDate: [],
       placement: [{ level: "", payments: [] }],
-      session: value,
+      session: trim(value),
     });
   }
 };

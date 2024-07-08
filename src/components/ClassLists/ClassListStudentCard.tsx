@@ -82,7 +82,7 @@ const ClassListStudentInfoMemo: React.FC<ClassListStudentInfoProps> = React.memo
           {!allSameGender && <LabeledText label="Gender">{data.gender === "M" ? "Male" : "Female"}</LabeledText>}
           <LabeledText label="Repeat">{repeatNum}</LabeledText>
         </LabeledContainer>
-        <PhoneNumbers data={data} noWhatsapp />
+        {data.phone && <PhoneNumbers data={data} noWhatsapp />}
 
         {selectedAcademicRecord && (
           <Box>

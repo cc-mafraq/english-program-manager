@@ -4,7 +4,6 @@ import {
   Equalizer,
   FormatListBulleted,
   Home,
-  LibraryBooks,
   Menu,
   PendingActions,
   Person,
@@ -68,10 +67,6 @@ const drawerList: DrawerListItem[] = [
   {
     component: Equalizer,
     name: "Gradebook",
-  },
-  {
-    component: LibraryBooks,
-    name: "Virtual Library",
   },
   {
     component: Schedule,

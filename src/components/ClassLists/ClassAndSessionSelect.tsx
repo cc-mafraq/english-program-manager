@@ -65,7 +65,7 @@ export const ClassAndSessionSelect: React.FC<ClassAndSessionSelectProps> = ({
             {map(sessionOptions, (so) => {
               return (
                 <MenuItem key={so} value={so}>
-                  {getSessionFullName(so)}
+                  {import.meta.env.VITE_PROJECT_NAME === "ccm-english" ? getSessionFullName(so) : so}
                 </MenuItem>
               );
             })}
