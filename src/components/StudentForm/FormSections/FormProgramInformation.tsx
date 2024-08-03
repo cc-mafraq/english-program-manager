@@ -39,7 +39,9 @@ export const FormProgramInformation: React.FC = () => {
           options={getAllInitialSessions(students)}
           textFieldProps={{ required: true }}
         />
-        <GridItemTextField label="Family Coordinator Entry" name="familyCoordinatorEntry" />
+        {import.meta.env.VITE_PROJECT_NAME === "ccm-english" && (
+          <GridItemTextField label="Family Coordinator Entry" name="familyCoordinatorEntry" />
+        )}
       </GridContainer>
     </>
   );

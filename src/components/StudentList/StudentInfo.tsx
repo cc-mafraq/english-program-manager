@@ -284,7 +284,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ data: student }) => {
       <PersonalInformation data={student} />
       <Demographics data={student} />
       {student.origPlacementData && <PlacementData data={student} />}
-      {student.covidVaccine && <CovidVaccine data={student} />}
+      {/* {student.covidVaccine && <CovidVaccine data={student} />} */}
       <LiteracyAndZoom data={student} />
     </Box>
   );

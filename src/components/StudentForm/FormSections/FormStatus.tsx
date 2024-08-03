@@ -95,10 +95,12 @@ export const FormStatus: React.FC = () => {
           name="status.droppedOutReason"
           options={withdrawReasons}
         />
-        <GridItemDatePicker label="Level Reeval Date" name="status.levelReevalDate" />
-        <Grid item>
-          <LabeledCheckbox label="ID Card in Box" name="status.idCardInBox" />
-        </Grid>
+        <GridItemDatePicker label="Level Reevaluation Date" name="status.levelReevalDate" />
+        {import.meta.env.VITE_PROJECT_NAME === "ccm-english" && (
+          <Grid item>
+            <LabeledCheckbox label="ID Card in Box" name="status.idCardInBox" />
+          </Grid>
+        )}
       </GridContainer>
     </>
   );

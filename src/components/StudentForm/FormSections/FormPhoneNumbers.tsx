@@ -27,7 +27,7 @@ export const FormPhoneNumbers = <T extends object>({
   return (
     <>
       <FormLabel textProps={{ marginTop: SPACING }}>{`Phone Numbers${
-        noWhatsapp ? "" : " and WhatsApp"
+        noWhatsapp ? (import.meta.env.VITE_PROJECT_NAME !== "ccm-english" ? " and Email" : "") : " and WhatsApp"
       }`}</FormLabel>
       <GridContainer marginBottom={SPACING}>
         <FormList
@@ -40,6 +40,11 @@ export const FormPhoneNumbers = <T extends object>({
         >
           <FormPhoneItem />
         </FormList>
+        {import.meta.env.VITE_PROJECT_NAME !== "ccm-english" && (
+          <Grid item sm={3} xs={12}>
+            <GridItemTextField gridProps={{ paddingBottom: SPACING, paddingLeft: 0 }} label="Email" name="email" />
+          </Grid>
+        )}
         {!noWhatsapp && (
           <Grid item sm={3} xs={12}>
             <GridItemTextField

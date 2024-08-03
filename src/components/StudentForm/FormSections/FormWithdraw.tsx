@@ -16,10 +16,12 @@ export const FormWithdraw: React.FC = () => {
     <>
       <FormLabel textProps={{ marginTop: SPACING }}>Withdraw Student</FormLabel>
       <GridContainer marginBottom={SPACING}>
-        <Grid item>
-          <LabeledCheckbox containerProps={{ marginTop: -1 }} label="Invite" name="inviteTag" />
-          <LabeledCheckbox containerProps={{ marginTop: -1 }} label="NCL" name="noContactList" />
-        </Grid>
+        {import.meta.env.VITE_PROJECT_NAME === "ccm-english" && (
+          <Grid item>
+            <LabeledCheckbox containerProps={{ marginTop: -1 }} label="Invite" name="inviteTag" />
+            <LabeledCheckbox containerProps={{ marginTop: -1 }} label="NCL" name="noContactList" />
+          </Grid>
+        )}
         <GridItemDatePicker
           label="Withdraw Date"
           name="withdrawDate"
