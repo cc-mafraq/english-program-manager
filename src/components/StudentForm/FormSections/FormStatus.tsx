@@ -21,7 +21,7 @@ export const FormStatus: React.FC = () => {
   const methods = useFormContext<Student>();
 
   const [cheatingSessions, addCheatingSession, removeCheatingSession] = useFormList(
-    selectedStudent && selectedStudent.status.cheatingSessions && selectedStudent.status.cheatingSessions.length
+    selectedStudent && selectedStudent.status?.cheatingSessions && selectedStudent.status.cheatingSessions.length
       ? selectedStudent.status.cheatingSessions
       : [""],
     "status.cheatingSessions",
@@ -95,10 +95,12 @@ export const FormStatus: React.FC = () => {
           name="status.droppedOutReason"
           options={withdrawReasons}
         />
-        <GridItemDatePicker label="Level Reeval Date" name="status.levelReevalDate" />
-        <Grid item>
-          <LabeledCheckbox label="ID Card in Box" name="status.idCardInBox" />
-        </Grid>
+        <GridItemDatePicker label="Level Reevaluation Date" name="status.levelReevalDate" />
+        {import.meta.env.VITE_PROJECT_NAME === "ccm-english" && (
+          <Grid item>
+            <LabeledCheckbox label="ID Card in Box" name="status.idCardInBox" />
+          </Grid>
+        )}
       </GridContainer>
     </>
   );

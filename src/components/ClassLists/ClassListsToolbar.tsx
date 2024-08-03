@@ -17,7 +17,12 @@ import { dropRight } from "lodash";
 import React, { useCallback, useMemo } from "react";
 import { useAppStore, useStudentStore } from "../../hooks";
 import { SectionPlacement, Student } from "../../interfaces";
-import { getAllSessionsWithRecord, getClassListCSV, getClassName } from "../../services";
+import {
+  getAllSessionsWithPlacement,
+  getAllSessionsWithRecord,
+  getClassListCSV,
+  getClassName,
+} from "../../services";
 import { ClassAndSessionSelect } from "./ClassAndSessionSelect";
 
 interface ClassListsToolbarProps {
@@ -50,7 +55,9 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
   const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
 
   const sessionOptions = useMemo(() => {
-    return dropRight(getAllSessionsWithRecord(students), 20);
+    return import.meta.env.VITE_PROJECT_NAME === "ccm-english"
+      ? dropRight(getAllSessionsWithRecord(students), 20)
+      : getAllSessionsWithPlacement(students);
   }, [students]);
 
   const exportClassList = useCallback(() => {

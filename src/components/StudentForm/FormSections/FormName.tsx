@@ -21,15 +21,17 @@ export const FormName: React.FC = () => {
         textFieldProps={{ required: true }}
       />
       <GridItemTextField label="Name - AR" name="name.arabic" textFieldProps={{ required: true }} />
-      <Grid item>
-        <LabeledCheckbox
-          checkboxProps={{ defaultChecked: true }}
-          containerProps={{ marginTop: -1 }}
-          label="Invite"
-          name="status.inviteTag"
-        />
-        <LabeledCheckbox containerProps={{ marginTop: -1 }} label="NCL" name="status.noContactList" />
-      </Grid>
+      {import.meta.env.VITE_PROJECT_NAME === "ccm-english" && (
+        <Grid item>
+          <LabeledCheckbox
+            checkboxProps={{ defaultChecked: true }}
+            containerProps={{ marginTop: -1 }}
+            label="Invite"
+            name="status.inviteTag"
+          />
+          <LabeledCheckbox containerProps={{ marginTop: -1 }} label="NCL" name="status.noContactList" />
+        </Grid>
+      )}
     </GridContainer>
   );
 };

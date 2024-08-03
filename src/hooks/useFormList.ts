@@ -11,7 +11,7 @@ export const useFormList = <T extends FieldValues>(
   const [list, setList] = useState(initialState);
 
   const addListItem = () => {
-    setList([...list, {}]);
+    setList(list === undefined ? [{}] : [...list, {}]);
   };
 
   const removeListItem = (index?: number) => {

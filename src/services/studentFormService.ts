@@ -122,11 +122,12 @@ const percentageToInteger = (value: string, originalValue: string) => {
 };
 
 export const isValidPhoneNumber = (value: number | undefined): boolean => {
-  return (
+  const isJordanPhoneNumber =
     value !== undefined &&
     value > 9999999 &&
-    ((value > 700000000 && value < 800000000) || !startsWith(toString(value), "7"))
-  );
+    ((value > 700000000 && value < 800000000) || !startsWith(toString(value), "7"));
+  const isTunisiaPhoneNumber = value !== undefined && value > 9999999;
+  return import.meta.env.VITE_PROJECT_NAME === "ccm-english" ? isJordanPhoneNumber : isTunisiaPhoneNumber;
 };
 
 const percentError = "Percentage must be an integer between 0 and 100";

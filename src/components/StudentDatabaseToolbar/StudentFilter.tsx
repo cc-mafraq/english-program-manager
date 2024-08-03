@@ -67,14 +67,14 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
   }, []);
 
   const whatsAppGroupFn = useCallback((student: Student) => {
-    const includesRemove = includes(student.phone.waBroadcastSAR?.toLowerCase(), "remove");
-    if (includes(student.phone.waBroadcastSAR?.toLowerCase(), "group") && !includesRemove) {
+    const includesRemove = includes(student.phone?.waBroadcastSAR?.toLowerCase(), "remove");
+    if (includes(student.phone?.waBroadcastSAR?.toLowerCase(), "group") && !includesRemove) {
       return (
-        `SAR ${first(student.phone.waBroadcastSAR?.match(/Group \d/))}` ||
-        `SAR Group ${first(student.phone.waBroadcastSAR?.match(/\d/))}`
+        `SAR ${first(student.phone?.waBroadcastSAR?.match(/Group \d/))}` ||
+        `SAR Group ${first(student.phone?.waBroadcastSAR?.match(/\d/))}`
       );
     }
-    if (includes(student.phone.waBroadcastSAR, "Y") && !includesRemove) {
+    if (includes(student.phone?.waBroadcastSAR, "Y") && !includesRemove) {
       return "SAR Group 1";
     }
     return "None";
@@ -105,7 +105,11 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
   const filterFields: FilterField<Student>[] = useMemo(() => {
     return [
       { condition: isAdmin, name: "Invite", path: "status.inviteTag", values: booleanCheckboxOptions },
-      { name: "Current Level", path: "currentLevel", values: [...genderedLevels, "L5 GRAD"] },
+      {
+        name: "Current Level",
+        path: "currentLevel",
+        values: import.meta.env.VITE_PROJECT_NAME === "ccm-english" ? [...genderedLevels, "L5 GRAD"] : levels,
+      },
       { name: "Current Status", path: "status.currentStatus", values: statuses },
       {
         condition: isAdmin,

@@ -28,7 +28,7 @@ export const StatisticsPage = () => {
     sum(values(statistics.waitingListOutcomeCounts)) - statistics.waitingListOutcomeCounts.undefined;
 
   useEffect(() => {
-    if (!statistics.totalRegistered) navigate("/epd", { replace: true });
+    if (!statistics.totalRegistered) navigate("/students", { replace: true });
   }, [navigate, statistics]);
 
   return statistics.totalRegistered && (role === "admin" || role === "faculty") ? (

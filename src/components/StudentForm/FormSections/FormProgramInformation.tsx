@@ -1,6 +1,6 @@
 import React from "react";
 import { useStudentStore } from "../../../hooks";
-import { genderedLevels, Status, statuses } from "../../../interfaces";
+import { genderedLevels, levels, Status, statuses } from "../../../interfaces";
 import { generateId, getAllInitialSessions, SPACING } from "../../../services";
 import { FormLabel, GridContainer, GridItemAutocomplete, GridItemTextField } from "../../reusables";
 
@@ -23,7 +23,7 @@ export const FormProgramInformation: React.FC = () => {
         <GridItemAutocomplete
           gridProps={{ sm: true, xs: 8 }}
           label="Current Level"
-          options={[...genderedLevels, "L5 GRAD"]}
+          options={import.meta.env.VITE_PROJECT_NAME === "ccm-english" ? [...genderedLevels, "L5 GRAD"] : levels}
           textFieldProps={{ required: true }}
         />
         <GridItemAutocomplete
@@ -39,7 +39,9 @@ export const FormProgramInformation: React.FC = () => {
           options={getAllInitialSessions(students)}
           textFieldProps={{ required: true }}
         />
-        <GridItemTextField label="Family Coordinator Entry" name="familyCoordinatorEntry" />
+        {import.meta.env.VITE_PROJECT_NAME === "ccm-english" && (
+          <GridItemTextField label="Family Coordinator Entry" name="familyCoordinatorEntry" />
+        )}
       </GridContainer>
     </>
   );

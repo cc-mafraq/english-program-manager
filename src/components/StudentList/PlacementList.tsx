@@ -99,6 +99,17 @@ const PlacementAccordionDetails: React.FC<PlacementAccordionDetailsProps> = ({ d
             <LabeledText label="Section">{pl.section}</LabeledText>
             <LabeledText label="Date">{pl.date}</LabeledText>
             <LabeledText label="Notes">{pl.notes}</LabeledText>
+            {map(pl.payments, (payment, j) => {
+              return (
+                <Box key={`payment-${j}`}>
+                  <LabeledText label={`Payment${(pl.payments?.length ?? 0) > 1 ? ` ${j + 1}` : ""}`}>
+                    {payment.amount + (import.meta.env.VITE_PROJECT_NAME === "kallaline-tunis" ? " TND" : "")}
+                  </LabeledText>
+                  <LabeledText label="Payment Date">{payment.date}</LabeledText>
+                  <LabeledText label="Payment Notes">{payment.notes}</LabeledText>
+                </Box>
+              );
+            })}
           </LabeledContainer>
         );
       })}

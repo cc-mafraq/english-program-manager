@@ -1,84 +1,67 @@
-// import {
-//   filter,
-//   first,
-//   forEach,
-//   get,
-//   includes,
-//   isEmpty,
-//   join,
-//   last,
-//   lowerCase,
-//   map,
-//   pullAll,
-//   range,
-//   replace,
-//   set,
-//   split,
-//   startsWith,
-//   trim,
-//   zip,
-// } from "lodash";
-// import moment from "moment";
-// import { MOMENT_FORMAT } from ".";
-// import {
-//   CovidStatus,
-//   DroppedOutReason,
-//   FinalResult,
-//   GenderedLevel,
-//   Grade,
-//   Level,
-//   LevelPlus,
-//   Nationality,
-//   PhoneNumber,
-//   Status,
-//   Student,
-//   WaitingListEntry,
-// } from "../interfaces";
-// import { ValidFields } from "./spreadsheetService";
+import {
+  findIndex,
+  first,
+  forEach,
+  includes,
+  isEmpty,
+  last,
+  map,
+  replace,
+  set,
+  some,
+  split,
+  startCase,
+  toLower,
+  trim,
+} from "lodash";
+import moment from "moment";
+import { MOMENT_FORMAT } from ".";
+import { Student } from "../interfaces";
+import { ValidFields } from "./spreadsheetService";
 
-// const separatorRegex = /[;,&]/g;
+const separatorRegex = /[;,&]/g;
 // const phoneRegex = /([\d]+)/;
 export const dateRegex = /\d{1,2}(\/|-)\d{1,2}\1\d{2,4}/g;
 
-// export const splitAndTrim = (value: string, separator?: string | RegExp): string[] => {
-//   const sep = separator || separatorRegex;
-//   const splitValues = split(value, sep);
-//   const trimmedSplitValues = map(splitValues, (v) => {
-//     return trim(v);
-//   });
-//   return trimmedSplitValues;
-// };
+export const splitAndTrim = (value: string, separator?: string | RegExp): string[] => {
+  const sep = separator || separatorRegex;
+  const splitValues = split(value, sep);
+  const trimmedSplitValues = map(splitValues, (v) => {
+    return trim(v);
+  });
+  return trimmedSplitValues;
+};
 
-// const parseDateVal = (value?: string) => {
-//   if (!value) return undefined;
-//   const valueNoLetters = trim(replace(value, /[a-z]|[A-Z]/, ""));
-//   const date = moment(valueNoLetters, ["L", "l", "M/D/YY", "MM/DD/YY", "M-D-YY", "M/D"]);
-//   return date.isValid() ? date.format(MOMENT_FORMAT) : undefined;
-// };
+const parseDateVal = (value?: string) => {
+  if (!value) return undefined;
+  const valueNoLetters = trim(replace(value, /[a-z]|[A-Z]/, ""));
+  const date = moment(valueNoLetters, ["L", "l", "M/D/YY", "MM/DD/YY", "M-D-YY", "M/D"]);
+  return date.isValid() ? date.format(MOMENT_FORMAT) : undefined;
+};
 
-// // https://stackoverflow.com/questions/14743536/multiple-key-names-same-pair-value
-// export const expand = <T>(obj: ValidFields<T>) => {
-//   const keys = Object.keys(obj);
-//   forEach(keys, (key) => {
-//     const subkeys = key.split(/,\s?/);
-//     const target = obj[key];
-//     delete obj[key];
-//     subkeys.forEach((subkey) => {
-//       obj[subkey] = target;
-//     });
-//   });
-//   return obj;
-// };
+// https://stackoverflow.com/questions/14743536/multiple-key-names-same-pair-value
+export const expand = <T>(obj: ValidFields<T>) => {
+  const keys = Object.keys(obj);
+  forEach(keys, (key) => {
+    const subkeys = key.split(/,\s?/);
+    const target = obj[key];
+    delete obj[key];
+    subkeys.forEach((subkey) => {
+      obj[subkey] = target;
+    });
+  });
+  return obj;
+};
 
-// export const parseDateField = <T extends object>(fieldPath: string) => {
-//   return (key: string, value: string, object: T) => {
-//     const lastMatch = last(value.match(dateRegex));
-//     if (!lastMatch) return;
-//     const date = parseDateVal(last(splitAndTrim(lastMatch)));
-//     if (!date || !value) return;
-//     set(object, fieldPath, date);
-//   };
-// };
+export const parseDateField = <T extends object>(fieldPath: string) => {
+  return (key: string, value: string, object: T) => {
+    const lastMatch = last(value.match(dateRegex));
+    if (!lastMatch) return;
+    const date = parseDateVal(last(splitAndTrim(lastMatch)));
+    if (!date || !value) return;
+    set(object, fieldPath, date);
+  };
+};
 
 // const parseDateFields = (fieldPath: string) => {
 //   return (key: string, value: string, student: Student) => {
@@ -95,22 +78,22 @@ export const dateRegex = /\d{1,2}(\/|-)\d{1,2}\1\d{2,4}/g;
 //   };
 // };
 
-// export const parseOptionalString = <T extends object>(fieldPath: string) => {
-//   return (key: string, value: string, object: T) => {
-//     if (isEmpty(value)) return;
-//     set(object, fieldPath, value);
-//   };
-// };
+export const parseOptionalString = <T extends object>(fieldPath: string) => {
+  return (key: string, value: string, object: T) => {
+    if (isEmpty(value)) return;
+    set(object, fieldPath, value);
+  };
+};
 
-// export const parseOptionalBoolean = <T extends object>(fieldPath: string) => {
-//   return (key: string, value: string, object: T) => {
-//     if (Number(value) === 1 || value.toLowerCase() === "yes") {
-//       set(object, fieldPath, true);
-//     } else if (value.toLowerCase() === "no") {
-//       set(object, fieldPath, false);
-//     }
-//   };
-// };
+export const parseOptionalBoolean = <T extends object>(fieldPath: string) => {
+  return (key: string, value: string, object: T) => {
+    if (Number(value) === 1 || value.toLowerCase() === "yes") {
+      set(object, fieldPath, true);
+    } else if (value.toLowerCase() === "no") {
+      set(object, fieldPath, false);
+    }
+  };
+};
 
 // export const generateKeys = (keyName: string, endNum: number, noIncludeKeyName?: boolean): string => {
 //   const nums = range(0, endNum);
@@ -516,4 +499,112 @@ export const dateRegex = /\d{1,2}(\/|-)\d{1,2}\1\d{2,4}/g;
 //   if (!value) return;
 //   student.status.cheatingSessions = splitAndTrim(value);
 // };
-export {};
+
+export const parseName = (key: string, value: string, student: Student) => {
+  if (!value) return;
+  if (isEmpty(student.name.english)) {
+    student.name.english = startCase(toLower(value));
+  } else {
+    student.name.english += ` ${startCase(toLower(value))}`;
+  }
+};
+
+export const parseCIN = (key: string, value: string, student: Student) => {
+  if (!value) return;
+  student.nationalID = trim(value);
+};
+
+export const parsePrimPhone = (key: string, value: string, student: Student) => {
+  if (!value) return;
+  const cleanValue = replace(value, /[-)(\s]/g, "");
+  student.phone = { phoneNumbers: [{ number: Number(cleanValue) }], primaryPhone: Number(cleanValue) };
+};
+
+export const parseProfession = (key: string, value: string, student: Student) => {
+  if (!value) return;
+  student.work = { ...student.work, occupation: value };
+};
+
+export const parseVille = (key: string, value: string, student: Student) => {
+  if (!value) return;
+  student.city = startCase(toLower(value));
+};
+
+export const parseEmail = (key: string, value: string, student: Student) => {
+  if (!value) return;
+  student.email = value;
+};
+
+export const parseSemester = (key: string, value: string, student: Student) => {
+  if (!value) return;
+  if (includes(map(student.placement, "session"), value)) {
+    const placementIndex = findIndex(student.placement, (placement) => {
+      return placement.session === value;
+    });
+    if (placementIndex !== undefined)
+      student.placement[placementIndex].placement.push({ level: "", payments: [] });
+  } else {
+    student.placement.push({
+      classScheduleSentDate: [],
+      placement: [{ level: "", payments: [] }],
+      session: trim(value),
+    });
+  }
+};
+
+export const parseCourseRegistered = (key: string, value: string, student: Student) => {
+  const placementSessionIndex = findIndex(student.placement, (placementSession) => {
+    return some(placementSession.placement, (placement) => {
+      return placement.level === "";
+    });
+  });
+  if (placementSessionIndex !== -1) {
+    const placementIndex = findIndex(student.placement[placementSessionIndex].placement, (placement) => {
+      return placement.level === "";
+    });
+    student.placement[placementSessionIndex].placement[placementIndex].level = value;
+  }
+};
+
+export const parsePayment = (key: string, value: string, student: Student) => {
+  if (!value) return;
+  last(last(student.placement)?.placement)?.payments?.push({ amount: Number(value), date: "" });
+};
+
+export const parsePaymentDate = (key: string, value: string, student: Student) => {
+  if (!value) return;
+  const payments = last(last(student.placement)?.placement)?.payments;
+  if (payments) {
+    const paymentIndex = findIndex(payments, (payment) => {
+      return payment.date === "";
+    });
+    if (paymentIndex !== -1) {
+      payments[paymentIndex].date = moment(first(split(value, "; ")), [
+        "DD/MM/YYYY",
+        "MMMM",
+        "YYYY",
+        "MMM D",
+        "MMM. D",
+        "M/DD",
+        "DD MMM",
+        "MMMM D",
+      ]).format(MOMENT_FORMAT);
+    }
+  }
+};
+
+export const parseCertificateDate = (key: string, value: string, student: Student) => {
+  if (!value) return;
+  student.certificateRequests = value;
+};
+
+export const parseNotes = (key: string, value: string, student: Student) => {
+  if (!value) return;
+  const { payments } = student.placement[0].placement[0];
+  if (payments) {
+    const paymentsLastIndex = payments.length - 1;
+    if (paymentsLastIndex !== -1) {
+      payments[paymentsLastIndex].notes = value;
+    }
+  }
+};

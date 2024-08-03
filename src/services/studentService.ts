@@ -12,7 +12,6 @@ import {
   isUndefined,
   keyBy,
   last,
-  lowerCase,
   map,
   mapValues,
   nth,
@@ -25,6 +24,7 @@ import {
   sortBy,
   split,
   sum,
+  toLower,
   uniq,
   uniqBy,
 } from "lodash";
@@ -64,20 +64,23 @@ export interface FilterField<T> {
 }
 
 export const getRepeatNum = (student: Student): string | undefined => {
-  const levelsTaken = map(
-    filter(student.academicRecords, (ar) => {
-      return ar.overallResult !== FinalResult.WD;
-    }),
-    "level",
-  );
-  const levelCounts = countBy(levelsTaken);
-  const lastResult = last(student.academicRecords)?.overallResult;
-  const repeatNum = levelCounts[student.currentLevel] - 1; // - 1 to not include initial session (not repeated)
-  return lastResult === FinalResult.P || !repeatNum ? undefined : `${repeatNum}x`;
+  if (student.currentLevel) {
+    const levelsTaken = map(
+      filter(student.academicRecords, (ar) => {
+        return ar.overallResult !== FinalResult.WD;
+      }),
+      "level",
+    );
+    const levelCounts = countBy(levelsTaken);
+    const lastResult = last(student.academicRecords)?.overallResult;
+    const repeatNum = levelCounts[student.currentLevel] - 1; // - 1 to not include initial session (not repeated)
+    return lastResult === FinalResult.P || !repeatNum ? undefined : `${repeatNum}x`;
+  }
+  return undefined;
 };
 
 export const isActive = (student: Student): boolean => {
-  return student.status.currentStatus === Status.NEW || student.status.currentStatus === Status.RET;
+  return student.status?.currentStatus === Status.NEW || student.status?.currentStatus === Status.RET;
 };
 
 export const getProgress = (student: Student, sessionOptions: string[]): StudentProgress => {
@@ -114,20 +117,19 @@ export const getProgress = (student: Student, sessionOptions: string[]): Student
         );
       }) as Level[],
     );
-    progress[
-      isCoreClass || electiveOrAuditLevel
-        ? electiveOrAuditLevel || level
-        : getLevelAtSession(ar.session, student, sessionOptions, true)
-    ]?.push({
-      isAudit: !isUndefined(ar.levelAudited) && isUndefined(ar.level),
-      level: isCoreClass ? undefined : level,
-      result:
-        isCoreClass ||
-        (!isCoreClass && (ar.overallResult === "F" || ar.overallResult === "WD" || !ar.finalGrade?.percentage))
-          ? ar.overallResult
-          : FinalResult.P,
-      session: ar.session,
-    });
+    const levelAtSession = getLevelAtSession(ar.session, student, sessionOptions, true);
+    if (levelAtSession) {
+      progress[isCoreClass || electiveOrAuditLevel ? electiveOrAuditLevel || level : levelAtSession]?.push({
+        isAudit: !isUndefined(ar.levelAudited) && isUndefined(ar.level),
+        level: isCoreClass ? undefined : level,
+        result:
+          isCoreClass ||
+          (!isCoreClass && (ar.overallResult === "F" || ar.overallResult === "WD" || !ar.finalGrade?.percentage))
+            ? ar.overallResult
+            : FinalResult.P,
+        session: ar.session,
+      });
+    }
   });
   progress.L5 = concat(progress.L5 || [], progress["L5 GRAD"] || []);
   return omit(progress, "L5 GRAD");
@@ -146,16 +148,20 @@ export const filterOutById = (students: Student[], id: Student["epId"]): Student
 };
 
 export const sortBySession = (session: Student["initialSession"]) => {
-  const sessionParts = session?.split(" ");
-  return `${nth(sessionParts, 2)} ${replace(
-    replace(replace(lowerCase(nth(sessionParts, 0)), "fa", "3"), "su", "2"),
-    "sp",
-    "1",
-  )} ${nth(sessionParts, 1)}`;
+  const sessionYear = first(session?.match(/\d{2,4}/));
+  const sessionSeason = first(toLower(session)?.match(/fa|wi|sp|su/));
+  const sessionNumber = first(session?.match(/\s\d\s|\s\d$|\sI\s|\sI$|\sII\s|\sII$/));
+  return `${sessionYear} ${replace(
+    replace(replace(replace(toLower(sessionSeason), "fa", "3"), "su", "2"), "sp", "1"),
+    "wi",
+    "0",
+  )} ${sessionNumber}`;
 };
 
 const filterSession = (s: Student["initialSession"]) => {
-  return !isEmpty(s) && !!s.match(/^(Fa|Sp|Su) (I|II) \d{2}$/);
+  return (
+    !isEmpty(s) && (import.meta.env.VITE_PROJECT_NAME !== "ccm-english" || !!s.match(/^(Fa|Sp|Su) (I|II) \d{2}$/))
+  );
 };
 
 export const getAllInitialSessions = (students: Student[]): string[] => {
@@ -339,7 +345,7 @@ export const getStatusDetails = ({
     return ar.overallResult !== FinalResult.WD;
   });
 
-  if (student.status.currentStatus === Status.NEW && student.academicRecords?.length === 0)
+  if (student.status?.currentStatus === Status.NEW && student.academicRecords?.length === 0)
     return [StatusDetails.NEW, numSessionsAttended];
   if (currentSessionIsActive) {
     if (
@@ -384,7 +390,7 @@ export const getStatusDetails = ({
 
 export const getStudentIDByPhoneNumber = (students: Student[], phoneNumber: number) => {
   const matchedStudent = find(students, (student: Student) => {
-    return includes(map(student.phone.phoneNumbers, "number"), phoneNumber);
+    return includes(map(student.phone?.phoneNumbers, "number"), phoneNumber);
   });
   return matchedStudent?.epId;
 };

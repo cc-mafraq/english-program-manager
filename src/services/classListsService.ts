@@ -29,7 +29,7 @@ const generateClassListNotes = (
       ? ""
       : `${student.currentLevel}. `
   }${
-    student.currentLevel.includes("PL1") && student.literacy.illiterateEng ? "Struggling with literacy. " : ""
+    student.currentLevel?.includes("PL1") && student.literacy?.illiterateEng ? "Struggling with literacy. " : ""
   }${map(student.placement[sessionIndex].placement[classIndex].classListNotes, (c) => {
     return `${c.date}: ${c.notes}\n`;
   })}`;
@@ -49,12 +49,12 @@ export const getClassListCSV = (
         classListStudents,
         selectedClass,
         selectedSession,
-      )}","${student.name.arabic}",${student.epId},${student.status.currentStatus},"${
+      )}","${student.name.arabic}",${student.epId},${student.status?.currentStatus},"${
         getStatusDetails({ student, students })[0]
-      }",${student.phone.primaryPhone},${
+      }",${student.phone?.primaryPhone},${
         first(
-          filter(student.phone.phoneNumbers, (pn) => {
-            return pn.number !== student.phone.primaryPhone;
+          filter(student.phone?.phoneNumbers, (pn) => {
+            return pn.number !== student.phone?.primaryPhone;
           }),
         )?.number ?? ""
       },${student.nationality}\n`;

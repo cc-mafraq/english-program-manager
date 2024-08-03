@@ -10,26 +10,30 @@ import {
   Status,
   StatusDetails,
   Student,
-  StudentStatus,
   WaitlistOutcome,
 } from "../interfaces";
 import { getAllSessionsWithPlacement, getSessionsWithResults, getStatusDetails, isActive } from "../services";
 import { useStudentStore, useWaitingListStore } from "./useStores";
 
+interface GenderStats {
+  F: number;
+  M: number;
+}
+
 interface Statistics {
-  activeGenderCounts: { [key in Student["gender"]]: number };
+  activeGenderCounts: GenderStats;
   activeLevelCounts: { [key in Level]: number };
   activeNationalityCounts: { [key in Nationality]: number };
   averageAge: number;
   covidStatusCounts: { [key in CovidStatus]: number };
   droppedOutReasonCounts: { [key in DroppedOutReason]: number };
   fullVaccineNationalityCounts: { [key in Nationality]: number };
-  genderCounts: { [key in Student["age"]]: number };
+  genderCounts: GenderStats;
   levelCounts: { [key in Level]: number };
   nationalityCounts: { [key in Nationality]: number };
   placementRegistrationCounts: {
-    inviteCounts: { [key in StudentStatus["currentStatus"]]: number };
-    registrationCounts: { [key in StudentStatus["currentStatus"]]: number };
+    inviteCounts: { [key in Status]: number };
+    registrationCounts: { [key in Status]: number };
     session: Student["initialSession"];
   }[];
   sessionCounts: { [key in Student["initialSession"]]: number };
@@ -76,7 +80,7 @@ export const useStatistics = (): Statistics => {
 
   const filterFullVaccine = useCallback(() => {
     return filter(students, (s) => {
-      return s.covidVaccine.status === CovidStatus.FULL;
+      return s.covidVaccine?.status === CovidStatus.FULL;
     });
   }, [students]);
 
@@ -145,7 +149,7 @@ export const useStatistics = (): Statistics => {
   );
 
   const statistics: Statistics = {
-    activeGenderCounts: countBy(filterIsActive(), "gender") as { [key in Student["gender"]]: number },
+    activeGenderCounts: countBy(filterIsActive(), "gender") as unknown as GenderStats,
     activeLevelCounts: countBy(filterIsActive(), "currentLevel") as { [key in GenderedLevel]: number },
     activeNationalityCounts: countBy(filterIsActive(), "nationality") as { [key in Nationality]: number },
     averageAge: 0,
@@ -156,7 +160,7 @@ export const useStatistics = (): Statistics => {
     fullVaccineNationalityCounts: countBy(filterFullVaccine(), "nationality") as {
       [key in Nationality]: number;
     },
-    genderCounts: countBy(students, "gender") as { [key in Student["age"]]: number },
+    genderCounts: countBy(students, "gender") as unknown as GenderStats,
     levelCounts: countBy(students, "currentLevel") as { [key in GenderedLevel]: number },
     nationalityCounts: countBy(students, "nationality") as { [key in Nationality]: number },
     placementRegistrationCounts,
@@ -193,13 +197,13 @@ export const useStatistics = (): Statistics => {
       }
     }
     if (isActive(student)) statistics.totalActive += 1;
-    if (student.status.inviteTag) statistics.totalEligible += 1;
-    if (student.work.isEnglishTeacher) statistics.totalEnglishTeachers += 1;
-    if (student.literacy.illiterateAr) statistics.totalIlliterateArabic += 1;
-    if (student.literacy.illiterateEng) statistics.totalIlliterateEnglish += 1;
-    if (student.status.noContactList) statistics.totalNCL += 1;
+    if (student.status?.inviteTag) statistics.totalEligible += 1;
+    if (student.work?.isEnglishTeacher) statistics.totalEnglishTeachers += 1;
+    if (student.literacy?.illiterateAr) statistics.totalIlliterateArabic += 1;
+    if (student.literacy?.illiterateEng) statistics.totalIlliterateEnglish += 1;
+    if (student.status?.noContactList) statistics.totalNCL += 1;
     if (last(student.placement)?.pending) statistics.totalPending += 1;
-    if (student.work.isTeacher) statistics.totalTeachers += 1;
+    if (student.work?.isTeacher) statistics.totalTeachers += 1;
   });
   statistics.averageAge /= numStudentsWithAge;
 

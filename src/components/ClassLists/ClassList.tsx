@@ -19,7 +19,7 @@ export const ClassList: React.FC<ClassListProps> = ({
 }) => {
   const firstStudent = first(filteredStudents);
   const allSameLevel = every(filteredStudents, (student) => {
-    return student.currentLevel.substring(0, 2) === firstStudent?.currentLevel.substring(0, 2);
+    return student.currentLevel?.substring(0, 2) === firstStudent?.currentLevel?.substring(0, 2);
   });
   const allSameGender = every(filteredStudents, (student) => {
     return student.gender === firstStudent?.gender;

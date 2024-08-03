@@ -43,7 +43,8 @@ export const StudentDatabasePage = () => {
     sortFn: sortStudents,
   });
 
-  const shouldEmpty = useMemo(() => {
+  const shouldEmpty = false;
+  useMemo(() => {
     return isEmpty(searchString) && isEmpty(filter);
   }, [filter, searchString]);
 

@@ -41,7 +41,7 @@ export const App = () => {
           <BrowserRouter>
             <Authorization>
               <Routes>
-                <Route element={<StudentDatabasePage />} path="/epd" />
+                <Route element={<StudentDatabasePage />} path="/students" />
                 <Route element={<WaitingListPage />} path="/waitlist" />
                 <Route element={<ClassListsPage />} path="/classlists" />
                 <Route

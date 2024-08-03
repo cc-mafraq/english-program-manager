@@ -1,4 +1,4 @@
-import { concat, filter, forEach, includes, indexOf, lowerCase, map, nth, replace, split, union } from "lodash";
+import { concat, filter, forEach, includes, indexOf, isEmpty, lowerCase, map, nth, replace, split } from "lodash";
 import { AcademicRecord, FinalResult, Level, Student, levels } from "../interfaces";
 
 export interface StudentAcademicRecordIndex {
@@ -20,9 +20,11 @@ export interface FinalGradeReportFormValues {
   studentId: string;
 }
 
-const levelsWithGrad: Level[] = union(levels, ["L5 GRAD"]);
+const levelsWithGrad: Level[] =
+  import.meta.env.VITE_PROJECT_NAME === "ccm-english" ? [...levels, "L5 GRAD"] : levels;
 
-export const getFullLevelName = (level: string): string => {
+export const getFullLevelName = (level?: string): string => {
+  if (level === undefined || isEmpty(level)) return "";
   return replace(
     replace(replace(replace(level, "P", "Pre-"), "L", "Level "), /(-W)|(-M)/, ""),
     "GRAD",
@@ -44,7 +46,10 @@ export const getLevelAtSession = (
   student: Student,
   sessionOptions: Student["initialSession"][],
   noIncrement?: boolean,
-): Level => {
+): Level | undefined => {
+  if (student.currentLevel === undefined) {
+    return undefined;
+  }
   const sessionIndex = getSessionIndex(session, sessionOptions);
   const academicRecordLevelSessionResults = filter(
     map(student.academicRecords, (ar) => {
@@ -60,7 +65,7 @@ export const getLevelAtSession = (
     },
   );
 
-  let { level } = student.origPlacementData;
+  let level = student.origPlacementData?.level;
   forEach(academicRecordLevelSessionResults, (sarlsr) => {
     const sarlsrLevel = replace(sarlsr.level ?? "", /(-W)|(-M)/, "");
     const isCoreClass = includes(levelsWithGrad, sarlsrLevel);
@@ -69,7 +74,7 @@ export const getLevelAtSession = (
       level = sarlsr.result === "P" ? levelsWithGrad[levelIndex + 1] : levelsWithGrad[levelIndex];
     }
   });
-  return level || replace(student.currentLevel, /(-W)|(-M)/, "");
+  return level || (replace(student.currentLevel, /(-W)|(-M)/, "") as Level);
 };
 
 export const getLevelForNextSession = ({

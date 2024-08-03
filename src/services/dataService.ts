@@ -34,13 +34,17 @@ export const deleteCollection = async (collectionName: string) => {
 export const setPlacementExamFilePaths = (students: Student[]) => {
   forEach(
     filter(students, (student) => {
-      return student.origPlacementData.examFile === undefined;
+      return student.origPlacementData?.examFile === undefined;
     }),
     (studentWithoutExam) => {
       getDownloadURL(ref(storage, `placementExams/${studentWithoutExam.epId}.pdf`)).then((fileUrl) => {
         if (fileUrl) {
           const studentCopy = cloneDeep(studentWithoutExam);
-          studentCopy.origPlacementData.examFile = fileUrl;
+          if (studentCopy.origPlacementData) {
+            studentCopy.origPlacementData.examFile = fileUrl;
+          } else {
+            studentCopy.origPlacementData = { examFile: fileUrl };
+          }
           setData(studentCopy, "students", "epId");
         }
       });

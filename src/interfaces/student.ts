@@ -3,31 +3,34 @@ import { values } from "lodash";
 /* eslint-disable typescript-sort-keys/string-enum */
 export interface Student {
   academicRecords: AcademicRecord[];
-  age: number | "Unknown";
+  age?: number | "Unknown";
   certificateRequests?: string;
+  city?: string;
   correspondence: Correspondence[];
-  covidVaccine: Covid;
-  currentLevel: GenderedLevel;
+  covidVaccine?: Covid;
+  currentLevel?: GenderedLevel;
+  email?: string;
   epId: number;
   familyCoordinatorEntry?: string;
-  gender: "M" | "F";
+  gender?: "M" | "F";
   imageName?: string;
   initialSession: string;
-  literacy: Literacy;
+  literacy?: Literacy;
   name: StudentName;
-  nationality: Nationality;
-  origPlacementData: {
+  nationalID?: string;
+  nationality?: Nationality;
+  origPlacementData?: {
     adjustment?: string;
     examFile?: string;
-    level: Level;
-    speaking: LevelPlus;
-    writing: LevelPlus;
+    level?: Level;
+    speaking?: LevelPlus;
+    writing?: LevelPlus;
   };
-  phone: WhatsappInfo;
+  phone?: WhatsappInfo;
   photoContact?: string;
   placement: Placement[];
-  status: StudentStatus;
-  work: StudentWork;
+  status?: StudentStatus;
+  work?: StudentWork;
   zoom?: string;
 }
 
@@ -65,17 +68,24 @@ export interface SectionPlacement {
   date?: string;
   level: string;
   notes?: string;
+  payments?: Payment[];
   section?: string;
   timestamp?: string;
 }
 
 export interface Placement {
-  classScheduleSentDate: string[];
+  classScheduleSentDate?: string[];
   noAnswerClassScheduleWpm?: boolean;
   pending?: boolean;
   placement: SectionPlacement[];
   sectionsOffered?: string;
   session: string;
+}
+
+export interface Payment {
+  amount: number;
+  date?: string;
+  notes?: string;
 }
 
 export interface StudentWork {
@@ -103,18 +113,18 @@ export interface WhatsappInfo {
 
 export interface StudentStatus {
   cheatingSessions?: string[];
-  currentStatus: Status;
+  currentStatus?: Status;
   droppedOutReason?: DroppedOutReason;
   idCardInBox?: boolean;
-  inviteTag: boolean;
+  inviteTag?: boolean;
   levelReevalDate?: string;
-  noContactList: boolean;
-  reactivatedDate: string[];
-  withdrawDate: string[];
+  noContactList?: boolean;
+  reactivatedDate?: string[];
+  withdrawDate?: string[];
 }
 
 export interface StudentName {
-  arabic: string;
+  arabic?: string;
   english: string;
 }
 export interface PhoneNumber {
@@ -134,7 +144,21 @@ export interface Withdraw {
   withdrawDate: string;
 }
 
-export type Level = "PL1" | "L1" | "L2" | "L3" | "L4" | "L5" | "L5 GRAD";
+export type Level =
+  | "PL1"
+  | "L1"
+  | "L2"
+  | "L3"
+  | "L4"
+  | "L5"
+  | "L5 GRAD"
+  | "A1"
+  | "A2"
+  | "B1"
+  | "B1+"
+  | "B2"
+  | "C1"
+  | "C2";
 
 export type GenderedLevel = Level | ("PL1-M" | "PL1-W" | "L1-M" | "L1-W" | "L2-M" | "L2-W");
 
@@ -212,41 +236,285 @@ export enum DroppedOutReason {
   VP = "Vision Problems",
 }
 
-export const nationalities = values(Nationality);
-
-export const genderedLevels: GenderedLevel[] = [
-  "PL1-M",
-  "PL1-W",
-  "L1-M",
-  "L1-W",
-  "L2-M",
-  "L2-W",
-  "L3",
-  "L4",
-  "L5",
+export const nationalities = [
+  "Afghan",
+  "Albanian",
+  "Algerian",
+  "American",
+  "American Samoan",
+  "Andorran",
+  "Angolan",
+  "Anguillan",
+  "Antarctic",
+  "Antiguan or Barbudan",
+  "Argentine",
+  "Armenian",
+  "Aruban",
+  "Australian",
+  "Austrian",
+  "Azerbaijani",
+  "Bahamian",
+  "Bahraini",
+  "Bangladeshi",
+  "Barbadian",
+  "Barthélemois",
+  "Basotho",
+  "Belarusian",
+  "Belgian",
+  "Belizean",
+  "Beninese",
+  "Bermudan",
+  "Bhutanese",
+  "Bissau-Guinean",
+  "Bolivian",
+  "Bonaire",
+  "Bosnian or Herzegovinian",
+  "Botswanan",
+  "Bouvet Island",
+  "Brazilian",
+  "British",
+  "British Virgin Island",
+  "Bruneian",
+  "Bulgarian",
+  "Burkinabé",
+  "Burmese",
+  "Burundian",
+  "Cabo Verdean",
+  "Cambodian",
+  "Cameroonian",
+  "Canadian",
+  "Caymanian",
+  "Central African",
+  "Chadian",
+  "Channel Island",
+  "Chilean",
+  "Chinese",
+  "Christmas Island",
+  "Cocos Island",
+  "Colombian",
+  "Comorian",
+  "Congolese",
+  "Cook Island",
+  "Costa Rican",
+  "Croatian",
+  "Cuban",
+  "Curaçaoan",
+  "Cypriot",
+  "Czech",
+  "Danish",
+  "Djiboutian",
+  "Dominican",
+  "Dutch",
+  "Ecuadorian",
+  "Egyptian",
+  "Emirati",
+  "Equatorial Guinean",
+  "Eritrean",
+  "Estonian",
+  "Ethiopian",
+  "Falkland Island",
+  "Faroese",
+  "Fijian",
+  "Filipino",
+  "Finnish",
+  "French",
+  "French Guianese",
+  "French Polynesian",
+  "French Southern Territories",
+  "Gabonese",
+  "Gambian",
+  "Georgian",
+  "German",
+  "Ghanaian",
+  "Gibraltar",
+  "Greek",
+  "Greenlandic",
+  "Grenadian",
+  "Guadeloupe",
+  "Guamanian",
+  "Guatemalan",
+  "Guinean",
+  "Guyanese",
+  "Haitian",
+  "Heard Island or McDonald Islands",
+  "Honduran",
+  "Hong Kong",
+  "Hungarian",
+  "I-Kiribati",
+  "Icelandic",
+  "Indian",
+  "Indonesian",
+  "Iranian",
+  "Iraqi",
+  "Irish",
+  "Israeli",
+  "Italian",
+  "Ivorian",
+  "Jamaican",
+  "Japanese",
+  "Jordanian",
+  "Kazakhstani",
+  "Kenyan",
+  "Kittitian or Nevisian",
+  "Kuwaiti",
+  "Kyrgyzstani",
+  "Lao",
+  "Latvian",
+  "Lebanese",
+  "Liberian",
+  "Libyan",
+  "Liechtenstein",
+  "Lithuanian",
+  "Luxembourgish",
+  "Macanese",
+  "Macedonian",
+  "Mahoran",
+  "Malagasy",
+  "Malawian",
+  "Malaysian",
+  "Maldivian",
+  "Malinese",
+  "Maltese",
+  "Manx",
+  "Marshallese",
+  "Martinican",
+  "Mauritanian",
+  "Mauritian",
+  "Mexican",
+  "Micronesian",
+  "Moldovan",
+  "Monacan",
+  "Mongolian",
+  "Montenegrin",
+  "Montserratian",
+  "Moroccan",
+  "Mozambican",
+  "Namibian",
+  "Nauruan",
+  "Nepali",
+  "New Caledonian",
+  "New Zealand",
+  "Ni-Vanuatu",
+  "Nicaraguan",
+  "Nigerian",
+  "Nigerien",
+  "Niuean",
+  "Norfolk Island",
+  "North Korean",
+  "Northern Marianan",
+  "Norwegian",
+  "Omani",
+  "Pakistani",
+  "Palauan",
+  "Palestinian",
+  "Panamanian",
+  "Papua New Guinean",
+  "Paraguayan",
+  "Peruvian",
+  "Pitcairn Island",
+  "Polish",
+  "Portuguese",
+  "Puerto Rican",
+  "Qatari",
+  "Romanian",
+  "Russian",
+  "Rwandan",
+  "Réunionese",
+  "Sahrawi",
+  "Saint Helenian",
+  "Saint Lucian",
+  "Saint Vincentian",
+  "Saint-Martinoise",
+  "Saint-Pierrais or Miquelonnais",
+  "Salvadoran",
+  "Sammarinese",
+  "Samoan",
+  "Saudi",
+  "Senegalese",
+  "Serbian",
+  "Seychellois",
+  "Sierra Leonean",
+  "Singaporean",
+  "Sint Maarten",
+  "Slovak",
+  "Slovenian",
+  "Solomon Island",
+  "Somali",
+  "South African",
+  "South Georgia or South Sandwich Islands",
+  "South Korean",
+  "South Sudanese",
+  "Spanish",
+  "Sri Lankan",
+  "Sudanese",
+  "Surinamese",
+  "Svalbard",
+  "Swazi",
+  "Swedish",
+  "Swiss",
+  "Syrian",
+  "São Toméan",
+  "Taiwanese",
+  "Tajikistani",
+  "Tanzanian",
+  "Thai",
+  "Timorese",
+  "Togolese",
+  "Tokelauan",
+  "Tongan",
+  "Trinidadian or Tobagonian",
+  "Tunisian",
+  "Turkish",
+  "Turkmen",
+  "Turks and Caicos Island",
+  "Tuvaluan",
+  "U.S. Virgin Island",
+  "Ugandan",
+  "Ukrainian",
+  "Uruguayan",
+  "Uzbekistani",
+  "Vatican",
+  "Venezuelan",
+  "Vietnamese",
+  "Wallis and Futuna",
+  "Yemeni",
+  "Zambian",
+  "Zimbabwean",
 ];
+// export const nationalities = values(Nationality);
 
-export const levels: Level[] = ["PL1", "L1", "L2", "L3", "L4", "L5"];
+export const levels: Level[] =
+  import.meta.env.VITE_PROJECT_NAME === "ccm-english"
+    ? ["PL1", "L1", "L2", "L3", "L4", "L5"]
+    : ["A1", "A2", "B1", "B1+", "B2", "C1", "C2"];
 
-export const levelsPlus: (LevelPlus | "Exempt")[] = [
-  "PL1",
-  "PL1+",
-  "L1",
-  "L1-",
-  "L1+",
-  "L2",
-  "L2-",
-  "L2+",
-  "L3",
-  "L3-",
-  "L3+",
-  "L4",
-  "L4-",
-  "L4+",
-  "L5",
-  "L5-",
-  "Exempt",
-];
+export const genderedLevels: GenderedLevel[] =
+  import.meta.env.VITE_PROJECT_NAME === "ccm-english"
+    ? ["PL1-M", "PL1-W", "L1-M", "L1-W", "L2-M", "L2-W", "L3", "L4", "L5"]
+    : levels;
+
+export const levelsPlus: (LevelPlus | "Exempt")[] =
+  import.meta.env.VITE_PROJECT_NAME === "ccm-english"
+    ? [
+        "PL1",
+        "PL1+",
+        "L1",
+        "L1-",
+        "L1+",
+        "L2",
+        "L2-",
+        "L2+",
+        "L3",
+        "L3-",
+        "L3+",
+        "L4",
+        "L4-",
+        "L4+",
+        "L5",
+        "L5-",
+        "Exempt",
+      ]
+    : levels;
 
 export const statuses = values(Status);
 export const statusDetails = values(StatusDetails);
@@ -257,42 +525,54 @@ export const PF = [FinalResult.P, FinalResult.F];
 
 export const withdrawReasons = values(DroppedOutReason);
 
-export const emptyStudent: Student = {
-  academicRecords: [],
-  age: "Unknown",
-  correspondence: [],
-  covidVaccine: {
-    status: CovidStatus.NORPT,
-  },
-  currentLevel: "PL1",
-  epId: 0,
-  gender: "M",
-  initialSession: "",
-  literacy: {},
-  name: {
-    arabic: "N/A",
-    english: "",
-  },
-  nationality: Nationality.UNKNWN,
-  origPlacementData: {
-    level: "PL1",
-    speaking: "PL1",
-    writing: "PL1",
-  },
-  phone: {
-    phoneNumbers: [],
-    primaryPhone: -1,
-  },
-  placement: [],
-  status: {
-    currentStatus: Status.NEW,
-    inviteTag: false,
-    noContactList: false,
-    reactivatedDate: [],
-    withdrawDate: [],
-  },
-  work: { occupation: "Unknown" },
-};
+export const emptyStudent: Student =
+  import.meta.env.VITE_PROJECT_NAME === "ccm-english"
+    ? {
+        academicRecords: [],
+        age: "Unknown",
+        correspondence: [],
+        covidVaccine: {
+          status: CovidStatus.NORPT,
+        },
+        currentLevel: "PL1",
+        epId: 0,
+        gender: "M",
+        initialSession: "",
+        literacy: {},
+        name: {
+          arabic: "N/A",
+          english: "",
+        },
+        nationality: Nationality.UNKNWN,
+        origPlacementData: {
+          level: "PL1",
+          speaking: "PL1",
+          writing: "PL1",
+        },
+        phone: {
+          phoneNumbers: [],
+          primaryPhone: -1,
+        },
+        placement: [],
+        status: {
+          currentStatus: Status.NEW,
+          inviteTag: false,
+          noContactList: false,
+          reactivatedDate: [],
+          withdrawDate: [],
+        },
+        work: { occupation: "Unknown" },
+      }
+    : {
+        academicRecords: [],
+        correspondence: [],
+        epId: 0,
+        initialSession: "",
+        name: {
+          english: "",
+        },
+        placement: [],
+      };
 
 export const emptyAcademicRecord: AcademicRecord = {
   session: "",

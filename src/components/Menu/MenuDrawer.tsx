@@ -4,7 +4,6 @@ import {
   Equalizer,
   FormatListBulleted,
   Home,
-  LibraryBooks,
   Menu,
   PendingActions,
   Person,
@@ -44,12 +43,12 @@ const drawerList: DrawerListItem[] = [
   {
     component: Home,
     name: "Home",
-    route: "/epd",
+    route: "/students",
   },
   {
     component: Person,
     name: "Student Database",
-    route: "/epd",
+    route: "/students",
   },
   {
     component: PendingActions,
@@ -68,10 +67,6 @@ const drawerList: DrawerListItem[] = [
   {
     component: Equalizer,
     name: "Gradebook",
-  },
-  {
-    component: LibraryBooks,
-    name: "Virtual Library",
   },
   {
     component: Schedule,

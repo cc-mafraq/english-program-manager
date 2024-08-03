@@ -4,7 +4,6 @@ import {
   FormAcademicRecords,
   FormCertRequests,
   FormCorrespondence,
-  FormCovidVaccine,
   FormDemographics,
   FormLiteracyAndZoom,
   FormName,
@@ -33,14 +32,18 @@ export const StudentForm: React.FC = () => {
       <Divider />
       <FormProgramInformation />
       <Divider />
-      <FormPhoneNumbers phonePath="phone.phoneNumbers" selectedData={selectedStudent} />
+      <FormPhoneNumbers
+        noWhatsapp={import.meta.env.VITE_PROJECT_NAME !== "ccm-english"}
+        phonePath="phone.phoneNumbers"
+        selectedData={selectedStudent}
+      />
       <Divider />
       <FormDemographics />
       <Divider />
       <FormOriginalPlacement />
       <Divider />
-      <FormCovidVaccine />
-      <Divider />
+      {/* <FormCovidVaccine />
+      <Divider /> */}
       <FormLiteracyAndZoom />
       <Divider />
       <FormCorrespondence selectedData={selectedStudent} />

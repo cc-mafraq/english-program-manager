@@ -14,9 +14,9 @@ export const FormLiteracyAndZoom: React.FC = () => {
         <Grid item xs>
           <FormLabel textProps={{ marginTop: SPACING }}>Literacy</FormLabel>
         </Grid>
-        <Grid item xs>
+        {/* <Grid item xs>
           <FormLabel textProps={{ marginTop: SPACING }}>Zoom</FormLabel>
-        </Grid>
+        </Grid> */}
       </Grid>
       <GridContainer>
         <Grid item xs>
@@ -38,13 +38,13 @@ export const FormLiteracyAndZoom: React.FC = () => {
             />
           )}
         </Grid>
-        <Grid item xs>
+        {/* <Grid item xs>
           <GridItemTextField
             label="Tutor / Club and Details"
             name="zoom"
             textFieldProps={{ multiline: true, rows: 4 }}
           />
-        </Grid>
+        </Grid> */}
       </GridContainer>
     </>
   );

@@ -35,8 +35,10 @@ export const WithdrawButton: React.FC<WithdrawButtonProps> = ({ student }) => {
 
   const onSubmit = useCallback(
     (data: Withdraw) => {
+      if (student.status === undefined) student.status = {};
       student.status.inviteTag = data.inviteTag;
       student.status.noContactList = data.noContactList;
+      if (student.status.withdrawDate === undefined) student.status.withdrawDate = [];
       student.status.withdrawDate.push(data.withdrawDate);
       if (data.droppedOutReason !== null) {
         student.status.droppedOutReason = data.droppedOutReason;
@@ -67,20 +69,24 @@ export const WithdrawButton: React.FC<WithdrawButtonProps> = ({ student }) => {
   const useFormProps = useMemo(() => {
     return {
       defaultValues: {
-        droppedOutReason: student.status.droppedOutReason,
+        droppedOutReason: student.status?.droppedOutReason,
         inviteTag: false,
-        noContactList: student.status.noContactList,
+        noContactList: student.status?.noContactList,
       },
       resolver: yupResolver(withdrawSchema),
     };
-  }, [student.status.droppedOutReason, student.status.noContactList]);
+  }, [student.status?.droppedOutReason, student.status?.noContactList]);
 
   return (
-    <Box>
+    <span>
       <Tooltip arrow title="Withdraw Student">
         <IconButton
           onClick={handleDialogOpen}
-          sx={greaterThanSmall ? { marginLeft: "50%", transform: "scale(1.25) translate(-50%)" } : undefined}
+          sx={
+            greaterThanSmall && import.meta.env.VITE_PROJECT_NAME === "ccm-english"
+              ? { marginLeft: "50%", transform: "scale(1.25) translate(-50%)" }
+              : undefined
+          }
         >
           <Logout />
         </IconButton>
@@ -95,6 +101,6 @@ export const WithdrawButton: React.FC<WithdrawButtonProps> = ({ student }) => {
       >
         <FormWithdrawMemo />
       </FormDialog>
-    </Box>
+    </span>
   );
 };

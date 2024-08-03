@@ -34,6 +34,13 @@ export const StudentCardImage: React.FC<StudentCardImageProps> = ({
   const greaterThanSmall = useMediaQuery(theme.breakpoints.up("sm"));
   const greaterThanMedium = useMediaQuery(theme.breakpoints.up("md"));
   const maxImageHeight = (imageWidth * 10) / 7;
+  const withdrawButtonConditions =
+    student.status?.currentStatus !== undefined &&
+    student.status?.currentStatus !== Status.WD &&
+    role === "admin" &&
+    greaterThanSmall &&
+    import.meta.env.VITE_PROJECT_NAME === "ccm-english";
+  const studentIdCardButtonConditions = student.imageName && greaterThanMedium && role === "admin";
 
   return (
     <Box {...imageContainerProps}>
@@ -78,12 +85,10 @@ export const StudentCardImage: React.FC<StudentCardImageProps> = ({
         scale={greaterThanSmall ? 2 : 1.5}
         student={student}
       />
-      {!noButtons && (
+      {!noButtons && (withdrawButtonConditions || studentIdCardButtonConditions) && (
         <Box display="flex" flexDirection="row" justifyContent="space-evenly" marginBottom="20px" marginTop="30px">
-          {student.status.currentStatus !== Status.WD && role === "admin" && greaterThanSmall && (
-            <WithdrawButton student={student} />
-          )}
-          {student.imageName && greaterThanMedium && role === "admin" && <StudentIdCardButton student={student} />}
+          {withdrawButtonConditions && <WithdrawButton student={student} />}
+          {studentIdCardButtonConditions && <StudentIdCardButton student={student} />}
         </Box>
       )}
     </Box>
