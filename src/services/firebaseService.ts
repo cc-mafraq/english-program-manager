@@ -24,12 +24,29 @@ const firebaseDevConfig = {
   storageBucket: "ccm-english-dev.appspot.com",
 };
 
+const tunisFirebaseConfig = {
+  apiKey: "AIzaSyDFbxBsn8FoS1HsBqOXBJXBz5hpSPie4Wg",
+  appId: "1:961509055519:web:79f3ae73c89003c153c92a",
+  authDomain: "kallaline-tunis.firebaseapp.com",
+  measurementId: "G-6X4BBTCTB5",
+  messagingSenderId: "961509055519",
+  projectId: "kallaline-tunis",
+  storageBucket: "kallaline-tunis.appspot.com",
+};
+
 export const isProd =
   window.location.hostname.includes("ccm-english.web.app") ||
   window.location.hostname.includes("ccm-english.firebaseapp.com");
 
 // Initialize Firebase
-export const app = initializeApp(isProd ? firebaseProdConfig : firebaseDevConfig);
+// export const app = initializeApp(firebaseProdConfig);
+export const app = initializeApp(
+  import.meta.env.VITE_PROJECT_NAME === "ccm-english"
+    ? isProd
+      ? firebaseProdConfig
+      : firebaseDevConfig
+    : tunisFirebaseConfig,
+);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 enableIndexedDbPersistence(db);

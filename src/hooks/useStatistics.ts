@@ -1,9 +1,8 @@
-import { countBy, dropRight, filter, find, findIndex, forEach, get, includes, last, map, omit, set } from "lodash";
+import { countBy, filter, forEach, get, last, map, omit, set } from "lodash";
 import { useCallback } from "react";
 import {
   CovidStatus,
   DroppedOutReason,
-  FinalResult,
   GenderedLevel,
   Level,
   Nationality,
@@ -13,7 +12,7 @@ import {
   StudentStatus,
   WaitlistOutcome,
 } from "../interfaces";
-import { getAllSessionsWithPlacement, getSessionsWithResults, getStatusDetails, isActive } from "../services";
+import { getPlacementRegistrationCounts, getSessionsWithoutSummer, getStatusDetails, isActive } from "../services";
 import { useStudentStore, useWaitingListStore } from "./useStores";
 
 interface Statistics {
@@ -80,69 +79,7 @@ export const useStatistics = (): Statistics => {
     });
   }, [students]);
 
-  const removeSummerSession = (session: Student["initialSession"]) => {
-    return !includes(session, "Su");
-  };
-
-  const sessions = filter(getSessionsWithResults(students), removeSummerSession);
-  const sessionsWithPlacement = filter(getAllSessionsWithPlacement(students), removeSummerSession);
-
-  const placementRegistrationCounts = dropRight(
-    map(sessionsWithPlacement, (session) => {
-      const placementSessionStudents = filter(students, (student) => {
-        return includes(map(student.placement, "session"), session);
-      });
-
-      const studentIsRegistered = (student: Student) => {
-        const studentPlacementSession = find(student.placement, (placement) => {
-          return placement.session === session;
-        });
-        return studentPlacementSession?.placement !== undefined && studentPlacementSession.placement.length > 0;
-      };
-
-      const previousSession =
-        sessions[
-          findIndex(sessions, (s) => {
-            return s === session;
-          }) + 1
-        ];
-      const newInviteStudents = filter(placementSessionStudents, (psrs) => {
-        return psrs.initialSession === session;
-      });
-      const retInviteStudents = filter(placementSessionStudents, (psrs) => {
-        const previousAcademicRecord = find(psrs.academicRecords, (ar) => {
-          return ar.session === previousSession;
-        });
-        return (
-          previousAcademicRecord?.overallResult === FinalResult.P ||
-          previousAcademicRecord?.overallResult === FinalResult.F
-        );
-      });
-      const wdInviteStudents = filter(placementSessionStudents, (psrs) => {
-        const previousAcademicRecord = find(psrs.academicRecords, (ar) => {
-          return ar.session === previousSession;
-        });
-        return (
-          (previousAcademicRecord === undefined && psrs.initialSession !== session) ||
-          previousAcademicRecord?.overallResult === FinalResult.WD
-        );
-      });
-      return {
-        inviteCounts: {
-          NEW: newInviteStudents.length,
-          RET: retInviteStudents.length,
-          WD: wdInviteStudents.length,
-        },
-        registrationCounts: {
-          NEW: filter(newInviteStudents, studentIsRegistered).length,
-          RET: filter(retInviteStudents, studentIsRegistered).length,
-          WD: filter(wdInviteStudents, studentIsRegistered).length,
-        },
-        session,
-      };
-    }),
-    1,
-  );
+  const sessions = getSessionsWithoutSummer(students);
 
   const statistics: Statistics = {
     activeGenderCounts: countBy(filterIsActive(), "gender") as { [key in Student["gender"]]: number },
@@ -159,7 +96,7 @@ export const useStatistics = (): Statistics => {
     genderCounts: countBy(students, "gender") as { [key in Student["age"]]: number },
     levelCounts: countBy(students, "currentLevel") as { [key in GenderedLevel]: number },
     nationalityCounts: countBy(students, "nationality") as { [key in Nationality]: number },
-    placementRegistrationCounts,
+    placementRegistrationCounts: getPlacementRegistrationCounts(students),
     sessionCounts: omit(countBy(students, "initialSession"), "") as {
       [key in Student["initialSession"]]: number;
     },

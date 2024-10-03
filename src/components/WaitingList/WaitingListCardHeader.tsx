@@ -41,15 +41,17 @@ export const WaitingListCardHeader: React.FC<WaitingListHeaderProps> = ({
   const theme = useTheme();
   const { iconColor } = useColors();
   const position = getPosition(waitingList, wlEntry);
-  const { newStudentRate, eligibleNewStudentRate, numHighPriority, numSpotsPerMonth } = waitingListTimeStats;
+  const { newStudentRate, eligibleNewStudentRate, numHighPriority, numSpotsPerMonth, avgNumPeoplePerEntry } =
+    waitingListTimeStats;
   const numActiveEligibleInFront = useMemo(() => {
     return getNumActiveEligibleInFront(waitingList, wlEntry);
   }, [waitingList, wlEntry]);
   const numMonthsWait = Math.round(
     // number of entries in front of this entry who are expected to become a new student and have not yet received the Eligibility WPM
-    ((position - numActiveEligibleInFront - numHighPriority) * newStudentRate +
+    (((position - numActiveEligibleInFront - numHighPriority) * newStudentRate +
       // number of entries in front of this entry who are expected to become a new student and have received the Eligibility WPM
-      numActiveEligibleInFront * eligibleNewStudentRate) /
+      numActiveEligibleInFront * eligibleNewStudentRate) *
+      avgNumPeoplePerEntry) /
       numSpotsPerMonth,
   );
 

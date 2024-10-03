@@ -2,6 +2,7 @@ import { Box, Typography, TypographyProps, useTheme } from "@mui/material";
 import { get, isEmpty, keys, map, round, sortBy, sum, values } from "lodash";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { PlacementPrediction } from "../components/Statistics";
 import { useAppStore, useStatistics, useStudentStore } from "../hooks";
 import { levels } from "../interfaces";
 import { getAllInitialSessions, sortObjectByValues } from "../services";
@@ -25,7 +26,7 @@ export const StatisticsPage = () => {
   };
 
   const totalWaitingListOutcomes =
-    sum(values(statistics.waitingListOutcomeCounts)) - statistics.waitingListOutcomeCounts.undefined;
+    sum(values(statistics.waitingListOutcomeCounts)) - (statistics.waitingListOutcomeCounts.undefined ?? 0);
 
   useEffect(() => {
     if (!statistics.totalRegistered) navigate("/epd", { replace: true });
@@ -197,6 +198,7 @@ export const StatisticsPage = () => {
       <Typography {...textProps}>Total English Teachers: {statistics.totalEnglishTeachers}</Typography>
       <Typography {...textProps}>Total Illiterate Arabic: {statistics.totalIlliterateArabic}</Typography>
       <Typography {...textProps}>Total Illiterate English: {statistics.totalIlliterateEnglish}</Typography>
+      <PlacementPrediction INDENT={INDENT} textProps={textProps} />
       <Typography {...textProps} fontWeight="bold">
         Waiting List Outcomes
       </Typography>

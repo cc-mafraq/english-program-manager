@@ -306,6 +306,14 @@ export const getSessionsWithResults = (students: Student[]) => {
   });
 };
 
+export const removeSummerSession = (session: Student["initialSession"]) => {
+  return !includes(session, "Su");
+};
+
+export const getSessionsWithoutSummer = (students: Student[]) => {
+  return filter(getSessionsWithResults(students), removeSummerSession);
+};
+
 export const getStatusDetails = ({
   student,
   students,

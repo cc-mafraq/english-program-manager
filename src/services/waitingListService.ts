@@ -1,4 +1,17 @@
-import { countBy, filter, findIndex, flatten, get, groupBy, includes, map, orderBy, slice, values } from "lodash";
+import {
+  countBy,
+  filter,
+  findIndex,
+  flatten,
+  get,
+  groupBy,
+  includes,
+  map,
+  orderBy,
+  slice,
+  sum,
+  values,
+} from "lodash";
 import moment from "moment";
 import { HighPriority, Student, WaitingListEntry, WaitlistOutcome } from "../interfaces";
 import { MOMENT_FORMAT } from "./studentFormService";
@@ -51,6 +64,7 @@ export const getPosition = (waitingList: WaitingListEntry[], wlEntry: WaitingLis
 };
 
 export interface WaitingListTimeStats {
+  avgNumPeoplePerEntry: number;
   eligibleNewStudentRate: number;
   newStudentRate: number;
   numHighPriority: number;
@@ -61,36 +75,37 @@ export const getWaitingListTimeStats = (
   waitingList: WaitingListEntry[],
   students: Student[],
 ): WaitingListTimeStats => {
+  const newOutcomeEntries = filter(waitingList, (wle) => {
+    return wle.outcome === WaitlistOutcome.N;
+  });
+
+  const newOutcomeNotWaitingEntries = filter(newOutcomeEntries, (wle) => {
+    return !wle.waiting;
+  });
+
+  const notWaitingLength = newOutcomeNotWaitingEntries.length;
+
   const newStudentRate =
-    filter(waitingList, (wle) => {
-      return wle.outcome === WaitlistOutcome.N;
-    }).length /
+    newOutcomeEntries.length /
     filter(waitingList, (wle) => {
       return wle.outcome !== undefined;
     }).length;
 
   const newStudentsPerMonth = students.length / moment().diff(moment("09-01-2017"), "months");
 
-  const notWaitingLength = filter(waitingList, (wle) => {
-    return !wle.waiting && wle.outcome === WaitlistOutcome.N;
-  }).length;
-
-  const numNewPastHighPriority = filter(waitingList, (wle) => {
-    return wle.highPriority === HighPriority.PAST && wle.outcome === WaitlistOutcome.N;
+  const numNewPastHighPriority = filter(newOutcomeEntries, (wle) => {
+    return wle.highPriority === HighPriority.PAST;
   }).length;
 
   const overallHighPriorityRate = numNewPastHighPriority / notWaitingLength;
 
   const reactivatedRate =
-    filter(waitingList, (wle) => {
-      return (
-        (includes(wle.placementExam, "NS") || includes(wle.placementExam, "NO RESPONSE")) &&
-        wle.outcome === WaitlistOutcome.N
-      );
+    filter(newOutcomeEntries, (wle) => {
+      return includes(wle.placementExam, "NS") || includes(wle.placementExam, "NO RESPONSE");
     }).length / notWaitingLength;
 
-  const numPreviousNewEligible = filter(waitingList, (wle) => {
-    return wle.eligible && !wle.waiting && wle.outcome === WaitlistOutcome.N;
+  const numPreviousNewEligible = filter(newOutcomeEntries, (wle) => {
+    return wle.eligible && !wle.waiting;
   }).length;
 
   const eligibleNewStudentRate =
@@ -117,7 +132,18 @@ export const getWaitingListTimeStats = (
     // number of spots expected to be taken by current high priority entries per month
     (numHighPriority * newHighPriorityRate) / newStudentsPerMonth;
 
-  return { eligibleNewStudentRate, newStudentRate, numHighPriority, numSpotsPerMonth };
+  const recentNewOutcomeNotWaitingEntries = filter(newOutcomeNotWaitingEntries, (wle) => {
+    return moment(wle.entryDate, MOMENT_FORMAT).isSameOrAfter(moment("01-01-2022"));
+  });
+
+  const avgNumPeoplePerEntry =
+    sum(
+      map(recentNewOutcomeNotWaitingEntries, (wle) => {
+        return wle.numPeople || 1;
+      }),
+    ) / recentNewOutcomeNotWaitingEntries.length;
+
+  return { avgNumPeoplePerEntry, eligibleNewStudentRate, newStudentRate, numHighPriority, numSpotsPerMonth };
 };
 
 export const getNumActiveEligibleInFront = (waitingList: WaitingListEntry[], wlEntry: WaitingListEntry) => {
