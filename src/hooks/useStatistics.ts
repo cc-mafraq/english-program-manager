@@ -1,27 +1,8 @@
-import {
-  countBy,
-  dropRight,
-  filter,
-  find,
-  findIndex,
-  flatten,
-  forEach,
-  get,
-  includes,
-  last,
-  map,
-  omit,
-  round,
-  set,
-  some,
-  sum,
-} from "lodash";
+import { countBy, filter, forEach, get, last, map, omit, set } from "lodash";
 import { useCallback } from "react";
 import {
-  AcademicRecord,
   CovidStatus,
   DroppedOutReason,
-  FinalResult,
   GenderedLevel,
   Level,
   Nationality,
@@ -30,16 +11,8 @@ import {
   Student,
   StudentStatus,
   WaitlistOutcome,
-  genderedLevels,
-  levels,
 } from "../interfaces";
-import {
-  getAllSessionsWithPlacement,
-  getCurrentSession,
-  getSessionsWithResults,
-  getStatusDetails,
-  isActive,
-} from "../services";
+import { getPlacementRegistrationCounts, getSessionsWithoutSummer, getStatusDetails, isActive } from "../services";
 import { useStudentStore, useWaitingListStore } from "./useStores";
 
 interface Statistics {
@@ -58,9 +31,6 @@ interface Statistics {
     registrationCounts: { [key in StudentStatus["currentStatus"]]: number };
     session: Student["initialSession"];
   }[];
-  predictedRegistration: {
-    [key1 in GenderedLevel]?: { [key2 in StudentStatus["currentStatus"]]: number };
-  };
   sessionCounts: { [key in Student["initialSession"]]: number };
   statusCounts: { [key in Status]: number };
   statusDetailsCounts: { [key in StatusDetails]: number };
@@ -109,237 +79,7 @@ export const useStatistics = (): Statistics => {
     });
   }, [students]);
 
-  const removeSummerSession = (session: Student["initialSession"]) => {
-    return !includes(session, "Su");
-  };
-
-  const sessions = filter(getSessionsWithResults(students), removeSummerSession);
-  const sessionsWithPlacement = filter(getAllSessionsWithPlacement(students), removeSummerSession);
-
-  const placementRegistrationCounts = dropRight(
-    map(sessionsWithPlacement, (session) => {
-      const placementSessionStudents = filter(students, (student) => {
-        return includes(map(student.placement, "session"), session);
-      });
-
-      const studentIsRegistered = (student: Student) => {
-        const studentPlacementSession = find(student.placement, (placement) => {
-          return placement.session === session;
-        });
-        return studentPlacementSession?.placement !== undefined && studentPlacementSession.placement.length > 0;
-      };
-
-      const previousSession =
-        sessions[
-          findIndex(sessions, (s) => {
-            return s === session;
-          }) + 1
-        ];
-      const newInviteStudents = filter(placementSessionStudents, (psrs) => {
-        return psrs.initialSession === session;
-      });
-      const retInviteStudents = filter(placementSessionStudents, (psrs) => {
-        const previousAcademicRecord = find(psrs.academicRecords, (ar) => {
-          return ar.session === previousSession;
-        });
-        return (
-          previousAcademicRecord?.overallResult === FinalResult.P ||
-          previousAcademicRecord?.overallResult === FinalResult.F
-        );
-      });
-      const wdInviteStudents = filter(placementSessionStudents, (psrs) => {
-        const previousAcademicRecord = find(psrs.academicRecords, (ar) => {
-          return ar.session === previousSession;
-        });
-        return (
-          (previousAcademicRecord === undefined && psrs.initialSession !== session) ||
-          previousAcademicRecord?.overallResult === FinalResult.WD
-        );
-      });
-      return {
-        inviteCounts: {
-          NEW: newInviteStudents.length,
-          RET: retInviteStudents.length,
-          WD: wdInviteStudents.length,
-        },
-        registrationCounts: {
-          NEW: filter(newInviteStudents, studentIsRegistered).length,
-          RET: filter(retInviteStudents, studentIsRegistered).length,
-          WD: filter(wdInviteStudents, studentIsRegistered).length,
-        },
-        session,
-      };
-    }),
-    1,
-  );
-
-  const predictedRegistration: {
-    [key1 in GenderedLevel]?: { [key2 in StudentStatus["currentStatus"]]: number };
-  } = {};
-  forEach(genderedLevels, (level) => {
-    const previousLevel = level.includes("PL1")
-      ? ""
-      : levels[
-          findIndex(levels, (l) => {
-            return level.includes(l);
-          }) - 1
-        ];
-    const previousGenderedLevel =
-      level.includes("PL1") || level === "L4" || level === "L5"
-        ? previousLevel
-        : level.includes("M")
-        ? `${previousLevel}-M`
-        : level.includes("W")
-        ? `${previousLevel}-W`
-        : "L2";
-    const activeStudentsInLevel = filter(students, (student) => {
-      return student.currentLevel === level && isActive(student) && student.academicRecords.length > 0;
-    });
-    const activeStudentsInPreviousLevel = level.includes("PL1")
-      ? []
-      : filter(students, (student) => {
-          return student.currentLevel.includes(previousGenderedLevel) && isActive(student);
-        });
-
-    const allAcademicRecords = flatten(map(students, "academicRecords"));
-    const allLevelAcademicRecords = filter(allAcademicRecords, (ar) => {
-      return ar?.level === level && ar.overallResult !== undefined;
-    });
-    const levelPassFailCounts = countBy(allLevelAcademicRecords, "overallResult");
-    const allPreviousLevelAcademicRecords = level.includes("PL1")
-      ? []
-      : filter(allAcademicRecords, (ar) => {
-          return ar?.level?.includes(previousGenderedLevel);
-        });
-    const previousLevelPassFailCounts = countBy(allPreviousLevelAcademicRecords, "overallResult");
-
-    const currentSession = getCurrentSession(students);
-    const newStudentsInLevel = filter(students, (student) => {
-      return (
-        student.status.currentStatus === Status.NEW &&
-        student.academicRecords.length === 0 &&
-        student.currentLevel === level
-      );
-    });
-    const wdStudentsInLevelWithInvite = filter(students, (student) => {
-      return (
-        student.status.currentStatus === Status.WD && student.currentLevel === level && student.status.inviteTag
-      );
-    });
-    const newStudentTestInLevelProb =
-      filter(students, (student) => {
-        return (
-          ((level.includes("PL1") && student.origPlacementData?.level === "PL1") ||
-            (!level.includes("PL1") && level.includes(student.origPlacementData?.level))) &&
-          ((!level.includes("M") && !level.includes("W")) ||
-            (level.includes("M") && student.gender === "M") ||
-            (level.includes("W") && student.gender === "F"))
-        );
-      }).length / students.length;
-
-    const newMalePercentage = 0.3;
-    const newStudentTestInLevelProbWithGender = level.includes("M")
-      ? newStudentTestInLevelProb * 2 * newMalePercentage
-      : level.includes("W")
-      ? newStudentTestInLevelProb * 2 * (1 - newMalePercentage)
-      : newStudentTestInLevelProb;
-
-    const numWDStudentsInLevelThisSession = filter(allLevelAcademicRecords, (ar) => {
-      return ar.session === currentSession && ar.overallResult === FinalResult.WD;
-    }).length;
-    const currentWDPercentage = numWDStudentsInLevelThisSession / activeStudentsInLevel.length;
-    const levelWDPercentage = levelPassFailCounts.WD / allLevelAcademicRecords.length;
-    const remainingWDPercentage = Math.max(0, levelWDPercentage - currentWDPercentage);
-    const levelFailPercentage = levelPassFailCounts.F / allLevelAcademicRecords.length;
-    const levelPassPercentage = levelPassFailCounts.P / allLevelAcademicRecords.length;
-    const remainingFailPercentage =
-      levelFailPercentage +
-      (levelFailPercentage * (levelWDPercentage - remainingWDPercentage)) /
-        (levelFailPercentage + levelPassPercentage);
-    const remainingPassPercentage =
-      levelPassPercentage +
-      (levelPassPercentage * (levelWDPercentage - remainingWDPercentage)) /
-        (levelFailPercentage + levelPassPercentage);
-    console.log(level);
-    console.log(remainingPassPercentage);
-    console.log(remainingFailPercentage);
-    console.log(remainingWDPercentage);
-
-    const numWDStudentsInPreviousLevelThisSession = filter(
-      allPreviousLevelAcademicRecords,
-      (ar: AcademicRecord) => {
-        return ar.session === currentSession && ar.overallResult === FinalResult.WD;
-      },
-    ).length;
-    const currentPreviousLevelWDPercentage =
-      activeStudentsInPreviousLevel.length > 0
-        ? numWDStudentsInPreviousLevelThisSession / activeStudentsInPreviousLevel.length
-        : 0;
-    const previousLevelWDPercentage =
-      allPreviousLevelAcademicRecords.length > 0
-        ? previousLevelPassFailCounts.WD / allPreviousLevelAcademicRecords.length
-        : 0;
-    const remainingPreviousLevelWDPercentage = Math.max(
-      0,
-      previousLevelWDPercentage - currentPreviousLevelWDPercentage,
-    );
-    const previousLevelFailPercentage =
-      allPreviousLevelAcademicRecords.length > 0
-        ? previousLevelPassFailCounts.F / allPreviousLevelAcademicRecords.length
-        : 0;
-    const previousLevelPassPercentage =
-      allPreviousLevelAcademicRecords.length > 0
-        ? previousLevelPassFailCounts.P / allPreviousLevelAcademicRecords.length
-        : 0;
-    const remainingPreviousLevelPassPercentage =
-      previousLevelPassPercentage +
-      (previousLevelPassPercentage * (previousLevelWDPercentage - remainingPreviousLevelWDPercentage)) /
-        (previousLevelFailPercentage + previousLevelPassPercentage);
-
-    const retInvites = sum(map(placementRegistrationCounts, "inviteCounts.RET"));
-    const retRegistrations = sum(map(placementRegistrationCounts, "registrationCounts.RET"));
-    const newInvites = sum(map(placementRegistrationCounts, "inviteCounts.NEW"));
-    const newRegistrations = sum(map(placementRegistrationCounts, "registrationCounts.NEW"));
-    const wdInvites = sum(map(placementRegistrationCounts, "inviteCounts.WD"));
-    const wdRegistrations = sum(map(placementRegistrationCounts, "registrationCounts.WD"));
-
-    const levelAcademicRecordsArePending = some(
-      filter(flatten(map(activeStudentsInLevel, "academicRecords")), (ar: AcademicRecord) => {
-        return ar.level === level;
-      }),
-      (ar: AcademicRecord) => {
-        return ar.overallResult === undefined;
-      },
-    );
-    console.log(level);
-    console.log(activeStudentsInLevel.length);
-
-    predictedRegistration[level] = {
-      // NEW: (number of new students currently waiting to enter level +
-      // remaining number of desired new students * the probability that they test into the level) * the registration rate for NEW students
-      NEW: round(
-        // TODO: Remove hard coded 70 desired students and newMalePercentage, allow for input
-        (newStudentsInLevel.length + (70 - newStudentsInLevel.length) * newStudentTestInLevelProbWithGender) *
-          (newRegistrations / newInvites),
-      ),
-      // RET: (number of active students in the level * the probability that they fail +
-      // number of active students in previous level * the probability that they pass) * the registration rate for RET students
-      RET: round(
-        (activeStudentsInLevel.length * (levelAcademicRecordsArePending ? remainingFailPercentage : 1) +
-          (level.includes("PL1")
-            ? 0
-            : activeStudentsInPreviousLevel.length *
-              (levelAcademicRecordsArePending ? remainingPreviousLevelPassPercentage : 0))) *
-          (retRegistrations / retInvites),
-      ),
-      // WD: (number of active students in the level * the probability that they withdraw +
-      // number of WD students in the level with open invite tag) * the registration rate for WD students
-      WD: round(
-        (activeStudentsInLevel.length * remainingWDPercentage + wdStudentsInLevelWithInvite.length) *
-          (wdRegistrations / wdInvites),
-      ),
-    };
-  });
+  const sessions = getSessionsWithoutSummer(students);
 
   const statistics: Statistics = {
     activeGenderCounts: countBy(filterIsActive(), "gender") as { [key in Student["gender"]]: number },
@@ -356,8 +96,7 @@ export const useStatistics = (): Statistics => {
     genderCounts: countBy(students, "gender") as { [key in Student["age"]]: number },
     levelCounts: countBy(students, "currentLevel") as { [key in GenderedLevel]: number },
     nationalityCounts: countBy(students, "nationality") as { [key in Nationality]: number },
-    placementRegistrationCounts,
-    predictedRegistration,
+    placementRegistrationCounts: getPlacementRegistrationCounts(students),
     sessionCounts: omit(countBy(students, "initialSession"), "") as {
       [key in Student["initialSession"]]: number;
     },

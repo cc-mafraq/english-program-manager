@@ -2,8 +2,9 @@ import { Box, Typography, TypographyProps, useTheme } from "@mui/material";
 import { get, isEmpty, keys, map, round, sortBy, sum, values } from "lodash";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { PlacementPrediction } from "../components/Statistics";
 import { useAppStore, useStatistics, useStudentStore } from "../hooks";
-import { genderedLevels, levels } from "../interfaces";
+import { levels } from "../interfaces";
 import { getAllInitialSessions, sortObjectByValues } from "../services";
 
 const INDENT = 3;
@@ -25,7 +26,7 @@ export const StatisticsPage = () => {
   };
 
   const totalWaitingListOutcomes =
-    sum(values(statistics.waitingListOutcomeCounts)) - statistics.waitingListOutcomeCounts.undefined;
+    sum(values(statistics.waitingListOutcomeCounts)) - (statistics.waitingListOutcomeCounts.undefined ?? 0);
 
   useEffect(() => {
     if (!statistics.totalRegistered) navigate("/epd", { replace: true });
@@ -164,26 +165,6 @@ export const StatisticsPage = () => {
         );
       })}
       <Typography {...textProps} fontWeight="bold">
-        Predicted Registration Numbers for Next Session by Level
-      </Typography>
-      {map(genderedLevels, (level) => {
-        const levelPredictedRegistration = get(statistics.predictedRegistration, level);
-        return (
-          <>
-            <Typography {...textProps} fontWeight="bold" marginLeft={INDENT}>
-              {level}: {sum(values(levelPredictedRegistration))}
-            </Typography>
-            {map(keys(levelPredictedRegistration), (key) => {
-              return (
-                <Typography {...textProps} marginLeft={INDENT * 2}>
-                  {key}: {get(levelPredictedRegistration, key)}
-                </Typography>
-              );
-            })}
-          </>
-        );
-      })}
-      <Typography {...textProps} fontWeight="bold">
         COVID Statistics
       </Typography>
       {map(keys(sortObjectByValues(statistics.covidStatusCounts)).reverse(), (key) => {
@@ -217,6 +198,7 @@ export const StatisticsPage = () => {
       <Typography {...textProps}>Total English Teachers: {statistics.totalEnglishTeachers}</Typography>
       <Typography {...textProps}>Total Illiterate Arabic: {statistics.totalIlliterateArabic}</Typography>
       <Typography {...textProps}>Total Illiterate English: {statistics.totalIlliterateEnglish}</Typography>
+      <PlacementPrediction INDENT={INDENT} textProps={textProps} />
       <Typography {...textProps} fontWeight="bold">
         Waiting List Outcomes
       </Typography>
