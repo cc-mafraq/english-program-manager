@@ -1,11 +1,17 @@
 import { Box, Typography, TypographyProps, useTheme } from "@mui/material";
+import { blue, blueGrey, deepOrange, green, lightGreen, pink, purple, yellow } from "@mui/material/colors";
+import { ArcElement, Chart as ChartJS, Legend, Title, Tooltip } from "chart.js";
+import ChartDataLabels, { Context } from "chartjs-plugin-datalabels";
 import { get, isEmpty, keys, map, round, sortBy, sum, values } from "lodash";
 import React, { useEffect } from "react";
+import { Pie } from "react-chartjs-2";
 import { useNavigate } from "react-router-dom";
 import { PlacementPrediction } from "../components/Statistics";
 import { useAppStore, useStatistics, useStudentStore } from "../hooks";
 import { levels } from "../interfaces";
 import { getAllInitialSessions, sortObjectByValues } from "../services";
+
+ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels, Title);
 
 const INDENT = 3;
 
@@ -24,6 +30,32 @@ export const StatisticsPage = () => {
     color: theme.palette.text.primary,
     marginTop: 1,
   };
+  const colors = [
+    blue[400],
+    deepOrange[400],
+    purple[300],
+    green[500],
+    yellow[600],
+    pink[300],
+    blueGrey[300],
+    lightGreen[500],
+    blueGrey[100],
+  ];
+
+  const dataLabelsPlugin = {
+    datalabels: {
+      font: {
+        size: 16,
+      },
+      formatter: (value: number, context: Context) => {
+        const { data } = context.chart.data.datasets[0];
+        const label = get(context.chart.data.labels, context.dataIndex);
+        const total = sum(data);
+        const percentage = (value * 100) / total;
+        return percentage > 2 ? `${label}\n${((value * 100) / total).toFixed(1)}%` : "";
+      },
+    },
+  };
 
   const totalWaitingListOutcomes =
     sum(values(statistics.waitingListOutcomeCounts)) - (statistics.waitingListOutcomeCounts.undefined ?? 0);
@@ -39,28 +71,66 @@ export const StatisticsPage = () => {
         {(round(statistics.totalActive / statistics.totalRegistered, 3) * 100 || 0).toFixed(1)}
         %)
       </Typography>
-      <Typography {...textProps} fontWeight="bold">
-        Active Nationalities
-      </Typography>
-      {map(keys(sortObjectByValues(statistics.activeNationalityCounts)).reverse(), (key) => {
-        return (
-          <Typography {...textProps} key={`active-nationality-${key}`} marginLeft={INDENT}>
-            {key}: {get(statistics.activeNationalityCounts, key)} (
-            {(round(get(statistics.activeNationalityCounts, key) / statistics.totalActive, 3) * 100).toFixed(1)}%)
-          </Typography>
-        );
-      })}
-      <Typography {...textProps} fontWeight="bold">
-        Active Levels
-      </Typography>
-      {map([...levels, "L5 GRAD"], (key) => {
+      <Box display="flex" flexDirection="row">
+        <Box width="50%">
+          <Pie
+            data={{
+              datasets: [
+                {
+                  backgroundColor: colors,
+                  data: values(statistics.activeNationalityCounts),
+                },
+              ],
+              labels: keys(statistics.activeNationalityCounts),
+            }}
+            options={{
+              plugins: {
+                legend: {
+                  position: "top",
+                },
+                title: {
+                  display: true,
+                  text: "Active Nationalities",
+                },
+                ...dataLabelsPlugin,
+              },
+            }}
+          />
+        </Box>
+        <Box width="50%">
+          <Pie
+            data={{
+              datasets: [
+                {
+                  backgroundColor: colors,
+                  data: values(statistics.activeLevelCounts),
+                },
+              ],
+              labels: keys(statistics.activeLevelCounts),
+            }}
+            options={{
+              plugins: {
+                legend: {
+                  position: "top",
+                },
+                title: {
+                  display: true,
+                  text: "Active Levels",
+                },
+                ...dataLabelsPlugin,
+              },
+            }}
+          />
+        </Box>
+      </Box>
+      {/* {map([...levels, "L5 GRAD"], (key) => {
         return (
           <Typography {...textProps} key={`active-level-${key}`} marginLeft={INDENT}>
             Active {key}: {get(statistics.activeLevelCounts, key)} (
             {(round((get(statistics.activeLevelCounts, key) ?? 0) / statistics.totalActive, 3) * 100).toFixed(1)}%)
           </Typography>
         );
-      })}
+      })} */}
       <Typography {...textProps} fontWeight="bold">
         Active Students by Gender
       </Typography>
