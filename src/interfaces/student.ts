@@ -162,6 +162,7 @@ export enum Nationality {
   IRQ = "Iraqi",
   ITL = "Italian",
   KOR = "Korean",
+  SDN = "Sudanese",
   YEM = "Yemeni",
   UNKNWN = "Unknown",
 }
