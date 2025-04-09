@@ -23,7 +23,6 @@ import {
   set,
   some,
   sortBy,
-  split,
   sum,
   uniq,
   uniqBy,
@@ -210,17 +209,17 @@ export const getClassName = (placement?: SectionPlacement) => {
 
 export const getClassFromClassName = (className: string): SectionPlacement | undefined => {
   if (isEmpty(className) || className === "All") return undefined;
-  const splitClassName = split(className, includes(className, "CSWL") ? " " : "-");
-  const level = nth(splitClassName, 0) || className;
-  const section = nth(splitClassName, 1);
+  if (includes(className, "CSWL")) {
+    return { level: replace(className, "CSWL ", ""), section: "CSWL" };
+  }
+  const level = first(className.match(/^.+?(?=-)/)) ?? className;
+  const section = first(className.match(/(?<=-)[A-Z]+/));
   const genderedSections = ["M", "W"];
-  return level === "CSWL"
-    ? { level: section || className, section: level }
-    : includes(genderedSections, section) || section === undefined
+  return includes(genderedSections, section) || section === undefined
     ? { level: className }
-    : includes(level, "M") || includes(level, "W")
-    ? { level: `${level.substring(0, level.length - 1)}-${level.charAt(level.length - 1)}`, section }
-    : { level, section };
+    : isEmpty(level.match(/[M|W]$/))
+    ? { level, section }
+    : { level: `${level.substring(0, level.length - 1)}-${level.charAt(level.length - 1)}`, section };
 };
 
 export const getSectionPlacement = (
