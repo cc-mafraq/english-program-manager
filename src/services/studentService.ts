@@ -24,6 +24,7 @@ import {
   some,
   sortBy,
   sum,
+  toLower,
   uniq,
   uniqBy,
 } from "lodash";
@@ -233,11 +234,14 @@ export const getSectionPlacement = (
       return placement.session === selectedSession;
     })?.placement,
     (sectionPlacement) => {
+      const sectionPlacementLevelLower = toLower(sectionPlacement.level);
+      const selectedClassLevelLower = toLower(selectedClass.level);
       return (
         (selectedClass.section === "MW"
-          ? sectionPlacement.level === `${selectedClass.level}-M` ||
-            sectionPlacement.level === `${selectedClass.level}-W`
-          : sectionPlacement.level === selectedClass.level) && sectionPlacement.section === selectedClass.section
+          ? sectionPlacementLevelLower === `${selectedClassLevelLower}-M` ||
+            sectionPlacementLevelLower === `${selectedClassLevelLower}-W`
+          : sectionPlacementLevelLower === selectedClassLevelLower) &&
+        sectionPlacement.section === selectedClass.section
       );
     },
   );
