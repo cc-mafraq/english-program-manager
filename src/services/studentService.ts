@@ -261,8 +261,9 @@ export const getAcademicRecordByPlacement = (
       );
       return (
         academicRecord.session === selectedSession &&
-        (academicRecordLevelNoGender === selectedClass?.level ||
-          (academicRecord?.level ?? academicRecord?.levelAudited) === selectedClass?.level)
+        (toLower(academicRecordLevelNoGender) === toLower(selectedClass?.level) ||
+          (toLower(academicRecord?.level) ?? toLower(academicRecord?.levelAudited)) ===
+            toLower(selectedClass?.level))
       );
     }) ?? null
   );

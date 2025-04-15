@@ -2,7 +2,7 @@ import { createTheme, PaletteMode, responsiveFontSizes, ThemeProvider, useMediaQ
 import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Authorization, MenuBar } from "./components";
-import { loadLocal } from "./hooks";
+import { loadLocal, useDatabase, useStudentStore, useWaitingListStore } from "./hooks";
 import { getDesignTokens, voidFn } from "./interfaces";
 import { ClassListsPage, LoginPage, StatisticsPage, StudentDatabasePage, WaitingListPage } from "./pages";
 
@@ -26,9 +26,19 @@ export const App = () => {
     };
   }, []);
 
+  const setStudents = useStudentStore((state) => {
+    return state.setStudents;
+  });
+  const setWaitingList = useWaitingListStore((state) => {
+    return state.setWaitingList;
+  });
+
   useEffect(() => {
     !localColorMode && setMode(isDarkPreference ? "dark" : "light");
   }, [isDarkPreference, localColorMode]);
+
+  useDatabase({ collectionName: "students", setData: setStudents });
+  useDatabase({ collectionName: "waitingList", setData: setWaitingList });
 
   const theme = React.useMemo(() => {
     return responsiveFontSizes(createTheme(getDesignTokens(mode)));

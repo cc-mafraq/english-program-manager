@@ -14,11 +14,11 @@ import { Student } from "../interfaces";
 import { searchStudents, sortStudents } from "../services";
 
 export const StudentDatabasePage = () => {
+  const students = useStudentStore((state) => {
+    return state.students;
+  });
   const filter = useStudentStore((state) => {
     return state.filter;
-  });
-  const setStudents = useStudentStore((state) => {
-    return state.setStudents;
   });
   const setStudentDialogOpen = useStudentFormStore((state) => {
     return state.setOpen;
@@ -35,11 +35,10 @@ export const StudentDatabasePage = () => {
     handleSearchStringChange,
     searchString,
   } = usePageState<Student>({
-    collectionName: "students",
     filter,
+    list: students,
     requiredValuePath: "name.english",
     searchFn: searchStudents,
-    setData: setStudents,
     sortFn: sortStudents,
   });
 
