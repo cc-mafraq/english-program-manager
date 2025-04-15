@@ -238,8 +238,8 @@ export const getSectionPlacement = (
       const selectedClassLevelLower = toLower(selectedClass.level);
       return (
         (selectedClass.section === "MW"
-          ? sectionPlacementLevelLower === `${selectedClassLevelLower}-M` ||
-            sectionPlacementLevelLower === `${selectedClassLevelLower}-W`
+          ? sectionPlacementLevelLower === `${selectedClassLevelLower}-m` ||
+            sectionPlacementLevelLower === `${selectedClassLevelLower}-w`
           : sectionPlacementLevelLower === selectedClassLevelLower) &&
         sectionPlacement.section === selectedClass.section
       );
