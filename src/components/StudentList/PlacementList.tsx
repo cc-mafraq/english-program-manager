@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Edit } from "@mui/icons-material";
 import { Box, Breakpoint, Button, IconButton, Tooltip, Typography } from "@mui/material";
-import { find, findIndex, forEach, includes, join, map, omit, reverse } from "lodash";
+import { filter, findIndex, forEach, includes, join, map, omit, remove, reverse } from "lodash";
 import moment from "moment";
 import React, { useCallback, useMemo, useState } from "react";
 import {
@@ -21,6 +21,7 @@ import {
   JOIN_STR,
   MOMENT_FORMAT,
   SPACING,
+  getAllSessionsWithPlacement,
   getCurrentSession,
   photoContactSchema,
   placementSchema,
@@ -130,6 +131,8 @@ export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
   const [open, setOpen] = useState(false);
   const [openPhotoContact, setOpenPhotoContact] = useState(false);
   const [selectedPlacement, setSelectedPlacement] = useState<Placement | null>(null);
+  const currentSession = getCurrentSession(students);
+  const allSessions = getAllSessionsWithPlacement(students);
 
   const handleAddButtonClick = useCallback(() => {
     setSelectedStudent(null);
@@ -167,17 +170,32 @@ export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
       } else {
         student.placement.push(dataNoNull);
       }
+
+      const academicRecordsForSession = filter(student.academicRecords, (arWithIndex) => {
+        return arWithIndex.session === dataNoNull.session;
+      });
+
+      // Don't edit academic records for past sessions, but allow an edit if the session is not the current session but it is a new session
+      if (dataNoNull.session === currentSession || !includes(allSessions, dataNoNull.session)) {
+        forEach(academicRecordsForSession, (sessionAcademicRecord) => {
+          if (
+            !includes(map(dataNoNull.placement, "level"), sessionAcademicRecord.level) &&
+            sessionAcademicRecord.overallResult === undefined
+          ) {
+            remove(student.academicRecords, { level: sessionAcademicRecord.level, session: dataNoNull.session });
+          }
+        });
+      }
+
       forEach(dataNoNull.placement, (sp, classIndex) => {
         if (sp.section === "CSWL" && sp.timestamp === undefined) {
           sp.timestamp = moment().format();
         }
+
         if (
-          !find(student.academicRecords, (academicRecord) => {
-            return academicRecord.session === dataNoNull.session && sp.level && academicRecord.level === sp.level;
-          }) &&
-          dataNoNull.session !== "Fa I 22" &&
-          dataNoNull.session !== "Fa II 22" &&
-          sp.section !== "CSWL"
+          !includes(map(academicRecordsForSession, "level"), sp.level) &&
+          sp.section !== "CSWL" &&
+          (dataNoNull.session === currentSession || !includes(allSessions, dataNoNull.session))
         ) {
           student.academicRecords.push({ level: sp.level, session: dataNoNull.session });
         }
@@ -206,7 +224,7 @@ export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
       setData(student, "students", "epId");
       handleDialogClose();
     },
-    [handleDialogClose, selectedPlacement, student],
+    [allSessions, currentSession, handleDialogClose, selectedPlacement, student],
   );
 
   const onSubmitPhotoContact = useCallback(
