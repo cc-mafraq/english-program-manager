@@ -56,11 +56,11 @@ export const sortWaitingList = (waitingList: WaitingListEntry[]) => {
   return orderedList;
 };
 
-export const getPosition = (waitingList: WaitingListEntry[], wlEntry: WaitingListEntry) => {
-  const index = findIndex(waitingList, (wle) => {
+export const getPosition = (sortedWaitingList: WaitingListEntry[], wlEntry: WaitingListEntry) => {
+  const index = findIndex(sortedWaitingList, (wle) => {
     return wle.id === wlEntry.id;
   });
-  return index + 1 - (get(countBy(map(slice(waitingList, 0, index), "waiting")), "false") || 0);
+  return index + 1 - (get(countBy(map(slice(sortedWaitingList, 0, index), "waiting")), "false") || 0);
 };
 
 export interface WaitingListTimeStats {

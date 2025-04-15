@@ -2,6 +2,7 @@ import { Badge, Close, Download } from "@mui/icons-material";
 import { Box, Dialog, IconButton, Tooltip, Typography, useMediaQuery, useTheme } from "@mui/material";
 import download from "downloadjs";
 import { toPng } from "html-to-image";
+import { isEmpty } from "lodash";
 import React, { useCallback, useRef, useState } from "react";
 import { Student } from "../../interfaces";
 
@@ -140,7 +141,9 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
               >
                 <Box sx={{ margin: "auto" }}>
                   <Typography color={black} fontSize={26} fontWeight="bold">
-                    {shortEnglishName}
+                    {isEmpty(student.name.arabic) || student.name.arabic === "N/A"
+                      ? student.name.english
+                      : shortEnglishName}
                   </Typography>
                 </Box>
               </Box>

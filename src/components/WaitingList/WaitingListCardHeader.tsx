@@ -13,6 +13,7 @@ import {
 interface WaitingListHeaderProps {
   data: WaitingListEntry;
   handleEditEntryClick: () => void;
+  sortedWaitingList: WaitingListEntry[];
   waitingListTimeStats: WaitingListTimeStats;
 }
 
@@ -20,6 +21,7 @@ export const WaitingListCardHeader: React.FC<WaitingListHeaderProps> = ({
   data: wlEntry,
   handleEditEntryClick,
   waitingListTimeStats,
+  sortedWaitingList,
 }) => {
   const role = useAppStore((state) => {
     return state.role;
@@ -40,7 +42,7 @@ export const WaitingListCardHeader: React.FC<WaitingListHeaderProps> = ({
 
   const theme = useTheme();
   const { iconColor } = useColors();
-  const position = getPosition(waitingList, wlEntry);
+  const position = getPosition(sortedWaitingList, wlEntry);
   const { newStudentRate, eligibleNewStudentRate, numHighPriority, numSpotsPerMonth, avgNumPeoplePerEntry } =
     waitingListTimeStats;
   const numActiveEligibleInFront = useMemo(() => {

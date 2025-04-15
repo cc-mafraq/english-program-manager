@@ -2,7 +2,7 @@ import React, { RefObject, useMemo } from "react";
 import { VirtualizedList, WaitingListCard } from "..";
 import { useStudentStore, useWaitingListStore } from "../../hooks";
 import { WaitingListEntry } from "../../interfaces";
-import { getWaitingListTimeStats } from "../../services";
+import { getWaitingListTimeStats, sortWaitingList } from "../../services";
 
 interface WaitingListProps {
   filteredWaitingList: WaitingListEntry[];
@@ -32,6 +32,8 @@ export const WaitingList: React.FC<WaitingListProps> = ({
     return getWaitingListTimeStats(waitingList, students);
   }, [students, waitingList]);
 
+  const sortedWaitingList = sortWaitingList(waitingList);
+
   return (
     <VirtualizedList
       idPath="id"
@@ -43,6 +45,7 @@ export const WaitingList: React.FC<WaitingListProps> = ({
     >
       <WaitingListCard
         handleWLEntryDialogOpen={handleWLEntryDialogOpen}
+        sortedWaitingList={sortedWaitingList}
         waitingListTimeStats={waitingListTimeStats}
       />
     </VirtualizedList>

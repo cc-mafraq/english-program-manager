@@ -1,5 +1,5 @@
 import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, SxProps } from "@mui/material";
-import { dropRight, filter, first, includes, last, map, sortBy, uniq } from "lodash";
+import { dropRight, filter, first, includes, last, map, sortBy, toLower, uniqBy } from "lodash";
 import React, { useMemo } from "react";
 import { useAppStore, useStudentStore } from "../../hooks";
 import { SectionPlacement, Student } from "../../interfaces";
@@ -38,10 +38,11 @@ export const ClassAndSessionSelect: React.FC<ClassAndSessionSelectProps> = ({
   const classOptions = useMemo(() => {
     return filter(
       sortBy(
-        uniq(
+        uniqBy(
           map(getClassOptions(students, selectedSession ?? first(sessionOptions)), (classOption) => {
             return getClassName(classOption);
           }),
+          toLower,
         ),
       ),
       (classOption) => {

@@ -1,9 +1,9 @@
 import { Brightness4, Brightness7, Logout } from "@mui/icons-material";
 import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography, useTheme } from "@mui/material";
-import React, { RefObject } from "react";
+import React, { RefObject, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { MenuDrawer } from "..";
-import { ColorModeContext } from "../../App";
+import { ColorModeContext } from "../../contexts";
 import { saveLocal, useColors } from "../../hooks";
 import { logout } from "../../services";
 
@@ -16,7 +16,7 @@ export const MenuBar: React.FC<MenuBarProps> = ({ pageName, innerRef }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { iconColor } = useColors();
-  const colorMode = React.useContext(ColorModeContext);
+  const colorMode = useContext(ColorModeContext);
 
   const handleLogout = async () => {
     await logout();

@@ -5,8 +5,8 @@ import { WaitingListEntry } from "../interfaces";
 import { searchWaitingList, sortWaitingList } from "../services";
 
 export const WaitingListPage = () => {
-  const setWaitingList = useWaitingListStore((state) => {
-    return state.setWaitingList;
+  const waitingList = useWaitingListStore((state) => {
+    return state.waitingList;
   });
   const setWaitingListFormDialogOpen = useWaitingListFormStore((state) => {
     return state.setOpen;
@@ -22,11 +22,10 @@ export const WaitingListPage = () => {
     handleSearchStringChange,
     searchString,
   } = usePageState<WaitingListEntry>({
-    collectionName: "waitingList",
     filter,
+    list: waitingList,
     requiredValuePath: "primaryPhone",
     searchFn: searchWaitingList,
-    setData: setWaitingList,
     sortFn: sortWaitingList,
   });
 
