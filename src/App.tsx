@@ -2,13 +2,10 @@ import { createTheme, PaletteMode, responsiveFontSizes, ThemeProvider, useMediaQ
 import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Authorization, MenuBar } from "./components";
+import { ColorModeContext } from "./contexts";
 import { loadLocal, useDatabase, useStudentStore, useWaitingListStore } from "./hooks";
-import { getDesignTokens, voidFn } from "./interfaces";
+import { getDesignTokens } from "./interfaces";
 import { ClassListsPage, LoginPage, StatisticsPage, StudentDatabasePage, WaitingListPage } from "./pages";
-
-export const ColorModeContext = React.createContext({
-  toggleColorMode: voidFn,
-});
 
 export const App = () => {
   const isDarkPreference = useMediaQuery("(prefers-color-scheme: dark)");
