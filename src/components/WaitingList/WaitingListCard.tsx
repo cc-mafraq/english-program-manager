@@ -6,6 +6,7 @@ import { WaitingListTimeStats } from "../../services";
 
 interface WaitingListCardProps {
   handleWLEntryDialogOpen: () => void;
+  sortedWaitingList: WaitingListEntry[];
   waitingListTimeStats: WaitingListTimeStats;
 }
 
@@ -18,7 +19,7 @@ export const WaitingListCard: React.FC<WaitingListCardProps> = (props) => {
   const role = useAppStore((state) => {
     return state.role;
   });
-  const { handleWLEntryDialogOpen, waitingListTimeStats } = props;
+  const { handleWLEntryDialogOpen, waitingListTimeStats, sortedWaitingList } = props;
 
   return (
     <CustomCard
@@ -27,6 +28,7 @@ export const WaitingListCard: React.FC<WaitingListCardProps> = (props) => {
         <WaitingListCardHeader
           data={emptyWaitingListEntry}
           handleEditEntryClick={handleWLEntryDialogOpen}
+          sortedWaitingList={sortedWaitingList}
           waitingListTimeStats={waitingListTimeStats}
         />
       }

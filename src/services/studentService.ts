@@ -23,8 +23,8 @@ import {
   set,
   some,
   sortBy,
-  split,
   sum,
+  toLower,
   uniq,
   uniqBy,
 } from "lodash";
@@ -210,17 +210,17 @@ export const getClassName = (placement?: SectionPlacement) => {
 
 export const getClassFromClassName = (className: string): SectionPlacement | undefined => {
   if (isEmpty(className) || className === "All") return undefined;
-  const splitClassName = split(className, includes(className, "CSWL") ? " " : "-");
-  const level = nth(splitClassName, 0) || className;
-  const section = nth(splitClassName, 1);
+  if (includes(className, "CSWL")) {
+    return { level: replace(className, "CSWL ", ""), section: "CSWL" };
+  }
+  const level = first(className.match(/^.+?(?=-)/)) ?? className;
+  const section = first(className.match(/(?<=-)[A-Z]+/));
   const genderedSections = ["M", "W"];
-  return level === "CSWL"
-    ? { level: section || className, section: level }
-    : includes(genderedSections, section) || section === undefined
+  return includes(genderedSections, section) || section === undefined
     ? { level: className }
-    : includes(level, "M") || includes(level, "W")
-    ? { level: `${level.substring(0, level.length - 1)}-${level.charAt(level.length - 1)}`, section }
-    : { level, section };
+    : isEmpty(level.match(/[M|W]$/))
+    ? { level, section }
+    : { level: `${level.substring(0, level.length - 1)}-${level.charAt(level.length - 1)}`, section };
 };
 
 export const getSectionPlacement = (
@@ -234,11 +234,14 @@ export const getSectionPlacement = (
       return placement.session === selectedSession;
     })?.placement,
     (sectionPlacement) => {
+      const sectionPlacementLevelLower = toLower(sectionPlacement.level);
+      const selectedClassLevelLower = toLower(selectedClass.level);
       return (
         (selectedClass.section === "MW"
-          ? sectionPlacement.level === `${selectedClass.level}-M` ||
-            sectionPlacement.level === `${selectedClass.level}-W`
-          : sectionPlacement.level === selectedClass.level) && sectionPlacement.section === selectedClass.section
+          ? sectionPlacementLevelLower === `${selectedClassLevelLower}-m` ||
+            sectionPlacementLevelLower === `${selectedClassLevelLower}-w`
+          : sectionPlacementLevelLower === selectedClassLevelLower) &&
+        sectionPlacement.section === selectedClass.section
       );
     },
   );
@@ -258,8 +261,9 @@ export const getAcademicRecordByPlacement = (
       );
       return (
         academicRecord.session === selectedSession &&
-        (academicRecordLevelNoGender === selectedClass?.level ||
-          (academicRecord?.level ?? academicRecord?.levelAudited) === selectedClass?.level)
+        (toLower(academicRecordLevelNoGender) === toLower(selectedClass?.level) ||
+          (toLower(academicRecord?.level) ?? toLower(academicRecord?.levelAudited)) ===
+            toLower(selectedClass?.level))
       );
     }) ?? null
   );

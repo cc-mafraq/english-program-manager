@@ -1,4 +1,5 @@
 export * from "./useColors";
+export * from "./useDatabase";
 export * from "./useFormDialog";
 export * from "./useFormList";
 export * from "./useInput";

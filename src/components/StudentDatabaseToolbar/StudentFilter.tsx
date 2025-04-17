@@ -86,7 +86,7 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
 
   const pendingPlacementFn = useCallback(
     (student: Student) => {
-      return find(student.placement, (p) => {
+      return !!find(student.placement, (p) => {
         return p.session === currentSession;
       })?.pending;
     },
