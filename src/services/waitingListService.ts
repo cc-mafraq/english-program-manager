@@ -91,7 +91,7 @@ export const getWaitingListTimeStats = (
       return wle.outcome !== undefined;
     }).length;
 
-  const newStudentsPerMonth = students.length / moment().diff(moment("09-01-2017"), "months");
+  const newStudentsPerMonth = students.length / moment().diff(moment("2017-09-01"), "months");
 
   const numNewPastHighPriority = filter(newOutcomeEntries, (wle) => {
     return wle.highPriority === HighPriority.PAST;
@@ -129,7 +129,7 @@ export const getWaitingListTimeStats = (
     newStudentsPerMonth * (1 - (overallHighPriorityRate + reactivatedRate));
 
   const recentNewOutcomeNotWaitingEntries = filter(newOutcomeNotWaitingEntries, (wle) => {
-    return moment(wle.entryDate, MOMENT_FORMAT).isSameOrAfter(moment("01-01-2022"));
+    return moment(wle.entryDate, MOMENT_FORMAT).isSameOrAfter(moment("2022-01-01"));
   });
 
   const avgNumPeoplePerEntry =
