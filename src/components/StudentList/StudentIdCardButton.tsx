@@ -3,7 +3,7 @@ import { Box, Dialog, IconButton, Tooltip, Typography, useMediaQuery, useTheme }
 import download from "downloadjs";
 import { toPng } from "html-to-image";
 import { isEmpty } from "lodash";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { Student } from "../../interfaces";
 import { getStudentShortName } from "../../services";
 
@@ -25,7 +25,9 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
     setOpen(true);
   };
 
-  const shortEnglishName = getStudentShortName(student);
+  const shortEnglishName = useMemo(() => {
+    return getStudentShortName(student);
+  }, [student]);
   const padding = "36px";
   const black = "#000000";
   const blackBorder = { borderColor: black, borderStyle: "solid" };
