@@ -5,6 +5,7 @@ import { toPng } from "html-to-image";
 import { isEmpty } from "lodash";
 import React, { useCallback, useRef, useState } from "react";
 import { Student } from "../../interfaces";
+import { getStudentShortName } from "../../services";
 
 interface StudentIdCardButtonProps {
   student: Student;
@@ -24,9 +25,7 @@ export const StudentIdCardButton: React.FC<StudentIdCardButtonProps> = ({ studen
     setOpen(true);
   };
 
-  const splitEnglishName = student.name.english.split(" ");
-  const idWordNum = splitEnglishName.length < 2 ? 1 : splitEnglishName[1] === "Al" ? 3 : 2;
-  const shortEnglishName = splitEnglishName.slice(0, idWordNum).join(" ");
+  const shortEnglishName = getStudentShortName(student);
   const padding = "36px";
   const black = "#000000";
   const blackBorder = { borderColor: black, borderStyle: "solid" };
