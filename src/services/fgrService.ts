@@ -183,17 +183,10 @@ export const getSortedSARIndexArray = (sarArr: StudentAcademicRecordIndex[]) => 
 
 export const getStudentShortName = (student: Student) => {
   const nameParts = split(student.name.english, " ");
-  const firstName = nth(nameParts, 0);
-  const secondName = nth(nameParts, 1);
-  const thirdName = nth(nameParts, 2);
-  const shortName = `${firstName} ${secondName}`;
-  return (secondName === "Al" ||
-    secondName === "Abd" ||
-    firstName === "Abd" ||
-    secondName?.startsWith('"') ||
-    secondName === "Abed" ||
-    firstName === "Abed") &&
-    thirdName !== "Al"
-    ? `${shortName} ${thirdName}`
-    : shortName;
+  const namePrefixes = ["Al", "Abd", "Abed"];
+  let finalNameIndex = includes(namePrefixes, nth(nameParts, 0)) ? 2 : 1;
+  while (includes(namePrefixes, nth(nameParts, finalNameIndex))) {
+    finalNameIndex += 1;
+  }
+  return nameParts.slice(0, finalNameIndex + 1).join(" ");
 };
