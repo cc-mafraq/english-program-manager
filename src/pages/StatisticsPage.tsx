@@ -302,13 +302,13 @@ export const StatisticsPage = () => {
                     {
                       backgroundColor: colors,
                       data: [
-                        statistics.activeSessionsAttendedCounts["0"],
-                        statistics.activeSessionsAttendedCounts["1"],
-                        statistics.activeSessionsAttendedCounts["2"],
+                        statistics.activeSessionsAttendedCounts["0"] ?? 0,
+                        statistics.activeSessionsAttendedCounts["1"] ?? 0,
+                        statistics.activeSessionsAttendedCounts["2"] ?? 0,
                         sum(values(statistics.activeSessionsAttendedCounts)) -
-                          statistics.activeSessionsAttendedCounts["0"] -
-                          statistics.activeSessionsAttendedCounts["1"] -
-                          statistics.activeSessionsAttendedCounts["2"],
+                          (statistics.activeSessionsAttendedCounts["0"] ?? 0) -
+                          (statistics.activeSessionsAttendedCounts["1"] ?? 0) -
+                          (statistics.activeSessionsAttendedCounts["2"] ?? 0),
                       ],
                     },
                   ],
@@ -327,13 +327,13 @@ export const StatisticsPage = () => {
                     {
                       backgroundColor: colors,
                       data: [
-                        statistics.sessionsAttendedCounts["0"],
-                        statistics.sessionsAttendedCounts["1"],
-                        statistics.sessionsAttendedCounts["2"],
+                        statistics.sessionsAttendedCounts["0"] ?? 0,
+                        statistics.sessionsAttendedCounts["1"] ?? 0,
+                        statistics.sessionsAttendedCounts["2"] ?? 0,
                         sum(values(statistics.sessionsAttendedCounts)) -
-                          statistics.sessionsAttendedCounts["0"] -
-                          statistics.sessionsAttendedCounts["1"] -
-                          statistics.sessionsAttendedCounts["2"],
+                          (statistics.sessionsAttendedCounts["0"] ?? 0) -
+                          (statistics.sessionsAttendedCounts["1"] ?? 0) -
+                          (statistics.sessionsAttendedCounts["2"] ?? 0),
                       ],
                     },
                   ],
