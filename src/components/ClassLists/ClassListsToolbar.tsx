@@ -94,7 +94,9 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
           />
         </Box>
         <Box textAlign="right">
-          <Typography>{filteredStudents.length} students</Typography>
+          <Typography>
+            {filteredStudents.length} {greaterThanSmall ? "students" : ""}
+          </Typography>
         </Box>
       </Toolbar>
     </AppBar>
