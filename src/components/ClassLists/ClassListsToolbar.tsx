@@ -89,12 +89,14 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
         <Box sx={{ alignItems: "center" }}>
           <FormControlLabel
             control={<Checkbox checked={showWDStudents} onChange={handleShowWDCheckboxChange} />}
-            label="Show WD Students"
+            label={greaterThanSmall ? "Show WD Students" : "Show WD"}
             sx={{ display: "flex", margin: "0 auto" }}
           />
         </Box>
         <Box textAlign="right">
-          <Typography>{filteredStudents.length} students</Typography>
+          <Typography>
+            {filteredStudents.length} {greaterThanSmall ? "students" : ""}
+          </Typography>
         </Box>
       </Toolbar>
     </AppBar>
