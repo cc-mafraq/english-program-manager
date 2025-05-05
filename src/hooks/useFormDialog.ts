@@ -22,7 +22,7 @@ export const useFormDialog = <T extends object>({
 
   const handleDialogClose = useCallback<DialogProps["onClose"]>(
     (reason) => {
-      if (disableBackdropClick && reason && reason === "backdropClick") return;
+      if (disableBackdropClick && reason === "backdropClick") return;
       setOpenDialog(false);
       setSelectedData && setSelectedData(null);
     },
