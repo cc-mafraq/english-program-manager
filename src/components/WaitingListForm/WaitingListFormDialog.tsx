@@ -41,7 +41,7 @@ export const WaitingListFormDialog: React.FC<WaitingListFormDialogProps> = ({ ha
     handleDialogClose: handleDupPhoneDialogClose,
     handleDialogOpen: handleDupPhoneDialogOpen,
     openDialog: openDupPhoneDialog,
-  } = useFormDialog({});
+  } = useFormDialog({ disableBackdropClick: true });
 
   const handleWLEntryDialogClose = useCallback(() => {
     setWaitingListFormDialogOpen(false);
