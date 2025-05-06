@@ -1,8 +1,9 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Logout } from "@mui/icons-material";
 import { Box, Breakpoint, IconButton, Tooltip, useMediaQuery, useTheme } from "@mui/material";
+import { forEach } from "lodash";
 import React, { useCallback, useMemo, useState } from "react";
-import { FinalResult, Status, Student, Withdraw } from "../../interfaces";
+import { AcademicRecord, FinalResult, Status, Student, Withdraw } from "../../interfaces";
 import { SPACING, setData, withdrawSchema } from "../../services";
 import { FormWithdraw } from "../StudentForm";
 import { FormDialog } from "../reusables";
@@ -42,13 +43,12 @@ export const WithdrawButton: React.FC<WithdrawButtonProps> = ({ student }) => {
         student.status.droppedOutReason = data.droppedOutReason;
       }
       student.status.currentStatus = Status.WD;
-      const lastAcademicRecord = student.academicRecords[student.academicRecords.length - 1];
-      if (lastAcademicRecord && lastAcademicRecord.overallResult === undefined) {
-        lastAcademicRecord.overallResult = FinalResult.WD;
-        lastAcademicRecord.finalGrade
-          ? (lastAcademicRecord.finalGrade.result = FinalResult.WD)
-          : (lastAcademicRecord.finalGrade = { result: FinalResult.WD });
-      }
+      forEach(student.academicRecords, (ar: AcademicRecord) => {
+        if (ar.overallResult === undefined) {
+          ar.overallResult = FinalResult.WD
+          ar.finalGrade ? (ar.finalGrade.result = FinalResult.WD) : (ar.finalGrade = {result: FinalResult.WD})
+        }
+      })
       setData(student, "students", "epId");
       handleDialogClose();
     },

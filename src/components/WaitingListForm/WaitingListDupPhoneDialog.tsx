@@ -1,11 +1,11 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import React from "react";
-import { useColors } from "../../hooks";
+import { DialogProps, useColors } from "../../hooks";
 import { WaitingListEntry } from "../../interfaces";
 
 interface WaitingListDupPhoneDialogProps {
   data: WaitingListEntry;
-  handleDialogClose: () => void;
+  handleDialogClose: DialogProps["onClose"];
   handleSearchStringChange: (newString: string) => void;
   handleWaitingListEntryDialogClose: () => void;
   onSubmit: (data: WaitingListEntry) => void;
@@ -24,7 +24,10 @@ export const WaitingListDupPhoneDialog: React.FC<WaitingListDupPhoneDialogProps>
 
   return (
     <Dialog
-      onClose={handleDialogClose}
+      disableEscapeKeyDown
+      onClose={(_, reason) => {
+        return handleDialogClose(reason);
+      }}
       open={open}
       PaperProps={{
         style: {
@@ -44,7 +47,7 @@ export const WaitingListDupPhoneDialog: React.FC<WaitingListDupPhoneDialogProps>
       <DialogActions>
         <Button
           onClick={() => {
-            handleDialogClose();
+            handleDialogClose("submit");
             onSubmit(data);
           }}
         >
@@ -53,7 +56,7 @@ export const WaitingListDupPhoneDialog: React.FC<WaitingListDupPhoneDialogProps>
         <Button
           autoFocus
           onClick={() => {
-            handleDialogClose();
+            handleDialogClose("submit");
             handleWaitingListEntryDialogClose();
             handleSearchStringChange(data.primaryPhone.toString());
           }}

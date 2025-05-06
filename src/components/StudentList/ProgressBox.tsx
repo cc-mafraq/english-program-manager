@@ -15,18 +15,17 @@ export const ProgressBox = ({
   sessionResults?: SessionResult[];
 }) => {
   const theme = useTheme();
-  const lastSessionResult = useMemo(() => {
-    return (
-      last(
-        filter(sessionResults, (sr) => {
-          return !sr.isElective && !sr.isAudit;
-        }),
-      )?.result || last(sessionResults)?.result
-    );
+  const coreSessionResults = useMemo(() => {
+    return filter(sessionResults, (sr) => {
+      return !sr.isElective && !sr.isAudit;
+    });
   }, [sessionResults]);
+  const lastSessionResult = useMemo(() => {
+    return last(coreSessionResults)?.result;
+  }, [coreSessionResults]);
 
   const isDarkAndYellow =
-    theme.palette.mode === "dark" && lastSessionResult === undefined && sessionResults?.length;
+    theme.palette.mode === "dark" && lastSessionResult === undefined && coreSessionResults?.length;
   const { defaultBackgroundColor, green, yellow, red } = useColors();
 
   return (
@@ -34,7 +33,7 @@ export const ProgressBox = ({
       containerProps={{
         sx: {
           backgroundColor:
-            sessionResults?.length === 0
+            coreSessionResults?.length === 0
               ? defaultBackgroundColor
               : lastSessionResult === "P"
               ? green
@@ -59,23 +58,18 @@ export const ProgressBox = ({
       }}
     >
       {join(
-        map(
-          filter(sessionResults, (sr) => {
-            return !sr.isElective;
-          }),
-          (sr) => {
-            const sessionStr = `${sr.session}${sr.isAudit ? " audit" : ""}`;
-            return sr.result === "WD"
-              ? // https://stackoverflow.com/questions/18285291/how-to-do-strike-through-string-for-javascript
-                `\u0336${join(
-                  map(split(sessionStr, ""), (char) => {
-                    return `${char}\u0336`;
-                  }),
-                  "",
-                )}`
-              : sessionStr;
-          },
-        ),
+        map(coreSessionResults, (sr) => {
+          const sessionStr = `${sr.session}`;
+          return sr.result === "WD"
+            ? // https://stackoverflow.com/questions/18285291/how-to-do-strike-through-string-for-javascript
+              `\u0336${join(
+                map(split(sessionStr, ""), (char) => {
+                  return `${char}\u0336`;
+                }),
+                "",
+              )}`
+            : sessionStr;
+        }),
         ", ",
       )}
     </LabeledText>

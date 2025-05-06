@@ -1,13 +1,13 @@
 import { Button, Dialog, Paper, TextField, Typography, useTheme } from "@mui/material";
 import { findIndex } from "lodash";
 import React, { useEffect, useRef, useState } from "react";
-import { loadLocal, saveLocal, useColors, useWaitingListStore } from "../../hooks";
+import { DialogProps, loadLocal, saveLocal, useColors, useWaitingListStore } from "../../hooks";
 import { WaitingListEntry } from "../../interfaces";
 import { phoneConditionFn } from "../../services";
 
 interface JumpToEntryDialogProps {
   filteredWaitingList: WaitingListEntry[];
-  handleDialogClose: () => void;
+  handleDialogClose: DialogProps["onClose"];
   open: boolean;
 }
 
@@ -30,7 +30,7 @@ export const JumpToEntryDialog: React.FC<JumpToEntryDialogProps> = ({
       return !!phoneConditionFn(value)(wle.primaryPhone);
     });
     scrollToIndex !== -1 && submitValue(scrollToIndex);
-    handleDialogClose();
+    handleDialogClose("submit");
   };
 
   const inputRef = useRef<HTMLDivElement | null>(null);
@@ -49,7 +49,9 @@ export const JumpToEntryDialog: React.FC<JumpToEntryDialogProps> = ({
 
   return (
     <Dialog
-      onClose={handleDialogClose}
+      onClose={(_, reason) => {
+        return handleDialogClose(reason);
+      }}
       open={open}
       PaperProps={{ style: { backgroundColor: popoverColor, overflowX: "hidden" } }}
     >

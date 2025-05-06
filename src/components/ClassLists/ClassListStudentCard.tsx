@@ -78,7 +78,7 @@ const ClassListStudentInfoMemo: React.FC<ClassListStudentInfoProps> = React.memo
           <LabeledText label="Status">{Status[data.status.currentStatus]}</LabeledText>
           <LabeledText label="Nationality">{data.nationality}</LabeledText>
           {!allSameGender && <LabeledText label="Gender">{data.gender === "M" ? "Male" : "Female"}</LabeledText>}
-          <LabeledText label="Repeat">{repeatNum}</LabeledText>
+          {!isElective(selectedAcademicRecord?.level) && <LabeledText label="Repeat">{repeatNum}</LabeledText>}
         </LabeledContainer>
         <PhoneNumbers data={data} noWhatsapp />
 
