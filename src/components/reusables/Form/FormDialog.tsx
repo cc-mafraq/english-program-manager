@@ -2,7 +2,7 @@ import { Close } from "@mui/icons-material";
 import { Box, Button, Dialog, DialogProps, Grid, IconButton, Tooltip, Typography, useTheme } from "@mui/material";
 import { green, grey } from "@mui/material/colors";
 import { isEqual } from "lodash";
-import React, { CSSProperties, PropsWithChildren, useState } from "react";
+import React, { CSSProperties, PropsWithChildren, useEffect, useState } from "react";
 import {
   DeepPartial,
   DefaultValues,
@@ -55,6 +55,10 @@ export const FormDialog = <T extends FieldValues>({
     setPrevDefaultValues(useFormProps.defaultValues as DefaultValues<T>);
   }
 
+  useEffect(() => {
+    reset({} as T);
+  }, [methods.formState.isSubmitSuccessful, reset]);
+
   return (
     <Dialog
       fullWidth
@@ -85,7 +89,6 @@ export const FormDialog = <T extends FieldValues>({
                   onClick={methods.handleSubmit(
                     (data, e) => {
                       onSubmit(data, e);
-                      reset({} as T);
                     },
                     () => {
                       setOpenErrorDialog(true);
