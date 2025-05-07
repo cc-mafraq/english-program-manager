@@ -20,7 +20,9 @@ export const App = () => {
     return state.setOnline;
   });
   window.addEventListener("online", () => {
-    setOnline(true);
+    if (!online) {
+      setOnline(true);
+    }
   });
   window.addEventListener("offline", () => {
     if (online) {
