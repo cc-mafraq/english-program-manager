@@ -1,4 +1,3 @@
-export * from "./Authorization";
 export * from "./ClassLists";
 export * from "./FinalGradeReports";
 export * from "./Menu";
@@ -9,3 +8,4 @@ export * from "./StudentForm";
 export * from "./StudentList";
 export * from "./WaitingList";
 export * from "./WaitingListForm";
+export * from "./Wrappers";

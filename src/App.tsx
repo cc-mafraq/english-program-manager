@@ -1,7 +1,13 @@
 import { createTheme, PaletteMode, responsiveFontSizes, ThemeProvider, useMediaQuery } from "@mui/material";
 import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Authorization, MenuBar, OfflineSnackbar } from "./components";
+import {
+  Authorization,
+  MenuBar,
+  OfflineSnackbar,
+  StudentDatabaseWrapper,
+  WaitingListDatabaseWrapper,
+} from "./components";
 import { ColorModeContext } from "./contexts";
 import { loadLocal, useAppStore, useDatabase, useStudentStore, useWaitingListStore } from "./hooks";
 import { getDesignTokens } from "./interfaces";
@@ -65,15 +71,40 @@ export const App = () => {
           <BrowserRouter>
             <Authorization>
               <Routes>
-                <Route element={<StudentDatabasePage />} path="/epd" />
-                <Route element={<WaitingListPage />} path="/waitlist" />
-                <Route element={<ClassListsPage />} path="/classlists" />
                 <Route
                   element={
-                    <>
-                      <MenuBar pageName="Statistics" />
-                      <StatisticsPage />
-                    </>
+                    <StudentDatabaseWrapper>
+                      <StudentDatabasePage />
+                    </StudentDatabaseWrapper>
+                  }
+                  path="/epd"
+                />
+                <Route
+                  element={
+                    <StudentDatabaseWrapper>
+                      <WaitingListDatabaseWrapper>
+                        <WaitingListPage />
+                      </WaitingListDatabaseWrapper>
+                    </StudentDatabaseWrapper>
+                  }
+                  path="/waitlist"
+                />
+                <Route
+                  element={
+                    <StudentDatabaseWrapper>
+                      <ClassListsPage />
+                    </StudentDatabaseWrapper>
+                  }
+                  path="/classlists"
+                />
+                <Route
+                  element={
+                    <StudentDatabaseWrapper>
+                      <WaitingListDatabaseWrapper>
+                        <MenuBar pageName="Statistics" />
+                        <StatisticsPage />
+                      </WaitingListDatabaseWrapper>
+                    </StudentDatabaseWrapper>
                   }
                   path="/stats"
                 />
