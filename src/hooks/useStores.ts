@@ -75,19 +75,27 @@ export const useWaitingListStore = create<WaitingListState>()((set) => {
 
 interface AppState {
   loading: boolean;
+  online: boolean;
   role: "admin" | "faculty" | "staff";
   setLoading: (loading: AppState["loading"]) => void;
+  setOnline: (online: AppState["online"]) => void;
   setRole: (role: AppState["role"]) => void;
 }
 
 export const useAppStore = create<AppState>()((set) => {
   return {
     loading: true,
+    online: window.navigator.onLine,
     role: "staff",
 
     setLoading: (loading: AppState["loading"]) => {
       return set(() => {
         return { loading };
+      });
+    },
+    setOnline: (online: AppState["online"]) => {
+      return set(() => {
+        return { online };
       });
     },
     setRole: (role: AppState["role"]) => {
