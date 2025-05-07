@@ -5,9 +5,9 @@ import React, { useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionOnce } from "react-firebase-hooks/firestore";
 import { useNavigate } from "react-router-dom";
-import { useRole, useStudentStore } from "../hooks";
-import { Student } from "../interfaces";
-import { app, db } from "../services";
+import { useRole, useStudentStore } from "../../hooks";
+import { Student } from "../../interfaces";
+import { app, db } from "../../services";
 
 interface AuthorizationProps {
   children: React.ReactNode;
