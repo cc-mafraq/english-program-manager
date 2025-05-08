@@ -85,8 +85,8 @@ export const FilterDrawer = <T,>({
                     ? valueMappings[val as string]
                     : val;
                 const checked = includes(
-                  find(filter, (fieldFilter) => {
-                    return fieldFilter.fieldPath === field.path;
+                  find(filter, (fieldFilter: FilterValue<T>) => {
+                    return fieldFilter.fieldPath === field.path && fieldFilter.fieldFunction === field.fn;
                   })?.values,
                   value,
                 );

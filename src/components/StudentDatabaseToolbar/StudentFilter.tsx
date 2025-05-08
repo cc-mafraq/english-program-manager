@@ -1,4 +1,4 @@
-import { find, first, includes, isEmpty, range, some } from "lodash";
+import { filter as _filter, find, first, includes, isEmpty, range, some } from "lodash";
 import React, { useCallback, useMemo } from "react";
 import { useAppStore, useStudentStore } from "../../hooks";
 import {
@@ -60,10 +60,18 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
     [sessionsWithResults, students],
   );
 
-  const pendingAcademicRecordFn = useCallback((student: Student) => {
+  const isEnrolled = useCallback((student: Student) => {
     return some(student.academicRecords, (ar) => {
       return ar.overallResult === undefined;
     });
+  }, []);
+
+  const isDualEnrolled = useCallback((student: Student) => {
+    return (
+      _filter(student.academicRecords, (ar) => {
+        return ar.overallResult === undefined;
+      }).length > 1
+    );
   }, []);
 
   const whatsAppGroupFn = useCallback((student: Student) => {
@@ -127,8 +135,15 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
       },
       {
         condition: isAdminOrFaculty,
-        fn: pendingAcademicRecordFn,
-        name: "Pending Academic Record",
+        fn: isEnrolled,
+        name: "Enrolled",
+        path: "academicRecords",
+        values: ["Yes", "No"],
+      },
+      {
+        condition: isAdminOrFaculty,
+        fn: isDualEnrolled,
+        name: "Enrolled in 2+ Classes",
         path: "academicRecords",
         values: ["Yes", "No"],
       },
@@ -183,7 +198,8 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
     pendingPlacementFn,
     noAnswerCSPlacementFn,
     isAdminOrFaculty,
-    pendingAcademicRecordFn,
+    isEnrolled,
+    isDualEnrolled,
     students,
     placementExamFileFn,
     whatsAppGroupFn,
