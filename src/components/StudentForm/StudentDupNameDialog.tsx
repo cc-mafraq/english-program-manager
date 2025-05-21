@@ -68,7 +68,3 @@ export const StudentDupNameDialog: React.FC<StudentDupNameDialogProps> = ({
     </Dialog>
   );
 };
-
-StudentDupNameDialog.defaultProps = {
-  matchedStudentId: undefined,
-};

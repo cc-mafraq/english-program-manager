@@ -102,8 +102,3 @@ export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
     </AppBar>
   );
 };
-
-ClassListsToolbar.defaultProps = {
-  selectedClass: undefined,
-  selectedSession: undefined,
-};

@@ -89,11 +89,3 @@ export const StudentCardImage: React.FC<StudentCardImageProps> = ({
     </Box>
   );
 };
-
-StudentCardImage.defaultProps = {
-  imageContainerProps: undefined,
-  loadingIconSize: undefined,
-  noBorder: undefined,
-  noButtons: undefined,
-  noMinWidth: undefined,
-};

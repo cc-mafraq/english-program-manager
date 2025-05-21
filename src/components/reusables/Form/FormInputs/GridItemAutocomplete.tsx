@@ -70,10 +70,3 @@ export const GridItemAutocomplete = (
     </Grid>
   );
 };
-
-GridItemAutocomplete.defaultProps = {
-  defaultValue: undefined,
-  gridProps: undefined,
-  name: undefined,
-  textFieldProps: undefined,
-};

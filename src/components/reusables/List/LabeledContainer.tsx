@@ -33,7 +33,7 @@ const defaultLabelProps: TypographyProps = {
 };
 
 export const LabeledContainer: React.FC<LabeledContainerProps> = ({
-  condition,
+  condition = true,
   childContainerProps,
   labelProps,
   label,
@@ -60,13 +60,4 @@ export const LabeledContainer: React.FC<LabeledContainerProps> = ({
   ) : (
     <></>
   );
-};
-
-LabeledContainer.defaultProps = {
-  childContainerProps: defaultChildContainerProps,
-  children: undefined,
-  condition: true,
-  labelProps: defaultLabelProps,
-  parentContainerProps: defaultParentContainerProps,
-  showWhenEmpty: false,
 };

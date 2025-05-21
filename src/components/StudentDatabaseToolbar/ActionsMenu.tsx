@@ -44,11 +44,3 @@ export const ActionsMenu: React.FC<ActionsMenuProps> = ({
     </Grow>
   );
 };
-
-ActionsMenu.defaultProps = {
-  addButtonCondition: undefined,
-  addButtonTooltip: undefined,
-  handleDialogOpen: undefined,
-  otherActions: undefined,
-  tooltipObjectName: undefined,
-};

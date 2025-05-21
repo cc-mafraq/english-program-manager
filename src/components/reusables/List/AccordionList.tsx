@@ -68,8 +68,3 @@ export const AccordionList = <T,>({
     </>
   );
 };
-
-AccordionList.defaultProps = {
-  handleEditClick: undefined,
-  width: undefined,
-};

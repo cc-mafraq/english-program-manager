@@ -37,7 +37,3 @@ export const FormCorrespondence = <T extends object>({ selectedData, disabled }:
     </>
   );
 };
-
-FormCorrespondence.defaultProps = {
-  disabled: undefined,
-};

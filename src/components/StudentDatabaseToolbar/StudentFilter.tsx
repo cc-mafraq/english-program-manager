@@ -219,9 +219,3 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
     />
   );
 };
-
-StudentFilter.defaultProps = {
-  anchorEl: null,
-  handleClose: undefined,
-  tooltipObjectName: undefined,
-};

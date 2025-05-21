@@ -102,12 +102,3 @@ export const ClassAndSessionSelect: React.FC<ClassAndSessionSelectProps> = ({
     </>
   );
 };
-
-ClassAndSessionSelect.defaultProps = {
-  classSelectSxProps: undefined,
-  includeAllOption: undefined,
-  noCSWL: undefined,
-  selectedClass: undefined,
-  selectedSession: undefined,
-  sessionSelectSxProps: undefined,
-};

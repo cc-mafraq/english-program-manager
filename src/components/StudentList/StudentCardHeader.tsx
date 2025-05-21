@@ -119,8 +119,3 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({
     </>
   );
 };
-
-StudentCardHeader.defaultProps = {
-  handleEditStudentClick: undefined,
-  otherButtons: undefined,
-};

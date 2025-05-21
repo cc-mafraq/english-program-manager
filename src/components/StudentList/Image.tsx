@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unused-prop-types */
 import { Box, BoxProps, CardMedia, Grid, GridProps, SxProps, useTheme } from "@mui/material";
-import { get, isEmpty, merge, omit } from "lodash";
+import { get, isEmpty, omit } from "lodash";
 import React, { useCallback, useState } from "react";
 import ReactLoading from "react-loading";
 import { AddImageButton } from ".";
@@ -39,12 +39,12 @@ const ImageBody: React.FC<ImageBodyProps> = ({
   loadingContainerProps,
   loadingIconSize,
   innerContainerProps,
-  scale,
+  scale = 1,
   student,
   imagePath,
   folderName,
   noButton,
-  lightColor,
+  lightColor = "default",
   isForm,
   img,
   loading,
@@ -156,22 +156,3 @@ export const Image: React.FC<ImageProps> = (props) => {
     </Box>
   );
 };
-
-const defaultProps: Partial<ImageProps> = {
-  gridProps: undefined,
-  imageStyleProps: undefined,
-  innerContainerProps: undefined,
-  isForm: false,
-  lightColor: "default",
-  loadingContainerProps: undefined,
-  loadingIconSize: undefined,
-  noButton: false,
-  outerContainerProps: undefined,
-  scale: 1,
-};
-
-Image.defaultProps = defaultProps;
-
-ImageBody.defaultProps = merge(defaultProps, {
-  img: undefined,
-});

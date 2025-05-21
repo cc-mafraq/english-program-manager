@@ -76,10 +76,3 @@ export const VirtualizedList = <T,>({
     <></>
   );
 };
-
-VirtualizedList.defaultProps = {
-  menuRef: undefined,
-  overscan: undefined,
-  scrollToIndex: undefined,
-  setScrollToIndex: undefined,
-};

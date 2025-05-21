@@ -56,8 +56,3 @@ export const FormErrorDialog: React.FC<FormErrorDialogProps> = ({
     </Dialog>
   );
 };
-
-FormErrorDialog.defaultProps = {
-  dialogProps: undefined,
-  paperStyleProps: undefined,
-};

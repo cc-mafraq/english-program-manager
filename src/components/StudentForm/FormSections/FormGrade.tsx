@@ -91,15 +91,3 @@ export const FormGrade: React.FC<FormGradeProps> = ({
     </>
   );
 };
-
-FormGrade.defaultProps = {
-  directGradePath: undefined,
-  includeWDOption: undefined,
-  noNotes: undefined,
-  notesComponent: undefined,
-  notesLabel: undefined,
-  notesPath: undefined,
-  onPercentageChange: undefined,
-  percentageComponent: undefined,
-  textProps: undefined,
-};

@@ -75,7 +75,3 @@ export const ProgressBox = ({
     </LabeledText>
   );
 };
-
-ProgressBox.defaultProps = {
-  sessionResults: [],
-};

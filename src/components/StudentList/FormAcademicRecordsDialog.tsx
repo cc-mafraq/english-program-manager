@@ -90,8 +90,3 @@ export const FormAcademicRecordsDialog: React.FC<FormAcademicRecordsDialogProps>
     </FormDialog>
   );
 };
-
-FormAcademicRecordsDialog.defaultProps = {
-  formTitle: undefined,
-  shouldSetStudents: undefined,
-};

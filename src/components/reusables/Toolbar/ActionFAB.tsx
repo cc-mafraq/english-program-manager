@@ -24,10 +24,3 @@ export const ActionFAB: React.FC<ActionFABProps> = ({ children, tooltipTitle, on
     </Tooltip>
   );
 };
-
-ActionFAB.defaultProps = {
-  children: undefined,
-  fabProps: undefined,
-  fabStyle: undefined,
-  onClick: undefined,
-};

@@ -36,8 +36,3 @@ export const ClassList: React.FC<ClassListProps> = ({
     </VirtualizedList>
   );
 };
-
-ClassList.defaultProps = {
-  selectedClass: undefined,
-  selectedSession: undefined,
-};

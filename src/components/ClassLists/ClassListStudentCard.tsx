@@ -229,9 +229,3 @@ export const ClassListStudentCard: React.FC<ClassListStudentCardProps> = (props)
     </>
   );
 };
-
-ClassListStudentCard.defaultProps = {
-  data: undefined,
-  selectedClass: undefined,
-  selectedSession: undefined,
-};

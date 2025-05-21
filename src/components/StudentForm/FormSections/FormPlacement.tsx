@@ -36,7 +36,3 @@ export const FormPlacement = <T extends FieldValues>() => {
     </>
   );
 };
-
-FormPlacement.defaultProps = {
-  standAlone: false,
-};
