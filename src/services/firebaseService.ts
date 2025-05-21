@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { enableIndexedDbPersistence, getFirestore } from "firebase/firestore";
+import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
@@ -31,9 +31,10 @@ export const isProd =
 // Initialize Firebase
 // export const app = initializeApp(firebaseProdConfig);
 export const app = initializeApp(isProd ? firebaseProdConfig : firebaseDevConfig);
-export const db = getFirestore(app);
+export const db = initializeFirestore(app, {
+  localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
+});
 export const storage = getStorage(app);
-enableIndexedDbPersistence(db);
 
 export const studentImageFolder = "studentPics/";
 export const covidVaccineImageFolder = "vaccineCertificates/";
