@@ -396,3 +396,48 @@ export const getStudentIDByPhoneNumber = (students: Student[], phoneNumber: numb
   });
   return matchedStudent?.epId;
 };
+
+const cleanArabicName = (arabicName: string): string => {
+  // remove harakat
+  let preprocessedName = arabicName.replaceAll(/[ًٌٍَُِْ]/g, "");
+  // remove extra spaces
+  preprocessedName = preprocessedName.replaceAll(/\s+/g, " ");
+  // add _ between prefixes and the rest of the name if there is a space
+  preprocessedName = preprocessedName.replaceAll(/(^|\s+)(عبد|ابو|أبو|بني)\s+(\S+)/g, "$1$2_$3");
+  // add _ between suffixes and the rest of the name if there is a space
+  preprocessedName = preprocessedName.replaceAll(/(\S+)\s+(الدين|خير)(\s+|$)/g, "$1_$2$3");
+  // replace ه with ة at the end of a name
+  preprocessedName = preprocessedName.replaceAll(/(\S+)ه(\s+)/g, "$1ة$2");
+  preprocessedName = preprocessedName.replaceAll(/[أإآ]/g, "ا");
+  return preprocessedName.trim();
+};
+
+export interface ArabicName {
+  familyName?: string;
+  fathersName?: string;
+  firstName: string;
+  grandfathersName?: string;
+}
+
+export const parseArabicName = (arabicName: string): ArabicName | undefined => {
+  if (arabicName === "N/A" || isEmpty(arabicName)) return undefined;
+  const cleanedArabicName = cleanArabicName(arabicName);
+  const nameParts = map(cleanedArabicName.split(/\s+/), (namePart) => {
+    return namePart.replaceAll("_", " ");
+  });
+  const parsedName: ArabicName = {
+    firstName: nameParts[0],
+  };
+  if (nameParts.length === 2) {
+    if (nameParts[1].startsWith("ال")) {
+      [, parsedName.familyName] = nameParts;
+    } else {
+      [, parsedName.fathersName] = nameParts;
+    }
+  } else if (nameParts.length === 3) {
+    [, parsedName.fathersName, parsedName.familyName] = nameParts;
+  } else {
+    [, parsedName.fathersName, parsedName.grandfathersName, parsedName.familyName] = nameParts;
+  }
+  return parsedName;
+};
