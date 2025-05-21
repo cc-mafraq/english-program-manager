@@ -129,6 +129,11 @@ export const StatisticsPage = () => {
               label="New Students Next Session"
               number={statistics.totalNewNextSession}
             />
+            <LabeledNumberBox
+              color={colors[6]}
+              label="Avg. Age Active Students"
+              number={Number(round(statistics.activeAverageAge, 1).toFixed(1))}
+            />
           </Box>
           <Typography variant="h5" {...textProps} marginLeft="3%">
             Nationalities

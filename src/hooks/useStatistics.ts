@@ -38,6 +38,7 @@ import {
 import { useStudentStore, useWaitingListStore } from "./useStores";
 
 interface Statistics {
+  activeAverageAge: number;
   activeGenderCounts: { [key in Student["gender"]]: number };
   activeInitialYearCounts: { [key in Student["initialSession"]]: number };
   activeLevelCounts: { [key in Level]: number };
@@ -121,6 +122,7 @@ export const useStatistics = (): Statistics => {
   const sessions = getSessionsWithoutSummer(students);
 
   const statistics: Statistics = {
+    activeAverageAge: 0,
     activeGenderCounts: countBy(activeStudents, "gender") as { [key in Student["gender"]]: number },
     activeInitialYearCounts: countBy(
       map(activeStudents, (student) => {
@@ -209,12 +211,17 @@ export const useStatistics = (): Statistics => {
     },
   };
 
+  let numActiveStudentsWithAge = 0;
   let numStudentsWithAge = 0;
   forEach(students, (student) => {
     if (student.age) {
       const ageNum = Number(student.age);
       if (!Number.isNaN(ageNum)) {
         statistics.averageAge += ageNum;
+        if (isActive(student)) {
+          statistics.activeAverageAge += ageNum;
+          numActiveStudentsWithAge += 1;
+        }
         numStudentsWithAge += 1;
       }
     }
@@ -233,6 +240,7 @@ export const useStatistics = (): Statistics => {
     statistics.totalEnrollment += activeAcademicRecords.length;
   });
   statistics.averageAge /= numStudentsWithAge;
+  statistics.activeAverageAge /= numActiveStudentsWithAge;
 
   statistics.totalRegistered = students.length;
   return statistics;
