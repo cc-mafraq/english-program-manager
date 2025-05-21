@@ -40,6 +40,7 @@ module.exports = {
     "arrow-parens": "off",
     "@typescript-eslint/semi": "off",
     "react/jsx-closing-bracket-location": "off",
+    "react/require-default-props": "off",
     "@typescript-eslint/indent": "off", // Conflicts with Prettier settings
     // Make comma-dangle error bc it needs to be in version control
     // or else it is confusing. See: https://eslint.org/docs/rules/comma-dangle

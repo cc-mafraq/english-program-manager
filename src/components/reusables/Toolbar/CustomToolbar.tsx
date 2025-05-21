@@ -130,11 +130,3 @@ export const CustomToolbar = <T,>({
     </>
   );
 };
-
-CustomToolbar.defaultProps = {
-  addButtonCondition: undefined,
-  addButtonTooltip: undefined,
-  handleDialogOpen: undefined,
-  otherActions: undefined,
-  tooltipObjectName: undefined,
-};

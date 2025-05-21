@@ -100,12 +100,3 @@ export const GridItemRadioGroup = ({
     </Grid>
   );
 };
-
-GridItemRadioGroup.defaultProps = {
-  defaultValue: undefined,
-  gridProps: undefined,
-  label: undefined,
-  name: undefined,
-  radioProps: undefined,
-  value: undefined,
-};

@@ -65,7 +65,3 @@ export const MenuBar: React.FC<MenuBarProps> = ({ pageName, innerRef }) => {
     </AppBar>
   );
 };
-
-MenuBar.defaultProps = {
-  innerRef: undefined,
-};

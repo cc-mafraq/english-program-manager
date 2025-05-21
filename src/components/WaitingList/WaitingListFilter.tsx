@@ -170,9 +170,3 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({
     />
   );
 };
-
-WaitingListFilter.defaultProps = {
-  anchorEl: null,
-  handleClose: undefined,
-  tooltipObjectName: undefined,
-};

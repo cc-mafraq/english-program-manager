@@ -23,7 +23,7 @@ const defaultTextProps: TypographyProps = {
 };
 
 export const LabeledText: React.FC<LabeledTextProps> = ({
-  condition,
+  condition = true,
   containerProps,
   labelProps,
   label,
@@ -62,13 +62,4 @@ export const LabeledText: React.FC<LabeledTextProps> = ({
   ) : (
     <></>
   );
-};
-
-LabeledText.defaultProps = {
-  children: undefined,
-  condition: true,
-  containerProps: undefined,
-  labelProps: defaultLabelProps,
-  showWhenEmpty: false,
-  textProps: defaultTextProps,
 };

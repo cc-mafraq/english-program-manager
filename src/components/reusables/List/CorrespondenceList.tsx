@@ -153,8 +153,3 @@ export const CorrespondenceList = <T extends object>({
     </Box>
   );
 };
-
-CorrespondenceList.defaultProps = {
-  correspondencePath: undefined,
-  itemName: undefined,
-};

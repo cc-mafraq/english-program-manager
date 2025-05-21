@@ -79,10 +79,6 @@ const PlacementAccordionSummary: React.FC<PlacementAccordionSummaryProps> = ({
   );
 };
 
-PlacementAccordionSummary.defaultProps = {
-  handleEditClick: undefined,
-};
-
 interface PlacementAccordionDetailsProps {
   data: Placement;
 }

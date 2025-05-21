@@ -43,10 +43,3 @@ export const GridItemTextField = ({ label, gridProps, textFieldProps, value, nam
     </Grid>
   );
 };
-
-GridItemTextField.defaultProps = {
-  gridProps: undefined,
-  name: undefined,
-  textFieldProps: undefined,
-  value: "",
-};

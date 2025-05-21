@@ -109,9 +109,3 @@ export const FilterDrawer = <T,>({
     </Drawer>
   );
 };
-
-FilterDrawer.defaultProps = {
-  anchorEl: null,
-  handleClose: undefined,
-  tooltipObjectName: undefined,
-};

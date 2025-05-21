@@ -134,9 +134,3 @@ export const Searchbar: React.FC<SearchbarProps> = ({
     </Box>
   );
 };
-
-Searchbar.defaultProps = {
-  noExpand: false,
-  searchString: undefined,
-  width: undefined,
-};

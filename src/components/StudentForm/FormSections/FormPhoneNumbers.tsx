@@ -54,7 +54,3 @@ export const FormPhoneNumbers = <T extends object>({
     </>
   );
 };
-
-FormPhoneNumbers.defaultProps = {
-  noWhatsapp: false,
-};

@@ -185,7 +185,3 @@ export const FormAcademicRecordsItem: React.FC<FormItem & { title?: string }> = 
     </>
   );
 };
-
-FormAcademicRecordsItem.defaultProps = {
-  title: undefined,
-};
