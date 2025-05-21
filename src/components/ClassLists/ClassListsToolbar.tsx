@@ -32,8 +32,8 @@ interface ClassListsToolbarProps {
 
 export const ClassListsToolbar: React.FC<ClassListsToolbarProps> = ({
   filteredStudents,
-  selectedSession = undefined,
-  selectedClass = undefined,
+  selectedSession,
+  selectedClass,
   showWDStudents,
   handleSessionChange,
   handleClassChange,
