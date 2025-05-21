@@ -64,7 +64,7 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({
     const placementVals = ["RESCHED", "NO RESPONSE", "NS", "NO SHOW"];
     const dateMatch = upperVal?.match(/\d+\W\d+\W\d+/);
     if (dateMatch) {
-      return moment(first(dateMatch)).format(MOMENT_FORMAT);
+      return moment(first(dateMatch), ["M/D/YY", "M-D-YY"]).format(MOMENT_FORMAT);
     }
     const valueMatches = filter(placementVals, (placementVal) => {
       return !!upperVal?.includes(placementVal);
@@ -83,7 +83,7 @@ export const WaitingListFilter: React.FC<WaitingListFilterProps> = ({
         orderBy(
           map(waitingList, placementExamFn),
           (value) => {
-            return moment(value).format("YYYYMMDD");
+            return moment(value, MOMENT_FORMAT).format("YYYYMMDD");
           },
           ["desc"],
         ),

@@ -104,7 +104,10 @@ export const getWaitingListTimeStats = (
       return (
         includes(wle.placementExam, "NS") ||
         (includes(wle.placementExam, "NO RESPONSE") &&
-          moment(wle.transferDbDate).diff(wle.entryDate, "months") > 24)
+          moment(wle.transferDbDate, ["M/D/YY", "M/D/YYYY", "M-D-YY", "M-D-YYYY"]).diff(
+            moment(wle.entryDate, ["M/D/YY", "M/D/YYYY", "M-D-YY", "M-D-YYYY"]),
+            "months",
+          ) > 24)
       );
     }).length / notWaitingLength;
 
