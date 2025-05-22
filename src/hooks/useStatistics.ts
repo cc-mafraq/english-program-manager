@@ -38,6 +38,7 @@ import {
 import { useStudentStore, useWaitingListStore } from "./useStores";
 
 interface Statistics {
+  activeAgeCounts: { [key in Student["age"]]: number };
   activeGenderCounts: { [key in Student["gender"]]: number };
   activeInitialYearCounts: { [key in Student["initialSession"]]: number };
   activeLevelCounts: { [key in Level]: number };
@@ -45,6 +46,7 @@ interface Statistics {
   activeSessionsAttendedCounts: Dictionary<number>;
   activeStatusCounts: { [key in Status]: number };
   activeStatusDetailsCounts: { [key in StatusDetails]: number };
+  ageCounts: { [key in Student["age"]]: number };
   averageAge: number;
   covidStatusCounts: { [key in CovidStatus]: number };
   droppedOutReasonCounts: { [key in DroppedOutReason]: number };
@@ -121,6 +123,7 @@ export const useStatistics = (): Statistics => {
   const sessions = getSessionsWithoutSummer(students);
 
   const statistics: Statistics = {
+    activeAgeCounts: countBy(activeStudents, "age") as { [key in Student["age"]]: number },
     activeGenderCounts: countBy(activeStudents, "gender") as { [key in Student["gender"]]: number },
     activeInitialYearCounts: countBy(
       map(activeStudents, (student) => {
@@ -144,6 +147,7 @@ export const useStatistics = (): Statistics => {
         return getStatusDetails({ sessions, student, students })[0];
       }),
     ) as { [key in StatusDetails]: number },
+    ageCounts: countBy(students, "age") as { [key in Student["age"]]: number },
     averageAge: 0,
     covidStatusCounts: countBy(students, "covidVaccine.status") as { [key in CovidStatus]: number },
     droppedOutReasonCounts: omit(countBy(students, "status.droppedOutReason"), "undefined") as {
