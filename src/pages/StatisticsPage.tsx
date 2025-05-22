@@ -19,10 +19,8 @@ import {
   get,
   includes,
   isEmpty,
-  isNaN,
   keys,
   map,
-  nth,
   omit,
   range,
   rangeRight,
@@ -318,22 +316,8 @@ export const StatisticsPage = () => {
               />
             </Box>
             <Box>
-              <Typography sx={textProps}>
-                Average:{" "}
-                {(
-                  reduce(
-                    keys(statistics.activeAgeCounts),
-                    (ageSum, age, i) => {
-                      const ageNum = Number(age);
-                      if (!isNaN(ageNum)) {
-                        return ageSum + ageNum * (nth(values(statistics.activeAgeCounts), i) ?? 0);
-                      }
-                      return ageSum;
-                    },
-                    0,
-                  ) / sum(values(omit(statistics.activeAgeCounts, "Unknown")))
-                ).toFixed(1)}
-              </Typography>
+              <Typography sx={textProps}>Average: {statistics.activeAverageAge.toFixed(1)}</Typography>
+              <Typography sx={textProps}>Median: {statistics.activeMedianAge}</Typography>
             </Box>
             <Box height="40vh" maxHeight="500px" width="40vw">
               <Bar
@@ -380,22 +364,8 @@ export const StatisticsPage = () => {
               />
             </Box>
             <Box>
-              <Typography sx={textProps}>
-                Average:{" "}
-                {(
-                  reduce(
-                    keys(statistics.ageCounts),
-                    (ageSum, age, i) => {
-                      const ageNum = Number(age);
-                      if (!isNaN(ageNum)) {
-                        return ageSum + ageNum * (nth(values(statistics.ageCounts), i) ?? 0);
-                      }
-                      return ageSum;
-                    },
-                    0,
-                  ) / sum(values(omit(statistics.ageCounts, "Unknown")))
-                ).toFixed(1)}
-              </Typography>
+              <Typography sx={textProps}>Average: {statistics.averageAge.toFixed(1)}</Typography>
+              <Typography sx={textProps}>Median: {statistics.medianAge}</Typography>
             </Box>
           </Box>
           <Typography variant="h5" {...textProps} marginLeft="3%">

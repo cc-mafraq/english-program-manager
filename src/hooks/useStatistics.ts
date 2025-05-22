@@ -5,13 +5,16 @@ import {
   flatMap,
   forEach,
   includes,
+  isNumber,
   join,
   last,
   map,
+  mean,
   omit,
   reduce,
   slice,
 } from "lodash";
+import { median } from "mathjs";
 import { useCallback, useMemo } from "react";
 import {
   AcademicRecord,
@@ -39,9 +42,11 @@ import { useStudentStore, useWaitingListStore } from "./useStores";
 
 interface Statistics {
   activeAgeCounts: { [key in Student["age"]]: number };
+  activeAverageAge: number;
   activeGenderCounts: { [key in Student["gender"]]: number };
   activeInitialYearCounts: { [key in Student["initialSession"]]: number };
   activeLevelCounts: { [key in Level]: number };
+  activeMedianAge: number;
   activeNationalityCounts: { [key in Nationality]: number };
   activeSessionsAttendedCounts: Dictionary<number>;
   activeStatusCounts: { [key in Status]: number };
@@ -53,6 +58,7 @@ interface Statistics {
   fullVaccineNationalityCounts: { [key in Nationality]: number };
   genderCounts: { [key in Student["gender"]]: number };
   levelCounts: { [key in Level]: number };
+  medianAge: number;
   nationalityCounts: { [key in Nationality]: number };
   overallResultCounts: { [key in FinalResult]: number };
   overallResultCountsByLevel: {
@@ -124,6 +130,7 @@ export const useStatistics = (): Statistics => {
 
   const statistics: Statistics = {
     activeAgeCounts: countBy(activeStudents, "age") as { [key in Student["age"]]: number },
+    activeAverageAge: mean(filter(map(activeStudents, "age"), isNumber)),
     activeGenderCounts: countBy(activeStudents, "gender") as { [key in Student["gender"]]: number },
     activeInitialYearCounts: countBy(
       map(activeStudents, (student) => {
@@ -135,6 +142,7 @@ export const useStatistics = (): Statistics => {
     activeLevelCounts: getLevelCounts(
       countBy(activeStudents, "currentLevel") as { [key in GenderedLevel]: number },
     ),
+    activeMedianAge: activeStudents.length ? median(filter(map(activeStudents, "age"), isNumber)) : 0,
     activeNationalityCounts: countBy(activeStudents, "nationality") as { [key in Nationality]: number },
     activeSessionsAttendedCounts: countBy(
       map(activeStudents, (student) => {
@@ -148,7 +156,7 @@ export const useStatistics = (): Statistics => {
       }),
     ) as { [key in StatusDetails]: number },
     ageCounts: countBy(students, "age") as { [key in Student["age"]]: number },
-    averageAge: 0,
+    averageAge: mean(filter(map(students, "age"), isNumber)),
     covidStatusCounts: countBy(students, "covidVaccine.status") as { [key in CovidStatus]: number },
     droppedOutReasonCounts: omit(countBy(students, "status.droppedOutReason"), "undefined") as {
       [key in DroppedOutReason]: number;
@@ -158,6 +166,7 @@ export const useStatistics = (): Statistics => {
     },
     genderCounts: countBy(students, "gender") as { [key in Student["gender"]]: number },
     levelCounts: getLevelCounts(countBy(students, "currentLevel") as { [key in GenderedLevel]: number }),
+    medianAge: students.length ? median(filter(map(students, "age"), isNumber)) : 0,
     nationalityCounts: countBy(students, "nationality") as { [key in Nationality]: number },
     overallResultCounts: countBy(allAcademicRecords, "overallResult") as {
       [key in FinalResult]: number;
@@ -213,15 +222,7 @@ export const useStatistics = (): Statistics => {
     },
   };
 
-  let numStudentsWithAge = 0;
   forEach(students, (student) => {
-    if (student.age) {
-      const ageNum = Number(student.age);
-      if (!Number.isNaN(ageNum)) {
-        statistics.averageAge += ageNum;
-        numStudentsWithAge += 1;
-      }
-    }
     if (student.status.inviteTag) statistics.totalEligible += 1;
     if (student.work.isEnglishTeacher) statistics.totalEnglishTeachers += 1;
     if (student.literacy.illiterateAr) statistics.totalIlliterateArabic += 1;
@@ -236,7 +237,6 @@ export const useStatistics = (): Statistics => {
     });
     statistics.totalEnrollment += activeAcademicRecords.length;
   });
-  statistics.averageAge /= numStudentsWithAge;
 
   statistics.totalRegistered = students.length;
   return statistics;
