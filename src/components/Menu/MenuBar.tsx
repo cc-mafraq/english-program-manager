@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { MenuDrawer } from "..";
 import { ColorModeContext } from "../../contexts";
 import { saveLocal, useColors } from "../../hooks";
-import { logout } from "../../services";
+import { isProd, logout } from "../../services";
 
 interface MenuBarProps {
   innerRef?: RefObject<HTMLDivElement>;
@@ -39,7 +39,7 @@ export const MenuBar: React.FC<MenuBarProps> = ({ pageName, innerRef }) => {
           textAlign="center"
           variant="h6"
         >
-          {pageName}
+          {`${pageName}${!isProd ? " - Dev" : ""}`}
         </Typography>
         <Box>
           {/* https://mui.com/customization/dark-mode/ */}
