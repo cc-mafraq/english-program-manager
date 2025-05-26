@@ -267,6 +267,45 @@ export const StatisticsPage = () => {
             </Box>
           </Box>
           <Typography variant="h5" {...textProps} marginLeft="3%">
+            Gender
+          </Typography>
+          <Box display="flex" flexDirection="row">
+            <Box {...pieChartSizeProps}>
+              <Pie
+                data={{
+                  datasets: [
+                    {
+                      backgroundColor: colors,
+                      data: [statistics.activeGenderCounts.M, statistics.activeGenderCounts.F],
+                    },
+                  ],
+                  labels: ["M", "F"],
+                }}
+                options={{
+                  maintainAspectRatio: false,
+                  plugins: chartPlugins("Active Students by Gender"),
+                }}
+              />
+            </Box>
+            <Box {...pieChartSizeProps}>
+              <Pie
+                data={{
+                  datasets: [
+                    {
+                      backgroundColor: colors,
+                      data: [statistics.genderCounts.M, statistics.genderCounts.F],
+                    },
+                  ],
+                  labels: ["M", "F"],
+                }}
+                options={{
+                  maintainAspectRatio: false,
+                  plugins: chartPlugins("All Students by Gender"),
+                }}
+              />
+            </Box>
+          </Box>
+          <Typography variant="h5" {...textProps} marginLeft="3%">
             Ages at Program Entry
           </Typography>
           <Box display="flex" flexDirection="row" marginLeft="3%">
@@ -319,7 +358,7 @@ export const StatisticsPage = () => {
               <Typography sx={textProps}>Average: {statistics.activeAverageAge.toFixed(1)}</Typography>
               <Typography sx={textProps}>Median: {statistics.activeMedianAge}</Typography>
             </Box>
-            <Box height="40vh" maxHeight="500px" width="40vw">
+            <Box height="40vh" marginLeft="5px" maxHeight="500px" width="40vw">
               <Bar
                 data={{
                   datasets: [
@@ -366,45 +405,6 @@ export const StatisticsPage = () => {
             <Box>
               <Typography sx={textProps}>Average: {statistics.averageAge.toFixed(1)}</Typography>
               <Typography sx={textProps}>Median: {statistics.medianAge}</Typography>
-            </Box>
-          </Box>
-          <Typography variant="h5" {...textProps} marginLeft="3%">
-            Gender
-          </Typography>
-          <Box display="flex" flexDirection="row">
-            <Box {...pieChartSizeProps}>
-              <Pie
-                data={{
-                  datasets: [
-                    {
-                      backgroundColor: colors,
-                      data: [statistics.activeGenderCounts.M, statistics.activeGenderCounts.F],
-                    },
-                  ],
-                  labels: ["M", "F"],
-                }}
-                options={{
-                  maintainAspectRatio: false,
-                  plugins: chartPlugins("Active Students by Gender"),
-                }}
-              />
-            </Box>
-            <Box {...pieChartSizeProps}>
-              <Pie
-                data={{
-                  datasets: [
-                    {
-                      backgroundColor: colors,
-                      data: [statistics.genderCounts.M, statistics.genderCounts.F],
-                    },
-                  ],
-                  labels: ["M", "F"],
-                }}
-                options={{
-                  maintainAspectRatio: false,
-                  plugins: chartPlugins("All Students by Gender"),
-                }}
-              />
             </Box>
           </Box>
           <Typography variant="h5" {...textProps} marginLeft="3%">
@@ -781,10 +781,9 @@ export const StatisticsPage = () => {
             <LabeledNumberBox
               color={colors[6]}
               containerProps={{ marginLeft: "10px" }}
-              label="Average Age at Program Entry"
-              number={Number(round(statistics.averageAge, 1).toFixed(1))}
+              label="Teachers"
+              number={statistics.totalTeachers}
             />
-            <LabeledNumberBox color={colors[6]} label="Teachers" number={statistics.totalTeachers} />
             <LabeledNumberBox
               color={colors[6]}
               label="English Teachers"
