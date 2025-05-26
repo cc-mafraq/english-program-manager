@@ -1,9 +1,10 @@
 import { Grid } from "@mui/material";
+import moment from "moment";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { useDateInitialState, useFormList, useStudentStore } from "../../../hooks";
 import { Student, withdrawReasons } from "../../../interfaces";
-import { SPACING } from "../../../services";
+import { MOMENT_FORMAT, SPACING } from "../../../services";
 import {
   FormLabel,
   FormList,
@@ -29,13 +30,13 @@ export const FormStatus: React.FC = () => {
   );
 
   const [withdrawDate, addWithdrawDate, removeWithdrawDate] = useFormList(
-    useDateInitialState("status.withdrawDate"),
+    useDateInitialState("status.withdrawDate", true),
     "status.withdrawDate",
     methods,
   );
 
   const [reactivatedDate, addReactivatedDate, removeReactivatedDate] = useFormList(
-    useDateInitialState("status.reactivatedDate"),
+    useDateInitialState("status.reactivatedDate", true),
     "status.reactivatedDate",
     methods,
   );
@@ -53,7 +54,11 @@ export const FormStatus: React.FC = () => {
           removeItem={removeWithdrawDate}
         >
           <FormDateItem>
-            <GridItemDatePicker gridProps={{ sm: 5, xs: 4.5 }} label="Withdraw Date" />
+            <GridItemDatePicker
+              gridProps={{ sm: 5, xs: 4.5 }}
+              label="Withdraw Date"
+              value={moment().format(MOMENT_FORMAT)}
+            />
           </FormDateItem>
         </FormList>
       </GridContainer>
@@ -71,6 +76,7 @@ export const FormStatus: React.FC = () => {
               gridProps={{ sm: 5, xs: 4.5 }}
               label="Reactivated Date"
               name="status.reactivatedDate"
+              value={moment().format(MOMENT_FORMAT)}
             />
           </FormDateItem>
         </FormList>
