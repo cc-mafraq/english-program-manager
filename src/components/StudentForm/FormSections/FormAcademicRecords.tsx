@@ -1,7 +1,7 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { useFormList, useStudentStore } from "../../../hooks";
-import { AcademicRecord } from "../../../interfaces";
+import { Student } from "../../../interfaces";
 import { SPACING } from "../../../services";
 import { FormLabel, FormList, GridContainer } from "../../reusables";
 import { FormAcademicRecordsItem } from "./ListItems";
@@ -11,8 +11,8 @@ export const FormAcademicRecords: React.FC = () => {
     return state.selectedStudent;
   });
 
-  const methods = useFormContext<AcademicRecord>();
-  const [academicRecords, addAcademicRecord, removeAcademicRecord] = useFormList<AcademicRecord>(
+  const methods = useFormContext<Student>();
+  const [academicRecords, addAcademicRecord, removeAcademicRecord] = useFormList(
     selectedStudent && selectedStudent.academicRecords ? selectedStudent.academicRecords : [],
     "academicRecords",
     methods,
