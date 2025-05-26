@@ -18,7 +18,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import { AccordionList, EditFn, FormAcademicRecordsDialog, LabeledContainer, LabeledText, ProgressBox } from "..";
 import { useAppStore, useColors, useStudentStore } from "../../hooks";
 import { AcademicRecord, FinalResult, GenderedLevel, Grade, Student } from "../../interfaces";
-import { getAllSessionsWithRecord, getProgress, isElective } from "../../services";
+import { getAllSessionsWithRecord, getProgress, isElective, sortAcademicRecords } from "../../services";
 
 interface AcademicRecordsProps {
   data: Student;
@@ -269,7 +269,7 @@ export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student 
           </Box>
         )}
         <AccordionList
-          dataList={student.academicRecords ? reverse([...student.academicRecords]) : []}
+          dataList={student.academicRecords ? sortAcademicRecords([...student.academicRecords]) : []}
           DetailsComponent={AcademicRecordAccordionDetails}
           handleEditClick={handleEditClick}
           SummaryComponent={AcademicRecordAccordionSummary}

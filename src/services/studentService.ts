@@ -141,7 +141,7 @@ export const filterOutById = (students: Student[], id: Student["epId"]): Student
   });
 };
 
-export const sortBySession = (session: Student["initialSession"]) => {
+export const sortBySession = (session: Student["initialSession"]): string => {
   const sessionParts = session?.split(" ");
   return `${nth(sessionParts, 2)} ${replace(
     replace(replace(lowerCase(nth(sessionParts, 0)), "fa", "3"), "su", "2"),
@@ -280,6 +280,14 @@ export const generateId = (students: Student[]): number => {
 
 export const sortStudents = (students: Student[]) => {
   return orderBy(students, ["status.inviteTag", "name.english"], ["desc", "asc"]);
+};
+
+const sortAcademicRecordBySession = (academicRecord: AcademicRecord) => {
+  return sortBySession(academicRecord.session);
+};
+
+export const sortAcademicRecords = (academicRecords: AcademicRecord[]): AcademicRecord[] => {
+  return orderBy(academicRecords, [sortAcademicRecordBySession, "level"], ["desc", "asc"]);
 };
 
 export const getStudentOptions = (students: Student[]): string[] => {
