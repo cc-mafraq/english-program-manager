@@ -138,12 +138,8 @@ export const getElectiveFullName = (electiveName: string): string => {
     replace(
       replace(
         replace(
-          replace(
-            replace(replace(electiveName, "I&T", "IELTS & TOEFL"), /(Ac Rdg)|(Adv Rdg)|(AR)/, "Advanced Reading "),
-            /C(?=[0-9])/,
-            "Conversation ",
-          ),
-          /Conv(?=[0-9])/,
+          replace(replace(electiveName, "I&T", "IELTS & TOEFL"), /(Ac Rdg)|(Adv Rdg)|(AR)/, "Advanced Reading "),
+          /(C|Conv|CONV)\s?(?=[0-9])/,
           "Conversation ",
         ),
         "AW",
