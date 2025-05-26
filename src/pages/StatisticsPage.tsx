@@ -21,7 +21,10 @@ import {
   isEmpty,
   keys,
   map,
+  omit,
+  range,
   rangeRight,
+  reduce,
   round,
   sortBy,
   sum,
@@ -75,12 +78,15 @@ export const StatisticsPage = () => {
     blueGrey[100],
   ];
 
+  const dataLabelsColor = "#656565";
+
   const chartPlugins = (
     title: string,
     noLabels?: boolean,
   ): _DeepPartialObject<PluginOptionsByType<"pie" | "bar">> => {
     return {
       datalabels: {
+        color: dataLabelsColor,
         font: {
           weight: "bold",
         },
@@ -112,6 +118,14 @@ export const StatisticsPage = () => {
   const initialSessions = useMemo(() => {
     return getAllInitialSessions(students);
   }, [students]);
+
+  const countActiveAgeRange = (ageCount: number, currentAge: number) => {
+    return ageCount + (get(statistics.activeAgeCounts, currentAge) ?? 0);
+  };
+
+  const countAgeRange = (ageCount: number, currentAge: number) => {
+    return ageCount + (get(statistics.ageCounts, currentAge) ?? 0);
+  };
 
   return (
     <>
@@ -292,6 +306,108 @@ export const StatisticsPage = () => {
             </Box>
           </Box>
           <Typography variant="h5" {...textProps} marginLeft="3%">
+            Ages at Program Entry
+          </Typography>
+          <Box display="flex" flexDirection="row" marginLeft="3%">
+            <Box height="40vh" maxHeight="500px" width="40vw">
+              <Bar
+                data={{
+                  datasets: [
+                    {
+                      backgroundColor: colors,
+                      data: [
+                        reduce(range(12, 18), countActiveAgeRange, 0),
+                        reduce(range(18, 23), countActiveAgeRange, 0),
+                        reduce(range(23, 30), countActiveAgeRange, 0),
+                        reduce(range(30, 40), countActiveAgeRange, 0),
+                        reduce(range(40, 50), countActiveAgeRange, 0),
+                        reduce(range(50, 60), countActiveAgeRange, 0),
+                        reduce(range(60, 100), countActiveAgeRange, 0),
+                      ],
+                    },
+                  ],
+                  labels: ["under 18", "18-22", "23-29", "30-39", "40-49", "50-59", "60+"],
+                }}
+                options={{
+                  maintainAspectRatio: false,
+                  plugins: {
+                    datalabels: {
+                      color: dataLabelsColor,
+                      font: {
+                        weight: "bold",
+                      },
+                      formatter: (value: number) => {
+                        const percentage =
+                          (value / sum(values(omit(statistics.activeAgeCounts, "Unknown")))) * 100;
+                        return percentage > 0 ? `${percentage.toFixed(1)}%` : "";
+                      },
+                    },
+                    legend: {
+                      display: false,
+                    },
+                    title: {
+                      color: theme.palette.text.primary,
+                      display: true,
+                      text: "Active Students By Age at Program Entry",
+                    },
+                  },
+                }}
+              />
+            </Box>
+            <Box>
+              <Typography sx={textProps}>Average: {statistics.activeAverageAge.toFixed(1)}</Typography>
+              <Typography sx={textProps}>Median: {statistics.activeMedianAge}</Typography>
+            </Box>
+            <Box height="40vh" marginLeft="5px" maxHeight="500px" width="40vw">
+              <Bar
+                data={{
+                  datasets: [
+                    {
+                      backgroundColor: colors,
+                      data: [
+                        reduce(range(12, 18), countAgeRange, 0),
+                        reduce(range(18, 23), countAgeRange, 0),
+                        reduce(range(23, 30), countAgeRange, 0),
+                        reduce(range(30, 40), countAgeRange, 0),
+                        reduce(range(40, 50), countAgeRange, 0),
+                        reduce(range(50, 60), countAgeRange, 0),
+                        reduce(range(60, 100), countAgeRange, 0),
+                      ],
+                    },
+                  ],
+                  labels: ["under 18", "18-22", "23-29", "30-39", "40-49", "50-59", "60+"],
+                }}
+                options={{
+                  maintainAspectRatio: false,
+                  plugins: {
+                    datalabels: {
+                      color: dataLabelsColor,
+                      font: {
+                        weight: "bold",
+                      },
+                      formatter: (value: number) => {
+                        const percentage = (value / sum(values(omit(statistics.ageCounts, "Unknown")))) * 100;
+                        return percentage > 0 ? `${percentage.toFixed(1)}%` : "";
+                      },
+                    },
+                    legend: {
+                      display: false,
+                    },
+                    title: {
+                      color: theme.palette.text.primary,
+                      display: true,
+                      text: "All Students By Age at Program Entry",
+                    },
+                  },
+                }}
+              />
+            </Box>
+            <Box>
+              <Typography sx={textProps}>Average: {statistics.averageAge.toFixed(1)}</Typography>
+              <Typography sx={textProps}>Median: {statistics.medianAge}</Typography>
+            </Box>
+          </Box>
+          <Typography variant="h5" {...textProps} marginLeft="3%">
             Sessions Completed
           </Typography>
           <Box display="flex" flexDirection="row">
@@ -452,6 +568,7 @@ export const StatisticsPage = () => {
                   maintainAspectRatio: false,
                   plugins: {
                     datalabels: {
+                      color: dataLabelsColor,
                       font: {
                         weight: "bold",
                       },
@@ -529,6 +646,7 @@ export const StatisticsPage = () => {
                   maintainAspectRatio: false,
                   plugins: {
                     datalabels: {
+                      color: dataLabelsColor,
                       font: {
                         weight: "bold",
                       },
@@ -604,7 +722,7 @@ export const StatisticsPage = () => {
           </Typography>
           {map(statistics.placementRegistrationCounts, (placementRegistrationSessionCounts) => {
             return (
-              <>
+              <Box key={placementRegistrationSessionCounts.session}>
                 <Typography {...textProps} fontWeight="bold" marginLeft={INDENT}>
                   {placementRegistrationSessionCounts.session}
                 </Typography>
@@ -624,7 +742,7 @@ export const StatisticsPage = () => {
                     </Typography>
                   );
                 })}
-              </>
+              </Box>
             );
           })}
           <Box height="50vh" maxHeight="500px" width="60vw">
@@ -642,6 +760,7 @@ export const StatisticsPage = () => {
                 maintainAspectRatio: false,
                 plugins: {
                   datalabels: {
+                    color: dataLabelsColor,
                     font: {
                       weight: "bold",
                     },
@@ -662,10 +781,9 @@ export const StatisticsPage = () => {
             <LabeledNumberBox
               color={colors[6]}
               containerProps={{ marginLeft: "10px" }}
-              label="Average Age at Program Entry"
-              number={Number(round(statistics.averageAge, 1).toFixed(1))}
+              label="Teachers"
+              number={statistics.totalTeachers}
             />
-            <LabeledNumberBox color={colors[6]} label="Teachers" number={statistics.totalTeachers} />
             <LabeledNumberBox
               color={colors[6]}
               label="English Teachers"
