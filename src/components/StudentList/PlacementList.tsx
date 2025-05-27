@@ -33,13 +33,15 @@ interface PlacementProps {
   data: Student;
 }
 
-const FormPlacementMemo = React.memo(({ index }: FormItem) => {
-  return (
-    <Box paddingRight={SPACING * 2}>
-      <FormPlacementSessionItem index={index} />
-    </Box>
-  );
-});
+const FormPlacementMemo = React.memo(
+  ({ index, sessions }: FormItem & { sessions: Student["initialSession"][] }) => {
+    return (
+      <Box paddingRight={SPACING * 2}>
+        <FormPlacementSessionItem index={index} sessions={sessions} />
+      </Box>
+    );
+  },
+);
 FormPlacementMemo.displayName = "Placement Form";
 
 interface PlacementAccordionSummaryProps {
@@ -284,6 +286,7 @@ export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
         >
           <FormPlacementMemo
             index={selectedPlacement ? findIndex(student.placement, selectedPlacement) : undefined}
+            sessions={allSessions}
           />
         </FormDialog>
       </Box>

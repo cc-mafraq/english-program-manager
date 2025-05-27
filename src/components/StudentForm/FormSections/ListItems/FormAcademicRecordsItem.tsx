@@ -11,19 +11,13 @@ import {
   GridItemDatePicker,
   GridItemTextField,
 } from "../../..";
-import { useAppStore, useColors, useStudentStore } from "../../../../hooks";
-import { genderedLevels } from "../../../../interfaces";
-import { FormItem, SPACING, getAllSessionsWithRecord, isElective } from "../../../../services";
+import { useAppStore, useColors } from "../../../../hooks";
+import { genderedLevels, Student } from "../../../../interfaces";
+import { FormItem, isElective, SPACING } from "../../../../services";
 
-export const FormAcademicRecordsItem: React.FC<FormItem & { title?: string }> = ({
-  index,
-  removeItem,
-  name,
-  title,
-}) => {
-  const students = useStudentStore((state) => {
-    return state.students;
-  });
+export const FormAcademicRecordsItem: React.FC<
+  FormItem & { sessions: Student["initialSession"][]; title?: string }
+> = ({ index, removeItem, name, title, sessions }) => {
   const role = useAppStore((state) => {
     return state.role;
   });
@@ -95,7 +89,7 @@ export const FormAcademicRecordsItem: React.FC<FormItem & { title?: string }> = 
             gridProps={{ hidden: role !== "admin" }}
             label="Session"
             name={name ? `${name}.session` : "session"}
-            options={getAllSessionsWithRecord(students)}
+            options={sessions}
             textFieldProps={{ required: true }}
           />
           <GridItemAutocomplete

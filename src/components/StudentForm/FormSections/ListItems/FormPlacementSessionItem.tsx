@@ -1,10 +1,11 @@
 import { Close } from "@mui/icons-material";
 import { Box, Grid, IconButton, Tooltip } from "@mui/material";
 import moment from "moment";
-import React, { useMemo } from "react";
+import React from "react";
 import { FieldValues, useFormContext } from "react-hook-form";
 import { useColors, useDateInitialState, useFormList, useStudentStore } from "../../../../hooks";
-import { FormItem, MOMENT_FORMAT, SPACING, getAllSessionsWithPlacement } from "../../../../services";
+import { Student } from "../../../../interfaces";
+import { FormItem, MOMENT_FORMAT, SPACING } from "../../../../services";
 import {
   FormLabel,
   FormList,
@@ -17,10 +18,12 @@ import {
 import { FormDateItem } from "./FormDateItem";
 import { FormPlacementItem } from "./FormPlacementItem";
 
-export const FormPlacementSessionItem = <T extends FieldValues>({ index, removeItem, name }: FormItem) => {
-  const students = useStudentStore((state) => {
-    return state.students;
-  });
+export const FormPlacementSessionItem = <T extends FieldValues>({
+  index,
+  removeItem,
+  name,
+  sessions,
+}: FormItem & { sessions: Student["initialSession"][] }) => {
   const selectedStudent = useStudentStore((state) => {
     return state.selectedStudent;
   });
@@ -42,10 +45,6 @@ export const FormPlacementSessionItem = <T extends FieldValues>({ index, removeI
     name ? `${name}.placement` : "placement",
     methods,
   );
-
-  const sessions = useMemo(() => {
-    return getAllSessionsWithPlacement(students);
-  }, [students]);
 
   return (
     <Box>
