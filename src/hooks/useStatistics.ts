@@ -108,7 +108,9 @@ export const useStatistics = (): Statistics => {
   const waitingList = useWaitingListStore((state) => {
     return state.waitingList;
   });
-  const currentSession = getCurrentSession(students);
+  const currentSession = useMemo(() => {
+    return getCurrentSession(students);
+  }, [students]);
 
   const activeStudents = useMemo(() => {
     return filter(students, (s: Student) => {
@@ -126,7 +128,9 @@ export const useStatistics = (): Statistics => {
     });
   }, [students]);
 
-  const sessions = getSessionsWithoutSummer(students);
+  const sessions = useMemo(() => {
+    return getSessionsWithoutSummer(students);
+  }, [students]);
 
   const statistics: Statistics = {
     activeAgeCounts: countBy(activeStudents, "age") as { [key in Student["age"]]: number },
