@@ -127,8 +127,12 @@ export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
   const [open, setOpen] = useState(false);
   const [openPhotoContact, setOpenPhotoContact] = useState(false);
   const [selectedPlacement, setSelectedPlacement] = useState<Placement | null>(null);
-  const currentSession = getCurrentSession(students);
-  const allSessions = getAllSessionsWithPlacement(students);
+  const currentSession = useMemo(() => {
+    return getCurrentSession(students);
+  }, [students]);
+  const allSessions = useMemo(() => {
+    return getAllSessionsWithPlacement(students);
+  }, [students]);
 
   const handleAddButtonClick = useCallback(() => {
     setSelectedStudent(null);

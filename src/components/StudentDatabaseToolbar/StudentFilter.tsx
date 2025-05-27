@@ -41,8 +41,12 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
     return state.setFilter;
   });
 
-  const sessionsWithResults = getSessionsWithResults(students);
-  const currentSession = getCurrentSession(students);
+  const sessionsWithResults = useMemo(() => {
+    return getSessionsWithResults(students);
+  }, [students]);
+  const currentSession = useMemo(() => {
+    return getCurrentSession(students);
+  }, [students]);
   const isAdmin = role === "admin";
   const isAdminOrFaculty = isAdmin || role === "faculty";
 
