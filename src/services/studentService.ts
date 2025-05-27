@@ -19,7 +19,6 @@ import {
   omit,
   orderBy,
   replace,
-  reverse,
   set,
   some,
   sortBy,
@@ -155,19 +154,19 @@ const filterSession = (s: Student["initialSession"]) => {
 };
 
 export const getAllInitialSessions = (students: Student[]): string[] => {
-  return filter(reverse(sortBy(uniq(map(students, "initialSession")), sortBySession)), filterSession);
+  return filter(orderBy(uniq(map(students, "initialSession")), sortBySession, "desc"), filterSession);
 };
 
 export const getAllSessionsWithRecord = (students: Student[]): string[] => {
   return filter(
-    reverse(sortBy(uniq(map(flatten(map(students, "academicRecords")), "session")), sortBySession)),
+    orderBy(uniq(map(flatten(map(students, "academicRecords")), "session")), sortBySession, "desc"),
     filterSession,
   );
 };
 
 export const getAllSessionsWithPlacement = (students: Student[]): string[] => {
   return filter(
-    reverse(sortBy(uniq(map(flatten(map(students, "placement")), "session")), sortBySession)),
+    orderBy(uniq(map(flatten(map(students, "placement")), "session")), sortBySession, "desc"),
     filterSession,
   );
 };
@@ -293,17 +292,15 @@ export const getStudentById = (id: Student["epId"], students: Student[]): Studen
 };
 
 export const getSessionsWithResults = (students: Student[]) => {
-  const allSessions = getAllSessionsWithRecord(students);
-  return filter(allSessions, (session) => {
-    return some(
-      map(
-        filter(flatten(map(students, "academicRecords")), (ar) => {
-          return ar?.session === session;
-        }),
-        "overallResult",
-      ),
-    );
+  const sessionsWithResults: Student["initialSession"][] = [];
+  forEach(students, (student) => {
+    forEach(student.academicRecords, (ar) => {
+      if (!includes(sessionsWithResults, ar.session) && ar.overallResult) {
+        sessionsWithResults.push(ar.session);
+      }
+    });
   });
+  return orderBy(sessionsWithResults, sortBySession, "desc");
 };
 
 export const removeSummerSession = (session: Student["initialSession"]) => {
