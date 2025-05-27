@@ -31,10 +31,12 @@ import {
   AcademicRecord,
   FinalResult,
   Level,
+  Placement,
   SectionPlacement,
   Status,
   StatusDetails,
   Student,
+  genderedLevels,
   levels,
 } from "../interfaces";
 import { getLevelAtSession, isElective } from "./fgrService";
@@ -437,4 +439,27 @@ export const parseArabicName = (arabicName: string): ArabicName | undefined => {
     [, parsedName.fathersName, parsedName.grandfathersName, parsedName.familyName] = nameParts;
   }
   return parsedName;
+};
+
+export const getElectivesBySession = (students: Student[], session: Student["initialSession"]): string[] => {
+  return sortBy(
+    filter(
+      uniq(
+        map(
+          flatten(
+            map(
+              filter(flatten(map(students, "placement")), (placement: Placement) => {
+                return placement?.session === (session ?? getCurrentSession(students));
+              }),
+              "placement",
+            ),
+          ),
+          "level",
+        ),
+      ),
+      (className) => {
+        return !includes(genderedLevels, className);
+      },
+    ),
+  );
 };

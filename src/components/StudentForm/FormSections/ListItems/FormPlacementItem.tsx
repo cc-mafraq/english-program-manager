@@ -1,14 +1,23 @@
 import { Close } from "@mui/icons-material";
 import { Grid, IconButton, Tooltip } from "@mui/material";
 import moment from "moment";
-import React from "react";
-import { useColors } from "../../../../hooks";
+import React, { useMemo } from "react";
+import { useFormContext } from "react-hook-form";
+import { useColors, useStudentStore } from "../../../../hooks";
 import { genderedLevels } from "../../../../interfaces";
-import { FormItem, MOMENT_FORMAT } from "../../../../services";
+import { FormItem, getElectivesBySession, MOMENT_FORMAT } from "../../../../services";
 import { GridContainer, GridItemAutocomplete, GridItemDatePicker, GridItemTextField } from "../../../reusables";
 
 export const FormPlacementItem: React.FC<FormItem> = ({ index, removeItem, name }) => {
   const { iconColor } = useColors();
+  const students = useStudentStore((state) => {
+    return state.students;
+  });
+  const { watch } = useFormContext();
+  const selectedSession = watch("session");
+  const electiveClasses = useMemo(() => {
+    return getElectivesBySession(students, selectedSession);
+  }, [selectedSession, students]);
 
   return (
     <GridContainer marginBottom={0} marginLeft={0}>
@@ -17,7 +26,7 @@ export const FormPlacementItem: React.FC<FormItem> = ({ index, removeItem, name 
         freeSolo
         label="Level"
         name={name ? `${name}.level` : "level"}
-        options={genderedLevels}
+        options={[...genderedLevels, ...electiveClasses]}
         textFieldProps={{ required: true }}
       />
       <GridItemAutocomplete
