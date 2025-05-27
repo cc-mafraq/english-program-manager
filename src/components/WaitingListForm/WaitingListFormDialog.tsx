@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { get, includes, map, nth } from "lodash";
+import { filter, get, includes, map, nth } from "lodash";
 import moment from "moment";
 import React, { useCallback, useMemo, useState } from "react";
 import { v4 } from "uuid";
@@ -64,7 +64,10 @@ export const WaitingListFormDialog: React.FC<WaitingListFormDialogProps> = ({ ha
     (data: WaitingListEntry) => {
       const primaryPhone = get(nth(data?.phoneNumbers, data.primaryPhone as number), "number");
       data.primaryPhone = primaryPhone || submitData.primaryPhone;
-      if (includes(map(waitingList, "primaryPhone"), data.primaryPhone) && !selectedWaitingListEntry) {
+      const waitingListWithoutSelectedEntry = filter(waitingList, (wle: WaitingListEntry) => {
+        return wle.primaryPhone !== selectedWaitingListEntry?.primaryPhone;
+      });
+      if (includes(map(waitingListWithoutSelectedEntry, "primaryPhone"), data.primaryPhone)) {
         primaryPhone && setSubmitData(data);
         handleDupPhoneDialogOpen();
       } else {
