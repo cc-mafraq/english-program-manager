@@ -195,7 +195,7 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
         values: statusDetails,
       },
       { condition: isAdminOrFaculty, name: "Withdraw Reason", path: "status.droppedOutReason" },
-      { fn: sessionsAttendedFn, name: "Sessions Attended", path: "sessionsAttended", values: range(15) },
+      { fn: sessionsAttendedFn, name: "Sessions Attended", path: "sessionsAttended", values: range(17) },
     ];
   }, [
     isAdmin,
