@@ -43,7 +43,9 @@ export const FinalGradeReportDialog: React.FC = () => {
   const [searchString, setSearchString] = useState("");
   const [hiddenFgrStudents, setHiddenFgrStudents] = useState<StudentAcademicRecordIndex[]>([]);
   const theme = useTheme();
-  const currentSession = getCurrentSession(students);
+  const currentSession = useMemo(() => {
+    return getCurrentSession(students);
+  }, [students]);
   const fgrOrCurrentSession = fgrSession || currentSession || "";
 
   const fgrStudents = useMemo(() => {

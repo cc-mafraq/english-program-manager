@@ -255,7 +255,3 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ data: student }) => {
     </Box>
   );
 };
-
-PhoneNumbers.defaultProps = {
-  noWhatsapp: undefined,
-};

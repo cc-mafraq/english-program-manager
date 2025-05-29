@@ -85,7 +85,3 @@ export const FinalGradeReportList: React.FC<FinalGradeReportListProps> = ({
     </Box>
   );
 };
-
-FinalGradeReportList.defaultProps = {
-  selectedClass: undefined,
-};

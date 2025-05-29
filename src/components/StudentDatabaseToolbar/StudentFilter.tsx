@@ -1,4 +1,4 @@
-import { find, first, includes, isEmpty, range, some } from "lodash";
+import { filter as _filter, find, first, includes, isEmpty, range, some } from "lodash";
 import React, { useCallback, useMemo } from "react";
 import { useAppStore, useStudentStore } from "../../hooks";
 import {
@@ -41,8 +41,12 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
     return state.setFilter;
   });
 
-  const sessionsWithResults = getSessionsWithResults(students);
-  const currentSession = getCurrentSession(students);
+  const sessionsWithResults = useMemo(() => {
+    return getSessionsWithResults(students);
+  }, [students]);
+  const currentSession = useMemo(() => {
+    return getCurrentSession(students);
+  }, [students]);
   const isAdmin = role === "admin";
   const isAdminOrFaculty = isAdmin || role === "faculty";
 
@@ -60,10 +64,18 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
     [sessionsWithResults, students],
   );
 
-  const pendingAcademicRecordFn = useCallback((student: Student) => {
+  const isEnrolled = useCallback((student: Student) => {
     return some(student.academicRecords, (ar) => {
       return ar.overallResult === undefined;
     });
+  }, []);
+
+  const isDualEnrolled = useCallback((student: Student) => {
+    return (
+      _filter(student.academicRecords, (ar) => {
+        return ar.overallResult === undefined;
+      }).length > 1
+    );
   }, []);
 
   const whatsAppGroupFn = useCallback((student: Student) => {
@@ -127,8 +139,15 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
       },
       {
         condition: isAdminOrFaculty,
-        fn: pendingAcademicRecordFn,
-        name: "Pending Academic Record",
+        fn: isEnrolled,
+        name: "Enrolled",
+        path: "academicRecords",
+        values: ["Yes", "No"],
+      },
+      {
+        condition: isAdminOrFaculty,
+        fn: isDualEnrolled,
+        name: "Enrolled in 2+ Classes",
         path: "academicRecords",
         values: ["Yes", "No"],
       },
@@ -176,14 +195,15 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
         values: statusDetails,
       },
       { condition: isAdminOrFaculty, name: "Withdraw Reason", path: "status.droppedOutReason" },
-      { fn: sessionsAttendedFn, name: "Sessions Attended", path: "sessionsAttended", values: range(15) },
+      { fn: sessionsAttendedFn, name: "Sessions Attended", path: "sessionsAttended", values: range(17) },
     ];
   }, [
     isAdmin,
     pendingPlacementFn,
     noAnswerCSPlacementFn,
     isAdminOrFaculty,
-    pendingAcademicRecordFn,
+    isEnrolled,
+    isDualEnrolled,
     students,
     placementExamFileFn,
     whatsAppGroupFn,
@@ -202,10 +222,4 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
       tooltipObjectName={tooltipObjectName}
     />
   );
-};
-
-StudentFilter.defaultProps = {
-  anchorEl: null,
-  handleClose: undefined,
-  tooltipObjectName: undefined,
 };

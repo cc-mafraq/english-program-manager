@@ -96,10 +96,3 @@ export const FormList: React.FC<FormListProps> = ({
     </>
   );
 };
-
-FormList.defaultProps = {
-  buttonGridProps: undefined,
-  children: undefined,
-  disabled: false,
-  reverseList: false,
-};

@@ -72,7 +72,3 @@ export const FGRDialogHeader: React.FC<FGRDialogHeaderProps> = ({
     </>
   );
 };
-
-FGRDialogHeader.defaultProps = {
-  selectedClass: undefined,
-};

@@ -97,13 +97,3 @@ export const CustomCard = <T,>({
     </div>
   );
 };
-
-CustomCard.defaultProps = {
-  header: undefined,
-  id: undefined,
-  image: undefined,
-  noTabs: false,
-  setTabValue: undefined,
-  style: undefined,
-  tabValue: undefined,
-};

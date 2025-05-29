@@ -36,11 +36,11 @@ export const useFormList = <T extends FieldValues>(
   return [list, addListItem, removeListItem];
 };
 
-export const useDateInitialState = <T>(datePath: Path<T>) => {
+export const useDateInitialState = <T>(datePath: Path<T>, startEmpty?: boolean) => {
   const selectedStudent = useStudentStore((state) => {
     return state.selectedStudent;
   });
   const dateArr = get(selectedStudent, datePath) as unknown as string[];
 
-  return selectedStudent && dateArr && dateArr?.length > 0 ? dateArr : [""];
+  return selectedStudent && dateArr && dateArr?.length > 0 ? dateArr : startEmpty ? [] : [""];
 };

@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import { useFormList, useStudentStore } from "../../../hooks";
 import { Student } from "../../../interfaces";
-import { SPACING } from "../../../services";
+import { getAllSessionsWithRecord, SPACING } from "../../../services";
 import { FormLabel, FormList, GridContainer } from "../../reusables";
 import { FormAcademicRecordsItem } from "./ListItems";
 
 export const FormAcademicRecords: React.FC = () => {
+  const students = useStudentStore((state) => {
+    return state.students;
+  });
   const selectedStudent = useStudentStore((state) => {
     return state.selectedStudent;
   });
@@ -17,6 +20,9 @@ export const FormAcademicRecords: React.FC = () => {
     "academicRecords",
     methods,
   );
+  const sessionsWithRecords = useMemo(() => {
+    return getAllSessionsWithRecord(students);
+  }, [students]);
 
   return (
     <>
@@ -30,7 +36,7 @@ export const FormAcademicRecords: React.FC = () => {
           removeItem={removeAcademicRecord}
           reverseList
         >
-          <FormAcademicRecordsItem />
+          <FormAcademicRecordsItem sessions={sessionsWithRecords} />
         </FormList>
       </GridContainer>
     </>

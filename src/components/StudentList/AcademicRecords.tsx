@@ -52,12 +52,6 @@ export const ResultBox: React.FC<ResultBoxProps> = ({ result, showEmpty, contain
   );
 };
 
-ResultBox.defaultProps = {
-  containerProps: undefined,
-  result: undefined,
-  showEmpty: undefined,
-};
-
 interface GradeInfoProps {
   bold?: boolean;
   grade?: Grade;
@@ -78,11 +72,6 @@ export const GradeInfo: React.FC<GradeInfoProps> = ({ grade, label, bold }) => {
       <LabeledText label="Notes">{grade?.notes}</LabeledText>
     </LabeledContainer>
   );
-};
-
-GradeInfo.defaultProps = {
-  bold: undefined,
-  grade: undefined,
 };
 
 interface AcademicRecordAccordionSummaryProps {
@@ -146,10 +135,6 @@ const AcademicRecordAccordionSummary: React.FC<AcademicRecordAccordionSummaryPro
   );
 };
 
-AcademicRecordAccordionSummary.defaultProps = {
-  handleEditClick: undefined,
-};
-
 interface AcademicRecordAccordionDetailsProps {
   bold?: boolean;
   data: AcademicRecord;
@@ -184,10 +169,6 @@ export const AcademicRecordAccordionDetails: React.FC<AcademicRecordAccordionDet
       </LabeledContainer>
     </>
   );
-};
-
-AcademicRecordAccordionDetails.defaultProps = {
-  bold: undefined,
 };
 
 export const AcademicRecords: React.FC<AcademicRecordsProps> = ({ data: student }) => {

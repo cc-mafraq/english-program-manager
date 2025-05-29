@@ -4,7 +4,13 @@ import { findIndex, remove } from "lodash";
 import React, { useCallback, useMemo } from "react";
 import { useAppStore, useStudentStore } from "../../hooks";
 import { AcademicRecord, Student, emptyAcademicRecord } from "../../interfaces";
-import { SPACING, academicRecordsSchema, removeNullFromObject, setData } from "../../services";
+import {
+  SPACING,
+  academicRecordsSchema,
+  getAllSessionsWithRecord,
+  removeNullFromObject,
+  setData,
+} from "../../services";
 import { FormAcademicRecordsItem } from "../StudentForm";
 import { FormDialog } from "../reusables";
 
@@ -17,13 +23,14 @@ interface FormAcademicRecordsDialogProps {
   student: Student;
 }
 
-const FormAcademicRecordsMemo: React.FC<{ formTitle?: string }> = React.memo(({ formTitle }) => {
-  return (
-    <Box paddingRight={SPACING * 2}>
-      <FormAcademicRecordsItem title={formTitle} />
-    </Box>
-  );
-});
+const FormAcademicRecordsMemo: React.FC<{ formTitle?: string; sessions: Student["initialSession"][] }> =
+  React.memo(({ formTitle, sessions }) => {
+    return (
+      <Box paddingRight={SPACING * 2}>
+        <FormAcademicRecordsItem sessions={sessions} title={formTitle} />
+      </Box>
+    );
+  });
 FormAcademicRecordsMemo.displayName = "Academic Records Form";
 
 export const FormAcademicRecordsDialog: React.FC<FormAcademicRecordsDialogProps> = ({
@@ -66,6 +73,10 @@ export const FormAcademicRecordsDialog: React.FC<FormAcademicRecordsDialogProps>
     [handleDialogClose, selectedAcademicRecord, setStudents, shouldSetStudents, student, students],
   );
 
+  const sessionsWithRecords = useMemo(() => {
+    return getAllSessionsWithRecord(students);
+  }, [students]);
+
   const dialogProps = useMemo(() => {
     const breakpoint: Breakpoint = "lg";
     return { fullWidth: role === "admin", maxWidth: breakpoint };
@@ -86,12 +97,7 @@ export const FormAcademicRecordsDialog: React.FC<FormAcademicRecordsDialogProps>
       open={open}
       useFormProps={useFormProps}
     >
-      <FormAcademicRecordsMemo formTitle={formTitle} />
+      <FormAcademicRecordsMemo formTitle={formTitle} sessions={sessionsWithRecords} />
     </FormDialog>
   );
-};
-
-FormAcademicRecordsDialog.defaultProps = {
-  formTitle: undefined,
-  shouldSetStudents: undefined,
 };

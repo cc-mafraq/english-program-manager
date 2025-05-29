@@ -33,13 +33,15 @@ interface PlacementProps {
   data: Student;
 }
 
-const FormPlacementMemo = React.memo(({ index }: FormItem) => {
-  return (
-    <Box paddingRight={SPACING * 2}>
-      <FormPlacementSessionItem index={index} />
-    </Box>
-  );
-});
+const FormPlacementMemo = React.memo(
+  ({ index, sessions }: FormItem & { sessions: Student["initialSession"][] }) => {
+    return (
+      <Box paddingRight={SPACING * 2}>
+        <FormPlacementSessionItem index={index} sessions={sessions} />
+      </Box>
+    );
+  },
+);
 FormPlacementMemo.displayName = "Placement Form";
 
 interface PlacementAccordionSummaryProps {
@@ -77,10 +79,6 @@ const PlacementAccordionSummary: React.FC<PlacementAccordionSummaryProps> = ({
       )}
     </>
   );
-};
-
-PlacementAccordionSummary.defaultProps = {
-  handleEditClick: undefined,
 };
 
 interface PlacementAccordionDetailsProps {
@@ -131,8 +129,12 @@ export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
   const [open, setOpen] = useState(false);
   const [openPhotoContact, setOpenPhotoContact] = useState(false);
   const [selectedPlacement, setSelectedPlacement] = useState<Placement | null>(null);
-  const currentSession = getCurrentSession(students);
-  const allSessions = getAllSessionsWithPlacement(students);
+  const currentSession = useMemo(() => {
+    return getCurrentSession(students);
+  }, [students]);
+  const allSessions = useMemo(() => {
+    return getAllSessionsWithPlacement(students);
+  }, [students]);
 
   const handleAddButtonClick = useCallback(() => {
     setSelectedStudent(null);
@@ -284,6 +286,7 @@ export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
         >
           <FormPlacementMemo
             index={selectedPlacement ? findIndex(student.placement, selectedPlacement) : undefined}
+            sessions={allSessions}
           />
         </FormDialog>
       </Box>

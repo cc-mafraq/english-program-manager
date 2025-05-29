@@ -20,11 +20,11 @@ interface AddImageButtonProps {
 }
 
 export const AddImageButton: React.FC<AddImageButtonProps> = ({
-  scale,
+  scale = 1,
   student,
   imagePath,
   folderName,
-  lightColor,
+  lightColor = "default",
   setLoading,
   setImg,
   isForm,
@@ -70,12 +70,4 @@ export const AddImageButton: React.FC<AddImageButtonProps> = ({
       </Tooltip>
     </label>
   );
-};
-
-AddImageButton.defaultProps = {
-  isForm: false,
-  lightColor: "default",
-  scale: 1,
-  setImg: undefined,
-  setLoading: undefined,
 };

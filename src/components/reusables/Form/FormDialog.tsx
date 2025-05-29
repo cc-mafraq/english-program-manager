@@ -122,10 +122,3 @@ export const FormDialog = <T extends FieldValues>({
     </Dialog>
   );
 };
-
-FormDialog.defaultProps = {
-  dialogProps: undefined,
-  onlyLoadWhenOpen: undefined,
-  paperStyleProps: undefined,
-  stickySubmit: undefined,
-};

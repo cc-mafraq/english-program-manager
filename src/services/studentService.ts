@@ -19,7 +19,6 @@ import {
   omit,
   orderBy,
   replace,
-  reverse,
   set,
   some,
   sortBy,
@@ -32,10 +31,12 @@ import {
   AcademicRecord,
   FinalResult,
   Level,
+  Placement,
   SectionPlacement,
   Status,
   StatusDetails,
   Student,
+  genderedLevels,
   levels,
 } from "../interfaces";
 import { getLevelAtSession, isElective } from "./fgrService";
@@ -155,19 +156,19 @@ const filterSession = (s: Student["initialSession"]) => {
 };
 
 export const getAllInitialSessions = (students: Student[]): string[] => {
-  return filter(reverse(sortBy(uniq(map(students, "initialSession")), sortBySession)), filterSession);
+  return filter(orderBy(uniq(map(students, "initialSession")), sortBySession, "desc"), filterSession);
 };
 
 export const getAllSessionsWithRecord = (students: Student[]): string[] => {
   return filter(
-    reverse(sortBy(uniq(map(flatten(map(students, "academicRecords")), "session")), sortBySession)),
+    orderBy(uniq(map(flatten(map(students, "academicRecords")), "session")), sortBySession, "desc"),
     filterSession,
   );
 };
 
 export const getAllSessionsWithPlacement = (students: Student[]): string[] => {
   return filter(
-    reverse(sortBy(uniq(map(flatten(map(students, "placement")), "session")), sortBySession)),
+    orderBy(uniq(map(flatten(map(students, "placement")), "session")), sortBySession, "desc"),
     filterSession,
   );
 };
@@ -293,17 +294,15 @@ export const getStudentById = (id: Student["epId"], students: Student[]): Studen
 };
 
 export const getSessionsWithResults = (students: Student[]) => {
-  const allSessions = getAllSessionsWithRecord(students);
-  return filter(allSessions, (session) => {
-    return some(
-      map(
-        filter(flatten(map(students, "academicRecords")), (ar) => {
-          return ar?.session === session;
-        }),
-        "overallResult",
-      ),
-    );
+  const sessionsWithResults: Student["initialSession"][] = [];
+  forEach(students, (student) => {
+    forEach(student.academicRecords, (ar) => {
+      if (!includes(sessionsWithResults, ar.session) && ar.overallResult) {
+        sessionsWithResults.push(ar.session);
+      }
+    });
   });
+  return orderBy(sessionsWithResults, sortBySession, "desc");
 };
 
 export const removeSummerSession = (session: Student["initialSession"]) => {
@@ -395,4 +394,72 @@ export const getStudentIDByPhoneNumber = (students: Student[], phoneNumber: numb
     return includes(map(student.phone.phoneNumbers, "number"), phoneNumber);
   });
   return matchedStudent?.epId;
+};
+
+const cleanArabicName = (arabicName: string): string => {
+  // remove harakat
+  let preprocessedName = arabicName.replaceAll(/[ًٌٍَُِْ]/g, "");
+  // remove extra spaces
+  preprocessedName = preprocessedName.replaceAll(/\s+/g, " ");
+  // add _ between prefixes and the rest of the name if there is a space
+  preprocessedName = preprocessedName.replaceAll(/(^|\s+)(عبد|ابو|أبو|بني)\s+(\S+)/g, "$1$2_$3");
+  // add _ between suffixes and the rest of the name if there is a space
+  preprocessedName = preprocessedName.replaceAll(/(\S+)\s+(الدين|خير)(\s+|$)/g, "$1_$2$3");
+  // replace ه with ة at the end of a name
+  preprocessedName = preprocessedName.replaceAll(/(\S+)ه(\s+)/g, "$1ة$2");
+  preprocessedName = preprocessedName.replaceAll(/[أإآ]/g, "ا");
+  return preprocessedName.trim();
+};
+
+export interface ArabicName {
+  familyName?: string;
+  fathersName?: string;
+  firstName: string;
+  grandfathersName?: string;
+}
+
+export const parseArabicName = (arabicName: string): ArabicName | undefined => {
+  if (arabicName === "N/A" || isEmpty(arabicName)) return undefined;
+  const cleanedArabicName = cleanArabicName(arabicName);
+  const nameParts = map(cleanedArabicName.split(/\s+/), (namePart) => {
+    return namePart.replaceAll("_", " ");
+  });
+  const parsedName: ArabicName = {
+    firstName: nameParts[0],
+  };
+  if (nameParts.length === 2) {
+    if (nameParts[1].startsWith("ال")) {
+      [, parsedName.familyName] = nameParts;
+    } else {
+      [, parsedName.fathersName] = nameParts;
+    }
+  } else if (nameParts.length === 3) {
+    [, parsedName.fathersName, parsedName.familyName] = nameParts;
+  } else {
+    [, parsedName.fathersName, parsedName.grandfathersName, parsedName.familyName] = nameParts;
+  }
+  return parsedName;
+};
+
+export const getElectivesBySession = (students: Student[], session: Student["initialSession"]): string[] => {
+  return sortBy(
+    filter(
+      uniq(
+        map(
+          flatten(
+            map(
+              filter(flatten(map(students, "placement")), (placement: Placement) => {
+                return placement?.session === (session ?? getCurrentSession(students));
+              }),
+              "placement",
+            ),
+          ),
+          "level",
+        ),
+      ),
+      (className) => {
+        return !includes(genderedLevels, className);
+      },
+    ),
+  );
 };

@@ -91,12 +91,3 @@ export const GridItemDatePicker: React.FC<GridItemDatePickerProps> = ({
     </Grid>
   );
 };
-
-GridItemDatePicker.defaultProps = {
-  datePickerProps: undefined,
-  errorName: undefined,
-  gridProps: undefined,
-  name: undefined,
-  textFieldProps: undefined,
-  value: undefined,
-};

@@ -32,7 +32,3 @@ export const LabeledNumberBox: React.FC<LabeledNumberBoxProps> = ({ color, label
     </Box>
   );
 };
-
-LabeledNumberBox.defaultProps = {
-  containerProps: undefined,
-};

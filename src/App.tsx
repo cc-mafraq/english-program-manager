@@ -1,10 +1,15 @@
 import { createTheme, PaletteMode, responsiveFontSizes, ThemeProvider, useMediaQuery } from "@mui/material";
 import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Authorization, MenuBar, StudentDatabaseWrapper } from "./components";
-import { WaitingListDatabaseWrapper } from "./components/Wrappers/WaitingListDatabaseWrapper";
+import {
+  Authorization,
+  MenuBar,
+  OfflineSnackbar,
+  StudentDatabaseWrapper,
+  WaitingListDatabaseWrapper,
+} from "./components";
 import { ColorModeContext } from "./contexts";
-import { loadLocal, useDatabase, useStudentStore, useWaitingListStore } from "./hooks";
+import { loadLocal, useAppStore, useDatabase, useStudentStore, useWaitingListStore } from "./hooks";
 import { getDesignTokens } from "./interfaces";
 import { ClassListsPage, LoginPage, StatisticsPage, StudentDatabasePage, WaitingListPage } from "./pages";
 
@@ -14,6 +19,23 @@ export const App = () => {
   const [mode, setMode] = React.useState<PaletteMode>(
     (localColorMode || (isDarkPreference ? "dark" : "light")) as PaletteMode,
   );
+  const online = useAppStore((state) => {
+    return state.online;
+  });
+  const setOnline = useAppStore((state) => {
+    return state.setOnline;
+  });
+  window.addEventListener("online", () => {
+    if (!online) {
+      setOnline(true);
+    }
+  });
+  window.addEventListener("offline", () => {
+    if (online) {
+      setOnline(false);
+    }
+  });
+
   const colorMode = React.useMemo(() => {
     return {
       toggleColorMode: () => {
@@ -90,6 +112,7 @@ export const App = () => {
               </Routes>
             </Authorization>
           </BrowserRouter>
+          <OfflineSnackbar />
         </ThemeProvider>
       </ColorModeContext.Provider>
     </div>

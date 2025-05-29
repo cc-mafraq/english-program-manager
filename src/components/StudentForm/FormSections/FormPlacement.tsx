@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { FieldValues, useFormContext } from "react-hook-form";
 import { FormPlacementSessionItem } from "..";
 import { useFormList, useStudentStore } from "../../../hooks";
-import { SPACING } from "../../../services";
+import { getAllSessionsWithPlacement, SPACING } from "../../../services";
 import { FormLabel, FormList, GridContainer, GridItemDatePicker } from "../../reusables";
 
 export const FormPlacement = <T extends FieldValues>() => {
+  const students = useStudentStore((state) => {
+    return state.students;
+  });
   const selectedStudent = useStudentStore((state) => {
     return state.selectedStudent;
   });
@@ -16,6 +19,10 @@ export const FormPlacement = <T extends FieldValues>() => {
     "placement",
     methods,
   );
+
+  const allSessions = useMemo(() => {
+    return getAllSessionsWithPlacement(students);
+  }, [students]);
 
   return (
     <>
@@ -30,13 +37,9 @@ export const FormPlacement = <T extends FieldValues>() => {
           removeItem={removeSessionPlacement}
           reverseList
         >
-          <FormPlacementSessionItem />
+          <FormPlacementSessionItem sessions={allSessions} />
         </FormList>
       </GridContainer>
     </>
   );
-};
-
-FormPlacement.defaultProps = {
-  standAlone: false,
 };

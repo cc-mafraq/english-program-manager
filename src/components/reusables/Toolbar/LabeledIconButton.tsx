@@ -24,7 +24,7 @@ export const LabeledIconButton: React.FC<LabeledIconButtonProps> = ({
   buttonProps,
   buttonStyle,
   children,
-  color,
+  color = "primary",
   label,
   onClick,
 }) => {
@@ -41,12 +41,4 @@ export const LabeledIconButton: React.FC<LabeledIconButtonProps> = ({
       </Typography>
     </IconButton>
   );
-};
-
-LabeledIconButton.defaultProps = {
-  buttonProps: undefined,
-  buttonStyle: undefined,
-  children: undefined,
-  color: "primary",
-  onClick: undefined,
 };

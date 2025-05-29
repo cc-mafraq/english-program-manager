@@ -13,8 +13,3 @@ export const FormLabel: React.FC<StudentFormLabelProps> = ({ children, textProps
     </Typography>
   );
 };
-
-FormLabel.defaultProps = {
-  children: undefined,
-  textProps: {},
-};

@@ -151,11 +151,13 @@ export const ClassListStudentCard: React.FC<ClassListStudentCardProps> = (props)
             data={emptyStudent}
             otherButtons={
               <>
-                <Tooltip title="Submit Final Grades">
-                  <IconButton onClick={handleDialogOpen}>
-                    <Assessment />
-                  </IconButton>
-                </Tooltip>
+                {selectedClass?.section !== "CSWL" && (
+                  <Tooltip title="Submit Final Grades">
+                    <IconButton onClick={handleDialogOpen}>
+                      <Assessment />
+                    </IconButton>
+                  </Tooltip>
+                )}
                 {selectedAcademicRecord?.overallResult && (
                   <Box>
                     <Typography
@@ -228,10 +230,4 @@ export const ClassListStudentCard: React.FC<ClassListStudentCardProps> = (props)
       />
     </>
   );
-};
-
-ClassListStudentCard.defaultProps = {
-  data: undefined,
-  selectedClass: undefined,
-  selectedSession: undefined,
 };

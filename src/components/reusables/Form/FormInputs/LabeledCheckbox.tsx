@@ -62,10 +62,3 @@ export const LabeledCheckbox: React.FC<LabeledCheckboxProps> = ({
     </Box>
   );
 };
-
-LabeledCheckbox.defaultProps = {
-  checkboxProps: undefined,
-  containerProps: undefined,
-  errorName: undefined,
-  name: undefined,
-};
