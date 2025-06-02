@@ -1,6 +1,6 @@
 {
   "name": "english-program-manager",
-  "version": "1.10.9",
+  "version": "1.10.10",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
