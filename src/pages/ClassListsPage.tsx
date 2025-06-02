@@ -71,7 +71,7 @@ export const ClassListsPage = () => {
   const studentHasResult = useCallback(
     (filteredStudent: Student) => {
       return find(filteredStudent.academicRecords, (ar) => {
-        return ar.session === selectedSession && includes(ar.level, selectedClass?.level);
+        return ar.session === selectedSession && includes(ar.level ?? ar.levelAudited, selectedClass?.level);
       })?.overallResult;
     },
     [selectedClass?.level, selectedSession],
