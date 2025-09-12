@@ -1,3 +1,4 @@
+import { Dictionary } from "lodash";
 import React from "react";
 import { AcademicRecords, PlacementList, StudentCardHeader, StudentCardImage, StudentInfo } from "..";
 import { useAppStore } from "../../hooks";
@@ -6,6 +7,8 @@ import { CorrespondenceList, CustomCard } from "../reusables";
 
 interface StudentCardProps {
   handleStudentDialogOpen: () => void;
+  phoneCounts?: Dictionary<number>;
+  primaryPhoneCounts?: Dictionary<number>;
 }
 
 const StudentInfoMemo: React.FC<{ data: Student }> = React.memo(({ data }) => {
@@ -18,12 +21,19 @@ export const StudentCard: React.FC<StudentCardProps> = (props) => {
     return state.role;
   });
   const isAdminOrFaculty = role === "admin" || role === "faculty";
-  const { handleStudentDialogOpen } = props;
+  const { handleStudentDialogOpen, phoneCounts, primaryPhoneCounts } = props;
 
   return (
     <CustomCard
       data={emptyStudent}
-      header={<StudentCardHeader data={emptyStudent} handleEditStudentClick={handleStudentDialogOpen} />}
+      header={
+        <StudentCardHeader
+          data={emptyStudent}
+          handleEditStudentClick={handleStudentDialogOpen}
+          phoneCounts={phoneCounts}
+          primaryPhoneCounts={primaryPhoneCounts}
+        />
+      }
       image={<StudentCardImage data={emptyStudent} imageWidth={150} smallBreakpointScaleDown={1.5} />}
       noTabs={role !== "admin" && role !== "faculty"}
       tabContents={[

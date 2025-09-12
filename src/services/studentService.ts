@@ -462,3 +462,18 @@ export const getElectivesBySession = (students: Student[], session: Student["ini
     ),
   );
 };
+
+export const getActivePrimaryPhoneCounts = (students: Student[]) => {
+  return countBy(
+    map(
+      filter(students, (s) => {
+        return s.status.inviteTag;
+      }),
+      "phone.primaryPhone",
+    ),
+  );
+};
+
+export const getPhoneCounts = (students: Student[]) => {
+  return countBy(map(flatten(map(students, "phone.phoneNumbers")), "number"));
+};

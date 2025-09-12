@@ -1,7 +1,7 @@
 import { Assessment } from "@mui/icons-material";
 import { Box, IconButton, Tooltip, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { green as materialGreen, red as materialRed } from "@mui/material/colors";
-import { filter, findIndex, nth } from "lodash";
+import { Dictionary, filter, findIndex, nth } from "lodash";
 import React, { useCallback, useMemo, useState } from "react";
 import {
   AcademicRecordAccordionDetails,
@@ -110,12 +110,15 @@ interface ClassListStudentCardProps {
   allSameGender: boolean;
   allSameLevel: boolean;
   data?: Student;
+  phoneCounts?: Dictionary<number>;
+  primaryPhoneCounts?: Dictionary<number>;
   selectedClass?: SectionPlacement;
   selectedSession?: string;
 }
 
 export const ClassListStudentCard: React.FC<ClassListStudentCardProps> = (props) => {
-  const { allSameGender, allSameLevel, data, selectedClass, selectedSession } = props;
+  const { allSameGender, allSameLevel, data, selectedClass, selectedSession, phoneCounts, primaryPhoneCounts } =
+    props;
   const sessionIndex = useMemo(() => {
     return findIndex(data?.placement, (placement) => {
       return placement.session === selectedSession;
@@ -179,6 +182,8 @@ export const ClassListStudentCard: React.FC<ClassListStudentCardProps> = (props)
                 )}
               </>
             }
+            phoneCounts={phoneCounts}
+            primaryPhoneCounts={primaryPhoneCounts}
           />
         }
         image={
