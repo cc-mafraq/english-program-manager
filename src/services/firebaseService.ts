@@ -29,8 +29,8 @@ export const isProd =
   window.location.hostname.includes("ccm-english.firebaseapp.com");
 
 // Initialize Firebase
-// export const app = initializeApp(firebaseProdConfig);
-export const app = initializeApp(isProd ? firebaseProdConfig : firebaseDevConfig);
+export const app = initializeApp(firebaseProdConfig);
+// export const app = initializeApp(isProd ? firebaseProdConfig : firebaseDevConfig);
 export const db = initializeFirestore(app, {
   localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
 });

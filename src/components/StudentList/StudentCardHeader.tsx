@@ -1,15 +1,18 @@
 import { Edit, WhatsApp } from "@mui/icons-material";
 import { Box, Divider, IconButton, Tooltip, Typography, useMediaQuery, useTheme } from "@mui/material";
-import React, { useMemo } from "react";
+import { Dictionary } from "lodash";
+import React from "react";
 import { WithdrawButton } from ".";
 import { useAppStore, useColors, useStudentStore } from "../../hooks";
 import { Status, Student } from "../../interfaces";
-import { getActivePrimaryPhoneCounts, getPhoneCounts, isValidPhoneNumber } from "../../services";
+import { isValidPhoneNumber } from "../../services";
 
 interface StudentCardHeaderProps {
   data: Student;
   handleEditStudentClick?: () => void;
   otherButtons?: React.ReactNode;
+  phoneCounts?: Dictionary<number>;
+  primaryPhoneCounts?: Dictionary<number>;
 }
 
 const padding = "2px";
@@ -18,6 +21,8 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({
   data: student,
   handleEditStudentClick,
   otherButtons,
+  phoneCounts,
+  primaryPhoneCounts,
 }) => {
   const role = useAppStore((state) => {
     return state.role;
@@ -25,16 +30,6 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({
   const setSelectedStudent = useStudentStore((state) => {
     return state.setSelectedStudent;
   });
-  const students = useStudentStore((state) => {
-    return state.students;
-  });
-  const primaryPhoneCounts = useMemo(() => {
-    return getActivePrimaryPhoneCounts(students);
-  }, [students]);
-
-  const phoneCounts = useMemo(() => {
-    return getPhoneCounts(students);
-  }, [students]);
 
   const theme = useTheme();
   const { iconColor } = useColors();
@@ -70,9 +65,9 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({
             <Tooltip enterDelay={500} placement="top" title="Primary WhatsApp Number">
               <Typography
                 borderTop={
-                  primaryPhoneCounts[student.phone.primaryPhone as number] > 1
+                  primaryPhoneCounts && primaryPhoneCounts[student.phone.primaryPhone as number] > 1
                     ? "solid"
-                    : phoneCounts[student.phone.primaryPhone as number] > 1
+                    : phoneCounts && phoneCounts[student.phone.primaryPhone as number] > 1
                     ? "dashed"
                     : undefined
                 }

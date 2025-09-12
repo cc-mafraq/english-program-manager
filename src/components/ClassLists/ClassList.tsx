@@ -1,7 +1,9 @@
 import { every, first } from "lodash";
-import React, { RefObject } from "react";
+import React, { RefObject, useMemo } from "react";
 import { ClassListStudentCard } from "..";
+import { useStudentStore } from "../../hooks";
 import { SectionPlacement, Student } from "../../interfaces";
+import { getActivePrimaryPhoneCounts, getPhoneCounts } from "../../services";
 import { VirtualizedList } from "../reusables";
 
 interface ClassListProps {
@@ -25,11 +27,23 @@ export const ClassList: React.FC<ClassListProps> = ({
     return student.gender === firstStudent?.gender;
   });
 
+  const students = useStudentStore((state) => {
+    return state.students;
+  });
+  const phoneCounts = useMemo(() => {
+    return getPhoneCounts(students);
+  }, [students]);
+  const primaryPhoneCounts = useMemo(() => {
+    return getActivePrimaryPhoneCounts(students);
+  }, [students]);
+
   return (
     <VirtualizedList idPath="epId" listData={filteredStudents} menuRef={menuRef} overscan={500}>
       <ClassListStudentCard
         allSameGender={allSameGender}
         allSameLevel={allSameLevel}
+        phoneCounts={phoneCounts}
+        primaryPhoneCounts={primaryPhoneCounts}
         selectedClass={selectedClass}
         selectedSession={selectedSession}
       />
