@@ -1,11 +1,10 @@
 import { Edit, WhatsApp } from "@mui/icons-material";
 import { Box, Divider, IconButton, Tooltip, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { countBy, filter, map } from "lodash";
 import React, { useMemo } from "react";
 import { WithdrawButton } from ".";
 import { useAppStore, useColors, useStudentStore } from "../../hooks";
 import { Status, Student } from "../../interfaces";
-import { isValidPhoneNumber } from "../../services";
+import { getActivePrimaryPhoneCounts, getPhoneCounts, isValidPhoneNumber } from "../../services";
 
 interface StudentCardHeaderProps {
   data: Student;
@@ -30,14 +29,11 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({
     return state.students;
   });
   const primaryPhoneCounts = useMemo(() => {
-    return countBy(
-      map(
-        filter(students, (s) => {
-          return s.status.inviteTag;
-        }),
-        "phone.primaryPhone",
-      ),
-    );
+    return getActivePrimaryPhoneCounts(students);
+  }, [students]);
+
+  const phoneCounts = useMemo(() => {
+    return getPhoneCounts(students);
   }, [students]);
 
   const theme = useTheme();
@@ -73,7 +69,13 @@ export const StudentCardHeader: React.FC<StudentCardHeaderProps> = ({
           {phoneNumberIsValid ? (
             <Tooltip enterDelay={500} placement="top" title="Primary WhatsApp Number">
               <Typography
-                borderTop={primaryPhoneCounts[student.phone.primaryPhone as number] > 1 ? "solid" : undefined}
+                borderTop={
+                  primaryPhoneCounts[student.phone.primaryPhone as number] > 1
+                    ? "solid"
+                    : phoneCounts[student.phone.primaryPhone as number] > 1
+                    ? "dashed"
+                    : undefined
+                }
                 marginRight="5px"
                 paddingBottom={padding}
                 variant="h5"
