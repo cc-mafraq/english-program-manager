@@ -38,6 +38,9 @@ export const WithdrawButton: React.FC<WithdrawButtonProps> = ({ student }) => {
     (data: Withdraw) => {
       student.status.inviteTag = data.inviteTag;
       student.status.noContactList = data.noContactList;
+      if (!student.status.withdrawDate) {
+        student.status.withdrawDate = []
+      }
       student.status.withdrawDate.push(data.withdrawDate);
       if (data.droppedOutReason !== null) {
         student.status.droppedOutReason = data.droppedOutReason;
