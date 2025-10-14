@@ -71,6 +71,8 @@ export const StudentFormDialog: React.FC<StudentFormDialogProps> = ({ handleSear
         : omit(data, "covidVaccine.suspectedFraudReason");
       const dataNoNull = removeNullFromObject(dataNoSuspect) as Student;
       if (!dataNoNull.placement) dataNoNull.placement = [];
+      if (!dataNoNull.status?.withdrawDate) dataNoNull.status.withdrawDate = [];
+      if (!dataNoNull.status?.reactivatedDate) dataNoNull.status.reactivatedDate = [];
       setData(dataNoNull, "students", "epId");
       dataNoNull.epId !== selectedStudent?.epId && selectedStudent && deleteStudentData(selectedStudent);
       !selectedStudent && handleSearchStringChange(dataNoNull.epId.toString());
