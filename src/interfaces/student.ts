@@ -109,8 +109,8 @@ export interface StudentStatus {
   inviteTag: boolean;
   levelReevalDate?: string;
   noContactList: boolean;
-  reactivatedDate: string[];
-  withdrawDate: string[];
+  reactivatedDate?: string[];
+  withdrawDate?: string[];
 }
 
 export interface StudentName {
