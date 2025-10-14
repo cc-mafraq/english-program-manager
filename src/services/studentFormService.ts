@@ -284,8 +284,8 @@ const statusSchema = object().shape({
   inviteTag: bool().required(),
   levelReevalDate: dateSchema.nullable().optional(),
   noContactList: bool().required(),
-  reactivatedDate: array().of(dateSchema.nullable().optional()).transform(dateStringToArray).required(),
-  withdrawDate: array().of(dateSchema.nullable().optional()).transform(dateStringToArray).required(),
+  reactivatedDate: array().of(dateSchema.nullable().optional()).transform(dateStringToArray).nullable().optional(),
+  withdrawDate: array().of(dateSchema.nullable().optional()).transform(dateStringToArray).nullable().optional(),
 });
 
 const workSchema = object().shape({
