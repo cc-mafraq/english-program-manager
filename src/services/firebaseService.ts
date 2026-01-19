@@ -5,13 +5,13 @@ import { getStorage } from "firebase/storage";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseProdConfig = {
-  apiKey: "AIzaSyDyoV4oFFFbXcSjUPeKbqpJrM1a1X12m_8",
-  appId: "1:1006817124710:web:9825e70910a29b74f668a7",
-  authDomain: "ccm-english.firebaseapp.com",
-  measurementId: "G-BLXM5NVNYK",
-  messagingSenderId: "1006817124710",
-  projectId: "ccm-english",
-  storageBucket: "ccm-english.appspot.com",
+  apiKey: "AIzaSyBeUcf_nQ6RoG518jJXT9eLm8J2ByIiUFQ",
+  appId: "1:1003787032022:web:591c5ed536ebca8f43c077",
+  authDomain: "ccmenglishprogram.firebaseapp.com",
+  measurementId: "G-58WFZ414WQ",
+  messagingSenderId: "1003787032022",
+  projectId: "ccmenglishprogram",
+  storageBucket: "ccmenglishprogram.firebasestorage.app",
 };
 
 const firebaseDevConfig = {
@@ -25,8 +25,8 @@ const firebaseDevConfig = {
 };
 
 export const isProd =
-  window.location.hostname.includes("ccm-english.web.app") ||
-  window.location.hostname.includes("ccm-english.firebaseapp.com");
+  window.location.hostname.includes("ccmenglishprogram.web.app") ||
+  window.location.hostname.includes("ccmenglishprogram.firebaseapp.com");
 
 // Initialize Firebase
 // export const app = initializeApp(firebaseProdConfig);
