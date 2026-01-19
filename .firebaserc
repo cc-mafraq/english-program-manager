@@ -1,8 +1,9 @@
 {
   "projects": {
-    "default": "ccm-english-dev",
+    "default": "ccmenglishprogram",
     "dev": "ccm-english-dev",
-    "prod": "ccm-english"
+    "prod": "ccmenglishprogram"
   },
-  "targets": {}
+  "targets": {},
+  "etags": {}
 }
