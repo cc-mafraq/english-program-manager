@@ -1,6 +1,7 @@
 import { collection, deleteDoc, doc, getDocs, setDoc, SetOptions } from "firebase/firestore";
 import { deleteObject, getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
 import { cloneDeep, filter, find, forEach, get, map, omit, set, toString } from "lodash";
+import pLimit from "p-limit";
 import { db, storage } from ".";
 import { Student } from "../interfaces";
 
@@ -51,17 +52,21 @@ export const setPlacementExamFilePaths = (students: Student[]) => {
 export const setFilePaths = async (students: Student[], path: string, folderName: string): Promise<Student[]> => {
   try {
     const storageFiles = await listAll(ref(storage, folderName));
+    const limit = pLimit(100);
     const fileNames = await Promise.all(
-      map(storageFiles.items, async (file) => {
-        return getDownloadURL(file);
+      map(storageFiles.items, (file) => {
+        return limit(async () => {
+          return getDownloadURL(file);
+        });
       }),
     );
     forEach(students, (student) => {
-      const imageURL = find(fileNames, (name) => {
-        if (name.includes(`${folderName.slice(0, -1)}%2F${student.epId}`)) return true;
+      const fileURL = find(fileNames, (name) => {
+        if (name.includes(`${student.epId}`)) return true;
         return false;
       });
-      set(student, path, imageURL || "");
+      set(student, path, fileURL || "");
+      if (fileURL) console.log(`set ${path} for ${student.epId}`);
     });
   } catch (e) {
     console.error(e);

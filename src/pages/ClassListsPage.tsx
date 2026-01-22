@@ -1,11 +1,11 @@
 import { SelectChangeEvent, Typography } from "@mui/material";
 import { green, red } from "@mui/material/colors";
-import { every, filter, find, includes, orderBy, replace, some } from "lodash";
+import { every, filter, find, includes, map, orderBy, replace, some } from "lodash";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ClassList, ClassListsToolbar, MenuBar } from "../components";
 import { loadLocal, saveLocal, useAppStore, useStudentStore } from "../hooks";
 import { FinalResult, SectionPlacement, Student } from "../interfaces";
-import { getClassFromClassName, getCurrentSession, getSectionPlacement } from "../services";
+import { getClassFromClassName, getCurrentSession, getSectionPlacement, setData, setFilePaths } from "../services";
 
 export const ClassListsPage = () => {
   const menuRef = useRef<HTMLDivElement>(null);
@@ -25,14 +25,36 @@ export const ClassListsPage = () => {
   );
   const [showWDStudents, setShowWDStudents] = useState(!!(loadLocal("showWDStudents") ?? true));
 
-  // const placementsSet = useRef(false);
+  const placementsSet = useRef(false);
 
-  // useEffect(() => {
-  //   if (!placementsSet.current && students.length) {
-  //     setPlacementExamFilePaths(students);
-  //     placementsSet.current = true;
-  //   }
-  // }, [placementsSet, students]);
+  useEffect(() => {
+    const setImageandPlacementURLs = async () => {
+      if (!placementsSet.current && students.length) {
+        const studentsWithNewImages = await setFilePaths(students, "imageName", "studentPics");
+        console.log("finished setting image URLs");
+        const studentsWithNewImagesAndPlacements = await setFilePaths(
+          studentsWithNewImages,
+          "origPlacementData.examFile",
+          "placementExams",
+        );
+        console.log("finished setting placement URLs");
+        try {
+          await Promise.all(
+            map(studentsWithNewImagesAndPlacements, async (student) => {
+              console.log(`updating URLs for ${student.epId}`);
+              await setData(student, "students", "epId", { merge: true });
+              console.log(`finished updating URLs for ${student.epId}`);
+            }),
+          );
+        } catch (e) {
+          console.error(e);
+        }
+        console.log("COMPLETE");
+      }
+    };
+    setImageandPlacementURLs();
+    placementsSet.current = true;
+  }, [placementsSet, students]);
 
   useEffect(() => {
     if (students.length && selectedSession === undefined) {
