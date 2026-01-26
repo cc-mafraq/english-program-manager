@@ -92,6 +92,9 @@ export const FormStatus: React.FC = () => {
         >
           <FormCheatingSessionItem />
         </FormList>
+        <Grid item>
+          <LabeledCheckbox label="Banned" name="status.banned" />
+        </Grid>
       </GridContainer>
       <GridContainer>
         <GridItemAutocomplete
