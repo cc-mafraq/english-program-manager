@@ -179,7 +179,7 @@ export const getSortedSARIndexArray = (sarArr: StudentAcademicRecordIndex[]) => 
 
 export const getStudentShortName = (student: Student) => {
   const nameParts = split(student.name.english, " ");
-  const namePrefixes = ["Al", "Abd", "Abed"];
+  const namePrefixes = ["Al", "Abd", "Abed", "Deen", "Addeen", "Adeen", "Kheir", "Kheer"];
   let finalNameIndex = includes(namePrefixes, nth(nameParts, 0)) ? 2 : 1;
   while (includes(namePrefixes, nth(nameParts, finalNameIndex))) {
     finalNameIndex += 1;
