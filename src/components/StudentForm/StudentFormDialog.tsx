@@ -1,11 +1,13 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { filter, first, get, isEmpty } from "lodash";
+import { filter, first, get, includes, isEmpty } from "lodash";
+import moment from "moment";
 import React, { useCallback, useMemo, useState } from "react";
 import { useFormDialog, useStudentFormStore, useStudentStore } from "../../hooks";
-import { emptyStudent, Student } from "../../interfaces";
+import { emptyStudent, Status, Student } from "../../interfaces";
 import {
   deleteImage,
   deleteStudentData,
+  MOMENT_FORMAT,
   parseArabicName,
   removeNullFromObject,
   setData,
@@ -73,6 +75,20 @@ export const StudentFormDialog: React.FC<StudentFormDialogProps> = ({ handleSear
       if (!dataNoNull.placement) dataNoNull.placement = [];
       if (!dataNoNull.status?.withdrawDate) dataNoNull.status.withdrawDate = [];
       if (!dataNoNull.status?.reactivatedDate) dataNoNull.status.reactivatedDate = [];
+      const dateToday = moment().format(MOMENT_FORMAT);
+      if (
+        dataNoNull.status?.currentStatus === Status.WD &&
+        selectedStudent?.status?.currentStatus !== Status.WD &&
+        !includes(dataNoNull.status.withdrawDate, dateToday)
+      ) {
+        dataNoNull.status.withdrawDate.push(dateToday);
+      } else if (
+        dataNoNull.status?.currentStatus !== Status.WD &&
+        selectedStudent?.status?.currentStatus === Status.WD &&
+        !includes(dataNoNull.status.reactivatedDate, dateToday)
+      ) {
+        dataNoNull.status.reactivatedDate.push(dateToday);
+      }
       setData(dataNoNull, "students", "epId");
       dataNoNull.epId !== selectedStudent?.epId && selectedStudent && deleteStudentData(selectedStudent);
       !selectedStudent && handleSearchStringChange(dataNoNull.epId.toString());
