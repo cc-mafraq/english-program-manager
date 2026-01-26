@@ -25,12 +25,10 @@ import {
   startsWith,
   toString,
   trim,
-  values,
 } from "lodash";
 import moment from "moment";
 import { array, bool, mixed, number, object, string } from "yup";
 import {
-  CovidStatus,
   DroppedOutReason,
   FinalResult,
   GenderedLevel,
@@ -83,9 +81,9 @@ const stringToStatus = (value: string, originalValue: string) => {
   return Status[originalValue as keyof typeof Status];
 };
 
-export const stringToCovidStatus = (value: string, originalValue: string) => {
-  return originalValue as CovidStatus;
-};
+// export const stringToCovidStatus = (value: string, originalValue: string) => {
+//   return originalValue as CovidStatus;
+// };
 
 const stringToNationality = (value: string, originalValue: string) => {
   return originalValue as Nationality;
@@ -184,18 +182,18 @@ export const correspondenceSchema = object().shape({
   ),
 });
 
-export const covidStatusSchema = mixed<CovidStatus>()
-  .oneOf(values(CovidStatus))
-  .transform(stringToCovidStatus)
-  .required("Vaccine status is required");
+// export const covidStatusSchema = mixed<CovidStatus>()
+//   .oneOf(values(CovidStatus))
+//   .transform(stringToCovidStatus)
+//   .required("Vaccine status is required");
 
-const covidSchema = object().shape({
-  date: dateSchema.nullable().optional(),
-  reason: string().transform(emptyToNull).nullable().optional(),
-  status: covidStatusSchema,
-  suspectedFraud: bool().optional(),
-  suspectedFraudReason: string().transform(emptyToNull).nullable().optional(),
-});
+// const covidSchema = object().shape({
+//   date: dateSchema.nullable().optional(),
+//   reason: string().transform(emptyToNull).nullable().optional(),
+//   status: covidStatusSchema,
+//   suspectedFraud: bool().optional(),
+//   suspectedFraudReason: string().transform(emptyToNull).nullable().optional(),
+// });
 
 const literacySchema = object().shape({
   illiterateAr: bool().optional(),
@@ -314,7 +312,7 @@ export const studentFormSchema = object().shape({
     .required("Age is required"),
   certificateRequests: string().transform(emptyToNull).nullable().optional(),
   correspondence: array().of(correspondenceSchema),
-  covidVaccine: covidSchema,
+  // covidVaccine: covidSchema,
   currentLevel: mixed<GenderedLevel>()
     .oneOf([...genderedLevels, "L5 GRAD"])
     .required("Current level is required"),

@@ -1,7 +1,7 @@
 export * from "./FormAcademicRecords";
 export * from "./FormCertRequests";
 export * from "./FormCorrespondence";
-export * from "./FormCovidVaccine";
+// export * from "./FormCovidVaccine";
 export * from "./FormDemographics";
 export * from "./FormGrade";
 export * from "./FormImageActions";

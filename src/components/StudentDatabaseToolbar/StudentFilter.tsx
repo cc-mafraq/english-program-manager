@@ -1,15 +1,7 @@
 import { filter as _filter, find, first, includes, isEmpty, range, some } from "lodash";
 import React, { useCallback, useMemo } from "react";
 import { useAppStore, useStudentStore } from "../../hooks";
-import {
-  Student,
-  covidStatuses,
-  genderedLevels,
-  levels,
-  nationalities,
-  statusDetails,
-  statuses,
-} from "../../interfaces";
+import { Student, genderedLevels, levels, nationalities, statusDetails, statuses } from "../../interfaces";
 import {
   FilterField,
   getAllInitialSessions,
@@ -186,7 +178,7 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
           "SAR Group 7",
         ],
       },
-      { condition: isAdmin, name: "COVID Vaccine Status", path: "covidVaccine.status", values: covidStatuses },
+      // { condition: isAdmin, name: "COVID Vaccine Status", path: "covidVaccine.status", values: covidStatuses },
       {
         condition: isAdminOrFaculty,
         fn: statusDetailsFn,
