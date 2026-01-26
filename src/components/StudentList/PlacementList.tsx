@@ -293,7 +293,14 @@ export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
       <LabeledContainer label="New Student Photo Contact" parentContainerProps={{ marginLeft: "15px" }}>
         <LabeledText label="Date">{student.photoContact}</LabeledText>
         <Box sx={{ minHeight: "30px", position: "relative" }}>
-          <Box sx={{ marginTop: "5px", position: "absolute", top: "50%", transform: "translateY(-50%)" }}>
+          <Box
+            sx={{
+              marginTop: student.photoContact ? undefined : "5px",
+              position: "absolute",
+              top: "50%",
+              transform: "translateY(-50%)",
+            }}
+          >
             <Tooltip arrow title="Edit Photo Contact">
               <IconButton
                 onClick={() => {
