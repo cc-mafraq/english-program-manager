@@ -144,6 +144,12 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
         values: ["Yes", "No"],
       },
       { name: "Original Placement Level", path: "origPlacementData.level", values: levels },
+      {
+        condition: isAdmin,
+        name: "High Priority Enrollment",
+        path: "status.highPriorityEnrollment",
+        values: booleanCheckboxOptions,
+      },
       { condition: isAdmin, name: "NCL", path: "status.noContactList", values: booleanCheckboxOptions },
       { condition: isAdminOrFaculty, name: "ID Card in Box", path: "status.idCardInBox", values: ["Yes", "No"] },
       { condition: isAdminOrFaculty, name: "Teacher", path: "work.isTeacher", values: ["Yes", "No"] },

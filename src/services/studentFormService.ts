@@ -278,10 +278,11 @@ const statusSchema = object().shape({
     .transform(emptyToNull)
     .nullable()
     .optional(),
+  highPriorityEnrollment: bool().default(false).required(),
   idCardInBox: bool().optional(),
   inviteTag: bool().required(),
   levelReevalDate: dateSchema.nullable().optional(),
-  noContactList: bool().required(),
+  noContactList: bool().default(false).required(),
   reactivatedDate: array().of(dateSchema.nullable().optional()).transform(dateStringToArray).nullable().optional(),
   withdrawDate: array().of(dateSchema.nullable().optional()).transform(dateStringToArray).nullable().optional(),
 });

@@ -44,6 +44,16 @@ const ProgramInformation: React.FC<StudentInfoProps> = ({ data: student }) => {
       >
         {student.status.noContactList ? "Yes" : undefined}
       </LabeledText>
+      <LabeledText
+        containerProps={{
+          sx: {
+            backgroundColor: student.status.highPriorityEnrollment ? red : defaultBackgroundColor,
+          },
+        }}
+        label="High Priority Enrollment"
+      >
+        {student.status.highPriorityEnrollment ? "Yes" : undefined}
+      </LabeledText>
       <LabeledText label="Current Level">{student.currentLevel}</LabeledText>
       <LabeledText condition={isAdminOrFaculty} label="Family Coordinator Entry">
         {student.familyCoordinatorEntry}
