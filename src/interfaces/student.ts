@@ -105,6 +105,7 @@ export interface StudentStatus {
   cheatingSessions?: string[];
   currentStatus: Status;
   droppedOutReason?: DroppedOutReason;
+  highPriorityEnrollment?: boolean;
   idCardInBox?: boolean;
   inviteTag: boolean;
   levelReevalDate?: string;
@@ -288,6 +289,7 @@ export const emptyStudent: Student = {
   placement: [],
   status: {
     currentStatus: Status.NEW,
+    highPriorityEnrollment: false,
     inviteTag: false,
     noContactList: false,
     reactivatedDate: [],
