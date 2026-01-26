@@ -290,10 +290,10 @@ export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
           />
         </FormDialog>
       </Box>
-      <LabeledContainer label="New Student Photo Contact">
+      <LabeledContainer label="New Student Photo Contact" parentContainerProps={{ marginLeft: "15px" }}>
         <LabeledText label="Date">{student.photoContact}</LabeledText>
         <Box sx={{ minHeight: "30px", position: "relative" }}>
-          <Box sx={{ position: "absolute", top: "50%", transform: "translateY(-50%)" }}>
+          <Box sx={{ marginTop: "5px", position: "absolute", top: "50%", transform: "translateY(-50%)" }}>
             <Tooltip arrow title="Edit Photo Contact">
               <IconButton
                 onClick={() => {
