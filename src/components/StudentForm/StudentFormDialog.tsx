@@ -1,9 +1,9 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { filter, first, get, includes, isEmpty } from "lodash";
+import { filter, first, forEach, get, includes, isEmpty } from "lodash";
 import moment from "moment";
 import React, { useCallback, useMemo, useState } from "react";
 import { useFormDialog, useStudentFormStore, useStudentStore } from "../../hooks";
-import { emptyStudent, Status, Student } from "../../interfaces";
+import { emptyStudent, FinalResult, Status, Student } from "../../interfaces";
 import {
   deleteImage,
   deleteStudentData,
@@ -76,12 +76,13 @@ export const StudentFormDialog: React.FC<StudentFormDialogProps> = ({ handleSear
       if (!dataNoNull.status?.withdrawDate) dataNoNull.status.withdrawDate = [];
       if (!dataNoNull.status?.reactivatedDate) dataNoNull.status.reactivatedDate = [];
       const dateToday = moment().format(MOMENT_FORMAT);
-      if (
-        dataNoNull.status?.currentStatus === Status.WD &&
-        selectedStudent?.status?.currentStatus !== Status.WD &&
-        !includes(dataNoNull.status.withdrawDate, dateToday)
-      ) {
-        dataNoNull.status.withdrawDate.push(dateToday);
+      if (dataNoNull.status?.currentStatus === Status.WD && selectedStudent?.status?.currentStatus !== Status.WD) {
+        forEach(dataNoNull.academicRecords, (ar) => {
+          if (ar.overallResult === undefined) ar.overallResult = FinalResult.WD;
+        });
+        if (!includes(dataNoNull.status.withdrawDate, dateToday)) {
+          dataNoNull.status.withdrawDate.push(dateToday);
+        }
       } else if (
         dataNoNull.status?.currentStatus !== Status.WD &&
         selectedStudent?.status?.currentStatus === Status.WD &&
