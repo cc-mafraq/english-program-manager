@@ -290,8 +290,9 @@ export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
           />
         </FormDialog>
       </Box>
-      <Box display="flex" flexDirection="row" marginLeft="15px">
-        <LabeledText label="Photo Contact">{student.photoContact}</LabeledText>
+      {/* <Box display="flex" flexDirection="row" marginLeft="15px"> */}
+      <LabeledContainer label="New Student Photo Contact">
+        <LabeledText label="Date">{student.photoContact}</LabeledText>
         <Box sx={{ minHeight: "30px", position: "relative" }}>
           <Box sx={{ position: "absolute", top: "50%", transform: "translateY(-50%)" }}>
             <Tooltip arrow title="Edit Photo Contact">
@@ -305,7 +306,8 @@ export const PlacementList: React.FC<PlacementProps> = ({ data: student }) => {
             </Tooltip>
           </Box>
         </Box>
-      </Box>
+      </LabeledContainer>
+      {/* </Box> */}
       <FormDialog<{ photoContact?: string }>
         dialogProps={{ ...dialogProps, fullWidth: false }}
         handleDialogClose={() => {
