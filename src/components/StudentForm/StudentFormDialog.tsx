@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { filter, first, get, isEmpty, omit } from "lodash";
+import { filter, first, get, isEmpty } from "lodash";
 import React, { useCallback, useMemo, useState } from "react";
 import { useFormDialog, useStudentFormStore, useStudentStore } from "../../hooks";
 import { emptyStudent, Student } from "../../interfaces";
@@ -63,13 +63,13 @@ export const StudentFormDialog: React.FC<StudentFormDialogProps> = ({ handleSear
       if (!data.imageName && selectedStudent?.imageName) {
         deleteImage(selectedStudent, "imageName", true);
       }
-      if (!data.covidVaccine.imageName && selectedStudent?.covidVaccine.imageName) {
-        deleteImage(selectedStudent, "covidVaccine.imageName", true);
-      }
-      const dataNoSuspect = data.covidVaccine.suspectedFraud
-        ? data
-        : omit(data, "covidVaccine.suspectedFraudReason");
-      const dataNoNull = removeNullFromObject(dataNoSuspect) as Student;
+      // if (!data.covidVaccine.imageName && selectedStudent?.covidVaccine.imageName) {
+      //   deleteImage(selectedStudent, "covidVaccine.imageName", true);
+      // }
+      // const dataNoSuspect = data.covidVaccine.suspectedFraud
+      //   ? data
+      //   : omit(data, "covidVaccine.suspectedFraudReason");
+      const dataNoNull = removeNullFromObject(data) as Student;
       if (!dataNoNull.placement) dataNoNull.placement = [];
       if (!dataNoNull.status?.withdrawDate) dataNoNull.status.withdrawDate = [];
       if (!dataNoNull.status?.reactivatedDate) dataNoNull.status.reactivatedDate = [];

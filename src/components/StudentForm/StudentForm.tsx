@@ -4,7 +4,6 @@ import {
   FormAcademicRecords,
   FormCertRequests,
   FormCorrespondence,
-  FormCovidVaccine,
   FormDemographics,
   FormLiteracyAndZoom,
   FormName,
@@ -39,8 +38,8 @@ export const StudentForm: React.FC = () => {
       <Divider />
       <FormOriginalPlacement />
       <Divider />
-      <FormCovidVaccine />
-      <Divider />
+      {/* <FormCovidVaccine />
+      <Divider /> */}
       <FormLiteracyAndZoom />
       <Divider />
       <FormCorrespondence selectedData={selectedStudent} />
