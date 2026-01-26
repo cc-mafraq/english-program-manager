@@ -151,6 +151,7 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
         values: booleanCheckboxOptions,
       },
       { condition: isAdmin, name: "NCL", path: "status.noContactList", values: booleanCheckboxOptions },
+      { condition: isAdmin, name: "Banned", path: "status.banned", values: booleanCheckboxOptions },
       { condition: isAdminOrFaculty, name: "ID Card in Box", path: "status.idCardInBox", values: ["Yes", "No"] },
       { condition: isAdminOrFaculty, name: "Teacher", path: "work.isTeacher", values: ["Yes", "No"] },
       {

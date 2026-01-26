@@ -268,6 +268,7 @@ export const placementSchema = object().shape({
 });
 
 const statusSchema = object().shape({
+  banned: bool().optional(),
   cheatingSessions: array().of(sessionSchema.transform(emptyToNull).nullable().optional()).optional(),
   currentStatus: mixed<Status>()
     .oneOf(Object.values(Status) as Status[])

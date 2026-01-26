@@ -47,6 +47,16 @@ const ProgramInformation: React.FC<StudentInfoProps> = ({ data: student }) => {
       <LabeledText
         containerProps={{
           sx: {
+            backgroundColor: student.status.banned ? red : defaultBackgroundColor,
+          },
+        }}
+        label="Banned"
+      >
+        {student.status.banned ? "Yes" : undefined}
+      </LabeledText>
+      <LabeledText
+        containerProps={{
+          sx: {
             backgroundColor: student.status.highPriorityEnrollment ? red : defaultBackgroundColor,
           },
         }}

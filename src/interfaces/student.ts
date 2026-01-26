@@ -102,6 +102,7 @@ export interface WhatsappInfo {
 }
 
 export interface StudentStatus {
+  banned?: boolean;
   cheatingSessions?: string[];
   currentStatus: Status;
   droppedOutReason?: DroppedOutReason;
