@@ -7,7 +7,7 @@ import { FormDialog, GridContainer, GridItemAutocomplete, GridItemTextField } fr
 
 interface RoleFormDialogProps {
   open: boolean;
-  selectedWhiteListEntry?: WhiteListEntry;
+  selectedWhiteListEntry?: WhiteListEntry | null;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -27,7 +27,7 @@ export const RoleFormDialog: React.FC<RoleFormDialogProps> = ({ open, setOpen, s
 
   const useFormProps = useMemo(() => {
     return {
-      defaultValues: selectedWhiteListEntry,
+      defaultValues: selectedWhiteListEntry ?? {},
       resolver: yupResolver(whiteListEntrySchema),
     };
   }, [selectedWhiteListEntry]);

@@ -20,7 +20,7 @@ import { Loading } from "../components";
 import { RoleFormDialog } from "../components/Settings";
 import { useAppStore } from "../hooks";
 import { WhiteListEntry } from "../interfaces";
-import { db } from "../services";
+import { db, deleteWhiteListEntry } from "../services";
 
 export const SettingsPage = () => {
   const [value, loading] = useCollection(collection(db, "whitelist"));
@@ -43,7 +43,10 @@ export const SettingsPage = () => {
   }, []);
 
   const handleDeleteRoleClick = useCallback((email: string) => {
-    return () => {};
+    // TODO: Add confirmation popup
+    return () => {
+      deleteWhiteListEntry(email);
+    };
   }, []);
 
   return (
