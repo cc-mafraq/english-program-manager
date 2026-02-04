@@ -53,6 +53,13 @@ export interface FilterValue<T> {
   values: unknown[];
 }
 
-export interface WhiteList {
+export enum Roles {
+  ADMIN = "admin",
+  FACULTY = "faculty",
+  STAFF = "staff",
+}
+
+export interface WhiteListEntry {
+  email: string;
   role: "admin" | "faculty" | "staff";
 }
