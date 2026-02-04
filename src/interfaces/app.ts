@@ -52,3 +52,7 @@ export interface FilterValue<T> {
   fieldPath: string;
   values: unknown[];
 }
+
+export interface WhiteList {
+  role: "admin" | "faculty" | "staff";
+}
