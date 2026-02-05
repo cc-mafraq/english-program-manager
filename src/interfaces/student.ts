@@ -6,7 +6,7 @@ export interface Student {
   age: number | "Unknown";
   certificateRequests?: string;
   correspondence: Correspondence[];
-  covidVaccine: Covid;
+  // covidVaccine: Covid;
   currentLevel: GenderedLevel;
   epId: number;
   familyCoordinatorEntry?: string;
@@ -45,14 +45,14 @@ export interface AcademicRecord {
   session: string;
 }
 
-export interface Covid {
-  date?: string;
-  imageName?: string;
-  reason?: string;
-  status: CovidStatus;
-  suspectedFraud?: boolean;
-  suspectedFraudReason?: string;
-}
+// export interface Covid {
+//   date?: string;
+//   imageName?: string;
+//   reason?: string;
+//   status: CovidStatus;
+//   suspectedFraud?: boolean;
+//   suspectedFraudReason?: string;
+// }
 
 export interface Grade {
   notes?: string;
@@ -102,9 +102,11 @@ export interface WhatsappInfo {
 }
 
 export interface StudentStatus {
+  banned?: boolean;
   cheatingSessions?: string[];
   currentStatus: Status;
   droppedOutReason?: DroppedOutReason;
+  highPriorityEnrollment?: boolean;
   idCardInBox?: boolean;
   inviteTag: boolean;
   levelReevalDate?: string;
@@ -140,16 +142,16 @@ export type GenderedLevel = "PL1-M" | "PL1-W" | "L1-M" | "L1-W" | "L2-M" | "L2-W
 
 export type LevelPlus = Level | ("PL1+" | "L1-" | "L1+" | "L2-" | "L2+" | "L3-" | "L3+" | "L4-" | "L4+" | "L5-");
 
-export enum CovidStatus {
-  NORPT = "Not Reported",
-  FULL = "Fully Vaccinated",
-  PART = "Partially Vaccinated",
-  UNV = "Unvaccinated",
-  BOOST = "Boosted (Three Doses)",
-  EXEMPT = "Exempt from Vaccine",
-  DECL = "Declined to Provide Vaccine Info",
-  UNCL = "Answered but Answer Unclear",
-}
+// export enum CovidStatus {
+//   NORPT = "Not Reported",
+//   FULL = "Fully Vaccinated",
+//   PART = "Partially Vaccinated",
+//   UNV = "Unvaccinated",
+//   BOOST = "Boosted (Three Doses)",
+//   EXEMPT = "Exempt from Vaccine",
+//   DECL = "Declined to Provide Vaccine Info",
+//   UNCL = "Answered but Answer Unclear",
+// }
 
 export enum Nationality {
   JDN = "Jordanian",
@@ -252,7 +254,7 @@ export const levelsPlus: (LevelPlus | "Exempt")[] = [
 
 export const statuses = values(Status);
 export const statusDetails = values(StatusDetails);
-export const covidStatuses = values(CovidStatus);
+// export const covidStatuses = values(CovidStatus);
 
 export const results = values(FinalResult);
 export const PF = [FinalResult.P, FinalResult.F];
@@ -263,9 +265,9 @@ export const emptyStudent: Student = {
   academicRecords: [],
   age: "Unknown",
   correspondence: [],
-  covidVaccine: {
-    status: CovidStatus.NORPT,
-  },
+  // covidVaccine: {
+  //   status: CovidStatus.NORPT,
+  // },
   currentLevel: "PL1-M",
   epId: 0,
   gender: "M",
@@ -288,6 +290,7 @@ export const emptyStudent: Student = {
   placement: [],
   status: {
     currentStatus: Status.NEW,
+    highPriorityEnrollment: false,
     inviteTag: false,
     noContactList: false,
     reactivatedDate: [],

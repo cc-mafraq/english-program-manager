@@ -11,7 +11,14 @@ import {
 import { ColorModeContext } from "./contexts";
 import { loadLocal, useAppStore, useDatabase, useStudentStore, useWaitingListStore } from "./hooks";
 import { getDesignTokens } from "./interfaces";
-import { ClassListsPage, LoginPage, StatisticsPage, StudentDatabasePage, WaitingListPage } from "./pages";
+import {
+  ClassListsPage,
+  LoginPage,
+  SettingsPage,
+  StatisticsPage,
+  StudentDatabasePage,
+  WaitingListPage,
+} from "./pages";
 
 export const App = () => {
   const isDarkPreference = useMediaQuery("(prefers-color-scheme: dark)");
@@ -107,6 +114,15 @@ export const App = () => {
                     </StudentDatabaseWrapper>
                   }
                   path="/stats"
+                />
+                <Route
+                  element={
+                    <>
+                      <MenuBar pageName="Settings" />
+                      <SettingsPage />
+                    </>
+                  }
+                  path="/settings"
                 />
                 <Route element={<LoginPage />} path="/" />
               </Routes>

@@ -1,15 +1,7 @@
 import { filter as _filter, find, first, includes, isEmpty, range, some } from "lodash";
 import React, { useCallback, useMemo } from "react";
 import { useAppStore, useStudentStore } from "../../hooks";
-import {
-  Student,
-  covidStatuses,
-  genderedLevels,
-  levels,
-  nationalities,
-  statusDetails,
-  statuses,
-} from "../../interfaces";
+import { Student, genderedLevels, levels, nationalities, statusDetails, statuses } from "../../interfaces";
 import {
   FilterField,
   getAllInitialSessions,
@@ -152,7 +144,14 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
         values: ["Yes", "No"],
       },
       { name: "Original Placement Level", path: "origPlacementData.level", values: levels },
+      {
+        condition: isAdmin,
+        name: "High Priority Enrollment",
+        path: "status.highPriorityEnrollment",
+        values: booleanCheckboxOptions,
+      },
       { condition: isAdmin, name: "NCL", path: "status.noContactList", values: booleanCheckboxOptions },
+      { condition: isAdmin, name: "Banned", path: "status.banned", values: booleanCheckboxOptions },
       { condition: isAdminOrFaculty, name: "ID Card in Box", path: "status.idCardInBox", values: ["Yes", "No"] },
       { condition: isAdminOrFaculty, name: "Teacher", path: "work.isTeacher", values: ["Yes", "No"] },
       {
@@ -186,7 +185,7 @@ export const StudentFilter: React.FC<StudentFilterProps> = ({ anchorEl, handleCl
           "SAR Group 7",
         ],
       },
-      { condition: isAdmin, name: "COVID Vaccine Status", path: "covidVaccine.status", values: covidStatuses },
+      // { condition: isAdmin, name: "COVID Vaccine Status", path: "covidVaccine.status", values: covidStatuses },
       {
         condition: isAdminOrFaculty,
         fn: statusDetailsFn,
