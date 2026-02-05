@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Breakpoint, FormLabel } from "@mui/material";
 import React, { useCallback, useMemo } from "react";
 import { Roles, WhiteListEntry } from "../../interfaces";
-import { setData, whiteListEntrySchema } from "../../services";
+import { deleteWhiteListEntry, setData, whiteListEntrySchema } from "../../services";
 import { FormDialog, GridContainer, GridItemAutocomplete, GridItemTextField } from "../reusables";
 
 interface RoleFormDialogProps {
@@ -14,10 +14,13 @@ interface RoleFormDialogProps {
 export const RoleFormDialog: React.FC<RoleFormDialogProps> = ({ open, setOpen, selectedWhiteListEntry }) => {
   const onSubmit = useCallback(
     (data: WhiteListEntry) => {
+      if (selectedWhiteListEntry && selectedWhiteListEntry?.email !== data?.email) {
+        deleteWhiteListEntry(selectedWhiteListEntry.email);
+      }
       setData(data, "whitelist", "email");
       setOpen(false);
     },
-    [setOpen],
+    [selectedWhiteListEntry, setOpen],
   );
 
   const dialogProps = useMemo(() => {
