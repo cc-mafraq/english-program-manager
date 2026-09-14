@@ -15,9 +15,9 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CCMENGLISHPROGRAM }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CCM_ENGLISH }}
           channelId: live
-          projectId: ccmenglishprogram
+          projectId: ccm-english
         env:
           VITE_PROJECT_NAME: ccm-english
 
