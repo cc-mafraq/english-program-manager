@@ -4,6 +4,7 @@ export * from "./fgrService";
 export * from "./filterService";
 export * from "./firebaseService";
 export * from "./loginService";
+export * from "./settingsService";
 export * from "./spreadsheetService";
 export * from "./statisticsService";
 export * from "./studentFormService";
