@@ -4,7 +4,7 @@ import { isEqual, map } from "lodash";
 import React from "react";
 import { LabeledContainer, LabeledText } from "..";
 import { useAppStore, useColors } from "../../hooks";
-import { CovidStatus, HighPriority, WaitingListEntry } from "../../interfaces";
+import { HighPriority, WaitingListEntry } from "../../interfaces";
 
 interface WaitingListEntryInfoProps {
   data: WaitingListEntry;
@@ -138,24 +138,24 @@ const PlacementExam: React.FC<WaitingListEntryInfoProps> = React.memo(({ data: w
 }, equalProps);
 PlacementExam.displayName = "Placement Exam";
 
-const CovidVaccine: React.FC<WaitingListEntryInfoProps> = React.memo(({ data: wlEntry }) => {
-  const role = useAppStore((state) => {
-    return state.role;
-  });
-  return (
-    <LabeledContainer condition={role === "admin"} label="COVID Vaccine">
-      <LabeledText label="Certificate in WA">
-        {wlEntry.covidStatus === CovidStatus.FULL || wlEntry.covidStatus === CovidStatus.BOOST
-          ? "Yes"
-          : wlEntry.covidStatus === CovidStatus.EXEMPT
-          ? "Exempt"
-          : "No"}
-      </LabeledText>
-      <LabeledText label="Vaccine Notes">{wlEntry.covidVaccineNotes}</LabeledText>
-    </LabeledContainer>
-  );
-}, equalProps);
-CovidVaccine.displayName = "Covid Vaccine";
+// const CovidVaccine: React.FC<WaitingListEntryInfoProps> = React.memo(({ data: wlEntry }) => {
+//   const role = useAppStore((state) => {
+//     return state.role;
+//   });
+//   return (
+//     <LabeledContainer condition={role === "admin"} label="COVID Vaccine">
+//       <LabeledText label="Certificate in WA">
+//         {wlEntry.covidStatus === CovidStatus.FULL || wlEntry.covidStatus === CovidStatus.BOOST
+//           ? "Yes"
+//           : wlEntry.covidStatus === CovidStatus.EXEMPT
+//           ? "Exempt"
+//           : "No"}
+//       </LabeledText>
+//       <LabeledText label="Vaccine Notes">{wlEntry.covidVaccineNotes}</LabeledText>
+//     </LabeledContainer>
+//   );
+// }, equalProps);
+// CovidVaccine.displayName = "Covid Vaccine";
 
 export const WaitingListEntryInfo: React.FC<WaitingListEntryInfoProps> = ({ data: wlEntry }) => {
   return (
@@ -163,7 +163,7 @@ export const WaitingListEntryInfo: React.FC<WaitingListEntryInfoProps> = ({ data
       <EntryInformation data={wlEntry} />
       <PhoneNumbers data={wlEntry} />
       <PlacementExam data={wlEntry} />
-      <CovidVaccine data={wlEntry} />
+      {/* <CovidVaccine data={wlEntry} /> */}
     </Box>
   );
 };

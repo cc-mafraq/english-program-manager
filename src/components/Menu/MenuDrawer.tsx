@@ -9,6 +9,7 @@ import {
   PendingActions,
   Person,
   Schedule,
+  Settings,
 } from "@mui/icons-material";
 import {
   Box,
@@ -82,6 +83,7 @@ const drawerList: DrawerListItem[] = [
     name: "Statistics",
     route: "/stats",
   },
+  { component: Settings, name: "Settings", route: "/settings" },
 ];
 
 export const MenuDrawer = () => {

@@ -2,7 +2,6 @@ import { array, bool, mixed, number, object, string } from "yup";
 import { HighPriority, WaitingListEntry, WaitlistOutcome } from "../interfaces";
 import {
   correspondenceSchema,
-  covidStatusSchema,
   dateSchema,
   emptyToNull,
   phoneNumberSchema,
@@ -22,8 +21,8 @@ const stringToWaitlistOutcome = (value: string, originalValue: string) => {
 
 export const waitingListFormSchema = object().shape({
   correspondence: array().of(correspondenceSchema),
-  covidStatus: covidStatusSchema,
-  covidVaccineNotes: optionalStringSchema,
+  // covidStatus: covidStatusSchema,
+  // covidVaccineNotes: optionalStringSchema,
   eligible: bool().nullable().optional(),
   enteredInPhone: bool().optional(),
   entryDate: dateSchema.required("Entry date is required").typeError("Entry date is required"),

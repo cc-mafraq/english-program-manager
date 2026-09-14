@@ -15,10 +15,9 @@ import {
   slice,
 } from "lodash";
 import { median } from "mathjs";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import {
   AcademicRecord,
-  CovidStatus,
   DroppedOutReason,
   FinalResult,
   GenderedLevel,
@@ -53,9 +52,9 @@ interface Statistics {
   activeStatusDetailsCounts: { [key in StatusDetails]: number };
   ageCounts: { [key in Student["age"]]: number };
   averageAge: number;
-  covidStatusCounts: { [key in CovidStatus]: number };
+  // covidStatusCounts: { [key in CovidStatus]: number };
   droppedOutReasonCounts: { [key in DroppedOutReason]: number };
-  fullVaccineNationalityCounts: { [key in Nationality]: number };
+  // fullVaccineNationalityCounts: { [key in Nationality]: number };
   genderCounts: { [key in Student["gender"]]: number };
   levelCounts: { [key in Level]: number };
   medianAge: number;
@@ -122,11 +121,11 @@ export const useStatistics = (): Statistics => {
     return flatMap(students, "academicRecords");
   }, [students]);
 
-  const filterFullVaccine = useCallback(() => {
-    return filter(students, (s) => {
-      return s.covidVaccine.status === CovidStatus.FULL;
-    });
-  }, [students]);
+  // const filterFullVaccine = useCallback(() => {
+  //   return filter(students, (s) => {
+  //     return s.covidVaccine.status === CovidStatus.FULL;
+  //   });
+  // }, [students]);
 
   const sessions = useMemo(() => {
     return getSessionsWithoutSummer(students);
@@ -161,13 +160,13 @@ export const useStatistics = (): Statistics => {
     ) as { [key in StatusDetails]: number },
     ageCounts: countBy(students, "age") as { [key in Student["age"]]: number },
     averageAge: mean(filter(map(students, "age"), isNumber)),
-    covidStatusCounts: countBy(students, "covidVaccine.status") as { [key in CovidStatus]: number },
+    // covidStatusCounts: countBy(students, "covidVaccine.status") as { [key in CovidStatus]: number },
     droppedOutReasonCounts: omit(countBy(students, "status.droppedOutReason"), "undefined") as {
       [key in DroppedOutReason]: number;
     },
-    fullVaccineNationalityCounts: countBy(filterFullVaccine(), "nationality") as {
-      [key in Nationality]: number;
-    },
+    // fullVaccineNationalityCounts: countBy(filterFullVaccine(), "nationality") as {
+    //   [key in Nationality]: number;
+    // },
     genderCounts: countBy(students, "gender") as { [key in Student["gender"]]: number },
     levelCounts: getLevelCounts(countBy(students, "currentLevel") as { [key in GenderedLevel]: number }),
     medianAge: students.length ? median(filter(map(students, "age"), isNumber)) : 0,

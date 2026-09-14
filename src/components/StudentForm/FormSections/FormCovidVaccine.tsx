@@ -1,25 +1,12 @@
-import { Grid } from "@mui/material";
 import React from "react";
-import { useFormContext } from "react-hook-form";
-import { CovidStatus, covidStatuses, Student } from "../../../interfaces";
-import { covidVaccineImageFolder, SPACING } from "../../../services";
-import {
-  FormImage,
-  FormLabel,
-  GridContainer,
-  GridItemAutocomplete,
-  GridItemDatePicker,
-  GridItemTextField,
-  LabeledCheckbox,
-} from "../../reusables";
 
 export const FormCovidVaccine: React.FC = () => {
-  const { watch } = useFormContext<Student>();
-  const covidStatus = watch("covidVaccine.status");
+  // const { watch } = useFormContext<Student>();
+  // const covidStatus = watch("covidVaccine.status");
 
   return (
     <>
-      <FormLabel textProps={{ marginTop: SPACING }}>COVID Vaccine</FormLabel>
+      {/* <FormLabel textProps={{ marginTop: SPACING }}>COVID Vaccine</FormLabel>
       <GridContainer>
         <FormImage
           folderName={covidVaccineImageFolder}
@@ -47,7 +34,7 @@ export const FormCovidVaccine: React.FC = () => {
         {watch("covidVaccine.suspectedFraud") && (
           <GridItemTextField label="Suspected Fraud Reason" name="covidVaccine.suspectedFraudReason" />
         )}
-      </GridContainer>
+      </GridContainer> */}
     </>
   );
 };

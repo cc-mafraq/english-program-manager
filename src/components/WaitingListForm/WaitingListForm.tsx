@@ -6,7 +6,6 @@ import {
   FormOutcome,
   FormPhoneNumbers,
   FormPlacementExam,
-  FormWaitingListVaccine,
   GridContainer,
 } from "..";
 import { useAppStore, useWaitingListStore } from "../../hooks";
@@ -37,9 +36,9 @@ export const WaitingListForm: React.FC = () => {
       <FormEntryInformation disabled={disabled} />
       <Divider />
       <GridContainer>
-        <Grid item md={5.75} xs={12}>
+        {/* <Grid item md={5.75} xs={12}>
           <FormWaitingListVaccine disabled={disabled} />
-        </Grid>
+        </Grid> */}
         <Grid item marginLeft={greaterThanMedium ? SPACING * 2 : 0} md={5.75} xs={12}>
           <FormOutcome disabled={disabled} />
         </Grid>

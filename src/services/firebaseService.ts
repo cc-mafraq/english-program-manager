@@ -37,4 +37,4 @@ export const db = initializeFirestore(app, {
 export const storage = getStorage(app);
 
 export const studentImageFolder = "studentPics/";
-export const covidVaccineImageFolder = "vaccineCertificates/";
+// export const covidVaccineImageFolder = "vaccineCertificates/";

@@ -1,9 +1,14 @@
 import { Grid } from "@mui/material";
 import React from "react";
+import { useFormContext } from "react-hook-form";
+import { Student } from "../../../interfaces";
 import { SPACING, studentImageFolder } from "../../../services";
 import { FormImage, GridContainer, GridItemTextField, LabeledCheckbox } from "../../reusables";
 
 export const FormName: React.FC = () => {
+  const { watch } = useFormContext<Student>();
+  const inviteChecked = watch("status.inviteTag") ?? true;
+
   return (
     <GridContainer marginBottom={SPACING}>
       <FormImage
@@ -21,14 +26,23 @@ export const FormName: React.FC = () => {
         textFieldProps={{ required: true }}
       />
       <GridItemTextField label="Name - AR" name="name.arabic" textFieldProps={{ required: true }} />
-      <Grid item>
+      <Grid item xs={1}>
         <LabeledCheckbox
           checkboxProps={{ defaultChecked: true }}
           containerProps={{ marginTop: -1 }}
           label="Invite"
           name="status.inviteTag"
         />
-        <LabeledCheckbox containerProps={{ marginTop: -1 }} label="NCL" name="status.noContactList" />
+        {inviteChecked && (
+          <LabeledCheckbox
+            containerProps={{ marginTop: -1 }}
+            label="High Priority"
+            name="status.highPriorityEnrollment"
+          />
+        )}
+        {!inviteChecked && (
+          <LabeledCheckbox containerProps={{ marginTop: -1 }} label="NCL" name="status.noContactList" />
+        )}
       </Grid>
     </GridContainer>
   );

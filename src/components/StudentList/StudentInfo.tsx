@@ -2,10 +2,10 @@ import { FileOpen } from "@mui/icons-material";
 import { Box, IconButton, Tooltip, useMediaQuery, useTheme } from "@mui/material";
 import { join, map } from "lodash";
 import React, { useMemo } from "react";
-import { Image, LabeledContainer, LabeledText } from "..";
+import { LabeledContainer, LabeledText } from "..";
 import { useAppStore, useColors, useStudentStore } from "../../hooks";
 import { Status, Student } from "../../interfaces";
-import { JOIN_STR, covidVaccineImageFolder, getRepeatNum, getStatusDetails, isActive } from "../../services";
+import { JOIN_STR, getRepeatNum, getStatusDetails, isActive } from "../../services";
 
 interface StudentInfoProps {
   data: Student;
@@ -43,6 +43,26 @@ const ProgramInformation: React.FC<StudentInfoProps> = ({ data: student }) => {
         label="NCL"
       >
         {student.status.noContactList ? "Yes" : undefined}
+      </LabeledText>
+      <LabeledText
+        containerProps={{
+          sx: {
+            backgroundColor: student.status.banned ? red : defaultBackgroundColor,
+          },
+        }}
+        label="Banned"
+      >
+        {student.status.banned ? "Yes" : undefined}
+      </LabeledText>
+      <LabeledText
+        containerProps={{
+          sx: {
+            backgroundColor: student.status.highPriorityEnrollment ? red : defaultBackgroundColor,
+          },
+        }}
+        label="High Priority Enrollment"
+      >
+        {student.status.highPriorityEnrollment ? "Yes" : undefined}
       </LabeledText>
       <LabeledText label="Current Level">{student.currentLevel}</LabeledText>
       <LabeledText condition={isAdminOrFaculty} label="Family Coordinator Entry">
@@ -194,35 +214,35 @@ const PlacementData: React.FC<StudentInfoProps> = ({ data: student }) => {
   );
 };
 
-const CovidVaccine: React.FC<StudentInfoProps> = ({ data: student }) => {
-  const role = useAppStore((state) => {
-    return state.role;
-  });
+// const CovidVaccine: React.FC<StudentInfoProps> = ({ data: student }) => {
+//   const role = useAppStore((state) => {
+//     return state.role;
+//   });
 
-  return (
-    <Box hidden={role !== "admin"}>
-      <LabeledContainer label="COVID Vaccine" parentContainerProps={{ marginRight: "2vh" }}>
-        <LabeledText label="Status">{student.covidVaccine?.status}</LabeledText>
-        <LabeledText label="Date">{student.covidVaccine?.date}</LabeledText>
-        <LabeledText label="Reason">{student.covidVaccine?.reason}</LabeledText>
-        <LabeledText label="Suspected Fraud">
-          {student.covidVaccine?.suspectedFraud ? "Yes" : undefined}
-        </LabeledText>
-        <LabeledText label="Suspected Fraud Reason">{student.covidVaccine?.suspectedFraudReason}</LabeledText>
-      </LabeledContainer>
-      <Image
-        folderName={covidVaccineImageFolder}
-        imagePath="covidVaccine.imageName"
-        imageStyleProps={{ height: "100px", maxWidth: "150px" }}
-        innerContainerProps={{ height: "100px", marginLeft: "-10%", top: "17px" }}
-        loadingContainerProps={{ marginLeft: "30px", marginTop: "30px", transform: "none" }}
-        outerContainerProps={{ display: "inline-block", height: "100px", marginRight: "2vh", width: "150px" }}
-        scale={1.5}
-        student={student}
-      />
-    </Box>
-  );
-};
+//   return (
+//     <Box hidden={role !== "admin"}>
+//       <LabeledContainer label="COVID Vaccine" parentContainerProps={{ marginRight: "2vh" }}>
+//         <LabeledText label="Status">{student.covidVaccine?.status}</LabeledText>
+//         <LabeledText label="Date">{student.covidVaccine?.date}</LabeledText>
+//         <LabeledText label="Reason">{student.covidVaccine?.reason}</LabeledText>
+//         <LabeledText label="Suspected Fraud">
+//           {student.covidVaccine?.suspectedFraud ? "Yes" : undefined}
+//         </LabeledText>
+//         <LabeledText label="Suspected Fraud Reason">{student.covidVaccine?.suspectedFraudReason}</LabeledText>
+//       </LabeledContainer>
+//       <Image
+//         folderName={covidVaccineImageFolder}
+//         imagePath="covidVaccine.imageName"
+//         imageStyleProps={{ height: "100px", maxWidth: "150px" }}
+//         innerContainerProps={{ height: "100px", marginLeft: "-10%", top: "17px" }}
+//         loadingContainerProps={{ marginLeft: "30px", marginTop: "30px", transform: "none" }}
+//         outerContainerProps={{ display: "inline-block", height: "100px", marginRight: "2vh", width: "150px" }}
+//         scale={1.5}
+//         student={student}
+//       />
+//     </Box>
+//   );
+// };
 
 const LiteracyAndZoom: React.FC<StudentInfoProps> = ({ data: student }) => {
   return (
@@ -250,7 +270,7 @@ export const StudentInfo: React.FC<StudentInfoProps> = ({ data: student }) => {
       <StatusBox data={student} />
       <Demographics data={student} />
       <PlacementData data={student} />
-      <CovidVaccine data={student} />
+      {/* <CovidVaccine data={student} /> */}
       <LiteracyAndZoom data={student} />
     </Box>
   );
