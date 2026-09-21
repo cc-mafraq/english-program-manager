@@ -25,6 +25,7 @@ export const searchStudents = (students: Student[], searchString: string): Stude
     const familyCoordinatorNoVowels = s.familyCoordinatorEntry?.replaceAll(vowelRegex, "");
     return (
       isEmpty(searchString) ||
+      cleanName.startsWith(cleanSearchString) ||
       !!toLower(cleanNameNoVowels).match(searchStringRegEx) ||
       !!cleanNameNoVowels.match(`^${first(splitSearchString)}(.)*\\s${last(splitSearchString)}$`) ||
       !!s.name.arabic.match(`^${first(splitSearchString)}(.)+${last(splitSearchString)}$`) ||
