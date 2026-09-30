@@ -1,5 +1,4 @@
-import { FilterListOutlined, SearchOutlined } from "@mui/icons-material";
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import React from "react";
 
 export const StudentDatabaseHome = () => {
@@ -7,7 +6,7 @@ export const StudentDatabaseHome = () => {
 
   return (
     <Box color="white" position="relative" textAlign="center">
-      <Box
+      {/* <Box
         sx={{
           fontVariant: "small-caps",
           left: "50%",
@@ -43,10 +42,10 @@ export const StudentDatabaseHome = () => {
           />
           filter to get started.
         </Typography>
-      </Box>
+      </Box> */}
       <img
         alt="Mafraq Art"
-        src={theme.palette.mode === "dark" ? "./assets/mafraq-art-wide-dark.jpg" : "./assets/mafraq-art-wide.jpg"}
+        src={theme.palette.mode === "dark" ? "./assets/EPD-Cover-Blue-2026.png" : "./assets/EPD-Cover-2026.png"}
         width="100%"
       />
     </Box>
