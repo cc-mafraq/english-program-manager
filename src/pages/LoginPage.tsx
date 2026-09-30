@@ -53,7 +53,7 @@ export const LoginPage = () => {
           width: "30vw",
         }}
       >
-        <Avatar src="./assets/ep-logo-full.png" sx={{ height: 56, width: 56 }} />
+        <Avatar src="./assets/EP-Circle.png" sx={{ height: 56, width: 56 }} />
         <Box sx={{ mt: 1 }}>
           <Button
             fullWidth
