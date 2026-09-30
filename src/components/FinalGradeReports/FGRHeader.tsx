@@ -12,12 +12,14 @@ interface FGRHeaderProps {
 export const FGRHeader: React.FC<FGRHeaderProps> = ({ borderSize, smallBorderSize, spacing, scale }) => {
   const englishFontSize = `${20 * scale}pt`;
   const arabicFontSize = `${18 * scale}pt`;
-  const logoSize = `${60 * scale}px`;
+  const logoSize = `${100 * scale}px`;
 
   return (
     <Grid
       container
-      padding={spacing}
+      paddingLeft={spacing}
+      paddingRight={spacing}
+      paddingTop={spacing}
       sx={{
         border: borderSize,
         borderBottom: smallBorderSize,
@@ -25,12 +27,12 @@ export const FGRHeader: React.FC<FGRHeaderProps> = ({ borderSize, smallBorderSiz
         borderTopWidth: 0,
       }}
     >
-      <Grid item marginBottom="auto" marginTop="auto" xs={1}>
-        <img alt="EP Logo" src="./assets/ep-logo-full.png" width={logoSize} />
+      <Grid item marginBottom="auto" marginTop="auto" xs={2}>
+        <img alt="EP Logo" src="./assets/EP-Circle.png" width={logoSize} />
       </Grid>
-      <Grid item xs={7}>
+      <Grid item xs={5.9}>
         <Typography color="black" fontSize={englishFontSize} fontWeight="bold" textAlign="center">
-          CCM English Program: Final Grade Report
+          English Program: Final Grade Report
         </Typography>
       </Grid>
       <Grid item xs={4}>

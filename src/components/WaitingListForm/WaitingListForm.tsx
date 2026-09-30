@@ -1,4 +1,4 @@
-import { Box, Divider, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 import React from "react";
 import { FormCorrespondence, FormEntryInformation, FormOutcome, FormPhoneNumbers, FormPlacementExam } from "..";
 import { useAppStore, useWaitingListStore } from "../../hooks";
@@ -13,8 +13,6 @@ export const WaitingListForm: React.FC = () => {
   });
   const disabled = role !== "admin";
   const addOrEdit = selectedWaitingListEntry ? "Edit" : "Add";
-  const theme = useTheme();
-  const greaterThanMedium = useMediaQuery(theme.breakpoints.up("md"));
 
   return (
     <>

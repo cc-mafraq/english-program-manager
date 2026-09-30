@@ -272,7 +272,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
               borderColor: lightPrimaryColor,
             }}
           >
-            <img alt="FGR Border" src="./assets/fgr-border.jpg" width={imageWidth} />
+            <img alt="FGR Border" src="./assets/fgr-border.png" width={imageWidth} />
           </Box>
           <Grid container sx={{ backgroundColor: "white" }} width={width}>
             <FGRHeader
@@ -306,7 +306,7 @@ export const FinalGradeReport: React.FC<FinalGradeReportProps> = ({
               transform: "scaleY(-1)",
             }}
           >
-            <img alt="FGR Border" src="./assets/fgr-border.jpg" width={imageWidth} />
+            <img alt="FGR Border" src="./assets/fgr-border.png" width={imageWidth} />
           </Box>
         </div>
       )}
