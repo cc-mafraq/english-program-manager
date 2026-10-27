@@ -1,3 +1,4 @@
+export * from "./FormFile";
 export * from "./FormImage";
 export * from "./GridContainer";
 export * from "./GridItemAutocomplete";
