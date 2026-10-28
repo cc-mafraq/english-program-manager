@@ -24,9 +24,12 @@ const firebaseDevConfig = {
   storageBucket: "ccm-english-dev.appspot.com",
 };
 
-export const isProd =
-  window.location.hostname.includes("ccm-english.web.app") ||
-  window.location.hostname.includes("ccm-english.firebaseapp.com");
+const allowedProdHosts = new Set([
+  "ccm-english.web.app",
+  "ccm-english.firebaseapp.com",
+]);
+
+export const isProd = allowedProdHosts.has(window.location.hostname);
 
 // Initialize Firebase
 // export const app = initializeApp(firebaseProdConfig);
