@@ -26,7 +26,7 @@ const firebaseDevConfig = {
 
 export const isProd =
   window.location.hostname.includes("ccm-english.web.app") ||
-  window.location.hostname.includes("ccom-english.firebaseapp.com");
+  window.location.hostname.includes("ccm-english.firebaseapp.com");
 
 // Initialize Firebase
 // export const app = initializeApp(firebaseProdConfig);
